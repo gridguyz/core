@@ -2684,7 +2684,7 @@ return array(
                                         'label'         => 'paragraph.form.title.separator',
                                         'required'      => false,
                                         'empty_option'  => '',
-                                        'options'       => include 'data/config/separators.php',
+                                        'options'       => include 'config/separators.php',
                                     ),
                                 ),
                             ),

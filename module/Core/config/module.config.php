@@ -425,7 +425,7 @@ return array(
                         'options'   => array(
                             'required'      => true,
                             'label'         => 'settings.form.siteDefinition.titleSeparator',
-                            'options'       => include 'data/config/separators.php',
+                            'options'       => include 'config/separators.php',
                             'translatable'  => false,
                         ),
                     ),
@@ -1004,7 +1004,7 @@ return array(
     'timezone'  => array(
         'id'    => 'UTC',
     ),
-    'locale'    => include './data/config/languages.php',
+    'locale'    => include 'config/languages.php',
     'http'      => array(
         'adapter'   => 'Zend\Http\Client\Adapter\Curl',
         'options'   => array(

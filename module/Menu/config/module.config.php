@@ -308,7 +308,7 @@ return array(
                                     'options'   => array(
                                         'label'         => 'paragraph.form.breadcrumb.separator',
                                         'required'      => false,
-                                        'options'       => include 'data/config/separators.php',
+                                        'options'       => include 'config/separators.php',
                                         'translatable'  => false,
                                     ),
                                 ),
