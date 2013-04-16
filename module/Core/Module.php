@@ -6,12 +6,11 @@ use Zend\Mvc\MvcEvent;
 use Zork\Stdlib\ModuleAbstract;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\ModuleManagerInterface;
+use Zork\Mvc\View\Http\InjectTemplateListener;
 use Zork\Mvc\Controller\LocaleSelectorInterface;
 use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
-use Zend\Mvc\View\Http\InjectTemplateListener as ZendInjectTemplateListener;
-use Zork\Mvc\View\Http\InjectTemplateListener as ZorkInjectTemplateListener;
 
 /**
  * Grid\Core\Module
@@ -63,8 +62,8 @@ class Module extends ModuleAbstract
         $shared->attach(
             'Zend\Stdlib\DispatchableInterface',
             MvcEvent::EVENT_DISPATCH,
-            array( new ZorkInjectTemplateListener, 'injectTemplate' ),
-            -80
+            array( new InjectTemplateListener, 'injectTemplate' ),
+            -85
         );
 
         $shared->attach(
@@ -95,7 +94,7 @@ class Module extends ModuleAbstract
                     ->getSharedManager()
                     ->attach(
                         'Zend\Mvc\Application',
-                        'dispatch.error',
+                        MvcEvent::EVENT_DISPATCH_ERROR,
                         array( $this, 'onDispatchError' )
                     );
 
@@ -140,7 +139,7 @@ class Module extends ModuleAbstract
 
         if ( $exception && $this->serviceLocator->has( 'Zork\Log\LoggerManager' ) )
         {
-            /* @var $loggerManager \Zork\Log\LoggerManager  */
+            /* @var $loggerManager \Zork\Log\LoggerManager */
             $loggerManager = $this->serviceLocator->get( 'Zork\Log\LoggerManager' );
 
             if ( $loggerManager->hasLogger( 'exception' ) )
