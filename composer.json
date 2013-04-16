@@ -8,6 +8,24 @@
         "core"
     ],
     "homepage": "http://gridguyz.com/",
+    "authors": [
+        {
+            "name": "Mihály Farkas",
+            "email": "mihaly.farkas@megaweb.hu",
+            "homepage": "http://gridguyz.com/",
+            "role": "Developer"
+        },
+        {
+            "name": "David Pozsar",
+            "email": "david.pozsar@megaweb.hu",
+            "homepage": "http://gridguyz.com/",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "dev@megaweb.hu",
+        "source": "https://github.com/webriq/gridguyz-core"
+    },
     "require": {
         "php": ">=5.4",
         "ext-pdo_pgsql": "*",
