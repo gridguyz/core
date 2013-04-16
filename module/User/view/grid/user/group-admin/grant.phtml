@@ -1,0 +1,25 @@
+<?php $this->headTitle( $title = $this->translate( 'user.form.grant.group', 'user' ) ) ?>
+<h1><?= $title ?></h1>
+<div class="page">
+    <h3><?= $this->group->name ?></h3>
+    <form action="" method="post">
+        <?= $this->partial( 'grid/user/grant', array(
+            'rights'        => $this->rights,
+            'inherited'     => array(),
+            'inheritedFrom' => null,
+        ) ) ?>
+        <p class="submits">
+            <input class="save" type="submit" name="save" value="<?=
+                $this->escapeHtmlAttr(
+                    $this->translate( 'user.form.grant.submit', 'user' )
+                )
+            ?>" />
+            <input class="cancel" type="button" value="<?=
+                $this->escapeHtmlAttr(
+                    $this->translate( 'default.cancel', 'default' )
+                )
+            ?>"
+                   onclick="document.location.href='/app/<?= $this->locale() ?>/admin/user-group/list'" />
+        </p>
+    </form>
+</div>

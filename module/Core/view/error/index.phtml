@@ -1,0 +1,55 @@
+<div class="paragraph-like error<?php if ( isset( $this->exception ) ):
+    ?> error-<?= $this->exception->getCode() ?><?php endif ?>">
+    <h1><?= $this->translate( 'default.error.occurred' ) ?></h1>
+    <h2><?= $this->message ?></h2>
+
+<?php if ( isset( $this->display_exceptions ) && $this->display_exceptions ): ?>
+
+<?php if ( isset( $this->exception ) && $this->exception instanceof Exception ): ?>
+    <hr />
+    <h2><?= $this->translate( 'default.error.exception' ) ?>:</h2>
+    <h3><?= get_class( $this->exception ) ?></h3>
+    <dl>
+        <dt><?= $this->translate( 'default.error.file' ) ?>:</dt>
+        <dd>
+            <pre class="prettyprint linenums"><?= $this->exception->getFile() ?>:<?= $this->exception->getLine() ?></pre>
+        </dd>
+        <dt><?= $this->translate( 'default.error.mesage' ) ?>:</dt>
+        <dd>
+            <pre class="prettyprint linenums"><?= $this->exception->getMessage() ?></pre>
+        </dd>
+        <dt><?= $this->translate( 'default.error.stack' ) ?>:</dt>
+        <dd>
+            <pre class="prettyprint linenums"><?= $this->exception->getTraceAsString() ?></pre>
+        </dd>
+    </dl>
+<?php $e = $this->exception->getPrevious(); if ( $e ): ?>
+    <hr/>
+    <h2><?= $this->translate( 'default.error.previous' ) ?>:</h2>
+    <ul class="unstyled">
+<?php while( $e ) : ?>
+        <li>
+            <h3><?= get_class( $e ) ?></h3>
+            <dl>
+                <dt><?= $this->translate( 'default.error.file' ) ?>:</dt>
+                <dd>
+                    <pre class="prettyprint linenums"><?= $e->getFile() ?>:<?= $e->getLine() ?></pre>
+                </dd>
+                <dt><?= $this->translate( 'default.error.mesage' ) ?>:</dt>
+                <dd>
+                    <pre class="prettyprint linenums"><?= $e->getMessage() ?></pre>
+                </dd>
+                <dt><?= $this->translate( 'default.error.stack' ) ?>:</dt>
+                <dd>
+                    <pre class="prettyprint linenums"><?= $e->getTraceAsString() ?></pre>
+                </dd>
+            </dl>
+        </li>
+<?php $e = $e->getPrevious(); endwhile ?>
+    </ul>
+<?php endif ?>
+<?php else: ?>
+    <h3><?= $this->translate( 'default.error.no-exception' ) ?></h3>
+<?php endif ?>
+<?php endif ?>
+</div>

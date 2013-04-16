@@ -1,0 +1,19 @@
+<?php $this->placeholder( 'content' )->captureStart(); ?>
+<div class="paragraph-like user register">
+    <?= $this->form( $this->form, 'user' ) ?>
+<?php if ( null !== $this->success ): ?>
+
+    <div data-js-type="zork.ui.dialog"
+         title="<?= $this->translate( 'default.' . ( $this->success ? 'info' : 'error' ) ) ?>">
+<?php if ( $this->success ): ?>
+        <?= $this->translate( 'user.form.register.success', 'user' ); ?>
+<?php else: ?>
+        <?= $this->translate( 'user.form.register.failed', 'user' ); ?>
+<?php endif ?>
+
+    </div>
+<?php endif ?>
+
+</div>
+<?php $this->placeholder( 'content' )->captureEnd(); ?>
+<?= $this->metaContent( 'user.register', (string) $this->placeholder( 'content' ) ) ?>

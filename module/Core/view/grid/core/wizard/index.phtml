@@ -1,0 +1,27 @@
+<?php $this->headLink()
+           ->appendStylesheet( '/styles/wizard.css', 'all' );
+
+?><div class="wizard">
+    <div class="wizard-step">
+        <ul class="step-stack ui-helper-clearfix">
+        <?php foreach ( $this->stack as $step ): ?>
+            <li><a href="?jump=<?= $step ?>"><?= $this->translate(
+                ( $this->translatePrefix ?: '' ) . $step,
+                $this->textDomain
+            ) ?></a></li>
+        <?php endforeach; ?>
+            <li><a href="#"><?= $this->translate(
+                ( $this->translatePrefix ?: '' ) . $this->step,
+                $this->textDomain
+            ) ?></a></li>
+        </ul>
+        <div class="step-action step-action-<?= $this->step ?>">
+        <?php if ( ! empty( $this->descriptionPartial ) ): ?>
+
+            <?= $this->partial( $this->descriptionPartial, $this->vars() ) ?>
+        <?php endif ?>
+
+            <?= $this->form( $this->form, $this->textDomain ) ?>
+        </div>
+    </div>
+</div>

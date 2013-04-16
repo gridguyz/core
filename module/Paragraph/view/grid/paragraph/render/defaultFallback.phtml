@@ -1,0 +1,10 @@
+<?php if ( $this->paragraph->displayWarning() ): ?>
+<p class="warn">
+    <?= sprintf(
+        $this->translate( 'paragraph.warn.defaultFallback', 'paragraph' ),
+        '<strong>' . $this->translate( 'paragraph.type.' .
+                     $this->paragraph->type, 'paragraph' ) . '</strong>'
+    ) ?>
+
+</p>
+<?php endif ?>

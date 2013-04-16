@@ -1,0 +1,10 @@
+<?php
+$this->headTitle( $this->user->displayName );
+$this->placeholder( 'content' )->captureStart();
+?>
+<div class="page">
+    <?= $this->form( $this->form, 'user' ) ?>
+
+</div>
+<?php $this->placeholder( 'content' )->captureEnd(); ?>
+<?= $this->metaContent( 'user.datasheet', (string) $this->placeholder( 'content' ) ) ?>

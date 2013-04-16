@@ -1,0 +1,49 @@
+<?php
+/**
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$this->headTitle( $title = $this->translate( 'paragraph.widget.list.title', 'paragraph' ) );
+$view   = $this;
+$rowSet = $this->rowSet();
+
+if ( ! $this->format ): ?>
+<h1><?= $title ?></h1>
+<?php endif ?>
+<?= $this->rowSet( $this->paginator, $rowSet::FLAG_LAYOUT_ALL )
+         ->setColumnTranslatePrefix( 'paragraph.widget.list.column' )
+         ->setColumnTranslatePostfix( 'title' )
+         ->setColumnTranslateTextDomain( 'paragraph' )
+         ->setPage( $this->page )
+         ->setHiddenColumns( array( 'id' ) )
+         ->setColumns( array(
+              'id'              => $rowSet::INT,
+              'name'            => $rowSet::STRING,
+              'rootName'        => $rowSet::STRING,
+              'rootType'        => $rowSet->column( $rowSet::TRANSLATE, 'paragraph.type', '', 'paragraph' ),
+              'actions'         => function ( $row ) use ( $view ) {
+                $view->placeholder( 'listActions' )->set( '' );
+                $view->placeholder( 'listActions' )->captureStart();
+?>
+    <a class="action-button view"
+       title="<?= $view->translate( 'default.view', 'default' ) ?>"
+       href="/app/<?= $view->adminLocale() ?>/paragraph/render/<?= $row->rootId ?>">
+    </a>
+<?php if ( $row->isEditable() ): ?>
+    <a class="action-button edit"
+       title="<?= $view->translate( 'default.edit' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/widget/edit/<?= $row->id ?>">
+    </a>
+<?php endif ?>
+<?php /* if ( $this->isEditable() ): ?>
+    <a class="action-button delete"
+       title="<?= $view->translate( 'default.delete' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/widget/delete/<?= $row->id ?>"
+       onclick="return js.require('js.ui.dialog').confirm(this);">
+    </a>
+<?php endif */ ?>
+<?php
+                $view->placeholder( 'listActions' )->captureEnd();
+                return (string) $view->placeholder( 'listActions' );
+              },
+          ) )
+         ->render( $this->format );

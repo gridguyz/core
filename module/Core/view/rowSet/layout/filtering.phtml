@@ -1,0 +1,278 @@
+<?php
+$id      = $this->rowSet->getId();
+$store   = $this->rowSet->getStore();
+$columns = $this->rowSet->getColumns();
+
+$searchable = function ( $type )
+{
+    return (
+        $type instanceof \Core\View\Helper\RowSet\Type\Set      ||
+        $type instanceof \Core\View\Helper\RowSet\Type\Enum     ||
+        $type instanceof \Core\View\Helper\RowSet\Type\Locale   ||
+        $type instanceof \Core\View\Helper\RowSet\Type\String   ||
+        $type instanceof \Core\View\Helper\RowSet\Type\Replace  ||
+        $type instanceof \Core\View\Helper\RowSet\Type\Text     ||
+        $type instanceof \Core\View\Helper\RowSet\Type\Float    ||
+        $type instanceof \Core\View\Helper\RowSet\Type\Int      ||
+        $type instanceof \Core\View\Helper\RowSet\Type\Bool     ||
+        $type instanceof \Core\View\Helper\RowSet\Type\Date     ||
+        $type instanceof \Core\View\Helper\RowSet\Type\DateTime ||
+        $type instanceof \Core\View\Helper\RowSet\Type\Currency
+    );
+};
+
+?>
+    <fieldset class="columns collapsed">
+        <legend onclick="$(this.parentNode).toggleClass('collapsed');"><?=
+            $this->translate( 'default.rowSet.columns.title' ) ?></legend>
+        <div class="collapsible">
+            <?php foreach ( $store['enable'] as $column => $enabled ):
+                $name = $this->rowSet->getColumnName( $column );  ?>
+                <input type="hidden" name="columns[<?php echo
+                    $column; ?>]" value="" />
+                <input type="checkbox"
+                       id="rowset_<?= $id ?>_column_<?= $column ?>"
+                       name="columns[<?= $column ?>]"
+                       value="1"<?php if ( $enabled ): ?>
+                       checked="checked"<?php endif ?> /><label
+                       for="rowset_<?= $id ?>_column_<?= $column ?>">
+                    <?= $name ?></label><br />
+            <?php endforeach ?>
+
+            <button type="submit">
+                <?= $this->translate( 'default.rowSet.columns.submit' ); ?>
+
+            </button>
+        </div>
+    </fieldset>
+    <fieldset class="search collapsed">
+        <legend onclick="$(this.parentNode).toggleClass('collapsed');"><?=
+            $this->translate( 'default.rowSet.search.title' ); ?></legend>
+        <div class="collapsible">
+            <dl class="columns">
+        <?php foreach ( $store['enable'] as $column => $enabled ):
+            $type = $columns[$column];
+            $name = $this->rowSet->getColumnName( $column );
+            if ( $enabled && $searchable( $type ) ): ?>
+
+                <dt class="name-<?= $column ?>"><?= $name ?>:</dt>
+        <?php if ( $type instanceof \Core\View\Helper\RowSet\Type\Set ): ?>
+
+                <dd class="set name-<?php echo $column ?>">
+                <?php foreach ( $type->getValues() as $value => $label ): ?>
+
+                    <input type="checkbox"
+                           id="rowset_<?= $id ?>_search_<?= $column
+                                ?>_set_<?= $value ?>"
+                           name="search[<?= $column ?>][set][]"
+                           value="<?= $value ?>"<?php if ( @in_array( $value,
+                                $store['search'][$column]['set'] ) ): ?>
+                           checked="checked"<?php endif ?>
+                    /><label for="rowret_<?= $id ?>_search_<?= $column
+                        ?>_set_<?= $value ?>">&nbsp;<?=
+                        $type->displayValue( $value ) ?></label><br />
+                <?php endforeach ?>
+
+                </dd>
+        <?php elseif ( $type instanceof \Core\View\Helper\RowSet\Type\Enum ): ?>
+
+                <dd class="enum name-<?= $column ?>">
+                <?php foreach ( $type->getValues() as $value => $label ): ?>
+
+                    <input type="checkbox"
+                           id="rowset_<?= $id ?>_search_<?= $column
+                                ?>_enum_<?= $value ?>"
+                           name="search[<?= $column ?>][enum][]"
+                           value="<?= $value ?>"<?php if ( @in_array( $value,
+                                $store['search'][$column]['enum'] ) ): ?>
+                           checked="checked"<?php endif ?>
+                    /><label for="rowset_<?= $id ?>_search_<?= $column
+                           ?>_enum_<?= $value ?>">&nbsp;<?=
+                           $type->displayValue( $value ) ?></label><br />
+                <?php endforeach ?>
+
+                </dd>
+        <?php elseif ( $type instanceof \Core\View\Helper\RowSet\Type\Locale ): ?>
+
+                <dd class="locale enum name-<?= $column ?>">
+                    <input type="radio"
+                           id="rowset_<?= $id ?>_search_<?= $column ?>_locale_all"
+                           name="search[<?= $column ?>][like]" value=""<?php
+                             if ( empty( $store['search'][$column]['like'] ) ): ?>
+                           checked="checked"<?php endif ?>
+                    /><label for="rowset_<?= $id ?>_search_<?= $column
+                           ?>_locale_all">&nbsp;<?=
+                           $this->translate( 'default.rowSet.search.locale.all' )
+                           ?></label><br />
+                <?php foreach ( $this->locale()->getAvailableLocales( true ) as
+                                $value => $_ ): ?>
+
+                    <input type="radio"
+                           id="rowset_<?= $id ?>_search_<?= $column
+                               ?>_locale_<?= $value ?>"
+                           name="search[<?= $column ?>][like]"
+                           value="<?= $value ?>*"<?php
+                               if ( isset( $store['search'][$column]['like'] ) &&
+                                  ( $value . '*' ) == $store['search'][$column]['like'] ): ?>
+                           checked="checked"<?php endif ?>
+                    /><label for="rowset_<?= $id ?>_search_<?= $column
+                           ?>_locale_<?= $value ?>">&nbsp;<?=
+                           $this->translate( 'locale.main.' . $value, 'locale' ) ?></label><br />
+                <?php endforeach; ?>
+
+                </dd>
+        <?php elseif ( $type instanceof \Core\View\Helper\RowSet\Type\String  ||
+                       $type instanceof \Core\View\Helper\RowSet\Type\Replace ||
+                       $type instanceof \Core\View\Helper\RowSet\Type\Text ): ?>
+
+                <dd class="string-like name-<?= $column ?>">
+                    <label>
+                        <?= $this->translate( 'default.rowSet.search.string.like' )
+                        ?>:&nbsp;<input type="text"
+                                        name="search[<?= $column ?>][like]"
+                                        value="<?php
+                                if ( isset( $store['search'][$column]['like'] ) )
+                                       echo $store['search'][$column]['like']; ?>" />
+                    </label>
+                </dd>
+        <?php elseif ( $type instanceof \Core\View\Helper\RowSet\Type\Float ||
+                       $type instanceof \Core\View\Helper\RowSet\Type\Int ): ?>
+
+                <dd class="number-min name-<?= $column; ?>">
+                    <label>
+                        <?= $this->translate( 'default.rowSet.search.number.min' );
+                        ?>:&nbsp;<input type="number"
+                                        name="search[<?= $column ?>][min]"
+                                        value="<?php
+                                if ( isset( $store['search'][$column]['min'] ) )
+                                       echo $store['search'][$column]['min']; ?>" />
+                    </label>
+                </dd>
+                <dd class="number-max name-<?php echo $column; ?>">
+                    <label>
+                        <?= $this->translate( 'default.rowSet.search.number.max' );
+                        ?>:&nbsp;<input type="number"
+                                        name="search[<?= $column ?>][max]"
+                                        value="<?php
+                                if ( isset( $store['search'][$column]['max'] ) )
+                                       echo $store['search'][$column]['max']; ?>" />
+                    </label>
+                </dd>
+        <?php elseif ( $type instanceof \Core\View\Helper\RowSet\Type\Bool ): ?>
+
+                <dd class="bool name-<?= $column ?>">
+                    <input type="radio"
+                           id="rowset_<?= $id ?>_search_<?= $column ?>_bool_all"
+                           name="search[<?= $column ?>][bool]"
+                           value=""<?php if ( ! isset( $store['search'][$column]['bool'] ) ||
+                                                       $store['search'][$column]['bool'] == '' ): ?>
+                           checked="checked"<?php endif ?> /><label
+                           for="rowset_<?= $id ?>_search_<?= $column ?>_bool_all">
+                        <?= $this->translate( 'default.rowSet.search.bool.all' ) ?>
+                    </label><br />
+                    <input type="radio"
+                           id="rowset_<?= $id ?>_search_<?= $column ?>_bool_only"
+                           name="search[<?= $column ?>][bool]"
+                           value="only"<?php if ( isset ( $store['search'][$column]['bool'] ) &&
+                                                          $store['search'][$column]['bool'] == 'only' ): ?>
+                           checked="checked"<?php endif ?> /><label
+                           for="rowset_<?= $id ?>_search_<?= $column ?>_bool_only">
+                        <?= sprintf( $this->translate( 'default.rowSet.search.bool.only.%s' ),
+                                     lcfirst( $name ) ); ?>
+                    </label><br />
+                    <input type="radio"
+                           id="rowset_<?= $id ?>_search_<?= $column ?>_bool_not"
+                           name="search[<?= $column ?>][bool]"
+                           value="not"<?php if ( isset( $store['search'][$column]['bool'] ) &&
+                                                        $store['search'][$column]['bool'] == 'not' ): ?>
+                           checked="checked"<?php endif ?> /><label
+                           for="rowset_<?= $id ?>_search_<?= $column ?>_bool_not">
+                        <?= sprintf( $this->translate( 'default.rowSet.search.bool.not.%s' ),
+                                     lcfirst( $name ) ); ?>
+                    </label><br />
+                </dd>
+        <?php elseif ( $type instanceof \Core\View\Helper\RowSet\Type\DateTime &&
+                     ! $type instanceof \Core\View\Helper\RowSet\Type\Time ): ?>
+
+                <dd class="date-from name-<?= $column ?>">
+                    <label>
+                        <?= $this->translate( 'default.rowSet.search.date.from' )
+                        ?>:&nbsp;<input type="date"
+                                        data-js-type="js.form.element.date"
+                                        name="search[<?= $column ?>][from]"
+                                        value="<?php if ( isset( $store['search'][$column]['from'] ) )
+                                                            echo $store['search'][$column]['from'] ?>" />
+                    </label>
+                </dd>
+                <dd class="date-to name-<?= $column ?>">
+                    <label>
+                        <?= $this->translate( 'default.rowSet.search.date.to' )
+                        ?>:&nbsp;<input type="date"
+                                        data-js-type="js.form.element.date"
+                                        name="search[<?= $column ?>][to]"
+                                        value="<?php if ( isset( $store['search'][$column]['to'] ) )
+                                                            echo $store['search'][$column]['to'] ?>" />
+                    </label>
+                </dd>
+        <?php elseif ( $type instanceof \Core\View\Helper\RowSet\Type\Currency ): ?>
+
+                <dd class="currency-min name-<?= $column ?>">
+                    <label>
+                        <?= $this->translate( 'default.rowSet.search.number.min' )
+                        ?>:&nbsp;<input type="number"
+                                        name="search[<?= $column ?>][min]"
+                                        value="<?php if ( isset( $store['search'][$column]['min'] ) )
+                                                            echo $store['search'][$column]['min'] ?>" />
+                    </label>
+                </dd>
+                <dd class="currency-max name-<?= $column ?>">
+                    <label>
+                        <?= $this->translate( 'default.rowSet.search.number.max' )
+                        ?>:&nbsp;<input type="number"
+                                        name="search[<?= $column ?>][max]"
+                                        value="<?php if ( isset( $store['search'][$column]['max'] ) )
+                                                            echo $store['search'][$column]['max'] ?>" />
+                    </label>
+                </dd>
+                <dd class="currency-currency name-<?= $column ?>">
+                    <label>
+                        <?= $this->translate( 'default.rowSet.search.currency' )
+                        ?>:&nbsp;<input type="text"
+                                        name="search[<?= $column ?>][currency]"
+                                        value="<?php if ( isset( $store['search'][$column]['currency'] ) )
+                                                            echo $store['search'][$column]['currency'] ?>" />
+                    </label>
+                </dd>
+        <?php endif ?>
+        <?php endif ?>
+    <?php endforeach ?>
+
+            </dl>
+            <button type="submit" name="page" value="1">
+                <?= $this->translate( 'default.rowSet.search.submit' ) ?>
+            </button>
+        </div>
+    </fieldset>
+    <fieldset class="freeWord">
+        <legend onclick="$(this.parentNode).toggleClass('collapsed');"><?=
+            $this->translate( 'default.rowSet.freeWord.title' ) ?></legend>
+        <div class="collapsible">
+            <dl title="<?= $this->escapeHtmlAttr(
+                $this->translate( 'default.rowSet.freeWord.title' )
+            ) ?>">
+                <dt>
+                    <input type="text" name="freeWord"
+                           class="ui-controls-after"<?php if ( $store['freeWord'] ):
+                           ?> value="<?= $store['freeWord'] ?>"<?php endif ?> />
+                </dt>
+                <dd>
+                    <button type="submit" name="page" value="1">
+                        <?= $this->translate( 'default.rowSet.freeWord.submit' ) ?>
+
+                    </button>
+                </dd>
+            </dl>
+        </div>
+    </fieldset>
+
+<?= $this->content ?>

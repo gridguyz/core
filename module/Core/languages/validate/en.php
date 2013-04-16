@@ -1,0 +1,28 @@
+<?php
+
+return array(
+    'validate.alternate' => 'Alternate required',
+    'validate.between' => '\'%value%\' is not between \'%min%\' and \'%max%\' (%inclusive%)',
+    'validate.between.inclusive' => 'inclusive',
+    'validate.between.notInclusive' => 'not inclusive',
+    'validate.equal' => 'Doesn\'t match',
+    'validate.forbidden' => '\'%value%\' is forbidden',
+    'validate.inArray' => '\'%value%\' is not in the valid values',
+    'validate.invalidAlnum' => 'Only english and number characters allowed',
+    'validate.invalidAlpha' => 'Only english characters allowed',
+    'validate.invalidEmail' => 'Invalid email-address',
+    'validate.invalidInteger' => 'Invalid integer',
+    'validate.invalidNumeric' => 'Only number characters allowed',
+    'validate.invalidScalar' => 'Invalid scalar',
+    'validate.invalidUrl' => 'Invalid URL',
+    'validate.length.higher' => '\'%value%\'s length (%length%) is higher than the maximum %max%',
+    'validate.length.lower' => '\'%value%\'s length (%length%) is lower than the minimum %min%',
+    'validate.pattern' => '\'%value%\' does not match \'%pattern%\'',
+    'validate.required' => 'Required',
+    'validate.rpc.default' => 'Taken',
+    'validate.rpc.error' => 'Error',
+    'validate.rpc.returnFalse' => 'Taken',
+    'validate.than.equal' => 'or equal',
+    'validate.than.less' => 'Doesn\'t less',
+    'validate.than.more' => 'Doesn\'t more',
+);

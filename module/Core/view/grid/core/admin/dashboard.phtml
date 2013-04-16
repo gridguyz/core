@@ -1,0 +1,36 @@
+<?php
+/**
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$this->headTitle( $title = $this->translate(
+    'admin.dashboard.title',
+    'admin'
+) );
+?>
+
+<h1><?= $title ?></h1>
+<section class="innerPanels">
+<?php foreach ( $this->boxes as $box ): ?>
+    <?= $this->render( $box ); ?>
+<?php endforeach ?>
+
+</section>
+<section class="icons">
+<?php foreach ( $this->icons as $key => $icon ):
+    $icon   = (object) $icon;
+    $params = array_merge(
+        array( 'locale' => (string) $this->locale() ),
+        empty( $icon->params )
+            ? array()
+            : (array) $icon->params
+    ); ?>
+
+    <div class="icon-border">
+        <a class="icon" href="<?= $this->url( $icon->route, $params ) ?>">
+            <img alt="" class="image dashboard-<?= $key ?>" src="/images/common/blank.gif" />
+            <span class="label"><?= $this->translate( $icon->label, $icon->textDomain ); ?></span>
+        </a>
+    </div>
+<?php endforeach ?>
+
+</section>

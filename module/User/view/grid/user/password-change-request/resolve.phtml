@@ -1,0 +1,7 @@
+<?php $this->placeholder( 'content' )->captureStart(); ?>
+<div class="paragraph-like user password-change-request resolve">
+    <?= $this->form( $this->form, 'user' ) ?>
+
+</div>
+<?php $this->placeholder( 'content' )->captureEnd(); ?>
+<?= $this->metaContent( 'user.passwordChangeRequest', (string) $this->placeholder( 'content' ) ) ?>

@@ -1,0 +1,27 @@
+<?php
+
+return array(
+    'mail.form.template.bodyHtml' => 'Törzs (html)',
+    'mail.form.template.bodyText' => 'Törzs (egyszerű szöveg)',
+    'mail.form.template.clone.%s' => 'A sablon nem létezik a kért nyelven; <i>%s</i> változata lesz lemásolva.',
+    'mail.form.template.failed' => 'Sablon mentés sikertelen',
+    'mail.form.template.fromAddress' => 'Feladó címe',
+    'mail.form.template.fromName' => 'Feladó neve',
+    'mail.form.template.locale' => 'Nyelv',
+    'mail.form.template.subject' => 'Tárgy',
+    'mail.form.template.submit' => 'Sablon mentése',
+    'mail.form.template.success' => 'Sablon sikeresen mentve',
+    'mail.form.template.title.%s.%s' => 'Levél-sablon: <i>%s</i> szerkesztése <i>%s</i> nyelven',
+    'mail.list.column.actions.title' => 'Műveletek',
+    'mail.list.column.bodyHtml.title' => 'Törzs (html)',
+    'mail.list.column.bodyText.title' => 'Törzs (szöveg)',
+    'mail.list.column.fromAddress.title' => 'Feladó címe',
+    'mail.list.column.fromName.title' => 'Feladó neve',
+    'mail.list.column.locale.title' => 'Nyelv',
+    'mail.list.column.name.title' => 'Név',
+    'mail.list.title' => 'Levél-sablonok',
+    'mail.template.user.admin-create' => 'Admin: új felhasználó',
+    'mail.template.user.forgotten-password' => 'Elfelejtett jelszó',
+    'mail.template.user.login-with' => 'Bejelentkezés ezzel ...',
+    'mail.template.user.register' => 'Regisztráció',
+);

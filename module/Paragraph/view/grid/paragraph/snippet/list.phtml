@@ -1,0 +1,54 @@
+<?php
+/**
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$this->headTitle( $title = $this->translate( 'paragraph.snippet.list.title', 'paragraph' ) );
+$view   = $this;
+$rowSet = $this->rowSet();
+
+if ( ! $this->format ): ?>
+<h1><?= $title ?></h1>
+<?php endif ?>
+<?= $this->rowSet( $this->paginator, $rowSet::FLAG_LAYOUT_AJAX )
+         ->setColumnTranslatePrefix( 'paragraph.snippet.list.column' )
+         ->setColumnTranslatePostfix( 'title' )
+         ->setColumnTranslateTextDomain( 'paragraph' )
+         ->setPage( $this->page )
+         ->setColumns( array(
+              'name'            => $rowSet::STRING,
+              'actions'         => function ( $row ) use ( $view ) {
+                $view->placeholder( 'listActions' )->set( '' );
+                $view->placeholder( 'listActions' )->captureStart();
+?>
+<?php if ( $this->isAllowed( 'snippet', 'edit' ) ): ?>
+    <a class="action-button edit"
+       title="<?= $view->translate( 'default.edit' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/snippet/edit/<?= $row->name ?>">
+    </a>
+<?php endif ?>
+<?php if ( $this->isAllowed( 'snippet', 'delete' ) ): ?>
+    <a class="action-button delete"
+       title="<?= $view->translate( 'default.delete' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/snippet/delete/<?= $row->name ?>"
+       onclick="return js.require('js.ui.dialog').confirm(this);">
+    </a>
+<?php endif ?>
+<?php
+                $view->placeholder( 'listActions' )->captureEnd();
+                return (string) $view->placeholder( 'listActions' );
+              },
+          ) )
+         ->render( $this->format );
+
+if ( ! $this->format && $this->isAllowed( 'snippet', 'create' ) ): ?>
+<div class="more-links">
+    <a class="button-appearance"
+       href="/app/<?= $view->locale() ?>/admin/snippet/create">
+        <?= $view->translate( 'default.createNew' ); ?>
+    </a>
+    <a class="button-appearance"
+       href="/app/<?= $view->locale() ?>/admin/snippet/upload">
+        <?= $view->translate( 'default.upload' ); ?>
+    </a>
+</div>
+<?php endif ?>

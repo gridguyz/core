@@ -1,0 +1,49 @@
+<?php
+
+$this->headLink()
+     ->appendStylesheet( '/styles/modules/Menu/editor.css', 'all' );
+
+$this->headTitle( $title = $this->translate( 'admin.navTop.menu', 'admin' ) );
+
+?>
+<h1><?= $this->escapeHtml( $title ); ?></h1>
+<div class="menu-editor menu-editor-container">
+    <div class="menu-editor-jstree"
+         data-js-type="js.ui.jsTreeAll"
+         data-js-tree-buttonbar-create="true"
+         data-js-tree-buttonbar-edit="true"
+         data-js-tree-id-prefix="menu-"
+         data-js-tree-types="<?= implode( ',', $this->types ); ?>"
+         data-js-tree-type-labels="menu.type.%type%"
+         data-js-tree-icons-uri="/images/modules/Menu/icons/%type%.png"
+         data-js-tree-move-rpc-method="<?= $this->escapeHtmlAttr( 'Grid\Menu\Model\Menu\Rpc::moveNode' ) ?>"
+         data-js-tree-rename-rpc-method="<?= $this->escapeHtmlAttr( 'Grid\Menu\Model\Menu\Rpc::renameNode' ) ?>"
+         data-js-tree-delete-rpc-method="<?= $this->escapeHtmlAttr( 'Grid\Menu\Model\Menu\Rpc::deleteNode' ) ?>"
+         data-js-tree-edit-form-uri="/app/<?= $this->adminLocale(); ?>/admin/menu/edit/%nodeId%?adminLocale=<?= $this->locale ?>"
+         data-js-tree-edit-form-target="menu-editor-frame"
+         data-js-tree-create-root-uri="/app/<?= $this->adminLocale(); ?>/admin/menu/create/%type%?adminLocale=<?= $this->locale ?>"
+         data-js-tree-create-form-uri="/app/<?= $this->adminLocale(); ?>/admin/menu/create/%type%/%parentId%?adminLocale=<?= $this->locale ?>"
+         data-js-tree-create-form-target="menu-editor-frame">
+        <ul>
+<?php
+$list = new \Zork\Iterator\DepthList( $this->forest );
+$list->runin( function ( $menu ) { ?>
+
+            <li id="menu-<?= $menu->id ?>"
+                data-js-tree-id="<?= $menu->id ?>"
+                data-js-tree-type="<?= $menu->type ?>">
+                <a class="jstree-drop jstree-draggable"
+                   href="<?= $menu->uri ?>"><?= $menu->label ?: '#' ?></a>
+                <ul>
+<?php }, function () { ?>
+
+                </ul>
+            </li>
+<?php } ); ?>
+
+        </ul>
+    </div>
+    <iframe id="menu-editor-frame" name="menu-editor-frame"
+            class="menu-editor-frame" src="javascript:void(0)"
+            allowtransparency="true" frameborder="0"></iframe>
+</div>

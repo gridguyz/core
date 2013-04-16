@@ -1,0 +1,10 @@
+<?php
+
+$auth   = new \Zend\Authentication\AuthenticationService();
+$which  = $auth->hasIdentity() ? 'logout' : 'login';
+
+?>
+<?= $this->render( 'grid/user/authentication/' . $which, array(
+    'form'      => $this->paragraph->getForm( $which ),
+    'display'   => $this->paragraph->getDisplay(),
+) ) ?>

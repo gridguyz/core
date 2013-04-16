@@ -1,0 +1,36 @@
+<?php $alt = $this->escapeHtmlAttr( $this->paragraph->alternate );
+      $url = $this->escapeHtmlAttr( $this->paragraph->url ); ?>
+<figure itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+    <meta itemprop="name" content="<?= $alt ?>" />
+    <a class="image-paragraph-link"
+       name="image-paragraph-<?= $this->paragraph->id ?>"
+<?php if ( $this->paragraph->linkTo ): ?>
+
+       href="<?= $this->escapeHtmlAttr( $this->paragraph->linkTo ) ?>"
+<?php if ( $this->paragraph->linkTarget ): ?>
+
+       target="<?= $this->escapeHtmlAttr( $this->paragraph->linkTarget ) ?>"
+<?php endif ?>
+<?php endif ?>
+<?php if ( $this->paragraph->lightBox ): ?>
+
+       data-js-type="js.paragraph.image"
+<?php endif ?>
+
+       data-js-href="<?= $url ?>"
+       data-js-html="<?= $this->escapeHtmlAttr( $this->paragraph->caption ) ?>">
+        <img alt="<?= $alt ?>"
+             title="<?= $alt ?>"
+             itemprop="thumbnail thumbnailUrl image"
+             src="<?= $this->thumbnail( $this->paragraph->url, array(
+                        'method'    => $this->paragraph->method,
+                        'width'     => $this->paragraph->width,
+                        'height'    => $this->paragraph->height,
+                        'bgColor'   => ltrim( $this->paragraph->bgColor, '#' ),
+                    ) ) ?>" />
+    </a>
+    <meta itemprop="contentUrl" content="<?= $url ?>" />
+    <figcaption itemprop="caption description"<?php
+        if ( empty( $this->paragraph->caption ) ): ?> class="empty"<?php
+        endif ?>><?= $this->paragraph->caption ?></figcaption>
+</figure>

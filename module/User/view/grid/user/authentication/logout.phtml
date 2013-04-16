@@ -1,0 +1,51 @@
+<?php
+
+$this->headLink()
+     ->appendStylesheet( '/styles/modules/User/login.css', 'all' );
+
+$auth       = new \Zend\Authentication\AuthenticationService();
+$identity   = $auth->getIdentity();
+
+?>
+
+<div class="user-authentication user-logout">
+    <h3><?= $this->translate( 'user.welcome', 'user' ) ?></h3>
+    <p>
+        <a class="linkToUser" href="<?=
+            $this->url( 'Grid\User\Datasheet\View', array(
+                'locale'        => (string) $this->locale(),
+                'displayName'   => $identity->displayName,
+            ) ) ?>"><?= $identity->displayName ?></a>
+<?php if ( ! empty( $this->display['adminUiLink'] ) &&
+           $this->isAllowed( 'admin', 'ui' ) ): ?>
+
+        <a class="linkToAdminUi" href="<?=
+            $this->url( 'Grid\Core\Admin\Dashboard', array(
+                'locale' => $identity->locale,
+            ), array(
+                'query' => array( 'adminLocale' => (string) $this->locale() ),
+            ) ) ?>"><?=
+            $this->translate( 'user.form.logout.toAdminUI', 'user' )
+           ?></a>
+<?php endif ?>
+
+<?php if ( ! empty( $this->display['centralWelcomeLink'] ) &&
+           $this->isAllowed( 'central', 'welcome' ) ): ?>
+
+        <a class="linkToCentralWelcome" href="<?=
+            $this->url( 'Grid\MultisiteCentral\Welcome\Index', array(
+                'locale' => (string) $this->locale(),
+            ) ) ?>"><?=
+            $this->translate( 'central.welcome', 'central' )
+           ?></a>
+<?php endif ?>
+
+        <br />
+        <span class="containerForEmail">
+            <?= $this->escapeHtml( $identity->email ) ?>
+        </span>
+    </p>
+
+    <?= $this->form( $this->form, 'user' ) ?>
+
+</div>

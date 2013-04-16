@@ -1,0 +1,15 @@
+<p class="tags">
+    <!-- span class="label"><?= $this->translate( 'paragraph.tags.label',
+                                                  'paragraph' ) ?>:</span -->
+<?php $first = true;
+foreach ( (array) $this->paragraph->renderedLocaleTags as $tag ):
+if ( $first ):
+    $first = false;
+else:
+?><span class="tag-separator">,</span><?php endif ?>
+
+    <a href="/app/<?= $this->locale() ?>/tag/list/all/<?=
+       $this->escapeHtmlAttr( rawurlencode( $tag ) ) ?>"
+       rel="tag" class="tag"><?= $this->escapeHtml( $tag ) ?></a><?php endforeach ?>
+
+</p>

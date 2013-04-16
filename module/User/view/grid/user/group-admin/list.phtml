@@ -1,0 +1,65 @@
+<?php
+/**
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$this->headTitle( $title = $this->translate( 'user.list.group.title', 'user' ) );
+$view   = $this;
+$rowSet = $this->rowSet();
+
+if ( ! $this->format ): ?>
+<h1><?= $title ?></h1>
+<?php endif ?>
+<?= $this->rowSet( $this->paginator, $rowSet::FLAG_LAYOUT_ALL )
+         ->setColumnTranslatePrefix( 'user.list.group.column' )
+         ->setColumnTranslatePostfix( 'title' )
+         ->setColumnTranslateTextDomain( 'user' )
+         ->setPage( $this->page )
+         ->setColumns( array(
+              'name'        => $rowSet::STRING,
+              'predefined'  => $rowSet::BOOL,
+              'default'     => $rowSet::BOOL,
+              'actions'     => function ( $row ) use ( $view ) {
+                $view->placeholder( 'listActions' )->set( '' );
+                $view->placeholder( 'listActions' )->captureStart();
+?>
+<?php if ( $this->isAllowed( $row, 'edit' ) ): ?>
+    <a class="action-button edit"
+       title="<?= $view->translate( 'default.edit' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/user-group/edit/<?= $row->id ?>">
+    </a>
+<?php if ( ! $row->default && ! $row->predefined ): ?>
+    <a class="action-button set-default"
+       title="<?= $view->translate( 'default.setDefault' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/user-group/set-default/<?= $row->id ?>">
+    </a>
+<?php endif ?>
+<?php endif ?>
+<?php if ( ! $row->predefined && $this->isAllowed( $row, 'grant' ) ): ?>
+    <a class="action-button grant"
+       title="<?= $view->translate( 'user.action.grant', 'user' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/user-group/grant/<?= $row->id ?>">
+    </a>
+<?php endif ?>
+<?php if ( ! $row->predefined && ! $row->default &&
+           $this->isAllowed( $row, 'delete' ) ): ?>
+    <a class="action-button delete"
+       title="<?= $view->translate( 'default.delete' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/user-group/delete/<?= $row->id ?>"
+       onclick="return js.require('js.ui.dialog').confirm(this);">
+    </a>
+<?php endif ?>
+<?php
+                $view->placeholder( 'listActions' )->captureEnd();
+                return (string) $view->placeholder( 'listActions' );
+              },
+          ) )
+         ->render( $this->format );
+
+if ( ! $this->format && $this->isAllowed( 'user.group', 'create' ) ): ?>
+<div class="more-links">
+    <a class="button-appearance"
+       href="/app/<?= $view->locale() ?>/admin/user-group/create">
+        <?= $view->translate( 'default.createNew' ); ?>
+    </a>
+</div>
+<?php endif ?>

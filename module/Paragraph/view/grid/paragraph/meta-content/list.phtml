@@ -1,0 +1,42 @@
+<?php
+/**
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$this->headTitle( $title = $this->translate( 'paragraph.metaContent.list.title', 'paragraph' ) );
+$view   = $this;
+$rowSet = $this->rowSet();
+
+if ( ! $this->format ): ?>
+<h1><?= $title ?></h1>
+<?php endif ?>
+<?= $this->rowSet( $this->paginator, $rowSet::FLAG_LAYOUT_ALL )
+         ->setColumnTranslatePrefix( 'paragraph.content.list.column' )
+         ->setColumnTranslatePostfix( 'title' )
+         ->setColumnTranslateTextDomain( 'paragraph' )
+         ->setPage( $this->page )
+         ->setHiddenColumns( array( 'id', 'publishedFrom', 'publishedTo' ) )
+         ->setColumns( array(
+              'id'              => $rowSet::INT,
+              'name'            => $rowSet->column( $rowSet::TRANSLATE,
+                                                    'paragraph.metaContent',
+                                                    '', 'paragraph' ),
+              'actions'         => function ( $row ) use ( $view ) {
+                $view->placeholder( 'listActions' )->set( '' );
+                $view->placeholder( 'listActions' )->captureStart();
+?>
+    <a class="action-button view"
+       title="<?= $view->translate( 'default.view', 'default' ) ?>"
+       href="/app/<?= $view->adminLocale() ?>/paragraph/render/<?= $row->id ?>">
+    </a>
+<?php if ( $row->isEditable() ): ?>
+    <a class="action-button edit"
+       title="<?= $view->translate( 'default.edit' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/meta-content/edit/<?= $row->id ?>">
+    </a>
+<?php endif ?>
+<?php
+                $view->placeholder( 'listActions' )->captureEnd();
+                return (string) $view->placeholder( 'listActions' );
+              },
+          ) )
+         ->render( $this->format );

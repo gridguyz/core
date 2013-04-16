@@ -1,0 +1,156 @@
+<?php
+
+$this->headLink()
+     ->appendStylesheet( '/styles/modules/User/login.css', 'all' );
+
+$nav    = array();
+$config = $this->config( 'user' );
+
+if ( ! empty( $this->display['registerLink'] ) &&
+     ! empty( $config->features->registrationEnabled ) )
+{
+    $nav[] = array(
+        'class' => 'register',
+        'text'  => $this->translate( 'user.form.register.title', 'user' ),
+        'attrs' => array(
+            'href' => $this->url( 'Grid\User\Manage\Register', array(
+                            'locale' => (string) $this->locale(),
+                        ) ),
+        ),
+    );
+}
+
+if ( ! empty( $this->display['passwordRequestLink'] ) )
+{
+    $nav[] = array(
+        'class' => 'password-request',
+        'text'  => $this->translate( 'user.form.passwordRequest.title', 'user' ),
+        'attrs' => array(
+            'href' => $this->url( 'Grid\User\PasswordChangeRequest\Create', array(
+                            'locale' => (string) $this->locale(),
+                        ) ),
+        ),
+    );
+}
+
+if ( ! empty( $this->display['loginWithLink'] ) &&
+     ! empty( $config->features->loginWith ) &&
+     0 < count( $config->features->loginWith ) )
+{
+    $loginWith = array();
+
+    foreach ( $config->features->loginWith as $label => $link )
+    {
+        switch ( true )
+        {
+            case null === $link:
+                continue 2;
+
+            case is_scalar( $link ):
+
+                $link = str_replace(
+                    array( '%locale%', '%returnUri%' ),
+                    array( (string) $this->locale(),
+                           urlencode(
+                               $this->appService( 'Request' )
+                                    ->getRequestUri()
+                           ) ),
+                    (string) $link
+                );
+                break;
+
+            case is_object( $link ):
+
+                if ( is_callable( array( $link, 'toArray' ) ) )
+                {
+                    $link = $link->toArray();
+                }
+                else
+                {
+                    $link = (array) $link;
+                }
+
+            case is_array( $link ):
+
+                if ( ( isset( $link['enabled'] ) && ! $link['enabled'] ) || empty( $link['route'] ) )
+                {
+                    continue 2;
+                }
+
+                if ( empty( $link['params'] ) )
+                {
+                    $link['params'] = array();
+                }
+
+                if ( empty( $link['options'] ) )
+                {
+                    $link['options'] = array();
+                }
+
+                $link = $this->url(
+                    (string) $link['route'],
+                    array_replace_recursive(
+                        array(
+                            'locale' => (string) $this->locale(),
+                        ),
+                        (array) $link['params']
+                    ),
+                    array_replace_recursive(
+                        array(
+                            'query' => array(
+                                'returnUri' => urlencode(
+                                    $this->appService( 'Request' )
+                                         ->getRequestUri()
+                                ),
+                            ),
+                        ),
+                        (array) $link['options']
+                    )
+                );
+                break;
+
+            default:
+                continue 2;
+        }
+
+        $loginWith[$label] = $link;
+    }
+
+    if ( ! empty( $loginWith ) )
+    {
+        $this->headLink()
+             ->appendStylesheet( '/styles/modules/User/loginWith.css', 'all' );
+
+        $nav[] = array(
+            'class' => 'login-with',
+            'text'  => $this->translate( 'user.loginWith.title', 'user' ),
+            'attrs' => array(
+                'href'              => '#',
+                'data-js-type'      => 'js.ui.loginWith',
+                'data-js-loginwith' => json_encode( $loginWith ),
+            ),
+        );
+    }
+}
+
+?>
+
+<div class="user-authentication user-login">
+    <h3><?= $this->translate( 'user.form.login.title', 'user' ) ?></h3>
+    <?= $this->form( $this->form, 'user' ) ?>
+
+<?php if ( ! empty( $nav ) ): ?>
+
+    <ul class="navigation">
+<?php foreach ( $nav as $link ): ?>
+
+        <li class="<?= $link['class'] ?>">
+            <?= $this->htmlTag( 'a', $link['text'], $link['attrs'] ) ?>
+
+        </li>
+<?php endforeach ?>
+
+    </ul>
+<?php endif ?>
+
+</div>

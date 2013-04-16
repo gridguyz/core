@@ -1,0 +1,80 @@
+<?php
+
+use Zork\Stdlib\Message;
+
+$fbLocaleAliases = array(
+    'en' => 'en_US',
+    'de' => 'de_DE',
+    'fr' => 'fr_FR',
+    'es' => 'es_ES',
+    'hu' => 'hu_HU',
+);
+
+$this->headDefaults();
+$siteInfo = $this->siteInfo();
+$uploads  = '/uploads/' . $siteInfo->getSchema();
+
+if ( ! empty( $this->middleLayout ) &&
+     $this->middleLayout instanceof \Zork\Mvc\Controller\Plugin\MiddleLayoutInterface )
+{
+    $content = $this->render( $this->middleLayout->getTemplate(), array_merge(
+        $this->middleLayout->getVariables(),
+        array( 'content' => $this->content )
+    ) );
+}
+else
+{
+    $content = $this->content;
+}
+
+$locale = (string) $this->locale();
+
+if ( ! empty( $fbLocaleAliases[$locale] ) )
+{
+    $locale = $fbLocaleAliases[$locale];
+}
+
+$this->openGraph()
+     ->append( array(
+         'og:locale'    => $locale,
+         'og:site_name' => $this->headTitle()->slice( 0, 1 ),
+     ) );
+
+?>
+<?= $this->doctype() ?>
+
+<html lang="<?= $this->escapeHtmlAttr( $this->locale()->toIso() ) ?>">
+    <head prefix="<?= $this->escapeHtmlAttr( $this->openGraph()->getPrefixAttribute() ) ?>">
+        <meta charset="utf-8" />
+        <?= $this->headTitle() ?>
+
+        <?= $this->headMeta()
+                 ->appendName( 'zork:locale',     (string) $this->locale()     )
+                 ->appendName( 'zork:userlocale', (string) $this->userLocale() )
+                 ->appendName( 'zork:uploads',    $uploads                     )
+                 ->appendName( 'zork:domain',     $siteInfo->getDomain()       )
+        ?>
+
+        <?= $this->headLink() ?>
+
+        <?= $this->headScript() ?>
+
+    </head>
+    <body>
+        <?= $content ?>
+
+        <?= $this->inlineScript() ?>
+
+        <?php foreach ( $this->messenger() as $message ): ?>
+            <div class="ui-helper-hidden" data-js-type="<?=
+                    Message::LEVEL_INFO === $message->getLevel()
+                    ? 'zork.ui.message' : 'zork.ui.dialog'; ?>">
+                <?php if ( $message->hasTranslations() ): ?>
+                    <?= $this->translate( $message->getMessage(), $message->getTextDomain() ) ?>
+                <?php else: ?>
+                    <?= $message->getMessage() ?>
+                <?php endif ?>
+            </div>
+        <?php endforeach ?>
+    </body>
+</html>

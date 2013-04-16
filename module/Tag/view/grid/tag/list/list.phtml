@@ -1,0 +1,43 @@
+<?php
+
+/* @var $paginator \Zend\Paginator\Paginator */
+$paginator = $this->paginator;
+
+$paginator->setPageRange( 7 )
+          ->setItemCountPerPage( 20 )
+          ->setCurrentPageNumber( $this->page );
+
+?>
+<div class="paragraph-like Tag list">
+
+    <?= $paginationControl = $this->paginationControl(
+        $paginator,
+        'Sliding',
+        'paginator/uriPattern',
+        array(
+            'uriPattern' => '/app/' . $this->locale()
+                          . '/tag/list/' . $this->mode
+                          . '/%d/' . strtr(
+                                implode( '/', array_map(
+                                    'rawurlencode',
+                                    $this->tags
+                                ) ),
+                                array(
+                                    '%' => '%%',
+                                )
+                            )
+        )
+    ) ?>
+
+    <?php if ( ! $paginator->getTotalItemCount() ): ?>
+
+        <p class="info"><?= $this->translate( 'tag.content.list.empty' ) ?></p>
+    <?php else: ?>
+        <?= $this->render( 'grid/tag/contentList', array(
+            'paginator' => $paginator,
+        ) ) ?>
+    <?php endif ?>
+
+    <?= $paginationControl ?>
+
+</div>

@@ -1,0 +1,31 @@
+<?php
+
+$this->headLink()
+     ->appendStylesheet( '/styles/modules/Menu/edit.css', 'all' );
+
+$this->headTitle( $title = $this->translate( 'menu.form.edit.title', 'menu' ) );
+
+?>
+<?php if ( ! empty( $this->success ) ): ?>
+<div data-js-type="js.ui.jsTreeAll.command"
+     data-js-tree-command="lastEdit"
+     data-js-tree-params="<?= $this->escapeHtmlAttr( \Zend\Json\Json::encode( array(
+         'id'       => $this->menu->id,
+         'type'     => $this->menu->type,
+         'label'    => $this->menu->label,
+     ) ) ) ?>">&nbsp;</div>
+<?php endif ?>
+
+<div class="page menu-edit">
+    <div class="menu-edit-box ui-corner-all">
+        <h3 class="ui-corner-all">
+            <?= $title ?>:
+            <span class="label"><?= $this->menu->label ?></span>
+        </h3>
+        <dl>
+            <dt><?= $this->translate( 'menu.form.type', 'menu' ) ?></dt>
+            <dd class="type"><?= $this->translate( 'menu.type.' . $this->menu->type, 'menu' ) ?></dd>
+        </dl>
+        <?= $this->form( $this->form, 'menu' ) ?>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+<?php
+
+$base = $this->uploads( 'snippets/' );
+
+foreach ( $this->paragraph->snippets as $snippet )
+{
+    switch ( strrchr( $snippet, '.' ) )
+    {
+        case '.js':
+
+            $this->headScript()
+                 ->appendFile( $base . $snippet );
+
+            break;
+
+        case '.css':
+
+            $this->headLink()
+                 ->appendStylesheet( $base . $snippet, 'all' );
+
+            break;
+
+        default:
+
+            echo '<!-- Unknown snippet type: ',
+                 $snippet, ' -->', PHP_EOL;
+
+            break;
+    }
+}
+
+echo $this->paragraph->code;

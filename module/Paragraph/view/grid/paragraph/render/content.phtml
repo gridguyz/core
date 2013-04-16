@@ -1,0 +1,60 @@
+<?php
+
+use Zork\Stdlib\String;
+use Zork\View\Helper\OpenGraph;
+
+$this->headTitle( $this->paragraph->title );
+
+if ( ! empty( $this->paragraph->metaRobots ) )
+{
+    $this->headMeta()
+         ->setName( 'robots', $this->paragraph->metaRobots );
+}
+
+if ( ! empty( $this->paragraph->metaKeywords ) )
+{
+    $this->headMeta()
+         ->setName( 'keywords', $this->paragraph->metaKeywords );
+}
+
+if ( ! empty( $this->paragraph->metaDescription ) )
+{
+    $this->headMeta()
+         ->setName( 'description', $this->paragraph->metaDescription );
+}
+
+$this->openGraph( OpenGraph::TYPE_ARTICLE )
+     ->append( array(
+         'og:url'       => 'http://'
+                         . $this->domain()
+                         . $this->paragraph->getUri( (string) $this->locale() ),
+         'og:title'     => $this->paragraph->title,
+     ) );
+
+if ( ! empty( $this->paragraph->leadImage ) )
+{
+    $this->openGraph()
+         ->append(
+               'og:image',
+               'http://' . $this->domain() . $this->paragraph->leadImage
+           );
+}
+
+if ( ! empty( $this->paragraph->leadText ) )
+{
+    $this->openGraph()
+         ->append( 'og:description', String::stripHtml( $this->paragraph->leadText ) );
+}
+
+$this->openGraph()
+     ->append( array(
+         'article:published_time'   => (string) ( $this->paragraph->publishedFrom
+                                               ?: $this->paragraph->created ),
+         'article:modified_time'    => (string) ( $this->paragraph->lastModified ),
+     ) );
+
+foreach ( (array) $this->paragraph->tags as $tag )
+{
+    $this->openGraph()
+         ->append( 'article:tag', $tag );
+}

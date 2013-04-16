@@ -1,0 +1,16 @@
+<header>
+    <img class="lead-image"
+<?php if ( ! empty( $this->paragraph->renderedImage ) ): ?>
+         src="<?= $this->thumbnail( $this->paragraph->renderedImage, array(
+                                        'method'    => 'fit',
+                                        'width'     => 100,
+                                        'height'    => 100,
+                                    ) ) ?>"
+<?php else: ?>
+         style="display: none;"
+<?php endif ?>
+         />
+    <div class="lead-text">
+        <?= $this->paragraph->renderedText ?>
+    </div>
+</header>

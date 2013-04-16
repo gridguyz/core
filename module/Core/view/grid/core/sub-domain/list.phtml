@@ -1,0 +1,68 @@
+<?php
+/**
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$this->headTitle( $title = $this->translate( 'subDomain.list.title', 'subDomain' ) );
+$view   = $this;
+$rowSet = $this->rowSet();
+
+/* @var $siteInfo \Zork\Db\SiteInfo */
+$siteInfo = $this->appService( 'SiteInfo' );
+
+if ( ! $this->format ): ?>
+<h1><?= $title ?></h1>
+<?php endif ?>
+<?= $this->rowSet( $this->paginator, $rowSet::FLAG_LAYOUT_ALL )
+         ->setColumnTranslatePrefix( 'subDomain.list.column' )
+         ->setColumnTranslatePostfix( 'title' )
+         ->setColumnTranslateTextDomain( 'subDomain' )
+         ->setPage( $this->page )
+         ->setNotSetLabels( array(
+             'subdomain'   => 'subDomain.list.column.subdomain.default',
+         ) )
+         ->setEmptyLabels( array(
+             'subdomain'   => 'subDomain.list.column.subdomain.default',
+         ) )
+         ->setColumns( array(
+              'subdomain'           => $rowSet::STRING,
+              'locale'              => $rowSet::LOCALE,
+              'defaultLayoutName'   => $rowSet::STRING,
+              'defaultContentName'  => $rowSet::STRING,
+              'actions'             => function ( $row ) use ( $view, $siteInfo ) {
+                $view->placeholder( 'listActions' )->set( '' );
+                $view->placeholder( 'listActions' )->captureStart();
+?>
+    <a class="action-button view" target="_blank"
+       title="<?= $view->translate( 'default.view' ) ?>"
+       href="http://<?= $row->subdomain,
+                        $row->subdomain ? '.' : '',
+                        $siteInfo->getDomain() ?>">
+    </a>
+<?php if ( $this->isAllowed( 'sub-domain', 'edit' ) ): ?>
+    <a class="action-button edit"
+       title="<?= $view->translate( 'default.edit' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/sub-domain/edit/<?= $row->id ?>">
+    </a>
+<?php endif ?>
+<?php if ( $row->subdomain && $this->isAllowed( 'sub-domain', 'delete' ) ): ?>
+    <a class="action-button delete"
+       title="<?= $view->translate( 'default.delete' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/sub-domain/delete/<?= $row->id ?>"
+       onclick="return js.require('js.ui.dialog').confirm(this);">
+    </a>
+<?php endif ?>
+<?php
+                $view->placeholder( 'listActions' )->captureEnd();
+                return (string) $view->placeholder( 'listActions' );
+              },
+          ) )
+         ->render( $this->format );
+
+if ( ! $this->format && $this->isAllowed( 'sub-domain', 'create' ) ): ?>
+<div class="more-links">
+    <a class="button-appearance"
+       href="/app/<?= $view->locale() ?>/admin/sub-domain/create">
+        <?= $view->translate( 'default.createNew' ); ?>
+    </a>
+</div>
+<?php endif ?>

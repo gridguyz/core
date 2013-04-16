@@ -1,0 +1,8 @@
+<?php if ( null !== $this->success ): ?>
+    <?= $this->translate(
+        'paragraph.save.' . ( $this->success ? 'success' : 'failed' ),
+        'paragraph'
+    ) ?>
+<?php else: ?>
+    <?= $this->form( $this->form, 'paragraph' ); ?>
+<?php endif ?>

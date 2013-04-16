@@ -1,0 +1,26 @@
+<?php
+
+return array(
+    'subDomain.action.delete.failed' => 'Delete failed',
+    'subDomain.action.delete.success' => 'Delete success',
+    'subDomain.form.defaultContent' => 'Default page',
+    'subDomain.form.defaultLayout' => 'Default layout',
+    'subDomain.form.failed' => 'Save failed',
+    'subDomain.form.locale' => 'Language',
+    'subDomain.form.subdomain' => 'Sub-domain',
+    'subDomain.form.submit' => 'Save',
+    'subDomain.form.success' => 'Save successful',
+    'subDomain.form.title' => 'Sub-domain',
+    'subDomain.list.column.actions.title' => 'Actions',
+    'subDomain.list.column.defaultContentName.title' => 'Default page',
+    'subDomain.list.column.defaultLayoutName.title' => 'Default layout',
+    'subDomain.list.column.locale.title' => 'Language',
+    'subDomain.list.column.subdomain.title' => 'Sub-domain',
+    'subDomain.list.column.subdomain.default' => 'Default',
+    'subDomain.list.title' => 'Sub-domains',
+    'subDomain.resource' => 'Sub-domains',
+    'subDomain.privilege.create' => 'Create sub-domain',
+    'subDomain.privilege.delete' => 'Delete sub-domains',
+    'subDomain.privilege.edit' => 'Edit sub-domains',
+    'subDomain.privilege.view' => 'View sub-domains',
+);

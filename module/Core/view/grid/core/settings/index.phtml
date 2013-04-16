@@ -1,0 +1,20 @@
+<?php
+/**
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$this->headTitle( $title = $this->translate(
+    'admin.navTop.settings',
+    'admin'
+) );
+
+$this->headTitle( $subTitle = $this->translate(
+    'admin.navTop.settings.' . lcfirst( $this->name ),
+    'admin'
+) );
+?>
+
+<h1><?= $title ?></h1>
+<div class="page">
+    <h3><?= $subTitle ?></h3>
+    <?= $this->form( $this->form, $this->textDomain ) ?>
+</div>

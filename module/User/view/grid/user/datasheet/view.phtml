@@ -1,0 +1,116 @@
+<?php
+
+use Zork\View\Helper\OpenGraph;
+
+$this->headTitle( $this->user->displayName );
+
+$this->headLink()
+     ->appendStylesheet( '/styles/modules/User/view.css', 'all' );
+
+$this->openGraph( OpenGraph::TYPE_PROFILE )
+     ->append( array(
+         'og:url'           => 'http://'
+                             . $this->domain()
+                             . $this->user->getUri( (string) $this->locale() ),
+         'og:title'         => $this->user->displayName,
+         'og:description'   => $this->translate( 'user.view.title', 'user' ),
+     ) );
+
+if ( ! empty( $this->user->avatar ) )
+{
+    $this->openGraph()
+         ->append(
+               'og:image',
+               'http://' . $this->domain() . $this->user->avatar
+           );
+}
+
+$this->openGraph()
+     ->append( array(
+         'profile:username' => $this->user->displayName,
+     ) );
+
+$this->placeholder( 'content' )->captureStart();
+
+?><div class="paragraph-like User view">
+<?php if ( $this->edit || $this->delete || $this->password ): ?>
+
+    <ul class="actions">
+<?php if ( $this->edit ): ?>
+
+        <li>
+            <a href="<?= $this->url( 'Grid\User\Datasheet\Edit', array(
+                'locale'        => (string) $this->locale(),
+                'displayName'   => $this->user->displayName,
+            ) ) ?>"><?= $this->translate( 'default.edit' ) ?></a>
+        </li>
+<?php endif ?>
+<?php if ( $this->password ): ?>
+
+        <li>
+            <a href="<?= $this->url( 'Grid\User\Datasheet\Password', array(
+                'locale'        => (string) $this->locale(),
+                'displayName'   => $this->user->displayName,
+            ) ) ?>"><?= $this->translate(
+                'user.form.passwordChange.title', 'user'
+            ); ?></a>
+        </li>
+<?php endif ?>
+<?php if ( $this->delete ): ?>
+
+        <li>
+            <a href="<?= $this->url( 'Grid\User\Datasheet\Delete', array(
+                'locale'        => (string) $this->locale(),
+                'displayName'   => $this->user->displayName,
+            ) ) ?>" onclick="return js.require('js.ui.dialog').confirm(this);"><?=
+                $this->translate( 'default.delete' ) ?></a>
+        </li>
+<?php endif ?>
+
+        </ul>
+<?php endif ?>
+<?php if ( ! empty( $this->user->avatar ) ): ?>
+
+    <p class="avatar">
+        <img alt="avatar" src="<?=
+             $this->thumbnail( $this->user->avatar ) ?>" />
+    </p>
+<?php endif ?>
+
+    <div class="textual">
+        <h3>
+            <span class="displayName"><?= $this->user->displayName ?></span>
+            <span class="bracket">(</span><span class="groupName"><?=
+                  $this->user->group->name ?></span><span class="bracket">)</span>
+        </h3>
+        <p class="locale">
+            <?= $this->translate( 'locale.sub.' . $this->user->locale, 'locale' ) ?>
+
+        </p>
+        <p class="state">
+            <?php
+                switch ( true )
+                {
+                    case $this->user->isActive():
+                        echo $this->translate( 'user.state.active', 'user' );
+                        break;
+
+                    case $this->user->isInactive():
+                        echo $this->translate( 'user.state.inactive', 'user' );
+                        break;
+
+                    case $this->user->isBanned():
+                        echo $this->translate( 'user.state.banned', 'user' );
+                        break;
+
+                    default:
+                        echo '###';
+                        break;
+                }
+            ?>
+
+        </p>
+    </div>
+</div>
+<?php $this->placeholder( 'content' )->captureEnd(); ?>
+<?= $this->metaContent( 'user.datasheet', (string) $this->placeholder( 'content' ) ) ?>

@@ -1,0 +1,28 @@
+<?php
+
+return array(
+    'uri.action.delete.failed' => 'Delete failed',
+    'uri.action.delete.success' => 'Delete successful',
+    'uri.action.move.failed' => 'Move failed',
+    'uri.action.move.success' => 'Move successful',
+    'uri.form.content' => 'Content',
+    'uri.form.failed' => 'Save failed',
+    'uri.form.locale' => 'Language',
+    'uri.form.subdomain' => 'Sub-domain',
+    'uri.form.submit' => 'Save',
+    'uri.form.success' => 'Save successful',
+    'uri.form.title' => 'SEO-friendly url',
+    'uri.form.uri' => 'Url',
+    'uri.list.column.actions.title' => 'Actions',
+    'uri.list.column.contentName.title' => 'Content',
+    'uri.list.column.default.title' => 'Default',
+    'uri.list.column.locale.title' => 'Language',
+    'uri.list.column.subdomain.title' => 'Sub-domain',
+    'uri.list.column.uri.title' => 'Url',
+    'uri.list.title' => 'SEO-friendly urls',
+    'uri.resource' => 'SEO-friendly urls',
+    'uri.privilege.create' => 'Create url',
+    'uri.privilege.delete' => 'Delete urls',
+    'uri.privilege.edit' => 'Edit urls',
+    'uri.privilege.view' => 'View urls',
+);

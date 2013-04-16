@@ -1,0 +1,14 @@
+<?php if ( $this->error ): ?>
+<div class="wizard" data-js-type="zork.wizard.cancel">
+    <?= $this->translate( 'paragraph.form.createWizard.error', 'paragraph' ) ?>
+</div>
+<?php else: ?>
+<div class="wizard"
+     data-js-type="zork.wizard.finish"
+     data-paragraph-id="<?= $this->paragraph->id ?>"
+     data-paragraph-type="<?= $this->paragraph->type ?>"
+     data-paragraph-root="<?= $this->paragraph->rootId ?>"
+     data-paragraph-parent="<?= $this->parentId ?>">
+    <?= $this->translate( 'paragraph.form.createWizard.success', 'paragraph' ) ?>
+</div>
+<?php endif ?>

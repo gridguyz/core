@@ -1,0 +1,113 @@
+<?php
+
+$view = $this;
+$list = new \Zork\Iterator\DepthList( $this->paragraphRenderList );
+
+$this->headLink()
+     ->appendStylesheet( '/styles/paragraph.css' );
+
+if ( empty( $this->content ) )
+{
+    $rootContent = null;
+}
+else
+{
+    $root           = $this->viewModel()->getRoot();
+    $rootContent    = $root->content;
+    $root->content  = $this->content;
+}
+
+$list->runin( function ( $paragraph ) use ( $view ) { ?>
+
+<div class="paragraph-container paragraph-<?= $paragraph->type ?>-container"
+     id="paragraph-<?= $paragraph->id ?>-container"
+     data-paragraph-id="<?= $paragraph->id ?>"
+     data-paragraph-type="<?= $paragraph->type ?>"
+     data-paragraph-name="<?= $view->escapeHtml( $paragraph->nameLabel ) ?>"
+     data-paragraph-properties="<?= implode( ' ', $paragraph::getAllowedFunctions() ) ?>"
+     data-paragraph-only-child-of="<?= $paragraph::onlyChildOf() ?>"
+     data-paragraph-only-parent-of="<?= $paragraph::onlyParentOf() ?>">
+    <div class="paragraph paragraph-<?= $paragraph->type ?>"
+         id="paragraph-<?= $paragraph->id ?>">
+        <div class="paragraph-children paragraph-<?= $paragraph->type ?>-children">
+<?= $paragraph->renderOpen( $view ) ?>
+<?php }, function ( $paragraph ) use ( $view ) { ?>
+<?= $paragraph->renderClose( $view ) ?>
+
+        </div>
+    </div>
+</div>
+
+<?php if ( $paragraph instanceof \Paragraph\Model\Paragraph\Structure\Layout &&
+           isset( $view->adminMenuSettings ) &&
+           $view->isAllowed( 'admin', 'ui' ) ):
+           $content = $paragraph->getRenderedContent(); ?>
+
+<div data-js-type="js.admin.menu"
+     data-js-adminmenu-state="<?= $view->adminMenuSettings->getSetting( 'open' ) ? 'open' : 'closed' ?>"
+     data-js-adminmenu-position="<?= $view->adminMenuSettings->getSetting( 'position' ) ?>"
+     title="<?= $this->translate( 'admin.menu.title',
+                                  'admin', $view->userLocale() ) ?>">
+    <ul class="ui-helper-hidden">
+        <li><a class="dashboard"
+               href="/app/<?= $view->userLocale();
+               ?>/admin/dashboard?adminLocale=<?= $view->locale(); ?>">
+            <?= $view->translate( 'admin.menu.dashboard',
+                                  'admin', $view->userLocale() ) ?>
+        </a></li>
+<?php if ( $view->isAllowed( 'uploads', 'manage' ) ): ?>
+
+        <li><a class="file-manager" href="#">
+            <?= $view->translate( 'admin.menu.fileManager',
+                                  'admin', $this->userLocale() ) ?>
+        </a></li>
+<?php endif ?>
+<?php if ( $content instanceof \Paragraph\Model\Paragraph\StructureInterface &&
+           $content->isEditable() ): ?>
+
+        <li><a class="edit-content" href="#">
+            <?= $view->translate( 'admin.menu.editContent',
+                                  'admin', $view->userLocale() ) ?>
+        </a></li>
+<?php endif ?>
+<?php if ( $view->isAllowed( 'paragraph', 'create' ) ): ?>
+
+        <li><a class="new-paragraph" href="#">
+            <?= $view->translate( 'admin.menu.newParagraph',
+                                  'admin', $view->userLocale() ) ?>
+        </a></li>
+<?php endif ?>
+<?php if ( $view->isAllowed( 'paragraph.content', 'create' ) ): ?>
+
+        <li><a class="new-content" href="#">
+            <?= $view->translate( 'admin.menu.newContent',
+                                  'admin', $view->userLocale() ) ?>
+        </a></li>
+<?php endif ?>
+<?php if ( $paragraph->isEditable() ): ?>
+
+        <li><a class="edit-layout" href="#">
+            <?= $view->translate( 'admin.menu.editLayout',
+                                  'admin', $view->userLocale() ) ?>
+        </a></li>
+<?php endif ?>
+<?php if ( $content instanceof \Paragraph\Model\Paragraph\StructureInterface &&
+           $content->isEditable() ||
+           $view->isAllowed( 'paragraph.content', 'changeLayout' ) ): ?>
+
+        <li><a class="change-layout" href="#">
+            <?= $view->translate( 'admin.menu.changeLayout',
+                                  'admin', $view->userLocale() ) ?>
+        </a></li>
+<?php endif ?>
+    </ul>
+</div>
+
+<?php endif ?>
+
+<?php } );
+
+if ( ! empty( $rootContent ) )
+{
+    $root->content = $rootContent;
+}

@@ -1,0 +1,24 @@
+<?php
+
+$this->headLink()
+     ->appendStylesheet( '/styles/modules/Menu/menu.css', 'all' );
+
+$navigation = $this->paragraph->getNavigation();
+$class      = $this->paragraph->isHorizontal() ? 'horizontal' : 'vertical';
+
+if ( ! empty( $navigation ) )
+{
+    $this->headLink( array(
+        'rel'   => 'sitemap',
+        'type'  => 'application/xml',
+        'href'  => '/app/' . $this->locale() .
+                   '/sitemap/' . $this->paragraph->menuId,
+    ) );
+
+ // $this->appendLinks( $nav );
+}
+
+echo $this->render( 'grid/menu/navigation/render', array(
+    'navigation'    => $navigation,
+    'class'         => $class,
+) );

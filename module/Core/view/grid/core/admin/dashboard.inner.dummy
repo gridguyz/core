@@ -1,0 +1,29 @@
+<?php if ($this->isModuleLoaded('googleAnalytics')) : ?>
+    <section id="dummyInnerPanelDashboard">
+        <h1><?php echo $this->translate('googleAnalytics.section.title') ?></h1>
+        <div class="innerPanelContent">
+            <?php /* echo $this->action('gaVisitsTypesGraphicon', 'google-analytics', 'googleAnalytics'); */ ?>
+        </div>
+    </section>
+<?php endif; ?>
+
+<?php if ($this->isModuleLoaded('coreSessionMonitor')) : ?>
+    <section id="dashboardSessionMonitorList" class="last">
+        <h1>
+            <?php echo $this->translate('admin.dashboard.sessionMonitorList.title') ?>
+            <span class="actions">
+            <?php if (APPLICATION_ENV == 'development'): ?>
+                <a href="/coreSessionMonitor/sessionMonitor/add-test-user">
+                    teszt user hozzáadása
+                </a>
+            <?php endif;?>
+                <a href="/coreSessionMonitor/sessionMonitor/del-user-list">
+                    <?php echo $this->translate('admin.dashboard.sessionMonitorList.delete') ?>
+                </a>
+            </span>
+        </h1>
+        <div class="innerPanelContent">
+            <?php echo $this->action('index', 'session-monitor', 'coreSessionMonitor', array('containerId' => 'sessionMonitorList')); ?>
+        </div>
+    </section>
+<?php endif; ?>

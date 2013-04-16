@@ -1,0 +1,9 @@
+<a href="/app/<?= $this->locale()
+    ?>/customize/export/<?= $this->layoutId
+    ?><?php if ( ! empty( $this->contentId ) ): ?>/<?= $this->contentId
+    ?><?php endif
+    ?>?exportUri=<?= urlencode( $this->exportUri )
+    ?>" target="_blank">
+    <?= $this->translate( 'default.export' ) ?>
+</a>
+<?= $this->form( $this->form, 'customize' ) ?>

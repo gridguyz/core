@@ -1,0 +1,65 @@
+<?php if ( $this->pageCount > 1 ): ?>
+
+    <div class="paginationControl">
+    <?php if ( isset( $this->first ) && $this->first != $this->current ): ?>
+
+        <button type="submit" class="link first" name="page"
+                value="<?= $this->first ?>">&#x00ab; <?=
+                $this->translate( 'default.paginator.first' ) ?></button>
+    <?php else: ?>
+
+        <button type="submit" disabled="disabled"
+                class="link first disabled">&#x00ab; <?=
+                $this->translate( 'default.paginator.first' ) ?></button>
+    <?php endif ?>
+
+    <?php if ( isset( $this->previous ) ): ?>
+
+        <button type="submit" class="link previous" name="page"
+                value="<?= $this->previous ?>">&#x2039; <?=
+                $this->translate( 'default.paginator.previous' ) ?></button>
+    <?php else: ?>
+
+        <button type="submit" disabled="disabled"
+                class="link previous disabled">&#x2039; <?=
+                $this->translate( 'default.paginator.previous' ) ?></button>
+    <?php endif ?>
+
+    <?php foreach ( $this->pagesInRange as $page ): ?>
+        <?php if ( $page != $this->current ): ?>
+
+            <button type="submit" class="link number" name="page"
+                    value="<?= $page ?>"><?= $page ?></button>
+        <?php else: ?>
+
+            <button type="submit" disabled="disabled"
+                    class="link number current"><?= $page ?></button>
+        <?php endif ?>
+    <?php endforeach ?>
+
+    <?php if ( isset( $this->next ) ): ?>
+
+        <button type="submit" class="link next" name="page"
+                value="<?= $this->next ?>"><?=
+                $this->translate( 'default.paginator.next' ) ?> &#x203a;</button>
+    <?php else: ?>
+
+        <button type="submit" disabled="disabled"
+                class="link next disabled"><?=
+                $this->translate( 'default.paginator.next' ) ?> &#x203a;</button>
+    <?php endif ?>
+
+    <?php if ( isset( $this->last ) && $this->last != $this->current ): ?>
+
+        <button type="submit" class="link last" name="page"
+                value="<?= $this->last ?>"><?=
+                $this->translate( 'default.paginator.last' ) ?> &#x00bb;</button>
+    <?php else: ?>
+
+        <button type="submit" disabled="disabled"
+                class="link last disabled"><?=
+                $this->translate( 'default.paginator.last' ) ?> &#x00bb;</button>
+    <?php endif ?>
+
+    </div>
+<?php endif ?>

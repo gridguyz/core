@@ -1,0 +1,19 @@
+<section class="innerPanel">
+    <section id="innerPanelAccountInformation">
+        <h1><?= $this->translate( 'admin.dashboard.accountInformation.title', 'admin' ) ?></h1>
+        <div class="innerPanelContent">
+            <!-- TODO: real subscription expiration -->
+            <!--
+                <dl class="info">
+
+                        <dt><b>Notice</b></dt>
+                        <dd>Your subscription will expire in 12 days. Click <a href="">here</a> to update your subscription.</dd>
+
+                </dl>
+             -->
+            <?= $this->render( 'grid/user/authentication/logout', array(
+                'form' => $this->form,
+            ) ) ?>
+        </div>
+    </section>
+</section>

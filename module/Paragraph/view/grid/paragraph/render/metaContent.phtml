@@ -1,0 +1,22 @@
+<?php
+
+$this->headTitle()
+     ->prepend( $this->paragraph->title );
+
+if ( ! empty( $this->paragraph->metaRobots ) )
+{
+    $this->headMeta()
+         ->setName( 'robots', $this->paragraph->metaRobots );
+}
+
+if ( ! empty( $this->paragraph->metaKeywords ) )
+{
+    $this->headMeta()
+         ->setName( 'keywords', $this->paragraph->metaKeywords );
+}
+
+if ( ! empty( $this->paragraph->metaDescription ) )
+{
+    $this->headMeta()
+         ->setName( 'description', $this->paragraph->metaDescription );
+}

@@ -1,0 +1,86 @@
+<?php
+
+$this->headLink()
+     ->appendStylesheet( '/styles/modules/User/grant.css', 'all' );
+
+$group      = null;
+$resource   = null;
+$inherited  = $this->inherited;
+$isInherit  = function ( $rightId ) use ( $inherited ) {
+    foreach ( $inherited as $right )
+    {
+        if ( $right->id == $rightId )
+        {
+            return $right->granted;
+        }
+    }
+
+    return false;
+};
+
+$tr = function ( $msg ) {
+    $parts  = explode( '.', $msg );
+    return $this->translate( $msg, reset( $parts ) );
+};
+
+?>
+<div class="grant-rights" data-js-type="js.user.grantRights">
+<?php foreach ( $this->rights as $right ): ?>
+    <?php if ( ( ! empty( $right->module ) && ! $this->isModuleLoaded( $right->module ) ) ||
+               ! $this->isAllowed( $right->resource, $right->privilege ) ): continue; endif; ?>
+    <?php if ( $group != $right->group ): ?>
+        <?php if ( null !== $group ): ?>
+
+        </dl>
+    </div>
+        <?php endif; $group = $right->group; $resource = null; ?>
+
+    <div class="right-group">
+        <h4><?= $tr( $group . '.resourceGroup' ) ?></h4>
+        <dl>
+    <?php if ( ! empty( $this->inheritedFrom ) ): ?>
+
+            <dd class="inherited-from">
+                <?= $this->translate( 'user.form.grant.inheritedFrom' ) ?>
+
+                <div class="group"><?= $this->inheritedFrom ?></div>
+            </dd>
+    <?php endif ?>
+    <?php endif ?>
+    <?php if ( ! $right->optional ): ?>
+
+            <input type="hidden" name="rights[<?= $right->id ?>]"
+                   class="required" value="<?= $right->granted ? '1' : '' ?>" />
+    <?php continue; endif; ?>
+    <?php if ( $resource != $right->resource ):  ?>
+            <?php if ( null !== $resource ): ?>
+
+                </div>
+            </dd>
+            <?php endif; $resource = $right->resource; ?>
+
+            <dt class="label label-multi_checkbox optional">
+                <?= $right->label
+                    ? sprintf( $tr( preg_replace( '/\\.[^\\.]+$/', '', $right->resource ) . '.resource.%s' ), $right->label )
+                    : $tr( $right->resource . '.resource' ) ?>
+
+            </dt>
+            <dd class="input input-multi_checkbox optional">
+                <div class="-x-multi_checkbox">
+    <?php endif ?>
+
+                <label class="<?php if ( $isInherit( $right->id ) ): ?>inherited<?php endif ?>">
+                    <input type="hidden" name="rights[<?= $right->id ?>]" value="" />
+                    <input type="checkbox" name="rights[<?= $right->id ?>]"
+                           value="1"<?php if ( $right->granted ): ?> checked="checked"<?php endif ?>
+                           /><?= $right->label
+                                ? sprintf( $tr( preg_replace( '/\\.[^\\.]+$/', '', $right->resource ) . '.privilege.%s.' . $right->privilege ), $right->label )
+                                : $tr( $right->resource . '.privilege.' . $right->privilege ) ?>
+
+                </label>
+<?php endforeach ?>
+                </div>
+            </dd>
+        </dl>
+    </div>
+</div>

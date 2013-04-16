@@ -1,0 +1,45 @@
+<?php $this->headLink()
+           ->appendStylesheet( '/styles/modules/Tag/list.css' ) ?>
+<div class="content-list">
+<?php foreach ( $this->paginator as $content ):
+    $link = $content->getUri( (string) $this->locale() );?>
+
+    <div class="content-entry">
+        <h3 class="title">
+            <a href="<?= $this->escapeHtmlAttr( $link ) ?>"><?=
+               $this->escapeHtml( $content->title ) ?></a>
+        </h3>
+<?php if ( $content->leadImage ): ?>
+
+        <a href="<?= $this->escapeHtmlAttr( $link ) ?>"
+           class="lead-image"><img src="<?=
+            $this->thumbnail( $content->leadImage, array(
+                'method'    => isset( $this->imageMethod ) ? $this->imageMethod : 'fit',
+                'width'     => isset( $this->imageWidth  ) ? $this->imageWidth  : 100,
+                'height'    => isset( $this->imageHeight ) ? $this->imageHeight : 100,
+            ) ) ?>" /></a>
+<?php endif ?>
+<?php if ( $content->userId ): ?>
+
+        <div class="user">
+            <a href="<?= $this->escapeHtmlAttr( $content->user->getUri( (string) $this->locale() ) ) ?>"
+               class="displayName"><?= $this->escapeHtml( $content->user->displayName ) ?></a>
+        </div>
+<?php endif ?>
+
+        <div class="created" title="<?= $this->dateTime( $content->created ) ?>">
+            <?= $this->relativeTime( $content->created ) ?>
+
+        </div>
+        <div class="lead-text">
+            <?= $content->leadText ?>
+
+        </div>
+        <div class="read-more">
+            <a href="<?= $this->escapeHtmlAttr( $link ) ?>"><?=
+               $this->translate( 'default.readMore', 'default' ) ?></a>
+        </div>
+    </div>
+<?php endforeach ?>
+
+</div>

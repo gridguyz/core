@@ -1,0 +1,8 @@
+<?php
+$this->headTitle( $title = $this->translate( 'paragraph.form.snippet.edit', 'paragraph' ) );
+$this->headTitle( $this->snippet->name );
+?>
+<h1><?= $title ?>: <?= $this->snippet->name ?></h1>
+<div class="page">
+    <?= $this->form( $this->form, 'paragraph' ) ?>
+</div>

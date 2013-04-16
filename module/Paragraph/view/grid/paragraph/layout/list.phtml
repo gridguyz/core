@@ -1,0 +1,65 @@
+<?php
+/**
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$this->headTitle( $title = $this->translate( 'paragraph.layout.list.title', 'paragraph' ) );
+$view   = $this;
+$rowSet = $this->rowSet();
+
+if ( ! $this->format ): ?>
+<h1><?= $title ?></h1>
+<?php endif ?>
+<?= $this->rowSet( $this->paginator, $rowSet::FLAG_LAYOUT_ALL )
+         ->setColumnTranslatePrefix( 'paragraph.layout.list.column' )
+         ->setColumnTranslatePostfix( 'title' )
+         ->setColumnTranslateTextDomain( 'paragraph' )
+         ->setPage( $this->page )
+         ->setHiddenColumns( array( 'id' ) )
+         ->setColumns( array(
+              'id'              => $rowSet::INT,
+              'name'            => $rowSet::STRING,
+              'created'         => $rowSet::DATETIME,
+              'lastModified'    => $rowSet::DATETIME,
+              'defaultFor'      => $rowSet::INT,
+              'actions'         => function ( $row ) use ( $view ) {
+                $view->placeholder( 'listActions' )->set( '' );
+                $view->placeholder( 'listActions' )->captureStart();
+?>
+    <a class="action-button view"
+       title="<?= $view->translate( 'default.view', 'default' ) ?>"
+       href="/app/<?= $view->adminLocale() ?>/paragraph/render/<?= $row->id ?>">
+    </a>
+<?php if ( $row->isEditable() ): ?>
+    <a class="action-button edit"
+       title="<?= $view->translate( 'default.edit' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/layout/edit/<?= $row->id ?>">
+    </a>
+<?php endif ?>
+<?php if ( $this->isAllowed( 'paragraph.layout', 'create' ) ): ?>
+    <a class="action-button clone"
+       title="<?= $view->translate( 'default.clone' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/layout/clone/<?= $row->id ?>">
+    </a>
+<?php endif ?>
+<?php if ( $row->getOption( 'defaultFor' ) < 1 && $row->isDeletable() ): ?>
+    <a class="action-button delete"
+       title="<?= $view->translate( 'default.delete' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/layout/delete/<?= $row->id ?>"
+       onclick="return js.require('js.ui.dialog').confirm(this);">
+    </a>
+<?php endif ?>
+<?php
+                $view->placeholder( 'listActions' )->captureEnd();
+                return (string) $view->placeholder( 'listActions' );
+              },
+          ) )
+         ->render( $this->format );
+
+if ( ! $this->format && $this->isAllowed( 'paragraph.layout', 'create' ) ): ?>
+<div class="more-links">
+    <a class="button-appearance"
+       href="/app/<?= $view->locale() ?>/admin/layout/create">
+        <?= $view->translate( 'default.createNew' ); ?>
+    </a>
+</div>
+<?php endif ?>

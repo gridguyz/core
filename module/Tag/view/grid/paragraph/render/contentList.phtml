@@ -1,0 +1,34 @@
+<?php
+
+/* @var $paginator \Zend\Paginator\Paginator */
+$paginator = $this->paragraph->findContentPaginator();
+$tags      = array();
+
+$paginator->setItemCountPerPage( $this->paragraph->itemCount )
+          ->setCurrentPageNumber( 1 );
+
+if ( $paginator->getTotalItemCount() ): ?>
+    <?= $this->render( 'grid/tag/contentList', array(
+        'paginator' => $paginator,
+    ) ) ?>
+<?php endif ?>
+
+<p class="tags">
+    <span class="label"><?= $this->translate( 'tag.contentList.tagsLabel', 'tag' ) ?>:</span>
+<?php $first = true;
+foreach ( (array) $this->paragraph->tags as $tag ):
+    if ( $first ):
+        $first = false;
+    else:
+    ?><span class="tag-separator">,</span><?php endif ?>
+
+    <a href="/app/<?= $this->locale() ?>/tag/list/all/<?=
+        $tags[] = $this->escapeHtmlAttr( rawurlencode( $tag ) )
+        ?>" class="tag"><?= $this->escapeHtml( $tag ) ?></a><?php endforeach ?>
+
+</p>
+<p class="read-more">
+    <a href="/app/<?= $this->locale() ?>/tag/list/<?=
+       $this->paragraph->mode ?>/<?= implode( '/', $tags ) ?>"><?=
+       $this->translate( 'default.readMore', 'default' ) ?></a>
+</p>

@@ -1,0 +1,198 @@
+<?php
+
+namespace Grid\Core\Controller;
+
+use Exception;
+use Grid\Core\Model\RpcAbstract;
+use Zork\Rpc\CallableInterface;
+use Zend\Stdlib\ErrorHandler;
+use Zork\Rpc\Exception as RpcException;
+use Zend\Mvc\Exception\DomainException;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
+
+/**
+ * Grid\Core\Controller\RpcController
+ *
+ * @author David Pozsar <david.pozsar@megaweb.hu>
+ */
+class RpcController extends AbstractActionController
+{
+
+    /**
+     * Check against infinite recusion
+     *
+     * @var array
+     */
+    private static $rawCheck = array();
+
+    /**
+     * Convert data to raw object
+     *
+     * @param array|object $object
+     * @return object
+     */
+    protected static function rawData( $object )
+    {
+        if ( is_object( $object ) )
+        {
+            $hash = spl_object_hash( $object );
+
+            if ( isset( self::$rawCheck[$hash] ) )
+            {
+                return array( '#recursion#' => $hash );
+            }
+
+            self::$rawCheck[$hash] = true;
+        }
+
+        $object = (array) $object;
+
+        foreach ( $object as $key => $value )
+        {
+            if ( is_array( $value ) || is_object( $value ) )
+            {
+                $object[$key] = self::rawData( $value );
+            }
+        }
+
+        return (object) $object;
+    }
+
+    /**
+     * Log a single exception
+     *
+     * @param \Exception $exception
+     */
+    public function logException( Exception $exception )
+    {
+        /* @var $logger \Zork\Log\LoggerManager */
+        $logger = $this->getServiceLocator()
+                       ->get( 'Zork\Log\LoggerManager' );
+
+        if ( $logger->hasLogger( 'exception' ) )
+        {
+            $logger->getLogger( 'exception' )
+                   ->crit( '<pre>' . $exception . PHP_EOL . '</pre>' . PHP_EOL );
+        }
+    }
+
+    /**
+     * Call an rpc
+     *
+     * @return array
+     */
+    public function callAction()
+    {
+        $formatName = $this->params()
+                           ->fromRoute( 'format', 'json' );
+
+        $format = $this->getServiceLocator()
+                       ->get( 'Grid\Core\\Model\\Rpc\\' . ucfirst( $formatName ) );
+
+        if ( ! $format || ! $format instanceof RpcAbstract )
+        {
+            throw new DomainException(
+                'The rpc-format (' . $formatName . ') not understood',
+                500
+            );
+        }
+
+        $request    = $this->getRequest();
+        $response   = $this->getResponse();
+        $error      = $format->parse( $request, $response );
+
+        if ( $error )
+        {
+            return $format->error(
+                $error,
+                $format->errorCodes[ $error ],
+                $error
+            );
+        }
+
+        @ list( $serviceName,
+                $method ) = explode( '::', $format->getMethod() );
+
+        if ( empty( $method ) )
+        {
+            $method = '__invoke';
+        }
+
+        try
+        {
+            $service = $this->getServiceLocator()
+                            ->get( $serviceName );
+        }
+        catch ( ServiceNotFoundException $ex )
+        {
+            $this->logException( $ex );
+
+            return $format->error(
+                RpcAbstract::METHOD_NOT_FOUND . ': ' . $format->getMethod(),
+                $format->errorCodes[RpcAbstract::METHOD_NOT_FOUND],
+                array(
+                    'service'   => $serviceName,
+                    'exception' => self::rawData( $ex ),
+                )
+            );
+        }
+
+        if ( empty( $service ) || ! $service instanceof CallableInterface )
+        {
+            return $format->error(
+                RpcAbstract::METHOD_NOT_FOUND . ': ' . $format->getMethod(),
+                $format->errorCodes[RpcAbstract::METHOD_NOT_FOUND],
+                array(
+                    'service'   => $serviceName,
+                )
+            );
+        }
+        else
+        {
+            try
+            {
+                ErrorHandler::start( E_ALL );
+                $result = $service->call( $method, $format->getParams() );
+                ErrorHandler::stop();
+                return $format->response( $result );
+            }
+            catch ( RpcException\BadMethodCallException $ex )
+            {
+                $this->logException( $ex );
+
+                return $format->error(
+                    RpcAbstract::METHOD_NOT_FOUND . ': ' . $format->getMethod(),
+                    $format->errorCodes[RpcAbstract::METHOD_NOT_FOUND],
+                    array(
+                        'service'   => $serviceName,
+                        'method'    => $method,
+                        'exception' => self::rawData( $ex ),
+                    )
+                );
+            }
+            catch ( RpcException\InvalidArgumentException $ex )
+            {
+                $this->logException( $ex );
+
+                return $format->error(
+                    $ex->getMessage(),
+                    $format->errorCodes[RpcAbstract::INVALID_PARAMS],
+                    self::rawData( $ex )
+                );
+            }
+            catch ( Exception $ex )
+            {
+                $this->logException( $ex );
+
+                return $format->error(
+                    RpcAbstract::INTERNAL . ': #' .
+                        $ex->getCode() . ' - ' . $ex->getMessage(),
+                    $format->errorCodes[RpcAbstract::INTERNAL],
+                    self::rawData( $ex )
+                );
+            }
+        }
+    }
+
+}

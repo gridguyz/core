@@ -1,0 +1,11 @@
+<?php if ( empty( $this->navigation ) ): ?>
+<ul class="navigation <?= $this->class ?>"><li><a href="#"><?=
+    $this->translate( 'menu.warn.deleted', 'menu' ) ?></a></li></ul>
+<?php else: ?>
+<?= $this->navigation()
+         ->menu()
+         ->setTranslatorEnabled( false )
+         ->renderMenu( $this->navigation, array(
+             'ulClass' => 'navigation ' . $this->class
+         ) ) ?>
+<?php endif ?>

@@ -1,0 +1,8 @@
+<?php $this->headLink()
+           ->appendStylesheet( '/styles/rowSet.css' ) ?>
+<form class="rowSetContainer" action="?" method="post"
+      data-js-type="js.rowSet"
+      data-js-rowset-id="rowset_<?= $this->rowSet->getId() ?>">
+<?= $this->content ?>
+
+</form>

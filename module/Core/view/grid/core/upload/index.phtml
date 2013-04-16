@@ -1,0 +1,30 @@
+<?php
+
+$this->headLink()
+     ->appendStylesheet( '/styles/upload.css' );
+
+$message = $this->translate( $this->success
+                                ? 'default.upload.success'
+                                : 'default.upload.failed' );
+
+?>
+<div class="core upload">
+<?php if ( ! empty( $this->messages ) ): ?>
+<?php foreach ( (array) $this->messages as $message ): ?>
+    <div data-js-type="js.ui.message">
+        <?= $message ?>
+    </div>
+<?php endforeach ?>
+<?php endif ?>
+<?php if ( null !== $this->success ): ?>
+    <div id="result"
+         data-js-upload-success="<?= $this->success ?>"
+         data-js-upload-message="<?= $this->escapeHtmlAttr( $message ) ?>"
+<?php if ( isset( $this->file ) ): ?>
+         data-js-upload-file="<?= $this->file ?>"<?php endif ?>>
+        <?= $message ?>
+    </div>
+<?php elseif ( isset( $this->form ) ): ?>
+    <?= $this->form( $this->form, 'mime' ); ?>
+<?php endif ?>
+</div>

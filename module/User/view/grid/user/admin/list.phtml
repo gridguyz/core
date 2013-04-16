@@ -1,0 +1,103 @@
+<?php
+/**
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$this->headTitle( $title = $this->translate( 'user.list.title', 'user' ) );
+$view   = $this;
+$rowSet = $this->rowSet();
+
+if ( ! $this->format ): ?>
+<h1><?= $title ?></h1>
+<?php endif ?>
+<?= $this->rowSet( $this->paginator, $rowSet::FLAG_LAYOUT_ALL )
+         ->setColumnTranslatePrefix( 'user.list.column' )
+         ->setColumnTranslatePostfix( 'title' )
+         ->setColumnTranslateTextDomain( 'user' )
+         ->setPage( $this->page )
+         ->setDefaultSearch( array(
+             'confirmed'    => array(
+                 'bool'     => 'only',
+             ),
+             'state'        => array(
+                 'enum'     => array( 'active' ),
+             ),
+         ) )
+         ->setColumns( array(
+             'avatar'       => $rowSet::THUMBNAIL,
+             'email'        => $rowSet::STRING,
+             'displayName'  => $rowSet::STRING,
+             'locale'       => $rowSet::LOCALE,
+             'confirmed'    => $rowSet::BOOL,
+             'state'        => $rowSet->column( 'enum', array(
+                                    'active'    => 'active',
+                                    'inactive'  => 'inactive',
+                                    'banned'    => 'banned',
+                                ), 'user.state', '', 'user' ),
+             'groupName'    => $rowSet::STRING,
+             'actions'      => function ( $row ) use ( $view ) {
+                 $view->placeholder( 'listActions' )->set( '' );
+                 $view->placeholder( 'listActions' )->captureStart();
+?>
+    <a class="action-button view"
+       title="<?= $view->translate( 'default.view' ) ?>"
+       href="/app/<?= $view->locale(); ?>/user/view/<?=
+                      urlencode( $row->displayName ) ?>">
+    </a>
+<?php if ( $this->isAllowed( $row, 'edit' ) ): ?>
+    <a class="action-button edit"
+       title="<?= $view->translate( 'default.edit' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/user/edit/<?= $row->id ?>">
+    </a>
+<?php endif ?>
+<?php if ( $this->isAllowed( $row, 'password' ) ): ?>
+    <a class="action-button password"
+       title="<?= $view->translate( 'user.form.passwordChange.title', 'user' ) ?>"
+       href="/app/<?= $view->locale() ?>/admin/user/password/<?= $row->id ?>">
+    </a>
+<?php endif ?>
+<?php if ( $this->isAllowed( $row, 'activate' ) ): ?>
+    <a class="action-button set-default"
+       title="<?= $view->translate( 'user.action.activate', 'user' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/user/activate/<?= $row->id ?>">
+    </a>
+<?php endif ?>
+<?php if ( $this->isAllowed( $row, 'grant' ) ): ?>
+    <a class="action-button grant"
+       title="<?= $view->translate( 'user.action.grant', 'user' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/user/grant/<?= $row->id ?>">
+    </a>
+<?php endif ?>
+<?php if ( $this->isAllowed( $row, 'delete' ) ): ?>
+    <a class="action-button delete"
+       title="<?= $view->translate( 'default.delete' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/user/delete/<?= $row->id ?>"
+       onclick="return js.require('js.ui.dialog').confirm(this);">
+    </a>
+<?php endif ?>
+<?php if ( $this->isAllowed( $row, 'ban' ) ): ?>
+    <a class="action-button ban"
+       title="<?= $view->translate( 'user.action.ban', 'user' ) ?>"
+       href="/app/<?= $view->locale() ?>/admin/user/ban/<?= $row->id ?>"
+       onclick="return js.require('js.ui.dialog').confirm(this);">
+    </a>
+<?php endif ?>
+<?php
+                 $view->placeholder( 'listActions' )->captureEnd();
+                 return (string) $view->placeholder( 'listActions' );
+             },
+         ) )
+         ->render( $this->format );
+
+if ( ! $this->format ): ?>
+<div class="more-links">
+    <a class="button-appearance"
+       href="/app/<?= $view->locale() ?>/admin/user/create">
+        <?= $view->translate( 'default.createNew' ); ?>
+    </a>
+    <a class="button-appearance"
+       data-js-type="js.ui.dialog.ajax" target="_blank"
+       href="/app/<?= $view->locale() ?>/admin/user/export">
+        <?= $view->translate( 'default.export' ); ?>
+    </a>
+</div>
+<?php endif ?>

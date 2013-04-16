@@ -1,0 +1,12 @@
+<ul class="language-variants">
+<?php foreach ( $this->paragraph->getLinks() as $locale => $link ):
+        $title = $this->translate( 'locale.sub.' . $locale, 'locale', $locale ); ?>
+
+    <li class="language-variant language-<?= \Locale::getPrimaryLanguage( $locale )
+        ?> locale-<?= $locale ?><?php if ( $link['active'] ):
+        ?> active<?php endif ?>" title="<?= $this->escapeHtmlAttr( $title ) ?>">
+        <a href="<?= $link['uri']?>"><?= $this->escapeHtml( $title ) ?></a>
+    </li>
+<?php endforeach ?>
+
+</ul>

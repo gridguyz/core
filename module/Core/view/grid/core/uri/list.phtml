@@ -1,0 +1,70 @@
+<?php
+/**
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$this->headTitle( $title = $this->translate( 'uri.list.title', 'uri' ) );
+$view   = $this;
+$rowSet = $this->rowSet();
+
+/* @var $siteInfo \Zork\Db\SiteInfo */
+$siteInfo = $this->appService( 'SiteInfo' );
+
+if ( ! $this->format ): ?>
+<h1><?= $title ?></h1>
+<?php endif ?>
+<?= $this->rowSet( $this->paginator, $rowSet::FLAG_LAYOUT_ALL )
+         ->setColumnTranslatePrefix( 'uri.list.column' )
+         ->setColumnTranslatePostfix( 'title' )
+         ->setColumnTranslateTextDomain( 'uri' )
+         ->setPage( $this->page )
+         ->setColumns( array(
+              'subdomain'   => $rowSet::STRING,
+              'contentName' => $rowSet::STRING,
+              'locale'      => $rowSet::LOCALE,
+              'uri'         => $rowSet::STRING,
+              'default'     => $rowSet::BOOL,
+              'actions'             => function ( $row ) use ( $view, $siteInfo ) {
+                $view->placeholder( 'listActions' )->set( '' );
+                $view->placeholder( 'listActions' )->captureStart();
+?>
+    <a class="action-button view" target="_blank"
+       title="<?= $view->translate( 'default.view' ) ?>"
+       href="http://<?= $row->getOption( 'subdomain' ),
+                        $row->getOption( 'subdomain' ) ? '.' : '',
+                        $siteInfo->getDomain(),
+                        '/', $row->uri ?>">
+    </a>
+<?php if ( $this->isAllowed( 'uri', 'edit' ) ): ?>
+    <a class="action-button edit"
+       title="<?= $view->translate( 'default.edit' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/uri/edit/<?= $row->id ?>">
+    </a>
+<?php endif ?>
+<?php if ( $this->isAllowed( 'uri', 'edit' ) ): ?>
+    <a class="action-button set-default"
+       title="<?= $view->translate( 'default.setDefault' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/uri/set-default/<?= $row->id ?>">
+    </a>
+<?php endif ?>
+<?php if ( $this->isAllowed( 'uri', 'delete' ) ): ?>
+    <a class="action-button delete"
+       title="<?= $view->translate( 'default.delete' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/uri/delete/<?= $row->id ?>"
+       onclick="return js.require('js.ui.dialog').confirm(this);">
+    </a>
+<?php endif ?>
+<?php
+                $view->placeholder( 'listActions' )->captureEnd();
+                return (string) $view->placeholder( 'listActions' );
+              },
+          ) )
+         ->render( $this->format );
+
+if ( ! $this->format && $this->isAllowed( 'uri', 'create' ) ): ?>
+<div class="more-links">
+    <a class="button-appearance"
+       href="/app/<?= $view->locale() ?>/admin/uri/create">
+        <?= $view->translate( 'default.createNew' ); ?>
+    </a>
+</div>
+<?php endif ?>

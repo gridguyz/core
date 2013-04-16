@@ -1,0 +1,62 @@
+<?php
+/**
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$this->headTitle( $title = $this->translate( 'tag.list.title', 'tag' ) );
+$view   = $this;
+$rowSet = $this->rowSet();
+
+if ( ! $this->format ): ?>
+<h1><?= $title ?></h1>
+<?php endif ?>
+<?= $this->rowSet( $this->paginator, $rowSet::FLAG_LAYOUT_ALL )
+         ->setColumnTranslatePrefix( 'tag.list.column' )
+         ->setColumnTranslatePostfix( 'title' )
+         ->setColumnTranslateTextDomain( 'tag' )
+         ->setPage( $this->page )
+      /* ->setDefaultSearch( array(
+             'locale'    => array(
+                 'like'  => \Locale::getPrimaryLanguage( $this->adminLocale() ) . '*',
+             ),
+         ) ) */
+         ->setNotSetLabels( array(
+             'locale'   => 'tag.locale.all',
+         ) )
+         ->setEmptyLabels( array(
+             'locale'   => 'tag.locale.all',
+         ) )
+         ->setColumns( array(
+             'locale'       => $rowSet::LOCALE,
+             'name'         => $rowSet::STRING,
+             'actions'      => function ( $row ) use ( $view ) {
+                 $view->placeholder( 'listActions' )->set( '' );
+                 $view->placeholder( 'listActions' )->captureStart();
+?>
+<?php if ( $this->isAllowed( 'tag.entry', 'edit' ) ): ?>
+    <a class="action-button edit"
+       title="<?= $view->translate( 'default.edit' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/tag/edit/<?= $row->id ?>">
+    </a>
+<?php endif ?>
+<?php if ( $this->isAllowed( 'tag.entry', 'delete' ) ): ?>
+    <a class="action-button delete"
+       title="<?= $view->translate( 'default.delete' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/tag/delete/<?= $row->id ?>"
+       onclick="return js.require('js.ui.dialog').confirm(this);">
+    </a>
+<?php endif ?>
+<?php
+                 $view->placeholder( 'listActions' )->captureEnd();
+                 return (string) $view->placeholder( 'listActions' );
+             },
+         ) )
+         ->render( $this->format );
+
+if ( ! $this->format && $this->isAllowed( 'tag.entry', 'create' ) ): ?>
+<div class="more-links">
+    <a class="button-appearance"
+       href="/app/<?= $view->locale() ?>/admin/tag/create">
+        <?= $view->translate( 'default.createNew' ); ?>
+    </a>
+</div>
+<?php endif ?>

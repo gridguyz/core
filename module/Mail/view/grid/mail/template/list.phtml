@@ -1,0 +1,39 @@
+<?php
+/**
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$this->headTitle( $title = $this->translate( 'mail.list.title', 'mail' ) );
+$view   = $this;
+$rowSet = $this->rowSet();
+
+if ( ! $this->format ): ?>
+<h1><?= $title ?></h1>
+<?php endif ?>
+<?= $this->rowSet( $this->paginator, $rowSet::FLAG_LAYOUT_ALL )
+         ->setColumnTranslatePrefix( 'mail.list.column' )
+         ->setColumnTranslatePostfix( 'title' )
+         ->setColumnTranslateTextDomain( 'mail' )
+         ->setPage( $this->page )
+         ->setColumns( array(
+             'name'         => $rowSet->column( $rowSet::TRANSLATE,
+                                                'mail.template', '', 'mail' ),
+             'locale'       => $rowSet::LOCALE,
+             'fromAddress'  => $rowSet::STRING,
+             'fromName'     => $rowSet::STRING,
+             'bodyHtml'     => $rowSet::HTML,
+             'bodyText'     => $rowSet::TEXT,
+             'actions'      => function ( $row ) use ( $view ) {
+                $view->placeholder( 'listActions' )->set( '' );
+                $view->placeholder( 'listActions' )->captureStart();
+?>
+    <a class="action-button edit"
+       title="<?= $view->translate( 'default.edit' ) ?>"
+       href="/app/<?= $view->locale() ?>/admin/mail/edit/<?=
+                      $row->name ?>?adminLocale=<?=
+                      $row->locale ?>">&nbsp;</a>
+<?php
+                $view->placeholder( 'listActions' )->captureEnd();
+                return (string) $view->placeholder( 'listActions' );
+            },
+         ) )
+         ->render( $this->format );

@@ -1,0 +1,9 @@
+<?php $root = $this->viewModel()->getRoot();
+if ( empty( $root->content ) ): ?>
+    <div class="paragraph-like visual-content-placeholder">
+        <h1><?= $this->translate( 'paragraph.type.contentPlaceholder', 'paragraph' ) ?></h1>
+        <?= file_get_contents( './data/paragraph/html.html' ) ?>
+    </div>
+<?php else: ?>
+    <?= $root->content ?>
+<?php endif ?>

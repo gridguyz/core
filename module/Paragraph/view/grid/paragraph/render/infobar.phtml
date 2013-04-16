@@ -1,0 +1,48 @@
+<?php
+
+$hasAvatar    = ! empty( $this->paragraph->renderedUser ) &&
+                ! empty( $this->paragraph->renderedUser->avatar );
+$hasUserName  = ! empty( $this->paragraph->renderedUser ) &&
+                ! empty( $this->paragraph->renderedUser->displayName );
+$hasPublished = ! empty( $this->paragraph->renderedPublished );
+
+?>
+<footer class="<?= $this->paragraph->skin ?>">
+    <p class="user">
+        <a class="user-avatar<?php if ( ! $this->paragraph->displayUserAvatar ):
+               ?> ui-helper-hidden<?php endif ?>"
+           href="<?= empty( $this->paragraph->renderedUser ) ? '#' :
+                            $this->paragraph->renderedUser
+                                 ->getUri( (string) $this->locale() ) ?>"
+<?php if ( ! $hasAvatar ): ?>
+           style="display: none;"
+<?php endif ?>><img src="<?php if ( $hasAvatar ): ?><?= $this->thumbnail(
+                $this->paragraph->renderedUser->avatar,
+                array(
+                    'method'    => 'fit',
+                    'width'     => 50,
+                    'height'    => 50,
+                )
+            ) ?><?php else: ?>javascript:void(0);<?php endif ?>" /></a>
+        <span class="user-displayName<?php if ( ! $this->paragraph->displayUserDisplayName ):
+                  ?> ui-helper-hidden<?php endif ?>"<?php if ( ! $hasUserName ):
+           ?> style="display: none;"<?php endif ?>>
+            <span class="label"><?= $this->translate( 'paragraph.infobar.user.label',
+                                                      'paragraph' ) ?>:</span>
+            <a href="<?= empty( $this->paragraph->renderedUser ) ? '#' :
+                        $this->paragraph->renderedUser->getUri( (string) $this->locale() )
+                    ?>"><?= empty( $this->paragraph->renderedUser ) ? '' :
+                        $this->paragraph->renderedUser->displayName ?></a>
+        </span>
+    </p>
+    <p class="published<?php if ( ! $this->paragraph->displayPublishedDate ):
+           ?> ui-helper-hidden<?php endif ?>"<?php if ( $hasPublished ):
+    ?> title="<?= $this->dateTime( $this->paragraph->renderedPublished ) ?>"<?php else:
+    ?> style="display: none;"<?php endif ?>>
+
+        <span class="label"><?= $this->translate( 'paragraph.infobar.published.label',
+                                                  'paragraph' ) ?>:</span>
+        <?= empty( $this->paragraph->renderedPublished )
+            ? '' : $this->relativeTime( $this->paragraph->renderedPublished ) ?>
+    </p>
+</footer>

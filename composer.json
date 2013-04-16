@@ -1,0 +1,38 @@
+{
+    "name": "webriq/gridguyz-core",
+    "description": "Core modules for Gridguyz",
+    "license": "CC-BY-SA-3.0",
+    "keywords": [
+        "gridguyz",
+        "module",
+        "core"
+    ],
+    "homepage": "http://gridguyz.com/",
+    "require": {
+        "php": ">=5.4",
+        "ext-pdo_pgsql": "*",
+        "webriq/zork": "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Grid\\Core": "module/Core/src/",
+            "Grid\\Customize": "module/Customize/src/",
+            "Grid\\Image": "module/Image/src/",
+            "Grid\\Mail": "module/Mail/src/",
+            "Grid\\Menu": "module/Menu/src/",
+            "Grid\\Paragraph": "module/Paragraph/src/",
+            "Grid\\Tag": "module/Tag/src/",
+            "Grid\\User": "module/User/src/"
+        },
+        "classmap": [
+            "module/Core/Module.php",
+            "module/Customize/Module.php",
+            "module/Image/Module.php",
+            "module/Mail/Module.php",
+            "module/Menu/Module.php",
+            "module/Paragraph/Module.php",
+            "module/Tag/Module.php",
+            "module/User/Module.php"
+        ]
+    }
+}

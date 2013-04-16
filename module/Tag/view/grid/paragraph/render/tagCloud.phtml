@@ -1,0 +1,37 @@
+<?php
+
+$min    = null;
+$max    = null;
+$tags   = array();
+
+foreach ( $this->paragraph
+               ->findTagsUsage() as $tagUsage )
+{
+    $tags[$tagUsage['name']] = $tagUsage['usage'];
+
+    if ( null === $min || $tagUsage['usage'] < $min )
+    {
+        $min = $tagUsage['usage'];
+    }
+
+    if ( null === $max || $tagUsage['usage'] > $max )
+    {
+        $max = $tagUsage['usage'];
+    }
+}
+
+?>
+
+<ul class="tags">
+<?php foreach ( $tags as $name => $usage ): ?>
+
+    <li class="tag" style="font-size: <?=
+        $max == $min ? 100 : intval( 150 * ( $usage - $min ) / ( $max - $min ) + 50 ) ?>%;">
+        <a href="/app/<?= $this->locale() ?>/tag/list/all/<?=
+            $this->escapeHtmlAttr( rawurlencode( $name ) )
+            ?>"><?= $this->escapeHtml( $name ) ?></a>
+        <span class="usage"><?= $usage ?></span>
+    </li>
+<?php endforeach ?>
+
+</ul>

@@ -1,0 +1,60 @@
+<?php if ( $this->pageCount > 1 ): ?>
+
+    <div class="paginationControl">
+    <?php if ( isset( $this->first ) && $this->first != $this->current ): ?>
+
+        <a class="link first"
+           href="<?= sprintf( $this->uriPattern, $this->first ) ?>">&#x00ab; <?=
+           $this->translate( 'default.paginator.first' ) ?></a>
+    <?php else: ?>
+
+        <span class="link first disabled">&#x00ab; <?=
+              $this->translate( 'default.paginator.first' ) ?></span>
+    <?php endif ?>
+
+    <?php if ( isset( $this->previous ) ): ?>
+
+        <a class="link previous"
+           href="<?= sprintf( $this->uriPattern, $this->previous ) ?>">&#x2039; <?=
+           $this->translate( 'default.paginator.previous' ) ?></a>
+    <?php else: ?>
+
+        <span class="link previous disabled">&#x2039; <?=
+              $this->translate( 'default.paginator.previous' ) ?></span>
+    <?php endif ?>
+
+    <?php foreach ( $this->pagesInRange as $page ): ?>
+        <?php if ( $page != $this->current ): ?>
+
+            <a class="link number" name="page"
+               href="<?= sprintf( $this->uriPattern, $page ) ?>"><?= $page ?></a>
+        <?php else: ?>
+
+            <span class="link number current"><?= $page ?></span>
+        <?php endif ?>
+    <?php endforeach ?>
+
+    <?php if ( isset( $this->next ) ): ?>
+
+        <a class="link next"
+           href="<?= sprintf( $this->uriPattern, $this->next ) ?>"><?=
+           $this->translate( 'default.paginator.next' ) ?> &#x203a;</a>
+    <?php else: ?>
+
+        <span class="link next disabled"><?=
+              $this->translate( 'default.paginator.next' ) ?> &#x203a;</span>
+    <?php endif ?>
+
+    <?php if ( isset( $this->last ) && $this->last != $this->current ): ?>
+
+        <a class="link last"
+           href="<?= sprintf( $this->uriPattern, $this->last ) ?>"><?=
+           $this->translate( 'default.paginator.last' ) ?> &#x00bb;</a>
+    <?php else: ?>
+
+        <span class="link last disabled"><?=
+              $this->translate( 'default.paginator.last' ) ?> &#x00bb;</span>
+    <?php endif ?>
+
+    </div>
+<?php endif ?>

@@ -1,0 +1,17 @@
+<?php
+/**
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$this->headTitle( $title = $this->translate(
+    'admin.notAllowed.title',
+    'admin'
+) );
+?>
+
+<h1><?= $title ?></h1>
+<div class="page">
+    <p class="warn"><?= $this->translate(
+        'admin.notAllowed.description',
+        'admin'
+    ); ?></p>
+</div>

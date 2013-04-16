@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * @var Zend\View\Renderer\PhpRenderer $this
+ */
+
+$links = $this->headLink()
+              ->getContainer()
+              ->getArrayCopy();
+
+foreach ( $links as $index => $item )
+{
+    if ( ! empty( $item->id ) &&
+           'customizeStyleSheet' === $item->id )
+    {
+        $this->headLink()
+             ->getContainer()
+             ->offsetUnset( $index );
+    }
+}
+
+$this->headLink()
+     ->appendStylesheet( '/styles/admin.css', 'all' );
+
+$menu = $this->navigation( $this->navigationPages )->setAcl($this->acl)->menu();
+$menu->setTranslatorEnabled( false );
+
+if ( $this->hasIdentity ): ?>
+
+    <header>
+        <nav class="menu"
+             data-js-type="zork.ui.menu"
+             data-js-menu-corners="bottom"
+             data-js-menu-orientation="horizontal">
+            <?= $menu ?>
+        </nav>
+    </header>
+
+    <div class="adminContentContainer">
+        <?php if ( ! empty( $this->adminLocaleForm ) ): ?>
+            <div class="adminLocale">
+                <?= $this->form( $this->adminLocaleForm, 'default' ); ?>
+            </div>
+        <?php
+            endif;
+            $ns = array_map( 'lcfirst', explode( '\\' , $this->controller ) );
+            $controller = array_pop( $ns );
+        ?>
+
+        <section class="admin <?=
+                 implode( '-', $ns ) . '-ns' ?> <?=
+                 $controller . '-controller' ?> <?=
+                 $this->action . '-action'; ?>">
+<?php endif ?>
+
+<?= $this->content ?>
+
+<?php if ( $this->hasIdentity ): ?>
+            <br class="clear" />
+        </section>
+    </div>
+<?php endif ?>
