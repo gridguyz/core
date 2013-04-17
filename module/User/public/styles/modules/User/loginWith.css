@@ -1,0 +1,108 @@
+@charset "utf-8";
+
+.ui-dialog.js-login-with
+{
+    border-color: #999a9e;
+}
+
+.ui-dialog.js-login-with .ui-widget-header
+{
+    border-color: #888a90;
+    background-color: #888a90;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #a9abb2), color-stop(1, #888a90));
+    background-image: -webkit-linear-gradient(top, #a9abb2 0%, #888a90 100%);
+    background-image: -moz-linear-gradient(top, #a9abb2 0%, #888a90 100%);
+    background-image: -ms-linear-gradient(top, #a9abb2 0%, #888a90 100%);
+    background-image: -o-linear-gradient(top, #a9abb2 0%, #888a90 100%);
+    background-image: linear-gradient(to bottom, #a9abb2 0%, #888a90 100%);
+}
+
+.js-browser-gradient-filter .ui-dialog.js-login-with .ui-widget-header
+{
+    -ms-filter: "progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#A9ABB2',EndColorStr='#888A90')";
+    filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#A9ABB2',EndColorStr='#888A90');
+}
+
+.ui-dialog.js-login-with .ui-menu
+{
+    overflow: hidden;
+    margin-left: 0em;
+    margin-right: 0em;
+    padding-left: 0em;
+    padding-right: 0em;
+}
+
+.ui-dialog.js-login-with .ui-menu .ui-menu-item li:hover
+{
+    background-color: #90b0ff;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #b1c5f4), color-stop(1, #90b0ff));
+    background-image: -webkit-linear-gradient(top, #b1c5f4 0%, #90b0ff 100%);
+    background-image: -moz-linear-gradient(top, #b1c5f4 0%, #90b0ff 100%);
+    background-image: -ms-linear-gradient(top, #b1c5f4 0%, #90b0ff 100%);
+    background-image: -o-linear-gradient(top, #b1c5f4 0%, #90b0ff 100%);
+    background-image: linear-gradient(to bottom, #b1c5f4 0%, #90b0ff 100%);
+}
+
+.js-browser-gradient-filter .ui-dialog.js-login-with .ui-menu .ui-menu-item li:hover
+{
+    -ms-filter: "progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#B1C5F4',EndColorStr='#90B0FF')";
+    filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#B1C5F4',EndColorStr='#90B0FF');
+}
+
+.ui-dialog.js-login-with .ui-menu .ui-menu-item a
+{
+    margin: 0px;
+    border: none;
+    font-weight: bold;
+    padding-left: 40px;
+    background-repeat: no-repeat;
+    background-position: 12px center;
+    border-radius: 0px;
+    -ms-border-radius: 0px;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+}
+
+.ui-dialog.js-login-with .ui-menu .ui-menu-item.facebook a
+{
+    background-image: url("/images/modules/User/loginWith/facebook.png");
+}
+
+.ui-dialog.js-login-with .ui-menu .ui-menu-item.google a
+{
+    background-image: url("/images/modules/User/loginWith/google.png");
+}
+
+.ui-dialog.js-login-with .ui-menu .ui-menu-item.yahoo a
+{
+    background-image: url("/images/modules/User/loginWith/yahoo.png");
+}
+
+.ui-dialog.js-login-with .ui-menu .ui-menu-item.openid a
+{
+    background-image: url("/images/modules/User/loginWith/openid.png");
+}
+
+.ui-dialog.js-login-with .ui-menu .ui-menu-item.facebook a.ui-state-hover,
+.ui-dialog.js-login-with .ui-menu .ui-menu-item.facebook a.ui-state-focus
+{
+    background-image: url("/images/modules/User/loginWith/facebook-hover.png");
+}
+
+.ui-dialog.js-login-with .ui-menu .ui-menu-item.google a.ui-state-hover,
+.ui-dialog.js-login-with .ui-menu .ui-menu-item.google a.ui-state-focus
+{
+    background-image: url("/images/modules/User/loginWith/google-hover.png");
+}
+
+.ui-dialog.js-login-with .ui-menu .ui-menu-item.yahoo a.ui-state-hover,
+.ui-dialog.js-login-with .ui-menu .ui-menu-item.yahoo a.ui-state-focus
+{
+    background-image: url("/images/modules/User/loginWith/yahoo-hover.png");
+}
+
+.ui-dialog.js-login-with .ui-menu .ui-menu-item.openid a.ui-state-hover,
+.ui-dialog.js-login-with .ui-menu .ui-menu-item.openid a.ui-state-focus
+{
+    background-image: url("/images/modules/User/loginWith/openid-hover.png");
+}

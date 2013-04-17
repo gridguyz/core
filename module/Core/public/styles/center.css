@@ -1,0 +1,46 @@
+@charset "utf-8";
+
+html, body,
+#center-table,
+#center-row
+{
+    width: 100%;
+    margin: 0px;
+    height: 100%;
+    padding: 0px;
+}
+
+#center-table
+{
+    display: table;
+}
+
+#center-row
+{
+    display: table-row;
+}
+
+#center-cell
+{
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#center
+{
+    padding: 0px;
+    text-align: left;
+    display: inline-block;
+    background: #f5f6f9;
+    border: 1px solid #d6d7da;
+    border-radius: 1px;
+    box-shadow: 0px 0px 5px #eee;
+    -ms-border-radius: 1px;
+    -moz-border-radius: 1px;
+    -webkit-border-radius: 1px;
+    -moz-box-shadow: 0px 0px 5px #eee;
+    -webkit-box-shadow: 0px 0px 5px #eee;
+    min-width: 510px;
+    width: auto;
+}

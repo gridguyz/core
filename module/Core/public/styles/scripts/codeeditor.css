@@ -1,0 +1,32 @@
+@charset "utf-8";
+
+.js-code-editor
+{
+    width: 100%;
+    resize: none;
+    display: inline;
+    min-height: 134px;
+    display: inline-block;
+}
+
+.js-code-editor .js-code-editor-bar
+{
+    z-index: 1;
+    margin: 0px;
+    padding: 1px;
+    height: 32px;
+    display: block;
+    text-align: right;
+    margin-bottom: -34px;
+}
+
+.js-code-editor textarea
+{
+    margin: 0px;
+    border-width: 1px;
+    padding: 34px 1px 1px 1px;
+    resize: none !important;
+    max-width: 100% !important;
+    min-height: 100px !important;
+    max-height: none !important;
+}

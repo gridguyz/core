@@ -1,0 +1,32 @@
+@charset "utf-8";
+
+html,
+body
+{ 
+    background: transparent !important;
+}
+
+dl dt,
+dl dd
+{
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+}
+
+ul.errors,
+ul.errors li
+{
+    color: red;
+    margin: 0px;
+    padding: 0px;
+    display: block;
+}
+
+#types-label,
+#types-element,
+#pattern-label,
+#pattern-element
+{
+    display: none;
+}

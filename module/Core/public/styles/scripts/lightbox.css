@@ -1,0 +1,1 @@
+@charset "utf-8";.ui-overlay-lightbox > .ui-widget-shadow { display: none; }.ui-overlay-lightbox > .ui-widget-shadow + div {    box-shadow: -3px 0 27px rgba(0, 0, 0, 0.75);}

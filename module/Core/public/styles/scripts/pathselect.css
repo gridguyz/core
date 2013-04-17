@@ -1,0 +1,371 @@
+@charset "utf-8";
+
+#js-pathselect,
+.js-pathselect
+{
+    display: block;
+    overflow: hidden;
+    position: relative;
+}
+
+.ui-selectable-helper
+{
+    z-index: 500000;
+}
+
+.js-pathselect ~ .ui-dialog-buttonpane .ui-dialog-buttonset
+{
+    float: none;
+}
+
+.js-pathselect ~ .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
+{
+    float: left;
+    margin-left: 0.4em;
+}
+
+.js-pathselect ~ .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button ~ .ui-button
+{
+    float: right;
+    margin-left: 0em;
+}
+
+.js-pathselect .js-pathselect-path,
+.js-pathselect .js-pathselect-actions
+{
+    padding: 0em;
+    display: block;
+    margin: 0em -1em 0.5em -1em;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+.js-pathselect .js-pathselect-path ul,
+.js-pathselect .js-pathselect-entries ul
+{
+    margin: 0em;
+    padding: 0em;
+}
+
+.js-pathselect .js-pathselect-path .js-pathselect-path-dir
+{
+    cursor: pointer;
+    padding: 0px 2px;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.js-pathselect .js-pathselect-path .js-pathselect-path-last
+{
+    font-weight: bold;
+}
+
+.js-pathselect .js-pathselect-path .js-pathselect-path-dir:after
+{
+    content: "/";
+    padding-left: 4px;
+}
+
+.js-pathselect .js-pathselect-path .js-pathselect-path-last:after
+{
+    content: "";
+}
+
+.js-pathselect .js-pathselect-actions .js-pathselect-separator
+{
+    padding: 0px 2px;
+}
+
+.js-pathselect .js-pathselect-preview
+{
+    width: 30%;
+    float: right;
+    display: block;
+    text-align: center;
+    padding: 0.5em 0em 2em 0em;
+}
+
+.js-pathselect .js-pathselect-preview img
+{
+    width: 100px;
+    height: 100px;
+    background: transparent none center center no-repeat;
+}
+
+.js-pathselect .js-pathselect-preview img.type-dir
+{
+    background-image: url("/images/scripts/pathselect/48x48/dir.png");
+}
+
+.js-pathselect .js-pathselect-preview img.type-file
+{
+    background-image: url("/images/scripts/pathselect/48x48/file.png");
+}
+
+.js-pathselect .js-pathselect-preview img.type-file.mime-audio
+{
+    background-image: url("/images/scripts/pathselect/48x48/audio.png");
+}
+
+.js-pathselect .js-pathselect-preview img.type-file.mime-text
+{
+    background-image: url("/images/scripts/pathselect/48x48/text.png");
+}
+
+.js-pathselect .js-pathselect-preview img.type-file.mime-image,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-psd,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-photoshop
+{
+    background-image: url("/images/scripts/pathselect/48x48/image.png");
+}
+
+.js-pathselect .js-pathselect-preview img.type-file.mime-video,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-ogg,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-webm
+{
+    background-image: url("/images/scripts/pathselect/48x48/video.png");
+}
+
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-futuresplash,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-x-shockwave-flash
+{
+    background-image: url("/images/scripts/pathselect/48x48/object.png");
+}
+
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-zip,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-x-7z-compressed,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-x-bzip2,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-x-compress,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-x-compressed,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-x-gtar,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-x-gzip,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-x-rar-compressed,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-x-tar
+{
+    background-image: url("/images/scripts/pathselect/48x48/compressed.png");
+}
+
+.js-pathselect .js-pathselect-preview img.type-file.mime-text-rtf,
+.js-pathselect .js-pathselect-preview img.type-file.mime-text-html,
+.js-pathselect .js-pathselect-preview img.type-file.mime-text-richtext,
+.js-pathselect .js-pathselect-preview img.type-file.mime-text-x-vcard,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-pdf,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-xml,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-msword,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-postscript,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-rtf,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-vnd-ms-office,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-vnd-ms-excel,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-vnd-ms-powerpoint,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-x-msaccess,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-vnd-oasis-opendocument-text,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-vnd-oasis-opendocument-spreadsheet,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-vnd-oasis-opendocument-presentation,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-vnd-oasis-opendocument-graphics,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-vnd-oasis-opendocument-chart,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-vnd-oasis-opendocument-formula,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-vnd-oasis-opendocument-image,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-vnd-oasis-opendocument-text-master,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-vnd-oasis-opendocument-base,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-vnd-oasis-opendocument-database,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-x-latex,
+.js-pathselect .js-pathselect-preview img.type-file.mime-application-x-tex
+{
+    background-image: url("/images/scripts/pathselect/48x48/document.png");
+}
+
+.js-pathselect .js-pathselect-preview dl
+{
+    padding: 0em;
+    text-align: left;
+    margin: 0em 0.5em;
+}
+
+.js-pathselect .js-pathselect-preview dl dt
+{
+    padding: 0em;
+    font-weight: bold;
+    margin: 0.5em 0em 0em 0em;
+}
+
+.js-pathselect .js-pathselect-preview dl dd
+{
+    padding: 0em;
+    overflow: hidden;
+    font-weight: normal;
+    margin: 0em 0em 0em 2em;
+    text-overflow: ellipsis;
+}
+
+.js-pathselect .js-pathselect-entries
+{
+    padding: 0em;
+    display: block;
+    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    margin: 0.5em 31% 2em 0em;
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry
+{
+    margin: 0em;
+    padding: 0.2em;
+    display: block;
+    cursor: pointer;
+    line-height: 20px;
+    position: relative;
+    text-decoration: none;
+    border: 1px solid transparent;
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.ui-selecting
+{
+    background: #fc4;
+    border: 1px solid #fc4;
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.ui-selected
+{
+    color: #fed;
+    background: #f91;
+    border: 1px solid #e91;
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.ui-selecting + .js-pathselect-entries-entry.ui-selecting
+{
+    border-top: 1px dotted #e91;
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.ui-selected + .js-pathselect-entries-entry.ui-selected
+{
+    border-top: 1px dotted #d60;
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry .type,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry input
+{
+    vertical-align: middle;
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry .type
+{
+    float: right;
+    max-width: 15%;
+    display: inline-block;
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry .name
+{
+    max-width: 75%;
+    overflow: hidden;
+    padding-left: 24px;
+    display: inline-block;
+    text-overflow: ellipsis;
+    background: transparent none 2px center no-repeat;
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-dir .name
+{
+    background-image: url("/images/scripts/pathselect/20x20/dir.png");
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file .name
+{
+    background-image: url("/images/scripts/pathselect/20x20/file.png");
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-audio .name
+{
+    background-image: url("/images/scripts/pathselect/20x20/audio.png");
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-text .name
+{
+    background-image: url("/images/scripts/pathselect/20x20/text.png");
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-image .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-psd .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-photoshop .name
+{
+    background-image: url("/images/scripts/pathselect/20x20/image.png");
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-video .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-ogg .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-webm .name
+{
+    background-image: url("/images/scripts/pathselect/20x20/video.png");
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-futuresplash .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-x-shockwave-flash .name
+{
+    background-image: url("/images/scripts/pathselect/20x20/object.png");
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-zip .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-x-7z-compressed .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-x-bzip2 .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-x-compress .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-x-compressed .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-x-gtar .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-x-gzip .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-x-rar-compressed .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-x-tar .name
+{
+    background-image: url("/images/scripts/pathselect/20x20/compressed.png");
+}
+
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-text-rtf .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-text-html .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-text-richtext .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-text-x-vcard .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-pdf .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-xml .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-msword .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-postscript .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-rtf .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-vnd-ms-office .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-vnd-ms-excel .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-vnd-ms-powerpoint .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-x-msaccess .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-vnd-oasis-opendocument-text .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-vnd-oasis-opendocument-spreadsheet .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-vnd-oasis-opendocument-presentation .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-vnd-oasis-opendocument-graphics .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-vnd-oasis-opendocument-chart .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-vnd-oasis-opendocument-formula .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-vnd-oasis-opendocument-image .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-vnd-oasis-opendocument-text-master .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-vnd-oasis-opendocument-base .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-vnd-oasis-opendocument-database .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-x-latex .name,
+.js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.type-file.mime-application-x-tex .name
+{
+    background-image: url("/images/scripts/pathselect/20x20/document.png");
+}
+
+.js-pathselect .js-pathselect-input
+{
+    left: 0px;
+    width: 100%;
+    bottom: 0px;
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    height: 1.6em;
+    line-height: 1.6em;
+    position: absolute;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    box-shadow: inset 0px 0px 1px #012 !important;
+    -ms-box-shadow: inset 0px 0px 1px #012 !important;
+    -moz-box-shadow: inset 0px 0px 1px #012 !important;
+    -webkit-box-shadow: inset 0px 0px 1px #012 !important;
+}

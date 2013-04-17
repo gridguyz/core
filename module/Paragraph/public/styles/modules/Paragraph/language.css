@@ -1,0 +1,22 @@
+/* 
+    Document   : language
+    Created on : 2012.08.30., 10:24:10
+    Author     : Sipos Zoltán
+*/
+
+.language-container
+{
+    position: relative;
+    overflow: hidden;
+}
+.language-list
+{ 
+    display: block;
+    list-style: none;
+    overflow: hidden;
+}
+.language-list li
+{
+    float: left;
+    padding: 10px 5px;
+}

@@ -1,0 +1,118 @@
+@charset "utf-8";
+
+.js-tabs-bottom.ui-tabs .js-tabs-spacer
+{
+    float: left;
+    height: 200px;
+}
+
+.js-tabs-bottom.ui-tabs .ui-tabs-nav
+{
+    clear: left;
+    padding: 0 .2em .2em .2em;
+}
+
+.js-tabs-bottom.ui-tabs .ui-tabs-nav li
+{
+    top: auto;
+    bottom: 0;
+    border-top: 0;
+    border-bottom: auto;
+    margin: 0 .2em 1px 0;
+}
+
+.js-tabs-bottom.ui-tabs .ui-tabs-nav li.ui-tabs-active
+{
+    margin-top: -1px;
+    padding-top: 1px;
+}
+
+.js-tabs-vertical.ui-tabs .ui-tabs-nav
+{
+    max-width: 20%;
+    min-width: 12em;
+    padding: .2em .1em .2em .2em;
+}
+
+.js-tabs-vertical.js-tabs-left.ui-tabs .ui-tabs-nav
+{
+    float: left;
+}
+
+.js-tabs-vertical.js-tabs-right.ui-tabs .ui-tabs-nav
+{
+    float: right;
+}
+
+.js-tabs-vertical.ui-tabs .ui-tabs-nav li
+{
+    width: 100%;
+    margin: 0 -1px 0 0;
+    border-bottom-width: 1px !important;
+}
+
+.js-tabs-vertical.ui-tabs .ui-tabs-nav li a
+{
+    float: none;
+}
+
+.js-tabs-vertical.js-tabs-left.ui-tabs .ui-tabs-nav li
+{
+    clear: left;
+    margin-right: .2em;
+    border-right-width: 0 !important;
+}
+
+.js-tabs-vertical.js-tabs-right.ui-tabs .ui-tabs-nav li
+{
+    clear: right;
+    margin-left: .2em;
+    border-left-width: 0 !important;
+}
+
+.js-tabs-vertical.ui-tabs .ui-tabs-nav li a
+{
+    display: block;
+}
+
+.js-tabs-vertical.ui-tabs .ui-tabs-nav li.ui-tabs-active
+{
+    padding-bottom: 0;
+}
+
+.js-tabs-vertical.js-tabs-left.ui-tabs .ui-tabs-nav li.ui-tabs-active
+{
+    padding-right: .1em;
+    border-right-width: 1px;
+    border-right-width: 1px;
+}
+
+.js-tabs-vertical.js-tabs-right.ui-tabs .ui-tabs-nav li.ui-tabs-active
+{
+    padding-left: .1em;
+    border-left-width: 1px;
+    border-left-width: 1px;
+}
+
+.js-tabs-vertical.ui-tabs .ui-tabs-panel
+{
+    min-width: 80%;
+    padding: 1em;
+}
+
+.js-tabs-vertical.js-tabs-left.ui-tabs .ui-tabs-panel
+{
+    float: right;
+    margin-left: -20%;
+}
+
+.js-tabs-vertical.js-tabs-right.ui-tabs .ui-tabs-panel
+{
+    float: left;
+    margin-right: -20%;
+}
+
+.js-tabs-vertical.ui-tabs .js-tabs-clear
+{
+    clear: both;
+}

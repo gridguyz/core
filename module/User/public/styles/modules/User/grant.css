@@ -1,0 +1,151 @@
+@charset "utf-8";
+
+body .admin .panel .right-group-list li
+{
+    padding-left: 40px;
+    background-repeat: no-repeat;
+    background-position: 10px 50%;
+    background-image: url("/images/common/icons/plus.png");
+}
+
+body .admin .panel .right-group-list li.selected
+{
+    background-image: url("/images/common/icons/minus.png");
+}
+
+body .admin .page .grant-rights
+{
+    font-size: smaller;
+    margin: -19px -15px 0px -15px;
+}
+
+body .admin .page .grant-rights .right-group h4
+{
+    color: #000000;
+    background: #f4f4f4;
+    border-color: #d3d4d9;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(1, #e8e8e8));
+    background-image: -webkit-linear-gradient(top, #ffffff 0%, #e8e8e8 100%);
+    background-image: -moz-linear-gradient(top, #ffffff 0%, #e8e8e8 100%);
+    background-image: -ms-linear-gradient(top, #ffffff 0%, #e8e8e8 100%);
+    background-image: -o-linear-gradient(top, #ffffff 0%, #e8e8e8 100%);
+    background-image: linear-gradient(to bottom, #ffffff 0%, #e8e8e8 100%);
+}
+
+.js-browser-gradient-filter .admin .page .grant-rights .right-group h4
+{
+    zoom: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#FFFFFF',EndColorStr='#E8E8E8')";
+    filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#FFFFFF',EndColorStr='#E8E8E8');
+}
+
+body .admin .page .grant-rights .right-group h4.ui-state-active
+{
+    color: #ffffff;
+    background: #424242;
+    border-color: #424242;
+    -ms-filter: none;
+    filter: none;
+}
+
+body .admin .page .grant-rights .right-group h4.ui-state-hover
+{
+    color: #ffffff;
+    background: #4d7cee;
+    border-color: #4d7cee;
+    -ms-filter: none;
+    filter: none;
+}
+
+body .admin .page .grant-rights .right-group h4 .ui-icon.ui-icon-carat-1-n
+{
+    background-position: 50% 50%;
+    background-image: url("/images/common/icons/carat-up.png");
+}
+
+body .admin .page .grant-rights .right-group h4 .ui-icon.ui-icon-carat-1-s
+{
+    background-position: 50% 50%;
+    background-image: url("/images/common/icons/carat-down.png");
+}
+
+body .admin .page .grant-rights .right-group dl
+{
+    margin: 0px;
+    border: 0px none;
+    padding: 0px 0px 10px 0px;
+}
+
+body .admin .page .grant-rights .right-group dl dt
+{
+    margin: 10px 50px;
+    font-weight: bold;
+}
+
+body .admin .page .grant-rights .right-group dl dt.label
+{
+    padding: 5px;
+    background: #e8e8e8;
+}
+
+body .admin .page .grant-rights .right-group dl dt.check-all
+{
+    margin: 10px 20px 20px 20px;
+}
+
+body .admin .page .grant-rights .right-group dl dd
+{
+    margin: 0px 80px;
+}
+
+body .admin .page .grant-rights .right-group dl dt,
+body .admin .page .grant-rights .right-group dl dd
+{
+    float: none;
+    width: auto;
+    text-align: left;
+}
+
+body .admin .page .grant-rights .right-group dl dd.input label
+{
+    margin: 0px;
+    padding: 3px;
+    border-top: 1px solid #e8e8e8;
+}
+
+body .admin .page .grant-rights .right-group dl dd.input label:first-child
+{
+    border-top: none;
+}
+
+body .admin .page .grant-rights .right-group dl dd.inherited-from
+{
+    float: right;
+    font-weight: bold;
+    text-align: center;
+    margin: -35px 100px 0px 0px;
+}
+
+body .admin .page .grant-rights .right-group dl dd.inherited-from .group
+{
+    color: #507ffe;
+    font-style: italic;
+}
+
+body .admin .page .grant-rights .right-group dl dd label.inherited:before
+{
+    float: right;
+    margin-right: 70px;
+    content: url("/images/common/checkbox.png");
+}
+
+body .admin .page .grant-rights ~ .submits
+{
+    margin: 0px;
+    padding: 10px 0px 0px 0px;
+}
+
+body .admin .page .grant-rights ~ .submits .save
+{
+    float: right;
+}

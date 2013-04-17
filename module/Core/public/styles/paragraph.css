@@ -1,0 +1,291 @@
+@charset "utf-8";
+
+html,
+body
+{
+    height: 100%;
+    overflow: visible;
+}
+
+body
+{
+    overflow-y: auto;
+}
+
+html,
+body,
+.paragraph,
+.paragraph-container
+{
+    margin: 0px;
+    padding: 0px;
+
+}
+
+html,
+body,
+.paragraph-container.paragraph-layout-container
+{
+    width: 100%;
+    min-height: 100%;
+}
+
+.paragraph,
+.paragraph-container
+{
+    display: block;
+    position: relative;
+}
+
+.paragraph-container
+{
+    margin: -1px;
+    border: 1px solid transparent;
+}
+
+.paragraph-container.paragraph-layout-container
+{
+    margin: 0px;
+    border: none;
+    text-align: center;
+}
+
+.paragraph.paragraph-layout
+{
+    width: 1000px;
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.paragraph-container.paragraph-columns-container
+{
+    min-width: 100%;
+}
+
+.paragraph-container.paragraph-columns-container .paragraph.paragraph-columns
+{
+    display: inline-block;
+}
+
+.paragraph-container .paragraph .paragraph-children
+{
+    min-height: 2em;
+}
+
+.paragraph-container.paragraph-columns-container
+{
+    margin-left: -0.5em;
+    margin-right: -0.5em;
+    border-left: 0px none;
+    border-right: 0px none;
+}
+
+.paragraph-container.paragraph-column-container
+{
+    float: left;
+    max-width: 100%;
+}
+
+.paragraph-container.paragraph-columns-container .paragraph-container.paragraph-column-container .paragraph.paragraph-column
+{
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+.paragraph-container:after,
+.paragraph-container .paragraph:after,
+.paragraph-container.paragraph-columns-container .paragraph.paragraph-columns:after
+{
+    height: 0;
+    clear: both;
+    content: ".";
+    display: block;
+    visibility: hidden;
+}
+
+/* required comment for clearfix to work in Opera \*/
+
+* html .paragraph-container,
+* html .paragraph-container .paragraph,
+* html .paragraph-container.paragraph-columns-container .paragraph.paragraph-columns
+{
+    height: 1%;
+}
+
+.paragraph-container,
+.paragraph-container .paragraph,
+.paragraph-container.paragraph-columns-container .paragraph.paragraph-columns
+{
+    display: block;
+}
+
+/* end clearfix */
+
+.paragraph-container.paragraph-layout-container .paragraph.paragraph-layout .visual-content-placeolder
+{
+    padding: 1em;
+    border: 1em dashed #888;
+    border-color: rgba( 128, 128, 128, 0.5 );
+}
+
+.paragraph-container.paragraph-image-container .paragraph.paragraph-image figure,
+.paragraph-container.paragraph-image-container .paragraph.paragraph-image figure figcaption
+{
+    margin: 0px;
+    padding: 0px;
+    display: block;
+    text-align: center;
+}
+
+.paragraph-container.paragraph-image-container .paragraph.paragraph-image figure a.image-paragraph-link
+{
+    display: inline-block;
+}
+
+.paragraph-container.paragraph-image-container .paragraph.paragraph-image figure img
+{
+    width: auto;
+    height: auto;
+    border: none;
+    max-width: 100%;
+    vertical-align: top;
+}
+
+.paragraph-container.paragraph-image-container .paragraph.paragraph-image figure figcaption.empty
+{
+    display: none;
+}
+
+.paragraph-container.paragraph-language-container .paragraph.paragraph-language ul,
+.paragraph-container.paragraph-language-container .paragraph.paragraph-language ul li
+{
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+.paragraph-container.paragraph-language-container .paragraph.paragraph-language ul li
+{
+    float: left;
+    margin-left: 1ex;
+    padding-left: 1ex;
+    display: inline-block;
+    border-left: 1px solid #000;
+    border-color: currentColor;
+}
+
+.paragraph-container.paragraph-language-container .paragraph.paragraph-language ul li:first-child
+{
+    margin-left: 0px;
+    padding-left: 0px;
+    border-left: 0px none;
+}
+
+.paragraph-container.paragraph-gmap-container .paragraph.paragraph-gmap .js-gmap-container
+{
+    margin: 0 auto;
+}
+
+.paragraph-container.paragraph-infobar-container .paragraph.paragraph-infobar p
+{
+    margin: 0.5em 0em;
+}
+
+.paragraph-container.paragraph-lead-container .paragraph.paragraph-lead .lead-image,
+.paragraph-container.paragraph-infobar-container .paragraph.paragraph-infobar .user-avatar
+{
+    float: left;
+    border: none;
+    text-align: center;
+    margin-right: 0.5em;
+    margin-bottom: 0.5em;
+    vertical-align: middle;
+}
+
+.paragraph-container.paragraph-infobar-container .paragraph.paragraph-infobar .left p
+{
+    text-align: left;
+}
+
+.paragraph-container.paragraph-infobar-container .paragraph.paragraph-infobar .left .user-avatar
+{
+    float: left;
+    margin-left: 0em;
+    margin-right: 0.5em;
+}
+
+.paragraph-container.paragraph-infobar-container .paragraph.paragraph-infobar .right p
+{
+    text-align: right;
+}
+
+.paragraph-container.paragraph-infobar-container .paragraph.paragraph-infobar .right .user-avatar
+{
+    float: right;
+    margin-right: 0em;
+    margin-left: 0.5em;
+}
+
+.paragraph-container.paragraph-contentList-container .paragraph.paragraph-contentList .read-more
+{
+    text-align: right;
+}
+
+.paragraph-container.paragraph-contentList-container .paragraph.paragraph-contentList .content-list .content-entry .lead-text
+{
+    overflow: hidden;
+    max-height: 4em;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+    transition: max-height 1s;
+    -o-transition: max-height 1s;
+    -ms-transition: max-height 1s;
+    -moz-transition: max-height 1s;
+    -webkit-transition: max-height 1s;
+}
+
+.paragraph-container.paragraph-contentList-container .paragraph.paragraph-contentList .content-list .content-entry:hover .lead-text
+{
+    max-height: 100em;
+}
+
+.paragraph-container.paragraph-tagCloud-container .paragraph.paragraph-tagCloud .tags,
+.paragraph-container.paragraph-tagCloud-container .paragraph.paragraph-tagCloud .tags .tag
+{
+    margin: 0px;
+    padding: 0px;
+    display: block;
+    list-style: none;
+}
+
+.paragraph-container.paragraph-tagCloud-container .paragraph.paragraph-tagCloud .tags .tag
+{
+    padding: 0.5em 0.5ex;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.paragraph-container.paragraph-contentList-container .paragraph.paragraph-contentList .tags
+{
+    padding-top: 0.5em;
+    border-top: 1px dotted #000;
+    border-color: currentColor;
+}
+
+.paragraph-container.paragraph-contentList-container .paragraph.paragraph-contentList .tags,
+.paragraph-container.paragraph-contentList-container .paragraph.paragraph-contentList .read-more
+{
+    margin: 0.5em 0em;
+}
+
+.paragraph-container.paragraph-tagCloud-container .paragraph.paragraph-tagCloud .tags .tag .usage:before
+{
+    content: "(";
+}
+
+.paragraph-container.paragraph-tagCloud-container .paragraph.paragraph-tagCloud .tags .tag .usage:after
+{
+    content: ")";
+}

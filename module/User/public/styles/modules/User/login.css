@@ -1,0 +1,165 @@
+@charset "utf-8";
+
+.user-authentication.user-login ul.navigation
+{
+    margin: 0em;
+    padding: 0em;
+    display: block;
+    list-style: none;
+}
+
+#center .user-authentication.user-login ul.navigation
+{
+    margin: 1px;
+    background: #d2d4d9;
+}
+
+#center .user-authentication.user-login ul.navigation:after
+{
+    height: 0;
+    clear: both;
+    content: ".";
+    display: block;
+    visibility: hidden;
+}
+
+/* required comment for clearfix to work in Opera \*/
+
+* html #center .user-authentication.user-login ul.navigation
+{
+    height: 1%;
+}
+
+#center .user-authentication.user-login ul.navigation
+{
+    display: block;
+}
+
+/* end clearfix */
+
+.user-authentication.user-login ul.navigation li
+{
+    padding: 0px;
+    display: block;
+    margin: 0px 10px;
+    list-style: none;
+}
+
+#center .user-authentication.user-login ul.navigation li.register,
+#center .user-authentication.user-login ul.navigation li.password-request
+{
+    float: right;
+}
+
+#center .user-authentication.user-login ul.navigation li.login-with
+{
+    float: left;
+}
+
+#center .user-authentication.user-login ul.navigation li a
+{
+    color: #38393d;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 5px;
+    display: block;
+    text-decoration: none;
+}
+
+#center .user-authentication.user-login ul.navigation li a:hover
+{
+    color: #4f7dec;
+    text-decoration: underline;
+}
+
+#center .openid.custom-provider,
+#center .user-authentication.user-login,
+#center .user-authentication.user-logout
+{
+    width: auto;
+    margin: 0px auto;
+}
+
+#center .openid.custom-provider h3,
+#center .user-authentication.user-login h3,
+#center .user-authentication.user-logout h3
+{
+    margin: -1px -1px 25px -1px;
+    padding: 5px 17px 5px 17px;
+    height: auto;
+    line-height: 24px;
+    color: #ffffff;
+    font-size: 14px;
+    border: 1px solid #3673d6;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #5587f6), color-stop(1, #4673e6));
+    background-image: -webkit-linear-gradient(top, #5587f6 0%, #4673e6 100%);
+    background-image: -moz-linear-gradient(top, #5587f6 0%, #4673e6 100%);
+    background-image: -ms-linear-gradient(top, #5587f6 0%, #4673e6 100%);
+    background-image: -o-linear-gradient(top, #5587f6 0%, #4673e6 100%);
+    background-image: linear-gradient(to bottom, #5587f6 0%, #4673e6 100%);
+}
+
+.js-browser-gradient-filter #center .openid.custom-provider h3,
+.js-browser-gradient-filter #center .user-authentication.user-login h3,
+.js-browser-gradient-filter #center .user-authentication.user-logout h3
+{
+    -ms-filter: "progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#5587F6',EndColorStr='#4673E6')";
+    filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#5587F6',EndColorStr='#4673E6');
+}
+
+#center .openid.custom-provider form,
+#center .user-authentication.user-login form,
+#center .user-authentication.user-logout form
+{
+    margin: 0px 16px 25px 16px;
+    min-width: 478px;
+    text-align: center;
+}
+
+#center .openid.custom-provider form dt,
+#center .user-authentication.user-login form dt
+{
+    width: 180px;
+    text-align: right;
+    float: left;
+    margin-right: 10px;
+}
+
+#center .openid.custom-provider form dd,
+#center .user-authentication.user-login form dd
+{
+    text-align: left;
+    margin: 0px 0px 10px 0px;
+}
+
+#center .user-authentication form dd.ui-inputset,
+#center .openid.custom-provider form dd.input-submit
+{
+    text-align: center;
+    margin: 0px;
+}
+
+#center .openid.custom-provider form dd p,
+#center .user-authentication.user-login form dd p,
+#center .user-authentication.user-login form dd.input-submit
+{
+    text-align: center;
+}
+
+#center .openid.custom-provider form dt label,
+#center .user-authentication.user-login form dt label
+{
+    color: #38393d;
+    font-weight: normal;
+}
+
+#center .user-authentication.user-logout p
+{
+    margin: 0px 30px;
+}
+
+#center .user-authentication.user-logout p a.linkToUser
+{
+    color: #4e7def;
+    font-size: 14px;
+}

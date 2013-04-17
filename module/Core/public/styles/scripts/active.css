@@ -1,0 +1,19 @@
+@charset "utf-8";
+
+.ui-active-parent .ui-active.ui-active-hidden *,
+.ui-active-parent .ui-active .ui-active-hidden *
+{
+    display: none;
+}
+
+.ui-active-parent .ui-active .ui-active-handler,
+.ui-active-parent .ui-active.ui-active-hidden .ui-active-handler,
+.ui-active-parent .ui-active .ui-active-hidden .ui-active-handler
+{
+    display: block;
+}
+
+.ui-active-parent .ui-active .ui-active-handler
+{
+    cursor: pointer;
+}

@@ -1,0 +1,27 @@
+@charset "utf-8";
+
+.ui-accordion > fieldset,
+.ui-accordion > fieldset > legend
+{
+    margin: 0px;
+    padding: 0px;
+    display: block;
+}
+
+.ui-accordion > fieldset
+{
+    border: none;
+}
+
+.ui-accordion > fieldset > legend
+{
+    width: 100%;
+}
+
+.ui-accordion > fieldset > .ui-accordion-content
+{
+    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-right: -2px;
+}

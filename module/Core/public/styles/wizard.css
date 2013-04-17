@@ -1,0 +1,170 @@
+@charset "utf-8";
+
+html, body, .wizard
+{
+    background: transparent !important;
+}
+
+.wizard .wizard-step ul.step-stack,
+.wizard .wizard-step ul.step-stack li,
+.wizard .wizard-step ul.step-stack li a
+{
+    display: block;
+}
+
+.wizard .wizard-step ul.step-stack
+{
+    padding: 0;
+}
+
+.wizard .wizard-step ul.step-stack,
+.wizard .wizard-step ul.step-stack li
+{
+    margin: 0em;
+}
+
+.wizard .wizard-step ul.step-stack li a
+{
+    padding: 0.1em 0.2em 0.1em;
+    text-decoration: none;
+}
+
+.wizard .wizard-step ul.step-stack li
+{
+    float: left;
+    margin: 0em;
+    padding: 0.6em 0.6em 0.6em 1.2em;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-position: left center;
+    background-image: url("/images/common/admin/button-right-arrow.png");
+}
+
+.wizard .wizard-step ul.step-stack li:first-child
+{
+    padding-left: 0.5em;
+    background-image: none;
+}
+
+.wizard .wizard-step ul.step-stack li,
+.wizard .wizard-step ul.step-stack li a
+{
+    color: #4d4d4d;
+    font-size: 11pt;
+    font-weight: bold;
+}
+
+.wizard .wizard-step ul.step-stack li:last-child,
+.wizard .wizard-step ul.step-stack li:last-child a
+{
+    color: #ffffff;
+}
+
+.wizard .wizard-step ul.step-stack li:hover,
+.wizard .wizard-step ul.step-stack li:hover a
+{
+    color: #000000;
+}
+
+.wizard .wizard-step .step-action
+{
+    color: #cecece;
+    display: block;
+    text-align: center;
+    background: #4d4d4d;
+}
+
+.wizard .wizard-step .step-action a
+{
+    color: #ffffff;
+}
+
+.wizard .wizard-step .step-action a:focus,
+.wizard .wizard-step .step-action a:hover,
+.wizard .wizard-step .step-action a:active
+{
+    color: #5080f0;
+}
+
+.wizard .wizard-step .step-action form
+{
+    width: 100%;
+    min-width: 500px;
+    text-align: left;
+    position: relative;
+    display: inline-block;
+}
+
+.wizard .wizard-step .step-action form dl
+{
+    margin: 0em;
+    padding: 1em;
+}
+
+.wizard .wizard-step .step-action form dl > dd > .ui-tabs
+{
+    margin: -1em -1em 0em -1em;
+}
+
+.wizard .wizard-step .step-action form dt,
+.wizard .wizard-step .step-action form dd
+{
+    float: none;
+    clear: none;
+    width: auto;
+    padding: 0em;
+    text-align: left;
+    margin: 0em 0em 0.5em 0em;
+}
+
+.wizard .wizard-step .step-action form dd.input-submit
+{
+    margin: 0px;
+    padding: 0px;
+}
+
+.wizard .wizard-step .step-action form dt label
+{
+    margin: 0em;
+    padding: 0em;
+}
+
+.wizard .wizard-step .step-action form input[type="submit"][name="cancel"]
+{
+    float: left;
+    margin: 1em 0em 1em 0em;
+}
+
+.wizard .wizard-step .step-action form input[type="submit"][name="previous"],
+.wizard .wizard-step .step-action form input[type="submit"][name="next"],
+.wizard .wizard-step .step-action form input[type="submit"][name="finish"]
+{
+    float: right;
+    margin: 1em 0em 1em 1em;
+}
+
+.wizard .wizard-step .step-action form input[type="submit"][name="finish"]
+{
+    background: #3b63c5;
+    border-color: #1f1f1f;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #4672e6), color-stop(1, #3154b0));
+    background-image: -webkit-linear-gradient(top, #4672e6 0%, #3154b0 100%);
+    background-image: -moz-linear-gradient(top, #4672e6 0%, #3154b0 100%);
+    background-image: -ms-linear-gradient(top, #4672e6 0%, #3154b0 100%);
+    background-image: -o-linear-gradient(top, #4672e6 0%, #3154b0 100%);
+    background-image: linear-gradient(to bottom, #4672e6 0%, #3154b0 100%);
+}
+
+.wizard .wizard-step .step-action form input[type="submit"][name="finish"]:focus,
+.wizard .wizard-step .step-action form input[type="submit"][name="finish"]:hover,
+.wizard .wizard-step .step-action form input[type="submit"][name="finish"]:active
+{
+    background: #1d1d1d;
+    border-color: #484848;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #343434), color-stop(1, #050505));
+    background-image: -webkit-linear-gradient(top, #343434 0%, #050505 100%);
+    background-image: -moz-linear-gradient(top, #343434 0%, #050505 100%);
+    background-image: -ms-linear-gradient(top, #343434 0%, #050505 100%);
+    background-image: -o-linear-gradient(top, #343434 0%, #050505 100%);
+    background-image: linear-gradient(to bottom, #343434 0%, #050505 100%);
+}

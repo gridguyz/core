@@ -1,0 +1,123 @@
+@charset "utf-8";
+
+.paragraph.paragraph-menu ul
+{
+    margin: 0em;
+    padding: 0em;
+    display: block;
+    list-style: none;
+    background: #eee;
+    border: 1px solid #ddd;
+}
+
+.paragraph.paragraph-menu ul li
+{
+    margin: 0em;
+    padding: 0em;
+    display: block;
+    cursor: pointer;
+    list-style: none;
+    position: relative;
+    white-space: nowrap;
+}
+
+.paragraph.paragraph-menu ul li.active
+{
+    background: #ddd;
+}
+
+.paragraph.paragraph-menu ul li:hover
+{
+    background: #fff;
+}
+
+.paragraph.paragraph-menu ul li a,
+.paragraph.paragraph-menu ul li span
+{
+    margin: 0em;
+    color: inherit;
+    display: block;
+    line-height: 1.2em;
+    padding: 0.2em 0.5em;
+    text-decoration: none;
+}
+
+.paragraph.paragraph-menu ul li ul
+{
+    z-index: 1;
+}
+
+.paragraph.paragraph-menu ul ul
+{
+    display: none;
+}
+
+.paragraph.paragraph-menu ul li:hover > ul
+{
+    top: 0%;
+    left: 100%;
+    width: auto;
+    display: block;
+    min-width: 100px;
+    margin-top: -1px;
+    margin-right: 1px;
+    position: absolute;
+}
+
+.paragraph.paragraph-menu ul.horizontal
+{
+    float: none;
+    height: auto;
+    display: inline-block;
+}
+
+.paragraph.paragraph-menu ul.horizontal > li
+{
+    float: left;
+    clear: none;
+    width: auto;
+}
+
+.paragraph.paragraph-menu ul.horizontal > li:hover > ul
+{
+    left: 0%;
+    top: 100%;
+    margin-top: 0px;
+}
+
+.paragraph.paragraph-menu ul.horizontal li a.has-children:after,
+.paragraph.paragraph-menu ul.horizontal li span.has-children:after
+{
+    content: "\00a0\00a0\25be";
+}
+
+.paragraph.paragraph-menu ul li a.has-children:after,
+.paragraph.paragraph-menu ul li span.has-children:after,
+.paragraph.paragraph-menu ul.horizontal ul li a.has-children:after,
+.paragraph.paragraph-menu ul.horizontal ul li span.has-children:after
+{
+    content: "\00a0\00a0\00bb";
+}
+
+.paragraph.paragraph-menu ul.horizontal:after
+{
+    clear: both;
+    height: 0em;
+    content: ".";
+    display: block;
+    visibility: hidden;
+}
+
+/* required comment for clearfix to work in Opera \*/
+
+* html .paragraph.paragraph-menu ul.horizontal
+{
+    height: 1%;
+}
+
+.paragraph.paragraph-menu ul.horizontal
+{
+    display: block;
+}
+
+/* end clearfix */

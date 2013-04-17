@@ -1,0 +1,60 @@
+@charset "utf-8";
+
+.ui-carousel
+{
+    padding: 0em 3em;
+    overflow: hidden;
+    position: relative;
+}
+
+.ui-carousel .ui-carousel-button-prev,
+.ui-carousel .ui-carousel-button-next
+{
+    top: 0px;
+    z-index: 1;
+    margin: 2px;
+    position: absolute;
+    box-sizing: content-box;
+    -o-box-sizing: content-box;
+    -ms-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+}
+
+.ui-carousel .ui-carousel-button-prev .ui-icon,
+.ui-carousel .ui-carousel-button-next .ui-icon
+{
+    top: 8px;
+    position: relative;
+}
+
+.ui-carousel .ui-carousel-button-prev
+{
+    left: 0px;
+}
+
+.ui-carousel .ui-carousel-button-next
+{
+    right: 0px;
+}
+
+.ui-carousel .ui-carousel-items
+{
+    white-space: nowrap;
+}
+
+.ui-carousel .ui-carousel-items .ui-carousel-item
+{
+    margin: 0.6em;
+    padding: 0.4em;
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ui-carousel .ui-carousel-items .ui-carousel-item .ui-carousel-caption
+{
+    display: block;
+}
