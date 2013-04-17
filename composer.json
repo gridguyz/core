@@ -1,5 +1,6 @@
 {
     "name": "webriq/gridguyz-core",
+    "type": "gridguyz-modules",
     "description": "Core modules for Gridguyz",
     "license": "CC-BY-SA-3.0",
     "keywords": [
@@ -30,7 +31,8 @@
         "php": ">=5.4",
         "ext-pdo_pgsql": "*",
         "codeplex/phpexcel": "1.*",
-        "webriq/zork": "*"
+        "webriq/zork": "*",
+        "webriq/gridguyz-installer": "*"
     },
     "autoload": {
         "psr-0": {
