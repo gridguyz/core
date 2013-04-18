@@ -48,9 +48,6 @@ class AdapterFactory extends FactoryAbstract
      */
     public function factory( $adapter, $options = null )
     {
-        p( $adapter );
-        p( $options );
-
         $adapter = parent::factory( $adapter, $options );
         $adapter->setModel( $this->getModel() );
 
