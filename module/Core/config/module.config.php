@@ -266,18 +266,18 @@ return array(
     ),
     'cache' => array(
         'storage' => array(
-            'adapter' => APPLICATION_ENV == 'development' ?
+            'adapter' => function_exists( 'apc_fetch' ) ?
+                array(
+                    'name'      => 'apc',
+                    'options'   => array(
+                        'ttl'   => 7200,
+                    ),
+                ) :
                 array(
                     'name'      => 'filesystem',
                     'options'   => array(
                         'ttl'       => 7200,
                         'cache_dir' => 'data/cache',
-                    ),
-                ) :
-                array(
-                    'name'      => 'apc',
-                    'options'   => array(
-                        'ttl'   => 7200,
                     ),
                 ),
             'plugins' => array(
@@ -1032,7 +1032,7 @@ return array(
     ),
     'view_manager' => array(
         'display_not_found_reason'  => true,
-        'display_exceptions'        => APPLICATION_ENV == 'production' ? false : true,
+        'display_exceptions'        => (bool) ( error_reporting() & E_WARNING ),
         'doctype'                   => 'XHTML5',
         'forbidden_template'        => 'error/403',
         'not_found_template'        => 'error/404',
@@ -1096,7 +1096,7 @@ return array(
                 'jqueryUi'      => array(
                     'rel'       => 'stylesheet',
                     'type'      => 'text/css',
-                    'href'      => '/styles/ui/custom' . ( APPLICATION_ENV != 'development' ? '.min' : '' ) . '.css',
+                    'href'      => '/styles/ui/custom' . ( ! ( error_reporting() & E_WARNING ) ? '.min' : '' ) . '.css',
                                 // 'http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css',
                 ),
                 'defaults'      => array(
@@ -1118,12 +1118,12 @@ return array(
             'headScript'        => array(
                 'jquery'        => array(
                     /// TODO: use jquery-ui version 1.9 & 2.0, when available from google
-                    'src'       => 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery' . ( APPLICATION_ENV != 'development' ? '.min' : '' ) . '.js',
+                    'src'       => 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery' . ( ! ( error_reporting() & E_WARNING ) ? '.min' : '' ) . '.js',
                     'type'      => 'text/javascript',
                 ),
                 'jqueryUi'      => array(
                     /// TODO: use jquery-ui version 1.10, when available from google
-                    'src'       => 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui' . ( APPLICATION_ENV != 'development' ? '.min' : '' ) . '.js',
+                    'src'       => 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui' . ( ! ( error_reporting() & E_WARNING ) ? '.min' : '' ) . '.js',
                     'type'      => 'text/javascript',
                 ),
                 'coreJs'        => array(

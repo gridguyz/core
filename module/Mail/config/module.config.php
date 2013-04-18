@@ -236,19 +236,9 @@ return array(
         ),
     ),
     'mail' => array(
-        'transport'     => APPLICATION_ENV == 'development' ?
-            array(
-                'type'      => 'Zend\Mail\Transport\File',
-                'options'   => array(
-                    'type'  => 'Zend\Mail\Transport\FileOptions',
-                    'options'   => array(
-                        'path'  => 'log/mail',
-                    ),
-                ),
-            ) :
-            array(
-                'type'      => 'Zend\Mail\Transport\Sendmail',
-            ),
+        'transport' => array(
+            'type'      => 'Zend\Mail\Transport\Sendmail',
+        ),
         'defaultFrom'   => array(
             'name'      => null,
             'email'     => null,
