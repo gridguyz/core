@@ -55,5 +55,10 @@
             "module/Tag/Module.php",
             "module/User/Module.php"
         ]
+    },
+    "extra": {
+        "patch-classes": {
+            "Grid\\Core\\Installer\\Patch": "module/Core/src/Grid/Core/Installer/Patch.php"
+        }
     }
 }
