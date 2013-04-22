@@ -1,7 +1,8 @@
 Core modules for Gridguyz
 =========================
 
-This package includes core modules for Gridguyz CMS.
+This package includes core modules for Gridguyz.
+All of them needs to run Gridguyz CMS.
 
 It includes:
 
