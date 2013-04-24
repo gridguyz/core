@@ -103,7 +103,7 @@ class Patch extends AbstractPatch
         $password = $data->get(
             'gridguyz-core',
             'platformOwner-password',
-            'Type the platform owner\'s password (min length: 4 characters)',
+            'Type the platform owner\'s password',
             $this->createPasswordSalt( 6 ),
             true
         );
