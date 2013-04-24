@@ -2,6 +2,7 @@
 
 namespace Grid\Core\Installer;
 
+use Grid\Installer\Exception;
 use Grid\Installer\AbstractPatch;
 
 /**
@@ -18,17 +19,6 @@ class Patch extends AbstractPatch
      * @const int
      */
     const SITE_OWNER_GROUP = 2;
-
-    /**
-     * Quote sql-identifier
-     *
-     * @param   string  $id
-     * @return  string
-     */
-    protected static function quoteIdentifier( $id )
-    {
-        return '"' . str_replace( '"', '""', $id ) . '"';
-    }
 
     /**
      * Run after patching
@@ -87,100 +77,6 @@ class Patch extends AbstractPatch
     }
 
     /**
-     * Select a field from a table
-     *
-     * @param   array|string    $table
-     * @param   string          $column
-     * @param   array           $where
-     * @return  int
-     */
-    protected function selectFromTable( $table, $column, array $where = array() )
-    {
-        $whereSql = '';
-
-        foreach ( $where as $col => $value )
-        {
-            if ( $whereSql )
-            {
-                $whereSql .= '
-               AND ';
-            }
-
-            $whereSql .= static::quoteIdentifier( $col ) . ' = :' . $col;
-        }
-
-        $query = $this->getDb()->prepare( sprintf(
-            'SELECT %s FROM %s WHERE %s ORDER BY %s ASC LIMIT 1',
-            static::quoteIdentifier( $column ),
-            implode( '.', array_map( array( __CLASS__, 'quoteIdentifier' ), (array) $table ) ),
-            $whereSql ?: 'TRUE',
-            static::quoteIdentifier( $column )
-        ) );
-
-        $query->execute( $where );
-
-        if ( ! $query->rowCount() )
-        {
-            return null;
-        }
-
-        return $query->fetchObject()->$column;
-    }
-
-    /**
-     * Insert data to table
-     *
-     * @param   array|string        $table
-     * @param   array               $data
-     * @param   null|bool|string    $seq
-     * @return  int
-     */
-    protected function insertToTable( $table, array $data, $seq = null )
-    {
-        $table   = (array) $table;
-        $columns = '';
-        $values  = '';
-
-        foreach ( $data as $field => $value )
-        {
-            if ( $columns )
-            {
-                $columns .= ', ';
-            }
-
-            if ( $values )
-            {
-                $values .= ', ';
-            }
-
-            $columns .= static::quoteIdentifier( $field );
-            $values  .= ':' . $field;
-        }
-
-        $db    = $this->getDb();
-        $query = $db->prepare( sprintf(
-            'INSERT INTO %s ( %s ) VALUES ( %s )',
-            implode( '.', array_map( array( __CLASS__, 'quoteIdentifier' ), $table ) ),
-            $columns,
-            $values
-        ) );
-
-        $query->execute( $data );
-
-        if ( $seq )
-        {
-            if ( true === $seq )
-            {
-                $seq = implode( '.', $table ) . '_id_seq';
-            }
-
-            return $db->lastInsertId( $seq );
-        }
-
-        return null;
-    }
-
-    /**
      * Insert developer user
      *
      * @return  int
@@ -213,12 +109,12 @@ class Patch extends AbstractPatch
             3
         );
 
-        return $this->insertToTable(
+        return $this->insertIntoTable(
             'user',
             array(
                 'email'         => $email,
                 'displayName'   => $displayName,
-                'passwordhash'  => $this->hash( $password ), // TODO: hash
+                'passwordhash'  => $this->createPasswordHash( $password ),
                 'groupId'       => static::SITE_OWNER_GROUP,
                 'state'         => 'active',
                 'confirmed'     => 't',
@@ -229,13 +125,98 @@ class Patch extends AbstractPatch
     }
 
     /**
+     * Create password hash
+     *
+     * @param   string   $password
+     * @return  string
+     */
+    protected function createPasswordHash( $password )
+    {
+        if ( function_exists( 'password_hash' ) )
+        {
+            return password_hash( $password, PASSWORD_DEFAULT );
+        }
+
+        if ( ! defined( 'CRYPT_BLOWFISH' ) )
+        {
+            throw new Exception\RuntimeException( sprintf(
+                '%s: CRYPT_BLOWFISH algorithm must be enabled',
+                __METHOD__
+            ) );
+        }
+
+        return crypt(
+            $password,
+            ( version_compare( PHP_VERSION, '5.3.7' ) >= 0 ? '$2y' : '$2a' ) .
+            '$10$' . $this->createPasswordSalt() . '$'
+        );
+    }
+
+    /**
+     * Create password-salt
+     *
+     * @return  string
+     */
+    private function createPasswordSalt()
+    {
+        static $chars = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        static $length = 22;
+
+        if ( function_exists( 'openssl_random_pseudo_bytes' ) &&
+             ( version_compare( PHP_VERSION, '5.3.4' ) >= 0 ||
+               strtoupper( substr( PHP_OS, 0, 3 ) ) !== 'WIN' ) )
+        {
+            $bytes = openssl_random_pseudo_bytes( $length, $usable );
+
+            if ( true !== $usable )
+            {
+                $bytes = null;
+            }
+        }
+
+        if ( empty( $bytes ) &&
+             function_exists( 'mcrypt_create_iv' ) &&
+             ( version_compare( PHP_VERSION, '5.3.7' ) >= 0 ||
+               strtoupper( substr( PHP_OS, 0, 3 ) ) !== 'WIN' ) )
+        {
+            $bytes = mcrypt_create_iv( $length, MCRYPT_DEV_URANDOM );
+
+            if ( empty( $bytes ) || strlen( $bytes ) < $length )
+            {
+                $bytes = null;
+            }
+        }
+
+        if ( empty( $bytes ) )
+        {
+            $bytes = '';
+
+            for ( $i = 0; $i < $length; ++$i )
+            {
+                $bytes .= chr( mt_rand( 0, 255 ) );
+            }
+        }
+
+        $pos  = 0;
+        $salt = '';
+        $clen = strlen( $chars );
+
+        for ( $i = 0; $i < $length; ++$i )
+        {
+            $pos = ( $pos + ord( $bytes[$i] ) ) % $clen;
+            $salt .= $chars[$pos];
+        }
+
+        return $salt;
+    }
+
+    /**
      * Insert default paragraph: content / layout
      *
      * @return  int
      */
     protected function insertDefaultParagraph( $type )
     {
-        $db     = $this->getDb();
         $data   = $this->getPatchData();
         $first  = $this->selectFromTable(
             array( '_central', 'paragraph' ),
@@ -250,14 +231,13 @@ class Patch extends AbstractPatch
             $first
         );
 
-        $query = $db->prepare( '
-            SELECT "paragraph_clone"( :schema, :id ) AS "result"
-        ' );
-
-        $query->execute( array(
-            'schema'    => '_central',
-            'id'        => $id,
-        ) );
+        $query = $this->query(
+            'SELECT "paragraph_clone"( :schema, :id ) AS "result"',
+            array(
+                'schema'    => '_central',
+                'id'        => $id,
+            )
+        );
 
         while ( $row = $query->fetchObject() )
         {
@@ -275,7 +255,7 @@ class Patch extends AbstractPatch
      */
     protected function insertDefaultMenu( $content )
     {
-        $root = $this->insertToTable(
+        $root = $this->insertIntoTable(
             'menu',
             array(
                 'type'  => 'container',
@@ -285,7 +265,7 @@ class Patch extends AbstractPatch
             true
         );
 
-        $this->insertToTable(
+        $this->insertIntoTable(
             'menu_label',
             array(
                 'menuId'    => $root,
@@ -294,7 +274,7 @@ class Patch extends AbstractPatch
             )
         );
 
-        $menuContent = $this->insertToTable(
+        $menuContent = $this->insertIntoTable(
             'menu',
             array(
                 'type'  => 'content',
@@ -304,7 +284,7 @@ class Patch extends AbstractPatch
             true
         );
 
-        $this->insertToTable(
+        $this->insertIntoTable(
             'menu_label',
             array(
                 'menuId'    => $menuContent,
@@ -313,7 +293,7 @@ class Patch extends AbstractPatch
             )
         );
 
-        $this->insertToTable(
+        $this->insertIntoTable(
             'menu_property',
             array(
                 'menuId'    => $menuContent,
@@ -334,7 +314,7 @@ class Patch extends AbstractPatch
      */
     protected function insertDefaultSubDomain( $layout, $content )
     {
-        return $this->insertToTable(
+        return $this->insertIntoTable(
             'subdomain',
             array(
                 'subdomain'         => '',
