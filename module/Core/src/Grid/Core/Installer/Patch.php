@@ -104,9 +104,8 @@ class Patch extends AbstractPatch
             'gridguyz-core',
             'platformOwner-password',
             'Type the platform owner\'s password (min length: 4 characters)',
-            null,
-            '/.{4,}/',
-            3
+            $this->createPasswordSalt( 6 ),
+            true
         );
 
         return $this->insertIntoTable(
@@ -114,7 +113,7 @@ class Patch extends AbstractPatch
             array(
                 'email'         => $email,
                 'displayName'   => $displayName,
-                'passwordhash'  => $this->createPasswordHash( $password ),
+                'passwordHash'  => $this->createPasswordHash( $password ),
                 'groupId'       => static::SITE_OWNER_GROUP,
                 'state'         => 'active',
                 'confirmed'     => 't',
@@ -155,12 +154,12 @@ class Patch extends AbstractPatch
     /**
      * Create password-salt
      *
+     * @param   int     $length
      * @return  string
      */
-    private function createPasswordSalt()
+    private function createPasswordSalt( $length = 22 )
     {
         static $chars = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-        static $length = 22;
 
         if ( function_exists( 'openssl_random_pseudo_bytes' ) &&
              ( version_compare( PHP_VERSION, '5.3.4' ) >= 0 ||
