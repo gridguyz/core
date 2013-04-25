@@ -146,10 +146,7 @@ BEGIN
 
     -- creating schema
 
-    EXECUTE format(
-        'CREATE SCHEMA %I AUTHORIZATION %I',
-        "p_destination_schema", 'postgres'
-    );
+    EXECUTE format( 'CREATE SCHEMA %I', "p_destination_schema" );
 
     -- copy sequences
 
