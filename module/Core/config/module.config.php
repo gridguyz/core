@@ -249,7 +249,7 @@ return array(
             'adminLocale'                               => 'Zork\Mvc\AdminLocaleServiceFactory',
             'Zend\Http\Client'                          => 'Zork\Http\Client\ServiceFactory',
             'Zend\Http\Client\Adapter\AdapterInterface' => 'Zork\Http\Client\Adapter\ServiceFactory',
-            'Grid\Core\Model\Settings\Definitions'           => 'Grid\Core\Model\Settings\DefinitionServiceFactory',
+            'Grid\Core\Model\Settings\Definitions'      => 'Grid\Core\Model\Settings\DefinitionServiceFactory',
             'Zork\Mvc\View\Http\ForbiddenStrategy'      => 'Zork\Mvc\View\Http\ForbiddenStrategyServiceFactory',
         ),
         'aliases' => array(
@@ -262,6 +262,9 @@ return array(
             'Zork\Mvc\AdminLocale'              => 'adminLocale',
             'Zend\Http\Client\Adapter'          => 'Zend\Http\Client\Adapter\AdapterInterface',
             'Zork\Log\LoggerManager'            => 'logger',
+        ),
+        'shared' => array(
+            'Zend\Http\Client'                  => false,
         ),
     ),
     'cache' => array(
