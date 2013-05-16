@@ -22,8 +22,10 @@ foreach ( $links as $index => $item )
 $this->headLink()
      ->appendStylesheet( '/styles/admin.css', 'all' );
 
-$menu = $this->navigation( $this->navigationPages )->setAcl($this->acl)->menu();
-$menu->setTranslatorEnabled( false );
+$menu = $this->navigation( $this->navigationPages )
+             ->setAcl( $this->acl )
+             ->menu()
+             ->setTranslatorEnabled( false );
 
 if ( $this->hasIdentity ): ?>
 
@@ -32,7 +34,7 @@ if ( $this->hasIdentity ): ?>
              data-js-type="zork.ui.menu"
              data-js-menu-corners="bottom"
              data-js-menu-orientation="horizontal">
-            <?= $menu ?>
+            <?= $menu->render() ?>
         </nav>
     </header>
 
