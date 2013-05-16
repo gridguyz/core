@@ -1,7 +1,11 @@
 <?php
 
+use Zork\Iterator\DepthList;
+use Paragraph\Model\Paragraph\StructureInterface;
+use Grid\Paragraph\Model\Paragraph\Structure\Layout;
+
 $view = $this;
-$list = new \Zork\Iterator\DepthList( $this->paragraphRenderList );
+$list = new DepthList( $this->paragraphRenderList );
 
 $this->headLink()
      ->appendStylesheet( '/styles/paragraph.css' );
@@ -38,7 +42,7 @@ $list->runin( function ( $paragraph ) use ( $view ) { ?>
     </div>
 </div>
 
-<?php if ( $paragraph instanceof \Paragraph\Model\Paragraph\Structure\Layout &&
+<?php if ( $paragraph instanceof Layout &&
            isset( $view->adminMenuSettings ) &&
            $view->isAllowed( 'admin', 'ui' ) ):
            $content = $paragraph->getRenderedContent(); ?>
@@ -62,7 +66,7 @@ $list->runin( function ( $paragraph ) use ( $view ) { ?>
                                   'admin', $this->userLocale() ) ?>
         </a></li>
 <?php endif ?>
-<?php if ( $content instanceof \Paragraph\Model\Paragraph\StructureInterface &&
+<?php if ( $content instanceof StructureInterface &&
            $content->isEditable() ): ?>
 
         <li><a class="edit-content" href="#">
@@ -91,7 +95,7 @@ $list->runin( function ( $paragraph ) use ( $view ) { ?>
                                   'admin', $view->userLocale() ) ?>
         </a></li>
 <?php endif ?>
-<?php if ( $content instanceof \Paragraph\Model\Paragraph\StructureInterface &&
+<?php if ( $content instanceof StructureInterface &&
            $content->isEditable() ||
            $view->isAllowed( 'paragraph.content', 'changeLayout' ) ): ?>
 
