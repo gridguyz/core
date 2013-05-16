@@ -230,7 +230,7 @@
                 var finish  = js.core.layer();
 
                 js.core.rpc( {
-                    "method"    : "Paragraph\\Model\\Paragraph\\Rpc::moveNode",
+                    "method"    : "Grid\\Paragraph\\Model\\Paragraph\\Rpc::moveNode",
                     "callback"  : function ( result ) {
                         finish();
 
@@ -590,7 +590,7 @@
                             var finish = js.core.layer();
 
                             js.core.rpc( {
-                                "method"    : "Paragraph\\Model\\Paragraph\\Rpc::deleteNode",
+                                "method"    : "Grid\\Paragraph\\Model\\Paragraph\\Rpc::deleteNode",
                                 "callback"  : function ( result ) {
                                     finish();
 

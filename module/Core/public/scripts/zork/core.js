@@ -2589,14 +2589,14 @@
         if ( typeof this.translate._domainRpc == "undefined" )
         {
             this.translate._domainRpc = js.core.rpc( {
-                "method": "Core\\Model\\Translate::textDomain"
+                "method": "Grid\\Core\\Model\\Translate::textDomain"
             } );
         }
 
         if ( typeof this.translate._textRpc == "undefined" )
         {
             this.translate._textRpc = js.core.rpc( {
-                "method": "Core\\Model\\Translate::translate"
+                "method": "Grid\\Core\\Model\\Translate::translate"
             } );
         }
 
@@ -3830,7 +3830,7 @@
      */
     ( function () {
         var timeout = 1100000,
-            method = "User\\Model\\User\\Rpc::status",
+            method = "Grid\\User\\Model\\User\\Rpc::status",
             status = js.core.rpc( {
                 "method"    : method,
                 "callback"  : function ( res ) {

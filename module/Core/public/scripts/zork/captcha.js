@@ -39,7 +39,7 @@
                    .css( "background", "url(\"/images/scripts/loading.gif\") 50% 50% no-repeat" );
 
                 js.core.rpc( {
-                    "method": "Core\\Model\\Captcha::regenerate",
+                    "method": "Grid\\Core\\Model\\Captcha::regenerate",
                     "callback": function () {
                         img.css( "background", "" )
                            .attr( "src", src + "?" + String( Math.random() ).replace( /^0?\./, "" ) )

@@ -123,11 +123,11 @@
                        .addClass( "ui-corner-" + corner );
             },
             openRpc     = js.core.rpc( {
-                              "method": "User\\Model\\AdminMenuSettings::open",
+                              "method": "Grid\\User\\Model\\AdminMenuSettings::open",
                               "callback": function () {}
                           } ),
             posRpc      = js.core.rpc( {
-                              "method": "User\\Model\\AdminMenuSettings::position",
+                              "method": "Grid\\User\\Model\\AdminMenuSettings::position",
                               "callback": function () {}
                           } ),
             toggle      = $( "<button></button>" )

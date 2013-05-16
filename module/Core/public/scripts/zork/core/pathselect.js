@@ -76,7 +76,7 @@
             "pathInfo"  : function ( path, cb ) {
                 return js.core.rpc( {
                     "callback"  : js.core.layer( cb ),
-                    "method"    : "Core\\Model\\FileSystem::pathInfo"
+                    "method"    : "Grid\\Core\\Model\\FileSystem::pathInfo"
                 } ).invoke( {
                     "path": $.isArray( path ) ? path : String( path )
                 } );
@@ -84,7 +84,7 @@
             "rightInfo"  : function ( path, cb ) {
                 return js.core.rpc( {
                     "callback"  : js.core.layer( cb ),
-                    "method"    : "Core\\Model\\FileSystem::rightInfo"
+                    "method"    : "Grid\\Core\\Model\\FileSystem::rightInfo"
                 } ).invoke( {
                     "path": String( path )
                 } );
@@ -92,7 +92,7 @@
             "changeMod" : function ( path, mods, cb ) {
                 return js.core.rpc( {
                     "callback"  : js.core.layer( cb ),
-                    "method"    : "Core\\Model\\FileSystem::changeMod"
+                    "method"    : "Grid\\Core\\Model\\FileSystem::changeMod"
                 } ).invoke( {
                     "path": $.isArray( path ) ? path : String( path ),
                     "mods": Object( mods )
@@ -101,7 +101,7 @@
             "makeDir"   : function ( path, cb ) {
                 return js.core.rpc( {
                     "callback"  : js.core.layer( cb ),
-                    "method"    : "Core\\Model\\FileSystem::makeDir"
+                    "method"    : "Grid\\Core\\Model\\FileSystem::makeDir"
                 } ).invoke( {
                     "path": $.isArray( path ) ? path : String( path )
                 } );
@@ -109,7 +109,7 @@
             "remove"    : function ( path, cb ) {
                 return js.core.rpc( {
                     "callback"  : js.core.layer( cb ),
-                    "method"    : "Core\\Model\\FileSystem::remove"
+                    "method"    : "Grid\\Core\\Model\\FileSystem::remove"
                 } ).invoke( {
                     "path": $.isArray( path ) ? path : String( path )
                 } );
@@ -117,7 +117,7 @@
             "rename"    : function ( path, to, cb ) {
                 return js.core.rpc( {
                     "callback"  : js.core.layer( cb ),
-                    "method"    : "Core\\Model\\FileSystem::rename"
+                    "method"    : "Grid\\Core\\Model\\FileSystem::rename"
                 } ).invoke( {
                     "path": $.isArray( path ) ? path : String( path ),
                     "to"  : $.isArray( to )   ? to   : String( to )
@@ -126,7 +126,7 @@
             "copy"      : function ( path, to, cb ) {
                 return js.core.rpc( {
                     "callback"  : js.core.layer( cb ),
-                    "method"    : "Core\\Model\\FileSystem::copy"
+                    "method"    : "Grid\\Core\\Model\\FileSystem::copy"
                 } ).invoke( {
                     "path": $.isArray( path ) ? path : String( path ),
                     "to"  : $.isArray( to )   ? to   : String( to )
@@ -135,7 +135,7 @@
             "uploaded"  : function ( temp, to, cb ) {
                 return js.core.rpc( {
                     "callback"  : js.core.layer( cb ),
-                    "method"    : "Core\\Model\\FileSystem::uploaded"
+                    "method"    : "Grid\\Core\\Model\\FileSystem::uploaded"
                 } ).invoke( {
                     "temp": $.isArray( temp ) ? temp : String( temp ),
                     "to"  : $.isArray( to )   ? to   : String( to )
