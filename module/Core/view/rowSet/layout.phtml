@@ -1,4 +1,7 @@
 <?php
+
+use Grid\Core\View\Helper\RowSet\Type;
+
 $columnCnt  = 0;
 $id         = $this->rowSet->getId();
 $store      = $this->rowSet->getStore();
@@ -27,15 +30,15 @@ $paginator->setPageRange( $this->rowSet->getPageRange() )
                         echo lcfirst( preg_replace( '/.*\\\\/', '', get_class( $type ) ) );
                         if ( $this->rowSet->isColumnSearched( $column ) )
                             echo ' search'; ?>">
-                    <?php if ( $type instanceof \Core\View\Helper\RowSet\Type\Bool ): ?>
+                    <?php if ( $type instanceof Type\Bool ): ?>
 
                         <abbr title="<?= $name ?>"><?= mb_substr( $name, 0, 1 ) ?></abbr>
                     <?php else: ?>
 
                         <?= $name ?>
 
-                        <?php if ( ! $type instanceof \Core\View\Helper\RowSet\Type\Translate &&
-                                   ! $type instanceof \Core\View\Helper\RowSet\Type\Callback ):
+                        <?php if ( ! $type instanceof Type\Translate &&
+                                   ! $type instanceof Type\Callback ):
                             $order = isset( $store['orders'][$column] ) ?
                                 strtolower( $store['orders'][$column] ) : null; ?>
                         <input type="hidden"
@@ -91,7 +94,7 @@ $paginator->setPageRange( $this->rowSet->getPageRange() )
                          src="<?= $this->rowSet->getIcon( $column, $value ) ?>" />
                 <?php endif ?>
 
-                <?php if ( ! $type instanceof \Core\View\Helper\RowSet\Type\Callback &&
+                <?php if ( ! $type instanceof Type\Callback &&
                          ( null === $value || '' === $value || ( is_array( $value ) && empty( $value ) ) ) ):
                           $label = null === $value
                               ? $this->rowSet->getNotSetLabel( $column )
