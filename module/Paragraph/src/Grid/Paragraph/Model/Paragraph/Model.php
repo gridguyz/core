@@ -207,6 +207,7 @@ class Model implements MapperAwareInterface,
                             array(
                                 Expression::TYPE_IDENTIFIER, Expression::TYPE_IDENTIFIER,
                                 Expression::TYPE_IDENTIFIER, Expression::TYPE_IDENTIFIER,
+                                Expression::TYPE_IDENTIFIER, Expression::TYPE_IDENTIFIER,
                             )
                         ),
                         'columns'   => array( 'layoutName' => 'name' ),
