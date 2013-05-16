@@ -54,7 +54,7 @@ return array(
     'admin.navTop.backToPage' => 'Back to site',
     'admin.navTop.central' => 'Central pages',
     'admin.navTop.content' => 'Contents',
-    'admin.navTop.customize' => 'Grid\Customize',
+    'admin.navTop.customize' => 'Customize',
     'admin.navTop.customize.ruleCreate' => 'Create new CSS rule',
     'admin.navTop.customize.ruleList' => 'List CSS rules',
     'admin.navTop.dashboard' => 'Dashboard',
