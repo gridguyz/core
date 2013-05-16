@@ -195,8 +195,12 @@ class Model implements MapperAwareInterface,
                     'paragraph_layout' => array(
                         'table'     => array( 'paragraph_layout' => 'paragraph' ),
                         'where'     => new Expression(
-                            'CAST( ?.? AS INT ) = ?.?',
+                            'CAST( CASE
+                                     WHEN ?.? = \'\' THEN NULL
+                                     ELSE ?.?
+                                   END AS INT ) = ?.?',
                             array(
+                                'paragraph_property_layout', 'value',
                                 'paragraph_property_layout', 'value',
                                 'paragraph_layout',          'id',
                             ),
