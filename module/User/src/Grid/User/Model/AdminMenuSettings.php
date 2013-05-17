@@ -40,7 +40,7 @@ class AdminMenuSettings implements CallableInterface,
      *
      * @param \User\Model\User\Settings\Model $userSettingsModel
      */
-    public function __construct( Grid\User\Settings\Model $userSettingsModel )
+    public function __construct( User\Settings\Model $userSettingsModel )
     {
         $this->setModel( $userSettingsModel );
     }
