@@ -159,6 +159,12 @@ return array(
     'form' => array(
         'Grid\Customize\Rule' => array(
             'elements' => array(
+                'id'        => array(
+                    'spec'  => array(
+                        'type'      => 'Zork\Form\Element\Hidden',
+                        'name'      => 'id',
+                    ),
+                ),
                 'selector'  => array(
                     'spec'  => array(
                         'type'      => 'Zork\Form\Element\Textarea',
@@ -166,6 +172,9 @@ return array(
                         'options'   => array(
                             'label'     => 'customize.form.selector',
                             'required'  => true,
+                            'rpc_validators'    => array(
+                                'Grid\Customize\Model\Rpc::isSelectorAvailable',
+                            ),
                         ),
                     ),
                 ),

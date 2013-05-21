@@ -3,6 +3,7 @@
 namespace Grid\Customize\Model\Rule;
 
 use Zend\Db\Sql;
+use Zend\Db\Sql\Predicate;
 use Zork\Db\Sql\Predicate\NotIn;
 use Zork\Model\Mapper\DbAware\ReadWriteMapperAbstract;
 
@@ -101,7 +102,7 @@ class Mapper extends ReadWriteMapperAbstract
                          ) )
                      ) )
                      ->where( array(
-                         new Sql\Predicate\Expression(
+                         new Predicate\Expression(
                              $platform->quoteIdentifier( 'ruleId' ) .
                              ' = ' .
                              $platform->quoteIdentifierChain( array(
@@ -410,7 +411,7 @@ class Mapper extends ReadWriteMapperAbstract
         if ( empty( $rootId ) )
         {
             $where = array(
-                new Sql\Predicate\IsNull( 'paragraphId' )
+                new Predicate\IsNull( 'paragraphId' )
             );
         }
         else
@@ -457,13 +458,13 @@ class Mapper extends ReadWriteMapperAbstract
     {
         if ( null === $rootId )
         {
-            $where = array( new Sql\Predicate\IsNull(
+            $where = array( new Predicate\IsNull(
                 'paragraphId'
             ) );
         }
         else
         {
-            $where = array( new Sql\Predicate\In(
+            $where = array( new Predicate\In(
                 'paragraphId',
                 $this->sql( $this->getTableInSchema( 'paragraph' ) )
                      ->select()
@@ -483,6 +484,33 @@ class Mapper extends ReadWriteMapperAbstract
                        ->execute();
 
         return $result->getAffectedRows();
+    }
+
+    /**
+     * Is selector (at a media) exists
+     *
+     * @param   string      $selector
+     * @param   string      $media
+     * @param   int|null    $excludeId
+     * @return  bool
+     */
+    public function isSelectorExists( $selector, $media = '', $excludeId = null )
+    {
+        $where = array(
+            'selector'  => (string) $selector,
+            'media'     => (string) $media,
+        );
+
+        if ( ! empty( $excludeId ) )
+        {
+            $where[] = new Predicate\Operator(
+                'id',
+                Predicate\Operator::OP_NE,
+                $excludeId
+            );
+        }
+
+        return $this->isExists( $where );
     }
 
 }

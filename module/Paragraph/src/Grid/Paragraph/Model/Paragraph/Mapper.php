@@ -1181,6 +1181,19 @@ class Mapper extends ReadWriteMapperAbstract
     }
 
     /**
+     * Is paragraph-id exists
+     *
+     * @param   int $paragraphId
+     * @return  bool
+     */
+    public function isParagraphIdExists( $paragraphId )
+    {
+        return $this->isExists( array(
+            'id' => (int) $paragraphId,
+        ) );
+    }
+
+    /**
      * Move a node in the hierarchy
      *
      * @param  int      $sourceNode

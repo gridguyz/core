@@ -22,9 +22,11 @@ return array(
     'customize.list.column.selector.title' => 'Css selector',
     'customize.list.create' => 'Create rule',
     'customize.list.title' => 'Customize',
-    'customize.resource' => 'Customize',
     'customize.privilege.create' => 'Create css-rule',
     'customize.privilege.delete' => 'Delete css-rules',
     'customize.privilege.edit' => 'Edit css-rules',
     'customize.privilege.view' => 'View css-rules',
+    'customize.resource' => 'Customize',
+    'customize.selector.taken' => 'Selector is taken under this media',
+    'customize.selector.paragraphNotExists' => 'Selector refers to an undefined paragraph',
 );
