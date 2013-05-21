@@ -1,8 +1,8 @@
 <?php
 
 use Zork\Iterator\DepthList;
-use Paragraph\Model\Paragraph\StructureInterface;
 use Grid\Paragraph\Model\Paragraph\Structure\Layout;
+use Grid\Paragraph\Model\Paragraph\StructureInterface;
 
 $view = $this;
 $list = new DepthList( $this->paragraphRenderList );
@@ -96,8 +96,8 @@ $list->runin( function ( $paragraph ) use ( $view ) { ?>
         </a></li>
 <?php endif ?>
 <?php if ( $content instanceof StructureInterface &&
-           $content->isEditable() ||
-           $view->isAllowed( 'paragraph.content', 'changeLayout' ) ): ?>
+           ( $content->isEditable() ||
+             $view->isAllowed( 'paragraph.content', 'changeLayout' ) ) ): ?>
 
         <li><a class="change-layout" href="#">
             <?= $view->translate( 'admin.menu.changeLayout',
