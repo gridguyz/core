@@ -201,7 +201,7 @@
             if ( typeof rpcs === "undefined" ||
                  rpcs === null || rpcs === "" )
             {
-                return true;
+                return null;
             }
 
             rpcs = String( rpcs )
@@ -211,10 +211,10 @@
 
             if ( rpcs.length === 0 )
             {
-                return true;
+                return null;
             }
 
-            var result  = true,
+            var result  = null,
                 data    = $( form ).serializeArray(),
                 context = {};
 
@@ -223,17 +223,81 @@
             } );
 
             $.each( rpcs, function ( _, rpc ) {
+                if ( result )
+                {
+                    return;
+                }
+
                 var res = js.core.rpc( rpc )( value, context );
 
-                if ( res === false || res === null ||
-                     ( Array.isArray( res ) && ( ! ( 0 in res ) ||
-                                                 res[0] === false ||
-                                                 res[0] === null ) ||
-                     ( Object.isObject( res ) && ( ! ( 'success' in res ) ||
-                                                   res.success === false ||
-                                                   res.success === null ) ) ) )
+                if ( res === true )
                 {
-                    result = false;
+                    // noop
+                }
+                else if ( res === null )
+                {
+                    result = "validate.rpc.returnNull";
+                }
+                else if ( res === false )
+                {
+                    result = "validate.rpc.returnFalse";
+                }
+                else if ( String.isString( res ) )
+                {
+                    if ( res.length )
+                    {
+                        result = res;
+                    }
+                }
+                else if ( Array.isArray( res ) )
+                {
+                    if ( ! ( 0 in res ) )
+                    {
+                        result = "validate.rpc.returnEmpty";
+                    }
+
+                    if ( res[0] === null || res[0] === false )
+                    {
+                        if ( 1 in res )
+                        {
+                            result = res[1];
+                        }
+                        else if ( res[0] === null )
+                        {
+                            result = "validate.rpc.returnNull";
+                        }
+                        else if ( res[0] === false )
+                        {
+                            result = "validate.rpc.returnFalse";
+                        }
+                    }
+                }
+                else if ( Object.isObject( res ) )
+                {
+                    if ( ! ( "success" in res ) )
+                    {
+                        result = "validate.rpc.returnEmpty";
+                    }
+
+                    if ( res.success === null || res.success === false )
+                    {
+                        if ( "message" in res )
+                        {
+                            result = res.message;
+                        }
+                        else if ( res.success === null )
+                        {
+                            result = "validate.rpc.returnNull";
+                        }
+                        else if ( res.success === false )
+                        {
+                            result = "validate.rpc.returnFalse";
+                        }
+                    }
+                }
+                else
+                {
+                    result = "validate.rpc.returnUnknown";
                 }
             } );
 
@@ -471,10 +535,14 @@
                                 isv   = false;
                                 emsg  = "validate.moreThan.notMore";
                             }
-                            else if ( ! checkRpcs( form, self.attr( "data-validate-rpcs" ), val ) )
+                            else
                             {
-                                isv   = false;
-                                emsg  = "validate.rpc.returnFalse";
+                                emsg = checkRpcs( form, self.attr( "data-validate-rpcs" ), val );
+
+                                if ( emsg && emsg.length )
+                                {
+                                    isv   = false;
+                                }
                             }
                         }
 

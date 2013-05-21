@@ -522,7 +522,7 @@
         }
         else if ( String.isString( result ) )
         {
-            return fault( js.core.translate( result ) );
+            return result ? fault( js.core.translate( result ) ) : ok;
         }
         else if ( Array.isArray( result ) )
         {
