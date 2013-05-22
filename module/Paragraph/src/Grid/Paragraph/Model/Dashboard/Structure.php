@@ -34,7 +34,7 @@ class Structure extends MapperAwareAbstract
      * @param \Paragraph\Model\Paragraph\StructureInterface $paragraph
      * @return \Paragraph\Model\Dashboard\Structure
      */
-    public function setParagraph( Grid\Paragraph\StructureInterface $paragraph )
+    public function setParagraph( Paragraph\StructureInterface $paragraph )
     {
         $this->paragraph = $paragraph;
         return $this;

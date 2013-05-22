@@ -59,7 +59,7 @@ class Customization
      * @param \Paragraph\Model\Dashboard\Paragraph\StructureInterface $paragraph
      * @return array
      */
-    public function getSelectorsByParagraph( Grid\Paragraph\StructureInterface $paragraph )
+    public function getSelectorsByParagraph( Paragraph\StructureInterface $paragraph )
     {
         $result = array();
         $id     = $paragraph->id;
