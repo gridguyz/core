@@ -257,8 +257,6 @@ class UploadController extends AbstractActionController
             }
             else
             {
-                $chunk    = (int) $request->getQuery( 'chunk',  0 );
-                $chunks   = (int) $request->getQuery( 'chunks', 0 );
                 $mimeType = $request->getHeaders()
                                     ->get( 'Content-Type' );
 
@@ -275,6 +273,11 @@ class UploadController extends AbstractActionController
                 {
                     $mimeType = 'application/octet-stream';
                 }
+
+                $chunk  = (int) $request->getPost( 'chunk',
+                                $request->getQuery( 'chunk', 0 ) );
+                $chunks = (int) $request->getPost( 'chunks',
+                                $request->getQuery( 'chunks', 0 ) );
 
                 $fileBase = self::TEMP_PATH . DIRECTORY_SEPARATOR;
                 $fileName = strtr(
