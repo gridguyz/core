@@ -81,7 +81,7 @@ class Mapper implements HydratorInterface,
      * @param \Paragraph\Model\Paragraph\Mapper $paragraphMapper
      * @return \Paragraph\Model\Dashboard\Mapper
      */
-    public function setParagraphMapper( Grid\Paragraph\Mapper $paragraphMapper )
+    public function setParagraphMapper( Paragraph\Mapper $paragraphMapper )
     {
         $this->paragraphMapper = $paragraphMapper;
         return $this;
@@ -182,7 +182,7 @@ class Mapper implements HydratorInterface,
      * @param \Paragraph\Model\Dashboard\Structure $paragraphDashboardStructurePrototype
      */
     public function __construct( Customization $customization,
-                                 Grid\Paragraph\Mapper $paragraphMapper,
+                                 Paragraph\Mapper $paragraphMapper,
                                  Rule\Mapper $customizeRuleMapper,
                                  Structure $paragraphDashboardStructurePrototype = null)
     {
