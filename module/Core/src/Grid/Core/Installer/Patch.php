@@ -21,6 +21,18 @@ class Patch extends AbstractPatch
     const SITE_OWNER_GROUP = 2;
 
     /**
+     * Uploads dirs to generate upon installation
+     *
+     * @var array
+     */
+    protected $uploadsDirs = array(
+        'pages',
+        'settings',
+        'customize',
+        'users',
+    );
+
+    /**
      * Run after patching
      *
      * @param   string  $from
@@ -72,6 +84,32 @@ class Patch extends AbstractPatch
             if ( ! $subDomain )
             {
                 $subDomain = $this->insertDefaultSubDomain( $layout, $content );
+            }
+
+            $schema = $this->getPatchData()
+                           ->get( 'db', 'schema' );
+
+            if ( is_array( $schema ) )
+            {
+                $schema = reset( $schema );
+            }
+
+            if ( ! empty( $schema ) )
+            {
+                foreach ( $this->uploadsDirs as $uploadsDir )
+                {
+                    @ mkdir(
+                        implode( DIRECTORY_SEPARATOR, array(
+                            '.',
+                            'public',
+                            'uploads',
+                            $schema,
+                            $uploadsDir
+                        ) ),
+                        0777,
+                        true
+                    );
+                }
             }
         }
     }
