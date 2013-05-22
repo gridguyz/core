@@ -671,8 +671,8 @@ abstract class ProxyAbstract
 
         $root = $this->getRootParagraph();
 
-        return ! empty( $root->editUsers ) && in_array( $user->id, $this->editUsers )
-            || ! empty( $root->editGroups ) && in_array( $user->groupId, $this->editGroups )
+        return ! empty( $root->editUsers ) && in_array( $user->id, $root->editUsers )
+            || ! empty( $root->editGroups ) && in_array( $user->groupId, $root->editGroups )
             || $this->getServiceLocator()
                     ->get( 'Grid\User\Model\Permissions\Model' )
                     ->isAllowed( $root, 'edit' );
@@ -694,15 +694,11 @@ abstract class ProxyAbstract
 
         $root = $this->getRootParagraph();
 
-        return ! empty( $root->editUsers ) && in_array( $user->id, $this->editUsers )
-            || ! empty( $root->editGroups ) && in_array( $user->groupId, $this->editGroups )
-            || ( $this->id == $this->rootId
-                    ? $this->getServiceLocator()
-                           ->get( 'Grid\User\Model\Permissions\Model' )
-                           ->isAllowed( $root, 'delete' )
-                    : $this->getServiceLocator()
-                           ->get( 'Grid\User\Model\Permissions\Model' )
-                           ->isAllowed( $root, 'edit' ) );
+        return ! empty( $root->editUsers ) && in_array( $user->id, $root->editUsers )
+            || ! empty( $root->editGroups ) && in_array( $user->groupId, $root->editGroups )
+            || $this->getServiceLocator()
+                    ->get( 'Grid\User\Model\Permissions\Model' )
+                    ->isAllowed( $root, $this->id == $this->rootId ? 'delete' : 'edit' );
     }
 
     /**
