@@ -52,7 +52,7 @@ return array(
     'default.form.module.modules.googleAnalytics' => 'Google analytics',
     'default.form.module.modules.googleSiteVerification' => 'Google site-verification',
     'default.form.module.modules.googleMap' => 'Google maps',
-    'default.form.module.modules.vote' => 'Grid\Vote',
+    'default.form.module.modules.vote' => 'Vote',
     'default.form.module.modules.openId' => 'OpenID',
     'default.form.module.modules.domainManager' => 'Domain manager',
     'default.form.module.modules.multisiteCentral' => 'Multisite: central',
