@@ -1,5 +1,7 @@
 <?php
 
+$debug = (bool) ( error_reporting() & E_WARNING );
+
 return array(
     'router' => array(
         'routes' => array(
@@ -1035,7 +1037,7 @@ return array(
     ),
     'view_manager' => array(
         'display_not_found_reason'  => true,
-        'display_exceptions'        => (bool) ( error_reporting() & E_WARNING ),
+        'display_exceptions'        => $debug,
         'doctype'                   => 'XHTML5',
         'forbidden_template'        => 'error/403',
         'not_found_template'        => 'error/404',
@@ -1076,8 +1078,8 @@ return array(
         ),
         'head_defaults'         => array(
             'headTitle'         => array(
-                'content'           => 'Zork',
-                'separator'         => '-',
+                'content'           => '-',
+                'separator'         => '/',
                 'autoEscape'        => false,
                 'translatorEnabled' => false,
             ),
@@ -1099,7 +1101,7 @@ return array(
                 'jqueryUi'      => array(
                     'rel'       => 'stylesheet',
                     'type'      => 'text/css',
-                    'href'      => '/styles/ui/custom' . ( ! ( error_reporting() & E_WARNING ) ? '.min' : '' ) . '.css',
+                    'href'      => '/styles/ui/custom' . ( ! $debug ? '.min' : '' ) . '.css',
                                 // 'http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css',
                 ),
                 'defaults'      => array(
@@ -1121,12 +1123,12 @@ return array(
             'headScript'        => array(
                 'jquery'        => array(
                     /// TODO: use jquery-ui version 1.9 & 2.0, when available from google
-                    'src'       => 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery' . ( ! ( error_reporting() & E_WARNING ) ? '.min' : '' ) . '.js',
+                    'src'       => 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery' . ( ! $debug ? '.min' : '' ) . '.js',
                     'type'      => 'text/javascript',
                 ),
                 'jqueryUi'      => array(
                     /// TODO: use jquery-ui version 1.10, when available from google
-                    'src'       => 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui' . ( ! ( error_reporting() & E_WARNING ) ? '.min' : '' ) . '.js',
+                    'src'       => 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui' . ( ! $debug ? '.min' : '' ) . '.js',
                     'type'      => 'text/javascript',
                 ),
                 'coreJs'        => array(
