@@ -13,9 +13,6 @@ class ModuleController extends AbstractAdminController
      */
     protected $aclRights = array(
         '' => array(
-            'sysadmin' => 'edit',
-        ),
-        'index' => array(
             'sysadmin.modules' => 'edit',
         ),
     );
