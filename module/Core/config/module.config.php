@@ -1126,7 +1126,7 @@ return array(
                 ),
                 'jqueryUi'      => array(
                     /// TODO: use jquery-ui version 1.10, when available from google
-                    'src'       => 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui' . ( ! ( error_reporting() & E_WARNING ) ? '.min' : '' ) . '.js',
+                    'src'       => 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui' . ( ! ( error_reporting() & E_WARNING ) ? '.min' : '' ) . '.js',
                     'type'      => 'text/javascript',
                 ),
                 'coreJs'        => array(
