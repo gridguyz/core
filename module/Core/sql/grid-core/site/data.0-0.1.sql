@@ -246,7 +246,7 @@ BEGIN
     "vLastId" = currval( 'paragraph_id_seq' );
 
     INSERT INTO "paragraph_property" ( "paragraphId", "locale", "name", "value" )
-         VALUES ( "vLastId", 'en', 'title', 'Grid\User' );
+         VALUES ( "vLastId", 'en', 'title', 'User' );
 
     INSERT INTO "paragraph" ( "type", "rootId", "left", "right", "name" )
          VALUES ( 'title', "vLastId", 2, 3, NULL );
