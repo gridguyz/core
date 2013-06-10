@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="./Bootstrap.php"
+         backupGlobals="false">
+    <testsuites>
+        <testsuite name="Core">
+            <directory suffix="Test.php">./module/Core</directory>
+        </testsuite>
+        <testsuite name="Customize">
+            <directory suffix="Test.php">./module/Customize</directory>
+        </testsuite>
+        <testsuite name="Image">
+            <directory suffix="Test.php">./module/Image</directory>
+        </testsuite>
+        <testsuite name="Mail">
+            <directory suffix="Test.php">./module/Mail</directory>
+        </testsuite>
+        <testsuite name="Menu">
+            <directory suffix="Test.php">./module/Menu</directory>
+        </testsuite>
+        <testsuite name="Paragraph">
+            <directory suffix="Test.php">./module/Paragraph</directory>
+        </testsuite>
+        <testsuite name="Tag">
+            <directory suffix="Test.php">./module/Tag</directory>
+        </testsuite>
+        <testsuite name="User">
+            <directory suffix="Test.php">./module/User</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../module/Core/src</directory>
+            <directory suffix=".php">../module/Customize/src</directory>
+            <directory suffix=".php">../module/Image/src</directory>
+            <directory suffix=".php">../module/Mail/src</directory>
+            <directory suffix=".php">../module/Menu/src</directory>
+            <directory suffix=".php">../module/Paragraph/src</directory>
+            <directory suffix=".php">../module/Tag/src</directory>
+            <directory suffix=".php">../module/User/src</directory>
+        </whitelist>
+    </filter>
+</phpunit>
