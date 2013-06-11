@@ -24,11 +24,18 @@ class ModelTest extends AbstractHttpControllerTestCase
         $this->assertInstanceOf( 'Grid\Core\Model\Module\Structure', $structure );
         $structure->modules['Grid\Core'] = true;
         $structure->save();
-
         $structure  = null;
+
         $structure  = $model->find();
         $this->assertArrayHasKey( 'Grid\Core', $structure->modules );
         $this->assertTrue( $structure->modules['Grid\Core'] );
+        $structure->delete();
+        $structure  = null;
+
+        $structure  = $model->find();
+        $this->assertArrayNotHasKey( 'Grid\Core', $structure->modules );
+        $structure  = null;
+        $model      = null;
     }
 
 }

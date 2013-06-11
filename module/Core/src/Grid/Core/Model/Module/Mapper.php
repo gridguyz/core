@@ -3,10 +3,8 @@
 namespace Grid\Core\Model\Module;
 
 use Zork\Db\Sql\Sql;
+use Zend\Db\Sql\Predicate;
 use Zend\Db\Adapter\Adapter;
-use Zend\Db\Sql\Expression;
-// use Zend\Db\Sql\Select;
-// use Zend\Db\Sql\Expression as SqlExpression;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 use Zork\Model\Mapper\ReadOnlyMapperInterface;
 use Zork\Model\Mapper\ReadWriteMapperInterface;
@@ -30,9 +28,11 @@ class Mapper implements HydratorInterface,
     use DbAdapterAwareTrait,
         DbSchemaAwareTrait;
 
+    /**
+     * @var Sql
+     */
     private $sql = null;
 
-    private $findResult = array();
     /**
      * Get a Zend\Db\Sql\Sql object
      *
@@ -79,15 +79,11 @@ class Mapper implements HydratorInterface,
             $key = (int) $filter;
         }
 
-        if ( isset( $this->findResult[$key] ) )
-        {
-            return clone $this->findResult[$key];
-        }
-
         $select = $this->sql()
                        ->select()
-                       ->columns(array(
-                            'module','enabled'
+                       ->columns( array(
+                           'module',
+                           'enabled',
                        ) );
 
         if ( $filter !== null )
@@ -97,31 +93,46 @@ class Mapper implements HydratorInterface,
             ) );
         }
 
-        $this->findResult[$key] = $this->create( array(
+        return $this->create( array(
             'modules' => self::recieveModuleIndex(
                 $this->sql()
                      ->prepareStatementForSqlObject( $select )
                      ->execute()
             )
         ) );
-
-        return clone $this->findResult[$key];
     }
 
-    protected static function recieveEnabledModules(Structure $structure )
+    /**
+     * @param \Grid\Core\Model\Module\Structure $structure
+     * @return array
+     */
+    protected static function recieveEnabledModules( Structure $structure )
     {
         return array_keys( array_filter( $structure->modules ) );
     }
 
+    /**
+     * @param array|\Traversable $resultSet
+     * @return array
+     */
     protected static function recieveModuleIndex( $resultSet )
     {
         $moduleIndex = array();
-        foreach($resultSet as $record)
+
+        foreach ( $resultSet as $record )
         {
-            $moduleIndex[$record['module']] = $record['enabled'];
+            $module     = (string) $record['module'];
+            $enabled    = $record['enabled'];
+            $moduleIndex[$module] = $enabled === true
+                                 || $enabled === 't'
+                                 || $enabled === 'true'
+                                 || $enabled === '1'
+                                 || $enabled === 1;
         }
+
         return $moduleIndex;
     }
+
     /**
      * Save and update the statuses of available modules.
      *
@@ -130,61 +141,61 @@ class Mapper implements HydratorInterface,
      */
     public function save( & $structure )
     {
-        $list = self::recieveEnabledModules($structure);
-        $oldStructureIndex = $this->find(null)->modules;
-        $adapter = $this->getDbAdapter();
-        $countResult = 0;
-        $connection = $adapter->getDriver()->getConnection();
-        $connection->beginTransaction();
-        try
+        if ( $structure instanceof Structure )
+        {
+            $modules = $structure->modules;
+        }
+        else if ( is_array( $structure ) )
+        {
+            $modules = $structure;
+        }
+        else
+        {
+            return 0;
+        }
+
+        $return = 0;
+
+        foreach ( $modules as $module => $enabled )
         {
             $update = $this->sql()
                            ->update()
                            ->set( array(
-                                'enabled' => empty( $list )
-                                           ? 0
-                                           : new Expression(
-                                               '? IN (' . implode( ', ', array_fill( 0, count( $list ), '?' ) ) . ')',
-                                               array_merge( array( 'module' ), $list ),
-                                               array_merge( array( Expression::TYPE_IDENTIFIER ), array_fill( 0, count( $list ), Expression::TYPE_VALUE ) )
-                                           )
+                               'enabled' => $enabled ? 't' : 'f',
+                           ) )
+                           ->where( array(
+                               'module' => $module,
                            ) );
 
             $result = $this->sql()
                            ->prepareStatementForSqlObject( $update )
                            ->execute();
 
-            $countResult += $result->getAffectedRows();
+            $updated = $result->getAffectedRows();
 
-            foreach ( $list as $module )
+            if ( $updated )
             {
-                if ( ! isset( $oldStructureIndex[$module] ) )
-                {
-                    $insert = $this->sql()
-                                   ->insert()
-                                   ->columns( array( 'module', 'enabled' ) )
-                                   ->values( array( 'module' => $module, 'enabled' => 1 ) );
-
-                    $result = $this->sql()
-                           ->prepareStatementForSqlObject( $insert )
-                           ->execute();
-
-                    $countResult += $result->getAffectedRows();
-                }
+                $return += $updated;
             }
+            else
+            {
+                $insert = $this->sql()
+                               ->insert()
+                               ->values( array(
+                                   'module'     => $module,
+                                   'enabled'    => $enabled ? 't' : 'f',
+                               ) );
 
 
-            $connection->commit();
+                $result = $this->sql()
+                               ->prepareStatementForSqlObject( $insert )
+                               ->execute();
+
+                $return += $result->getAffectedRows();
+            }
         }
-        catch ( Exception $e )
-        {
-            $connection->rollBack();
-            throw $e;
-        }
 
-        $this->findResult = array();
-
-        return $countResult;
+        return $return;
     }
 
     /**
@@ -208,24 +219,34 @@ class Mapper implements HydratorInterface,
      */
     public function delete( $structure )
     {
+        if ( $structure instanceof Structure )
+        {
+            $modules = $structure->modules;
+        }
+        else if ( is_array( $structure ) )
+        {
+            $modules = $structure;
+        }
+        else
+        {
+            return 0;
+        }
+
         $update = $this->sql()
-                       ->update()
-                       ->set( array(
-                           'enabled' => false
+                       ->delete()
+                       ->where( array(
+                           new Predicate\In(
+                               'module',
+                               array_keys( $modules )
+                           ),
                        ) );
 
         $result = $this->sql()
                        ->prepareStatementForSqlObject( $update )
                        ->execute();
 
-        $this->findResult = array();
         return $result->getAffectedRows();
     }
-
-    /**
-     * Implementation of hydration .
-     */
-
 
     /**
      * Extract values from a structure
@@ -260,13 +281,13 @@ class Mapper implements HydratorInterface,
     {
         if ( $structure instanceof Structure )
         {
-            foreach($structure->modules as &$enabled)
+            foreach ( $structure->modules as & $enabled )
             {
                 $enabled = false;
             }
-            if(isset($data['modules']))
+            if ( isset( $data['modules'] ) )
             {
-                foreach((array)$data['modules'] as $module)
+                foreach ( (array) $data['modules'] as $module )
                 {
                     $structure->modules[$module] = true;
                 }

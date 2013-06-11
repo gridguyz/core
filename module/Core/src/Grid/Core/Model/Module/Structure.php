@@ -13,10 +13,10 @@ class Structure extends MapperAwareAbstract
 {
 
     /**
-     * Field: subdomain
+     * Field: modules
      *
-     * @var string
+     * @var array
      */
-    public $modules             = null;
+    public $modules = array();
 
 }
