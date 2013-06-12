@@ -1122,8 +1122,8 @@ return array(
             ),
             'headScript'        => array(
                 'jquery'        => array(
-                    /// TODO: use jquery-ui version 1.9 & 2.0, when available from google
-                    'src'       => 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery' . ( ! $debug ? '.min' : '' ) . '.js',
+                    /// TODO: use jquery-ui version 1.10 & 2.0, when available from google
+                    'src'       => 'http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery' . ( ! $debug ? '.min' : '' ) . '.js',
                     'type'      => 'text/javascript',
                 ),
                 'jqueryUi'      => array(

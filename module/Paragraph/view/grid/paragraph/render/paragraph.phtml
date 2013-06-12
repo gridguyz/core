@@ -33,12 +33,14 @@ $list->runin( function ( $paragraph ) use ( $view ) { ?>
      data-paragraph-only-parent-of="<?= $paragraph::onlyParentOf() ?>">
     <div class="paragraph paragraph-<?= $paragraph->type ?>"
          id="paragraph-<?= $paragraph->id ?>">
+        <div class="paragraph-content paragraph-content-open paragraph-<?= $paragraph->type ?>-content"
+             ><?= $paragraph->renderOpen( $view ) ?></div>
         <div class="paragraph-children paragraph-<?= $paragraph->type ?>-children">
-<?= $paragraph->renderOpen( $view ) ?>
 <?php }, function ( $paragraph ) use ( $view ) { ?>
-<?= $paragraph->renderClose( $view ) ?>
 
         </div>
+        <div class="paragraph-content paragraph-content-close paragraph-<?= $paragraph->type ?>-content"
+             ><?= $paragraph->renderClose( $view ) ?></div>
     </div>
 </div>
 

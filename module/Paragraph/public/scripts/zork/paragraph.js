@@ -35,8 +35,7 @@
     /**
      * @type $
      */
-    var _accCache = {},
-        _root     = null,
+    var _root     = null,
         cssom     = js.require( "js.cssom" ),
         wizard    = js.require( "js.wizard" ),
         customize = js.require( "js.customize" ),
@@ -44,48 +43,7 @@
         reflect   = js.require( "js.paragraph.reflectCss" ),
         editable  = "[data-paragraph-id]:not(.paragraph-edit-disabled)",
         draggable = '[data-paragraph-properties~="drag"]' + editable,
-        droppable = '[data-paragraph-properties~="drop"]' + editable,
-        accept    = function ( drag, drop, inner )
-        {
-            var dragId          = drag.data( "paragraphId" ),
-                dropId          = drop.data( "paragraphId" ),
-                cacheKey        = dragId + "-" + dropId + "-" + inner;
-
-            if ( cacheKey in _accCache )
-            {
-                return _accCache[cacheKey];
-            }
-
-            var dpar            = drop.parents( droppable + ":first" ),
-                dragType        = drag.data( "paragraphType" ),
-                dropType        = drop.data( "paragraphType" ),
-                dparType        = dpar.data( "paragraphType" ),
-                dragChildOf     = drag.data( "paragraphOnlyChildOf" ),
-             // dropChildOf     = drop.data( "paragraphOnlyChildOf" ),
-             // dparChildOf     = dpar.data( "paragraphOnlyChildOf" ),
-             // dragParentOf    = drag.data( "paragraphOnlyParentOf" ),
-                dropParentOf    = drop.data( "paragraphOnlyParentOf" ),
-                dparParentOf    = dpar.data( "paragraphOnlyParentOf" );
-
-            if ( inner )
-            {
-                return _accCache[cacheKey] = (
-                    ! Object.isUndefined( dragChildOf ) &&
-                    ! Object.isUndefined( dropParentOf ) &&
-                    ( dragChildOf == '*' || dragChildOf == dropType ) &&
-                    ( dropParentOf == '*' || dropParentOf == dragType )
-                );
-            }
-            else
-            {
-                return _accCache[cacheKey] = (
-                    ! Object.isUndefined( dragChildOf ) &&
-                    ! Object.isUndefined( dparParentOf ) &&
-                    ( dragChildOf == '*' || dragChildOf == dparType ) &&
-                    ( dparParentOf == '*' || dparParentOf == dragType )
-                );
-            }
-        };
+        droppable = '[data-paragraph-properties~="drop"]' + editable;
 
     /**
      * Paragraph header instance
@@ -102,19 +60,19 @@
      */
     global.Zork.Paragraph.prototype.header.template =
         '<div class="paragraph-edit-header">' +
-            '<a class="down" href="#">&nbsp;</a>' +
-            '<a class="up" href="#">&nbsp;</a>' +
+            '<span class="down">&nbsp;</span>' +
+            '<span class="up">&nbsp;</span>' +
             '<div class="actions">' +
-                '<a class="title" href="#">&nbsp;</a>' +
-                '<a class="edit" href="#" title="' +
+                '<span class="title">&nbsp;</span>' +
+                '<span class="edit" title="' +
                     js.core.translate( "paragraph.editableHeader.edit", js.core.userLocale ) +
-                '">&nbsp;</a>' +
-                '<a class="append" href="#" title="' +
+                '">&nbsp;</span>' +
+                '<span class="append" title="' +
                     js.core.translate( "paragraph.editableHeader.append", js.core.userLocale ) +
-                '">&nbsp;</a>' +
-                '<a class="delete" href="#" title="' +
+                '">&nbsp;</span>' +
+                '<span class="delete" title="' +
                     js.core.translate( "paragraph.editableHeader.delete", js.core.userLocale ) +
-                '">&nbsp;</a>' +
+                '">&nbsp;</span>' +
             '</div>' +
         '</div>';
 
@@ -183,11 +141,6 @@
                         types = String( para.data( "paragraphProperties" ) )
                                             .split( /\s+/ );
 
-                    header.parent( draggable )
-                          .parents( draggable )
-                          .filter( ":ui-draggable" )
-                          .draggable( "option", "disabled", false );
-
                     root.find( ".paragraph-container.outline" )
                         .andSelf()
                         .removeClass( "outline" );
@@ -196,11 +149,6 @@
                           .show( "fast" );
 
                     para.addClass( "outline" );
-
-                    header.parent( draggable )
-                          .parents( draggable )
-                          .filter( ":ui-draggable" )
-                          .draggable( "option", "disabled", true );
 
                     if ( ! ( title = para.data( "paragraphName" ) ) )
                     {
@@ -212,7 +160,8 @@
                     }
 
                     header.find( ".title" )
-                          .text( title );
+                          .text( title )
+                          .disableSelection();
 
                     header.find( ".edit" )
                           .css( "display", ~ types.indexOf( "edit" ) ? "" : "none" );
@@ -225,9 +174,23 @@
                           .css( "display", para.data( "paragraphOnlyParentOf" ) ? "" : "none" );
                 }
             },
-            onDrop = function ( drag, drop, position )
+            onUpdate = function ( event, ui )
             {
-                var finish  = js.core.layer();
+                if ( ui.sender && ui.sender.length )
+                {
+                    return;
+                }
+
+                var item        = ui.item,
+                    finish      = js.core.layer(),
+                    related     = item.next( "[data-paragraph-id]" ),
+                    position    = "before";
+
+                if ( ! related.length )
+                {
+                    related     = item.parents( "[data-paragraph-id]:first" );
+                    position    = "append";
+                }
 
                 js.core.rpc( {
                     "method"    : "Grid\\Paragraph\\Model\\Paragraph\\Rpc::moveNode",
@@ -236,31 +199,10 @@
 
                         if ( result.success )
                         {
-                            if ( drag.data( "paragraphType" ) == "column" ||
-                                 drop.data( "paragraphType" ) == "columns" )
+                            if ( item.data( "paragraphType" ) == "column" )
                             {
                                 customize.reload();
                             }
-
-                            drag.hide(
-                                "blind",
-                                {
-                                    "easing": "easeOutQuart"
-                                },
-                                "fast",
-                                function ()
-                                {
-                                    ( position == "append"
-                                        ? drop.find( ".paragraph-children:first" )
-                                        : drop )[position]( drag.show(
-                                            "blind",
-                                            {
-                                                "easing": "easeOutQuart"
-                                            },
-                                            "fast"
-                                        ) );
-                                }
-                            );
 
                             message( {
                                 "title": js.core.translate(
@@ -272,266 +214,76 @@
                                         js.core.userLocale
                                     ).format( js.core.translate(
                                         "paragraph.type." +
-                                        drag.data( "paragraphType" ),
+                                        item.data( "paragraphType" ),
                                         js.core.userLocale
                                     ) )
                             } );
                         }
                     }
                 } ).invoke( {
-                    "sourceNode"    : drag.data( "paragraphId" ),
-                    "relatedNode"   : drop.data( "paragraphId" ),
+                    "sourceNode"    : item.data( "paragraphId" ),
+                    "relatedNode"   : related.data( "paragraphId" ),
                     "position"      : position
                 } );
 
                 self.header.lock = locking;
             },
-            dropClear = function ()
-            {
-                root.find( ".paragraph-drop-hover-append" )
-                    .removeClass( "paragraph-drop-hover-append" );
-
-                root.find( ".paragraph-drop-hover-before" )
-                    .removeClass( "paragraph-drop-hover-before" );
-
-                root.find( ".paragraph-drop-hover-after" )
-                    .removeClass( "paragraph-drop-hover-after" );
-
-                root.find( ".paragraph-drop-hover" )
-                    .removeClass( "paragraph-drop-hover" );
-            },
-            dropPosition = function ( drag, drop, ui )
-            {
-                var acca = accept( drag, drop, true ),
-                    accs = accept( drag, drop, false ),
-                    offs = drop.offset(),
-                    x    = ui.offset.left - offs.left + ui.helper.width() / 2,
-                    y    = ui.offset.top - offs.top + ui.helper.height() / 2,
-                    w    = drop.width(),
-                    h    = drop.height(),
-                    cols = drag.data( "paragraphType" ) == "column" &&
-                           drop.data( "paragraphType" ) == "column";
-
-                if ( acca )
-                {
-                    if ( accs )
-                    {
-                        if ( cols )
-                        {
-                            if ( x < w / 3 )
-                            {
-                                return "before";
-                            }
-                            else if ( x > w * 2 / 3 )
-                            {
-                                return "after";
-                            }
-                            else
-                            {
-                                return "append";
-                            }
-                        }
-                        else
-                        {
-                            if ( y < h / 3 )
-                            {
-                                return "before";
-                            }
-                            else if ( y > h * 2 / 3 )
-                            {
-                                return "after";
-                            }
-                            else
-                            {
-                                return "append";
-                            }
-                        }
-                    }
-                    else
-                    {
-                        return "append";
-                    }
-                }
-                else if ( accs )
-                {
-                    if ( cols )
-                    {
-                        if ( x < w / 2 )
-                        {
-                            return "before";
-                        }
-                        else
-                        {
-                            return "after";
-                        }
-                    }
-                    else
-                    {
-                        if ( y < h / 2 )
-                        {
-                            return "before";
-                        }
-                        else
-                        {
-                            return "after";
-                        }
-                    }
-                }
-
-                return "append";
-            },
             add = function ( _, element )
             {
                 element = $( element || this );
 
-                if ( element.is( draggable ) )
-                {
-                    element.draggable( {
-                        "revert": true,
-                        "opacity": 0.7,
-                        "cursor": "move",
-                        "stop": dropClear,
-                        "disabled": false,
-                        "scope": "paragraph",
-                        "refreshPositions": true,
-                        "cursorAt": {"top": 12, "left": 12},
-                     // "cancel": ":not(.paragraph-edit-header) *",
-                        "handle": ":not([data-paragraph-id]) .paragraph-edit-header .actions .title",
-                        "helper": function ( event ) {
-                            var target = $( event.srcElement || event.target );
-
-                            locking = self.header.lock;
-                            self.header.lock = true;
-
-                            return $( '<div class="paragraph-move-header">' +
-                                        js.core.translate(
-                                            "paragraph.type." +
-                                            target.closest( draggable )
-                                                  .data( "paragraphType" ),
-                                            js.core.userLocale
-                                        ) +
-                                    '</div>' ).appendTo( "body" );
-                        },
-                        "drag": function ( _, ui ) {
-                            var pos,
-                                drop,
-                                dropState,
-                                drag = $( this ),
-                                current = $.ui.ddmanager.current,
-                                scope = drag.draggable( "option", "scope" );
-
-                            $.each( $.ui.ddmanager.droppables[scope] || [], function () {
-                                if ( ! this.options )
-                                {
-                                    return undefined;
-                                }
-
-                                if ( ! this.options.disabled && this.visible &&
-                                    current.element[0] != this.element[0] &&
-                                    $.ui.intersect( current, this, this.options.tolerance ) )
-                                {
-                                    var childrenIntersection = false;
-
-                                    this.element
-                                        .find( ":data(droppable)" )
-                                        .not( ".ui-draggable-dragging" )
-                                        .each( function () {
-                                            var inst = $.data( this, 'droppable' );
-                                            if( inst.options.greedy && ! inst.options.disabled &&
-                                                inst.options.scope == current.options.scope &&
-                                                inst.accept.call( inst.element[0], current.element ) &&
-                                                $.ui.intersect( current, $.extend( inst, {
-                                                    "offset": inst.element.offset()
-                                                } ), inst.options.tolerance ) )
-                                            {
-                                                childrenIntersection = true;
-                                                return false;
-                                            }
-
-                                            return undefined;
-                                        } );
-
-                                    if ( childrenIntersection )
-                                    {
-                                        return undefined;
-                                    }
-
-                                    if ( this.accept.call( this.element[0], current.element ) )
-                                    {
-                                        drop = this.element;
-                                        return false;
-                                    }
-
-                                    return undefined;
-                                }
-                            } );
-
-                            dropState = drop
-                                ? drag.data( "paragraphId" ) + "-" +
-                                drop.data( "paragraphId" ) + "-" +
-                                ( pos = dropPosition( drag, drop, ui ) )
-                                : null;
-
-                            if ( lastDropState !== dropState )
-                            {
-                                lastDropState = dropState;
-                                dropClear();
-
-                                if ( drop )
-                                {
-                                    drop.addClass( "paragraph-drop-hover" )
-                                        .addClass( "paragraph-drop-hover-" + pos );
-                                }
-                            }
-                        }
-                    } );
-                }
-
                 if ( element.is( droppable ) )
                 {
-                    element.droppable( {
-                        "greedy": true,
-                        "disabled": false,
-                        "addClasses": true,
-                        "scope": "paragraph",
-                     // "hoverClass": "paragraph-drop-hover",
-                        "activeClass": "paragraph-drop-active",
-                        "accept": function ( drag ) {
-                            var drop = $( this );
+                    var type            = element.data( "paragraphType" ),
+                     // onlyChildOf     = element.data( "paragraphOnlyChildOf" ),
+                        onlyParentOf    = element.data( "paragraphOnlyParentOf" ),
+                        sortable        = "> .paragraph > .paragraph-children",
+                        connect         = "";
 
-                            return accept( drag, drop, true ) ||
-                                accept( drag, drop, false );
-                        },
-                     // "over": function () { },
-                     // "out": function () { },
-                        "drop": function ( event, ui ) {
-                            var drag = ui.draggable,
-                                drop = $( this ),
-                                pos  = dropPosition( drag, drop, ui );
-
-                            drag.hide(
-                                "blind",
-                                {
-                                    "easing": "easeOutQuart"
-                                },
-                                "fast",
-                                function ()
-                                {
-                                    ( pos == "append"
-                                        ? drop.find( ".paragraph-children:first" )
-                                        : drop )[pos]( drag.show(
-                                            "blind",
-                                            {
-                                                "easing": "easeOutQuart"
-                                            },
-                                            "fast"
-                                        ) );
-                                }
-                            );
-
-                            onDrop( drag, drop, pos );
+                    if ( onlyParentOf != "" )
+                    {
+                        if ( onlyParentOf != "*" )
+                        {
+                            connect = '[data-paragraph-only-parent-of="' + onlyParentOf + '"]';
                         }
-                    } );
+
+                        element.find( sortable )
+                               .sortable( {
+                                    "appendTo": "body",
+                                 // "cancel": "> .paragraph-container > .paragraph",
+                                    "containment": false, // "window",
+                                    "forceHelperSize": true,
+                                    "forcePlaceholderSize": true,
+                                    "tolerance": "pointer",
+                                    "handle": ".paragraph-edit-header .actions .title",
+                                    "revert": true,
+                                    "connectWith": droppable + connect + sortable,
+                                    "placeholder": "paragraph-placeholder",
+                                    "items": "> .paragraph-container",
+                                    "update": onUpdate,
+                                    "start": function ( event, ui ) {
+                                        locking = self.header.lock;
+                                        self.header.lock = true;
+
+                                        var item        = ui.item,
+                                            placeholder = ui.placeholder,
+                                            type        = item.data( "paragraphType" );
+
+                                        placeholder.addClass( "paragraph-" + type + "-placeholder" );
+
+                                        if ( type == "column" )
+                                        {
+                                            placeholder.css( {
+                                                "float": "left",
+                                                "width": item.css( "width" )
+                                            } );
+                                        }
+                                    },
+                                    "stop": function () {
+                                        self.header.lock = locking;
+                                    }
+                                } );
+                    }
                 }
             };
 
@@ -543,7 +295,10 @@
                     if ( parent.size() > 0 &&
                          js.core.distance( para, parent ) < self.tolerance )
                     {
-                        mmove( {"force": true, "target": parent} );
+                        mmove( {
+                            "force": true,
+                            "target": parent
+                        } );
                     }
 
                     event.preventDefault();
@@ -557,7 +312,10 @@
                     if ( child.size() > 0 &&
                          js.core.distance( para, child ) < self.tolerance )
                     {
-                        mmove( {"force": true, "target": child} );
+                        mmove( {
+                            "force": true,
+                            "target": child
+                        } );
                     }
 
                     event.preventDefault();
@@ -637,20 +395,21 @@
                     js.paragraph.append( para );
                 } );
 
-        root.find( draggable + ", " + droppable ).each( add );
+        root.find( droppable )
+            .andSelf()
+            .each( add );
 
-        root.on( "mousemove", mmove );
-        root.on( "mouseleave", leave );
-
-        root.data( "paragraph.edit.add", add );
-        root.data( "paragraph.edit.reset", function () {
-            root.off( "mousemove", mmove );
-            root.off( "mouseleave", leave );
-            root.find( draggable ).filter( ":ui-draggable" ).draggable( "destroy" );
-            root.find( droppable ).filter( ":ui-droppable" ).droppable( "destroy" );
-            root.removeData( "paragraph.edit.add" );
-            root.removeData( "paragraph.edit.reset" );
-        } );
+        root.on( "mousemove", mmove )
+            .on( "mouseleave", leave )
+            .data( "paragraph.edit.add", add )
+            .data( "paragraph.edit.reset", function () {
+                root.off( "mousemove", mmove );
+                root.off( "mouseleave", leave );
+                root.find( droppable + ":ui-sortable" )
+                    .sortable( "destroy" );
+                root.removeData( "paragraph.edit.add" );
+                root.removeData( "paragraph.edit.reset" );
+            } );
     };
 
     global.Zork.Paragraph.prototype.edit.isElementConstructor = true;

@@ -22,7 +22,7 @@
         form    = $( form );
         element = $( element );
 
-        var before = element.find( ".paragraph .paragraph-children:first" ).html(),
+        var before = element.find( ".paragraph .paragraph-content-open" ).html(),
             update = function ( html ) {
                 var owrite      = global.document.write,
                     owriteln    = global.document.writeln;
@@ -36,7 +36,7 @@
                         element[0].innerHTML += code + "\n";
                     };
 
-                    element.find( ".paragraph .paragraph-children:first" )
+                    element.find( ".paragraph .paragraph-content-open" )
                            .html( "" )
                            .html( html );
                 } catch ( e ) {

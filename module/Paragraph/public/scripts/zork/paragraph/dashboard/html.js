@@ -22,11 +22,11 @@
         form    = $( form );
         element = $( element );
 
-        var before = element.find( ".paragraph .paragraph-children:first" ).html();
+        var before = element.find( ".paragraph .paragraph-content-open" ).html();
 
         form.find( ":input[name='paragraph-html[html]']" )
             .on( "keyup change", function () {
-                element.find( ".paragraph .paragraph-children:first" ).html(
+                element.find( ".paragraph .paragraph-content-open" ).html(
                     $( this ).val()
                              .replace( /<script(\s[^>]*)?>.*?<\/script>/g, "" )
                 );
@@ -37,7 +37,7 @@
                 before = form.find( ":input[name='paragraph-html[html]']" ).val();
             },
             "restore": function () {
-                element.find( ".paragraph .paragraph-children:first" ).html( before );
+                element.find( ".paragraph .paragraph-content-open" ).html( before );
             }
         };
     };

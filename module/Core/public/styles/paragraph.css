@@ -43,6 +43,12 @@ body,
     border: 1px solid transparent;
 }
 
+.paragraph-container .paragraph .paragraph-content:empty,
+.paragraph-container .paragraph .paragraph-children:empty
+{
+    display: none;
+}
+
 .paragraph-container.paragraph-layout-container
 {
     margin: 0px;
@@ -68,8 +74,12 @@ body,
     display: inline-block;
 }
 
-.paragraph-container .paragraph .paragraph-children
+.paragraph-container.paragraph-box-container .paragraph.paragraph-box .paragraph-children.paragraph-box-children,
+.paragraph-container.paragraph-boxes-container .paragraph.paragraph-boxes .paragraph-children.paragraph-boxes-children,
+.paragraph-container.paragraph-column-container .paragraph.paragraph-column .paragraph-children.paragraph-column-children,
+.paragraph-container.paragraph-columns-container .paragraph.paragraph-columns .paragraph-children.paragraph-columns-children
 {
+    display: block;
     min-height: 2em;
 }
 
