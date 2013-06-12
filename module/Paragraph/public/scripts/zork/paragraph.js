@@ -238,24 +238,20 @@
                      // onlyChildOf     = element.data( "paragraphOnlyChildOf" ),
                         onlyParentOf    = element.data( "paragraphOnlyParentOf" ),
                         sortable        = "> .paragraph > .paragraph-children",
-                        connect         = "";
+                        connect         = '[data-paragraph-only-parent-of="' + onlyParentOf + '"]';
 
                     if ( onlyParentOf != "" )
                     {
-                        if ( onlyParentOf != "*" )
-                        {
-                            connect = '[data-paragraph-only-parent-of="' + onlyParentOf + '"]';
-                        }
-
                         element.find( sortable )
                                .sortable( {
                                     "appendTo": "body",
-                                 // "cancel": "> .paragraph-container > .paragraph",
+                                    "dropOnEmpty": true,
                                     "containment": false, // "window",
                                     "forceHelperSize": true,
                                     "forcePlaceholderSize": true,
                                     "tolerance": "pointer",
                                     "handle": ".paragraph-edit-header .actions .title",
+                                    "cancel": "> .paragraph-container > .paragraph",
                                     "revert": true,
                                     "connectWith": droppable + connect + sortable,
                                     "placeholder": "paragraph-placeholder",

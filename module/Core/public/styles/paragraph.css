@@ -80,7 +80,7 @@ body,
 .paragraph-container.paragraph-columns-container .paragraph.paragraph-columns .paragraph-children.paragraph-columns-children
 {
     display: block;
-    min-height: 2em;
+    min-height: 4em;
 }
 
 .paragraph-container.paragraph-columns-container
