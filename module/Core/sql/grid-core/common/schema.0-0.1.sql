@@ -332,12 +332,19 @@ BEGIN
     FOR "v_command_line" IN
 
         SELECT regexp_replace(
-                   pg_get_triggerdef( pg_trigger.oid ),
-                   ' ON .* FOR ',
+                   regexp_replace(
+                       pg_get_triggerdef( pg_trigger.oid ),
+                       ' ON .* FOR ',
+                       format(
+                           ' ON %I.%I FOR ',
+                           "p_destination_schema",
+                           pg_class.relname
+                       )
+                   ),
+                   ' EXECUTE PROCEDURE .*\.',
                    format(
-                       ' ON %I.%I FOR ',
-                       "p_destination_schema",
-                       pg_class.relname
+                       ' EXECUTE PROCEDURE %I.',
+                       "p_destination_schema"
                    )
                )
           FROM pg_catalog.pg_trigger
