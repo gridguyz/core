@@ -42,18 +42,18 @@ class RenderController extends AbstractActionController
         $filePath = trim( $config['headLink']['customize']['href'], '/' );
         $file     = $fileBase . $filePath;
 
-        if ( ! file_exists( $file ) )
+        if ( ! is_file( $file ) )
         {
             $dir = dirname( $file );
 
-            if ( ! file_exists( $dir ) )
+            if ( ! is_dir( $dir ) )
             {
                 mkdir( $dir, 0777, true );
             }
 
             $iterator = new RegexIterator(
                 new FileSystemIterator(
-                    dirname( $file ),
+                    $dir,
                     FileSystemIterator::SKIP_DOTS |
                     FileSystemIterator::KEY_AS_FILENAME |
                     FileSystemIterator::CURRENT_AS_PATHNAME
