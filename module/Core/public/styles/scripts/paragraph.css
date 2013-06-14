@@ -155,8 +155,9 @@
 
 .paragraph-placeholder
 {
- /* z-index: 100; */
+    padding: 0px;
     margin: 0px -5px;
+    max-height: 150px;
     border: 5px dashed #4b7aec;
     background: rgba( 75, 122, 236, 0.5 );
 }

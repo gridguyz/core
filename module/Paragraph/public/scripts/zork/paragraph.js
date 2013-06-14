@@ -244,15 +244,18 @@
                     {
                         element.find( sortable )
                                .sortable( {
+                                    "revert": true,
+                                    "scroll": false,
+                                    "scrollSpeed": 10,
+                                    "scrollSensitivity": 10,
                                     "appendTo": "body",
                                     "dropOnEmpty": true,
-                                    "containment": false, // "window",
+                                    "containment": false,
+                                    "tolerance": "pointer",
                                     "forceHelperSize": true,
                                     "forcePlaceholderSize": true,
-                                    "tolerance": "pointer",
                                     "handle": ".paragraph-edit-header .actions .title",
                                     "cancel": "> .paragraph-container > .paragraph",
-                                    "revert": true,
                                     "connectWith": droppable + connect + sortable,
                                     "placeholder": "paragraph-placeholder",
                                     "items": "> .paragraph-container",
