@@ -142,12 +142,14 @@
                             "width": 400,
                             "height": 100,
                             "border": "none",
-                            "margin": "0px auto"
+                            "margin": "0px auto",
+                            "overflow": "hidden"
                         } )
                         .attr( {
                             "src": src,
                             "id": target,
                             "name": target,
+                            "scrolling": "no",
                             "frameborder": "0",
                             "allowtransparency": "true"
                         } ),
@@ -188,13 +190,23 @@
             else
             {
                 form = contents.find( "form" );
+                form.find( ":submit" ).hide();
             }
         } );
 
         buttons[uploadLabel] = function () {
             if ( form )
             {
-                form.submit();
+                var submit = form.find( ":submit:first" );
+
+                if ( submit.length )
+                {
+                    submit.click();
+                }
+                else
+                {
+                    form.submit();
+                }
             }
         };
 

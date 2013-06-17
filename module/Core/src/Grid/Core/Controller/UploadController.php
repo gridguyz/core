@@ -95,6 +95,8 @@ class UploadController extends AbstractActionController
             $label = 'mime.type.' . $types;
         }
 
+        $accept = '*' == $types ? '*/*' : $types;
+
         return $this->getServiceLocator()
                     ->get( 'Zork\Form\Factory' )
                     ->createForm( array(
@@ -104,16 +106,16 @@ class UploadController extends AbstractActionController
                         ),
                         'elements'      => array(
                             'types'     => array(
-                                'spec' => array(
+                                'spec'  => array(
                                     'type'  => 'Zork\Form\Element\Hidden',
                                     'name'  => 'types',
                                     'attributes' => array(
-                                        'value' => $types,
+                                        'value' => $accept,
                                     ),
                                 ),
                             ),
                             'pattern'   => array(
-                                'spec' => array(
+                                'spec'  => array(
                                     'type'  => 'Zork\Form\Element\Hidden',
                                     'name'  => 'pattern',
                                     'attributes' => array(
@@ -122,14 +124,23 @@ class UploadController extends AbstractActionController
                                 ),
                             ),
                             'file'      => array(
-                                'spec' => array(
+                                'spec'  => array(
                                     'type'      => 'Zork\Form\Element\File',
                                     'name'      => 'file',
                                     'options'   => array(
                                         'required'      => true,
                                         'label'         => $label,
-                                        'accept'        => $types,
+                                        'accept'        => $accept,
                                         'validators'    => $this->getValidators( $types )
+                                    ),
+                                ),
+                            ),
+                            'upload'    => array(
+                                'spec'  => array(
+                                    'type'      => 'Zork\Form\Element\Submit',
+                                    'name'      => 'upload',
+                                    'attributes'    => array(
+                                        'value'     => 'default.upload',
                                     ),
                                 ),
                             ),
