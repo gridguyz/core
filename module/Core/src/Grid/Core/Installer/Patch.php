@@ -27,9 +27,20 @@ class Patch extends AbstractPatch
      */
     protected $uploadsDirs = array(
         'pages',
+        'pages/images',
+        'pages/documents',
         'settings',
         'customize',
         'users',
+    );
+
+    /**
+     * Uploads files to copy
+     *
+     * @var array
+     */
+    protected $uploadsFiles = array(
+        'customize/extra.css' => './uploads/central/customize/extra.css',
     );
 
     /**
@@ -104,10 +115,24 @@ class Patch extends AbstractPatch
                             'public',
                             'uploads',
                             $schema,
-                            $uploadsDir
+                            str_replace( '/', DIRECTORY_SEPARATOR, $uploadsDir )
                         ) ),
                         0777,
                         true
+                    );
+                }
+
+                foreach ( $this->uploadsFiles as $uploadsFile => $copyFrom )
+                {
+                    @ copy(
+                        str_replace( '/', DIRECTORY_SEPARATOR, $copyFrom ),
+                        implode( DIRECTORY_SEPARATOR, array(
+                            '.',
+                            'public',
+                            'uploads',
+                            $schema,
+                            str_replace( '/', DIRECTORY_SEPARATOR, $uploadsFile )
+                        ) )
                     );
                 }
             }
