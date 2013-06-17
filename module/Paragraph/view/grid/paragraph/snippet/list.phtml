@@ -20,13 +20,13 @@ if ( ! $this->format ): ?>
                 $view->placeholder( 'listActions' )->set( '' );
                 $view->placeholder( 'listActions' )->captureStart();
 ?>
-<?php if ( $this->isAllowed( 'snippet', 'edit' ) ): ?>
+<?php if ( $this->isAllowed( 'paragraph.snippet', 'edit' ) ): ?>
     <a class="action-button edit"
        title="<?= $view->translate( 'default.edit' ); ?>"
        href="/app/<?= $view->locale() ?>/admin/snippet/edit/<?= $row->name ?>">
     </a>
 <?php endif ?>
-<?php if ( $this->isAllowed( 'snippet', 'delete' ) ): ?>
+<?php if ( $this->isAllowed( 'paragraph.snippet', 'delete' ) ): ?>
     <a class="action-button delete"
        title="<?= $view->translate( 'default.delete' ); ?>"
        href="/app/<?= $view->locale() ?>/admin/snippet/delete/<?= $row->name ?>"
@@ -40,7 +40,7 @@ if ( ! $this->format ): ?>
           ) )
          ->render( $this->format );
 
-if ( ! $this->format && $this->isAllowed( 'snippet', 'create' ) ): ?>
+if ( ! $this->format && $this->isAllowed( 'paragraph.snippet', 'create' ) ): ?>
 <div class="more-links">
     <a class="button-appearance"
        href="/app/<?= $view->locale() ?>/admin/snippet/create">
