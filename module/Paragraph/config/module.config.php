@@ -595,7 +595,6 @@ return array(
                         ),
                         'attributes'    => array(
                             'data-js-type'  => 'js.user.select',
-                            'placeholder'   => 'default.autoCompletePlaceholder',
                         ),
                     ),
                 ),
@@ -2185,7 +2184,6 @@ return array(
                                     ),
                                     'attributes'    => array(
                                         'data-js-type'  => 'js.user.select',
-                                        'placeholder'   => 'default.autoCompletePlaceholder',
                                     ),
                                 ),
                             ),

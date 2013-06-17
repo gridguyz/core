@@ -214,6 +214,8 @@
         element = $( element );
 
         var minLength   = element.data( "jsUserselectMinLength" ) || 1,
+            placeholder = element.data( "jsAutocompletePlaceholder" ) ||
+                          js.core.translate( "default.autoCompletePlaceholder" ),
             selected    = element.find( ":selected" ),
             input       = $( "<input type='text' />" ),
             change      = function ( _, ui ) {
@@ -239,6 +241,8 @@
         {
             input.val( selected.text() );
         }
+
+        input.attr( "placeholder", placeholder );
 
         element.removeAttr( "multiple" )
                .addClass( "ui-helper-hidden" )

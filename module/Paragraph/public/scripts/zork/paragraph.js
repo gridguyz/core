@@ -895,6 +895,8 @@
         element = $( element );
 
         var minLength   = element.data( "jsContentselectMinLength" ) || 1,
+            placeholder = element.data( "jsAutocompletePlaceholder" ) ||
+                      js.core.translate( "default.autoCompletePlaceholder" ),
             selected    = element.find( ":selected" ),
             input       = $( "<input type='text' />" ),
             change      = function ( _, ui ) {
@@ -925,6 +927,8 @@
                .addClass( "ui-helper-hidden" )
                .prop( "multiple", false )
                .after( input );
+
+        input.attr( "placeholder", placeholder );
 
         input.autocompleteicon( {
             "minLength": minLength,
