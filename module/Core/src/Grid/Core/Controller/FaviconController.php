@@ -2,7 +2,6 @@
 
 namespace Grid\Core\Controller;
 
-use Zend\Mvc\Exception;
 use Zend\Mvc\Controller\AbstractActionController;
 
 /**
@@ -25,9 +24,10 @@ class FaviconController extends AbstractActionController
 
         if ( empty( $options['headLink']['favicon']['href'] ) )
         {
-            throw new Exception\RuntimeException(
-                'Favicon not found', 404
-            );
+            $this->getResponse()
+                 ->setStatusCode( 404 );
+
+            return;
         }
 
         return $this->redirect()
