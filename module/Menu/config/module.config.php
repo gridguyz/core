@@ -3,6 +3,29 @@
 return array(
     'router' => array(
         'routes' => array(
+            'Grid\Menu\Sitemap\Index' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'         => '/sitemap.xml',
+                    'defaults'      => array(
+                        'controller'    => 'Grid\Menu\Controller\Sitemap',
+                        'action'        => 'index',
+                    ),
+                ),
+            ),
+            'Grid\Menu\Sitemap\Menu' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route'         => '/app/:locale/sitemap/:id',
+                    'constraints'   => array(
+                        'id'        => '[1-9][0-9]*',
+                    ),
+                    'defaults'      => array(
+                        'controller'    => 'Grid\Menu\Controller\Sitemap',
+                        'action'        => 'menu',
+                    ),
+                ),
+            ),
             'Grid\Menu\Admin\Editor' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -79,6 +102,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Grid\Menu\Controller\Admin'         => 'Grid\Menu\Controller\AdminController',
+            'Grid\Menu\Controller\Sitemap'       => 'Grid\Menu\Controller\SitemapController',
             'Grid\Menu\Controller\Navigation'    => 'Grid\Menu\Controller\NavigationController',
         ),
     ),
