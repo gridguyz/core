@@ -203,6 +203,7 @@ return array(
     'paragraph.form.snippet.failed' => 'Save failed',
     'paragraph.form.snippet.file' => 'Snippet file',
     'paragraph.form.snippet.name' => 'Name',
+    'paragraph.form.snippet.name.placeholder' => 'English letters, number, underscore, dot & dash',
     'paragraph.form.snippet.overwrite' => 'Allow overwrite (if filename is already exists)',
     'paragraph.form.snippet.submit' => 'Save',
     'paragraph.form.snippet.success' => 'Save successfull',

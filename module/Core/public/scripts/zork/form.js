@@ -313,6 +313,12 @@
     {
         form = $( form );
 
+        form.find( ":input[placeholder]:not([title])" )
+            .each( function () {
+                var self = $( this );
+                self.attr( "title", self.attr( "placeholder" ) );
+            } );
+
         var novalidate  = false,
             validate    = function ( evt ) {
                 if ( novalidate || form.attr( "novalidate" ) )

@@ -2901,6 +2901,9 @@ return array(
                                 'Grid\Paragraph\Model\Snippet\Rpc::isNameAvailable',
                             ),
                         ),
+                        'attributes'    => array(
+                            'placeholder'   => 'paragraph.form.snippet.name.placeholder',
+                        ),
                     ),
                 ),
                 'type' => array(
