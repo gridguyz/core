@@ -3,6 +3,7 @@
 return array(
     'default.add' => 'Hozzáad',
     'default.areYouSure' => 'Biztos benne?',
+    'default.autoCompletePlaceholder' => 'Kezdjen gépelni',
     'default.back' => 'Vissza',
     'default.calculate' => 'Kiszámol',
     'default.cancel' => 'Mégse',

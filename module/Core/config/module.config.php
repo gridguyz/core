@@ -547,6 +547,7 @@ return array(
                         ),
                         'attributes'    => array(
                             'data-js-type'  => 'js.paragraph.contentSelect',
+                            'placeholder'   => 'default.autoCompletePlaceholder',
                         ),
                     ),
                 ),
@@ -646,6 +647,7 @@ return array(
                         ),
                         'attributes'    => array(
                             'data-js-type'  => 'js.paragraph.contentSelect',
+                            'placeholder'   => 'default.autoCompletePlaceholder',
                         ),
                     ),
                 ),

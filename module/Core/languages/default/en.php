@@ -3,6 +3,7 @@
 return array(
     'default.add' => 'Add',
     'default.areYouSure' => 'Are you sure?',
+    'default.autoCompletePlaceholder' => 'Please, start typing',
     'default.back' => 'Back',
     'default.calculate' => 'Calculate',
     'default.cancel' => 'Cancel',
