@@ -100,7 +100,7 @@
                     var self    = $( this ),
                         val     = self.val(),
                         text    = self.text(),
-                        parent  = String( self.data( "parent" ) || "" ),
+                        level   = Number( self.data( "level" ) || 0 ),
                         search  = text.toLowerCase()
                                       .replace( /^\s+/, "" )
                                       .replace( /\s+$/, "" )
@@ -113,7 +113,7 @@
                         result.push( {
                             "value": val,
                             "label": text,
-                            "description": val == parent ? trans[0] : trans[1]
+                            "description": level ? trans[1].format( level ) : trans[0]
                         } );
                     }
                 } );

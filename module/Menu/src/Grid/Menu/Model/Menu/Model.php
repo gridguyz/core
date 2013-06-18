@@ -92,7 +92,7 @@ class Model implements LocaleAwareInterface,
                         array(
                             'value'         => 'id',
                             'label'         => 'label',
-                            'data-parent'   => 'parentId',
+                            'data-level'    => 'level',
                         ),
                         array(),
                         array(

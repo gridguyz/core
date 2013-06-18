@@ -22,5 +22,5 @@ return array(
     'menu.privilege.edit' => 'Edit menu-points / menus',
     'menu.privilege.delete' => 'Delete menu-points / menus',
     'menu.select.main' => 'Main menu',
-    'menu.select.sub' => 'Submenu',
+    'menu.select.sub' => 'Submenu, level %d',
 );

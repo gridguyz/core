@@ -216,6 +216,20 @@ class Mapper extends ReadWriteMapperAbstract
             $proxyData = false;
         }
 
+        if ( null === $columns )
+        {
+            $level = false;
+        }
+        elseif ( ( $index = array_search( 'level', $columns ) ) )
+        {
+            $level = true;
+            unset( $columns[$index] );
+        }
+        else
+        {
+            $level = false;
+        }
+
         $columns = parent::getSelectColumns( $columns );
 
         if ( $label )
@@ -299,6 +313,33 @@ class Mapper extends ReadWriteMapperAbstract
                              ' = ' .
                              $platform->quoteIdentifierChain( array(
                                  static::$tableName, 'id'
+                             ) )
+                         )
+                     ) )
+                     ->getSqlString( $platform ) .
+            ')' );
+        }
+
+        if ( $level )
+        {
+            $columns['level'] = new Sql\Expression( '(' .
+                $this->sql( null )
+                     ->select( array(
+                         'ascendants' => static::$tableName,
+                     ) )
+                     ->columns( array( new Sql\Expression( 'COUNT(*) - 1' ) ) )
+                     ->where( array(
+                         new Sql\Predicate\Expression(
+                             $platform->quoteIdentifierChain( array(
+                                 static::$tableName, 'left'
+                             ) ) .
+                             ' BETWEEN ' .
+                             $platform->quoteIdentifierChain( array(
+                                 'ascendants', 'left'
+                             ) ) .
+                             ' AND ' .
+                             $platform->quoteIdentifierChain( array(
+                                 'ascendants', 'right'
                              ) )
                          )
                      ) )
