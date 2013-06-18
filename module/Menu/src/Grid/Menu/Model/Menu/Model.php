@@ -90,12 +90,13 @@ class Model implements LocaleAwareInterface,
         return $this->getMapper()
                     ->findOptions(
                         array(
-                            'value' => 'id',
-                            'label',
+                            'value'         => 'id',
+                            'label'         => 'label',
+                            'data-parent'   => 'parentId',
                         ),
                         array(),
                         array(
-                            'left' => 'ASC'
+                            'left'          => 'ASC'
                         )
                     );
     }

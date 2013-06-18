@@ -292,6 +292,9 @@ return array(
                                         'model'     => 'Grid\Menu\Model\Menu\Model',
                                         'method'    => 'findOptions',
                                     ),
+                                    'attributes'    => array(
+                                        'data-js-type'  => 'js.menu.select',
+                                    ),
                                 ),
                             ),
                             'horizontal' => array(
