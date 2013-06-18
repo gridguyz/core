@@ -54,6 +54,7 @@ return array(
     'paragraph.form.content.layout.default-description' => 'Layout default description',
     'paragraph.form.content.leadImage' => 'Lead image',
     'paragraph.form.content.leadText' => 'Lead text',
+    'paragraph.form.content.menuId' => 'Attach to menu',
     'paragraph.form.content.metaDescription' => 'Description',
     'paragraph.form.content.metaKeywords' => 'Keywords',
     'paragraph.form.content.metaRobots' => 'Seo-robots',

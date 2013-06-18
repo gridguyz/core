@@ -2831,8 +2831,8 @@ return array(
         ),
         'Grid\Paragraph\ImportContent\Import' => array(
             'elements' => array(
-                'importId' => array(
-                    'spec' => array(
+                'importId'  => array(
+                    'spec'  => array(
                         'type'      => 'Zork\Form\Element\RadioGroupModel',
                         'name'      => 'importId',
                         'options'   => array(
@@ -2856,8 +2856,23 @@ return array(
                         ),
                     ),
                 ),
-                'name' => array(
-                    'spec' => array(
+                'menuId'    => array(
+                    'spec'  => array(
+                        'type'      => 'Zork\Form\Element\SelectModel',
+                        'name'      => 'menuId',
+                        'options'   => array(
+                            'label'     => 'paragraph.form.content.menuId',
+                            'required'  => false,
+                            'model'     => 'Grid\Menu\Model\Menu\Model',
+                            'method'    => 'findOptions',
+                        ),
+                        'attributes'    => array(
+                            'data-js-type'  => 'js.menu.select',
+                        ),
+                    ),
+                ),
+                'name'      => array(
+                    'spec'  => array(
                         'type'      => 'Zork\Form\Element\Text',
                         'name'      => 'name',
                         'options'   => array(
@@ -2866,8 +2881,8 @@ return array(
                         ),
                     ),
                 ),
-                'title'    => array(
-                    'spec' => array(
+                'title'     => array(
+                    'spec'  => array(
                         'type'      => 'Zork\Form\Element\Text',
                         'name'      => 'title',
                         'options'   => array(

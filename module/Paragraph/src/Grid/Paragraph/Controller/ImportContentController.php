@@ -61,6 +61,8 @@ class ImportContentController extends AbstractAdminController
                 $model  = $this->getServiceLocator()
                                ->get( 'Grid\Paragraph\Model\Paragraph\Model' );
                 $id     = $model->cloneFrom( $data['importId'], '_central' );
+                $menuId = (int) $data['menuId'];
+                unset( $data['menuId'] );
                 unset( $data['importId'] );
 
                 if ( empty( $id ) )
@@ -128,6 +130,23 @@ class ImportContentController extends AbstractAdminController
                                 if ( $uri->save() )
                                 {
                                     $redirect = '/' . $uri->safeUri;
+                                }
+
+                                if ( $menuId )
+                                {
+                                    $menuModel = $this->getServiceLocator()
+                                                      ->get( 'Grid\Menu\Model\Menu\Model' );
+
+                                    $menu = $menuModel->create( array(
+                                        'type'      => 'content',
+                                        'label'     => $data['title'],
+                                        'contentId' => $content->id,
+                                    ) );
+
+                                    if ( $menu->save() )
+                                    {
+                                        $menuModel->appendTo( $menu->id, $menuId );
+                                    }
                                 }
                             }
                         }
