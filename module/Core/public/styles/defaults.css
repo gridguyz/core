@@ -224,12 +224,12 @@ form dl dt
 form dl dt label
 {
     font-weight: bold;
-    margin-right: 10px;
+    margin-right: 1ex;
 }
 
 form dl dd
 {
-    margin-left: 31%;
+    margin-left: 33%;
     margin-bottom: 1em;
 }
 
