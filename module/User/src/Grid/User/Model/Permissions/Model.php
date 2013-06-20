@@ -218,10 +218,15 @@ class Model implements AclAwareInterface,
      * @param string $privilege
      * @return bool
      */
-    public function isAllowed( $resource, $privilege = self::PRIVILEGE_DEFAULT )
+    public function isAllowed( $resource, $privilege = self::PRIVILEGE_DEFAULT, $role = null )
     {
+        if ( empty( $role ) )
+        {
+            $role = $this->getRole();
+        }
+
+        $role       = $this->checkRole( $role );
         $resource   = $this->checkResource( $resource );
-        $role       = $this->checkRole( $this->getRole() );
 
         return $this->getAcl()
                     ->isAllowed( $role,
