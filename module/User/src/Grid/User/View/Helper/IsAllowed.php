@@ -49,26 +49,28 @@ class IsAllowed extends AbstractHelper
     /**
      * Is a permission allowed or not
      *
-     * @param string|\Zend\Permissions\Acl\Resource\ResourceInterface $resource
-     * @param string $privilege
-     * @return bool
+     * @param   string|\Zend\Permissions\Acl\Resource\ResourceInterface $resource
+     * @param   string                                                  $privilege
+     * @param   string|\Zend\Permissions\Acl\Role\RoleInterface         $role
+     * @return  bool
      */
-    public function isAllowed( $resource, $privilege = null )
+    public function isAllowed( $resource, $privilege = null, $role = null )
     {
         return $this->getPermissionsModel()
-                    ->isAllowed( $resource, $privilege );
+                    ->isAllowed( $resource, $privilege, $role );
     }
 
     /**
      * Is a permission allowed or not
      *
-     * @param string|\Zend\Permissions\Acl\Resource\ResourceInterface $resource
-     * @param string $privilege
-     * @return bool
+     * @param   string|\Zend\Permissions\Acl\Resource\ResourceInterface $resource
+     * @param   string                                                  $privilege
+     * @param   string|\Zend\Permissions\Acl\Role\RoleInterface         $role
+     * @return  bool
      */
-    public function __invoke( $resource, $privilege = null )
+    public function __invoke( $resource, $privilege = null, $role = null )
     {
-        return $this->isAllowed( $resource, $privilege );
+        return $this->isAllowed( $resource, $privilege, $role );
     }
 
 }
