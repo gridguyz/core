@@ -205,6 +205,118 @@ table.table-pairs td
     text-align: left;
 }
 
+.action-button
+{
+    float: left;
+    height: 22px;
+    padding: 0px;
+    display: block;
+    min-width: 22px;
+    margin: 2px 3px 2px 0px;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
+
+.action-button.append
+{
+    background-image: url("/images/common/buttons/button-append.png");
+}
+
+.action-button.append:hover
+{
+    background-image: url("/images/common/buttons/button-append-hover.png");
+}
+
+.action-button.ban
+{
+    background-image: url("/images/common/buttons/button-ban.png");
+}
+
+.action-button.ban:hover
+{
+    background-image: url("/images/common/buttons/button-ban-hover.png");
+}
+
+.action-button.edit
+{
+    background-image: url("/images/common/buttons/button-edit.png");
+}
+
+.action-button.edit:hover
+{
+    background-image: url("/images/common/buttons/button-edit-hover.png");
+}
+
+.action-button.delete
+{
+    background-image: url("/images/common/buttons/button-delete.png");
+}
+
+.action-button.delete:hover
+{
+    background-image: url("/images/common/buttons/button-delete-hover.png");
+}
+
+.action-button.view
+{
+    background-image: url("/images/common/buttons/button-view.png");
+}
+
+.action-button.view:hover
+{
+    background-image: url("/images/common/buttons/button-view-hover.png");
+}
+
+.action-button.list
+{
+    background-image: url("/images/common/buttons/button-list.png");
+}
+
+.action-button.list:hover
+{
+    background-image: url("/images/common/buttons/button-list-hover.png");
+}
+
+.action-button.password
+{
+    background-image: url("/images/common/buttons/button-password.png");
+}
+
+.action-button.password:hover
+{
+    background-image: url("/images/common/buttons/button-password-hover.png");
+}
+
+.action-button.clone
+{
+    background-image: url("/images/common/buttons/button-clone.png");
+}
+
+.action-button.clone:hover
+{
+    background-image: url("/images/common/buttons/button-clone-hover.png");
+}
+
+.action-button.set-default
+{
+    background-image: url("/images/common/buttons/button-enable.png");
+}
+
+.action-button.set-default:hover
+{
+    background-image: url("/images/common/buttons/button-enable-hover.png");
+}
+
+.action-button.grant
+{
+    background-image: url("/images/common/buttons/button-grant.png");
+}
+
+.action-button.grant:hover
+{
+    background-image: url("/images/common/buttons/button-grant-hover.png");
+}
+
 form dl,
 form dl dt
 {
