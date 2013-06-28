@@ -90,6 +90,7 @@
     global.Zork.Paragraph.prototype.edit = function ( root )
     {
         js.style( "/styles/scripts/paragraph.css" );
+        js.require( "jQuery.ui.sortabletree" );
         _root = root = $( root );
 
         if ( root.data( "paragraphEditMode" ) === "on" )
@@ -172,117 +173,6 @@
 
                     header.find( ".append" )
                           .css( "display", para.data( "paragraphOnlyParentOf" ) ? "" : "none" );
-                }
-            },
-            onUpdate = function ( event, ui )
-            {
-                if ( ui.sender && ui.sender.length )
-                {
-                    return;
-                }
-
-                var item        = ui.item,
-                    finish      = js.core.layer(),
-                    related     = item.next( "[data-paragraph-id]" ),
-                    position    = "before";
-
-                if ( ! related.length )
-                {
-                    related     = item.parents( "[data-paragraph-id]:first" );
-                    position    = "append";
-                }
-
-                js.core.rpc( {
-                    "method"    : "Grid\\Paragraph\\Model\\Paragraph\\Rpc::moveNode",
-                    "callback"  : function ( result ) {
-                        finish();
-
-                        if ( result.success )
-                        {
-                            if ( item.data( "paragraphType" ) == "column" )
-                            {
-                                customize.reload();
-                            }
-
-                            message( {
-                                "title": js.core.translate(
-                                        "paragraph.drop.title",
-                                        js.core.userLocale
-                                    ),
-                                "message": js.core.translate(
-                                        "paragraph.drop.message",
-                                        js.core.userLocale
-                                    ).format( js.core.translate(
-                                        "paragraph.type." +
-                                        item.data( "paragraphType" ),
-                                        js.core.userLocale
-                                    ) )
-                            } );
-                        }
-                    }
-                } ).invoke( {
-                    "sourceNode"    : item.data( "paragraphId" ),
-                    "relatedNode"   : related.data( "paragraphId" ),
-                    "position"      : position
-                } );
-
-                self.header.lock = locking;
-            },
-            add = function ( _, element )
-            {
-                element = $( element || this );
-
-                if ( element.is( droppable ) )
-                {
-                    var type            = element.data( "paragraphType" ),
-                     // onlyChildOf     = element.data( "paragraphOnlyChildOf" ),
-                        onlyParentOf    = element.data( "paragraphOnlyParentOf" ),
-                        sortable        = "> .paragraph > .paragraph-children",
-                        connect         = '[data-paragraph-only-parent-of="' + onlyParentOf + '"]';
-
-                    if ( onlyParentOf != "" )
-                    {
-                        element.find( sortable )
-                               .sortable( {
-                                    "revert": true,
-                                    "scroll": false,
-                                    "scrollSpeed": 10,
-                                    "scrollSensitivity": 10,
-                                    "appendTo": "body",
-                                    "dropOnEmpty": true,
-                                    "containment": false,
-                                    "tolerance": "pointer",
-                                    "forceHelperSize": true,
-                                    "forcePlaceholderSize": true,
-                                    "handle": ".paragraph-edit-header .actions .title",
-                                    "cancel": "> .paragraph-container > .paragraph",
-                                    "connectWith": droppable + connect + sortable,
-                                    "placeholder": "paragraph-placeholder",
-                                    "items": "> .paragraph-container",
-                                    "update": onUpdate,
-                                    "start": function ( event, ui ) {
-                                        locking = self.header.lock;
-                                        self.header.lock = true;
-
-                                        var item        = ui.item,
-                                            placeholder = ui.placeholder,
-                                            type        = item.data( "paragraphType" );
-
-                                        placeholder.addClass( "paragraph-" + type + "-placeholder" );
-
-                                        if ( type == "column" )
-                                        {
-                                            placeholder.css( {
-                                                "float": "left",
-                                                "width": item.css( "width" )
-                                            } );
-                                        }
-                                    },
-                                    "stop": function () {
-                                        self.header.lock = locking;
-                                    }
-                                } );
-                    }
                 }
             };
 
@@ -394,18 +284,111 @@
                     js.paragraph.append( para );
                 } );
 
-        root.find( droppable )
-            .andSelf()
-            .each( add );
+        root.sortabletree( {
+            "handle": ".paragraph-edit-header .actions .title",
+            "containers": "> .paragraph > .paragraph-children",
+            "items": "> .paragraph-container[data-paragraph-id]",
+            "leaves": "[data-paragraph-only-parent-of='']",
+            "accept": function ( parent, child ) {
+                parent = $( parent ).closest( ".paragraph-container" );
+                child  = $( child ).closest( ".paragraph-container" );
+
+                var onlyParentOf    = parent.data( "paragraphOnlyParentOf" ),
+                    onlyChildOf     = child.data( "paragraphOnlyChildOf" );
+
+                if ( ! onlyParentOf || ! onlyChildOf ) {
+                    return false;
+                }
+
+                if ( onlyParentOf == "*" && onlyChildOf == "*" ) {
+                    return true;
+                }
+
+                var parentType      = parent.data( "paragraphType" ),
+                    childType       = child.data( "paragraphType" );
+
+                return parentType == onlyChildOf
+                    && childType == onlyParentOf;
+            },
+            "horizontal": function ( item ) {
+                return $( item ).closest( ".paragraph-container" )
+                                .data( "paragraphType" ) == "column";
+            },
+            "change": function ( event, ui )
+            {
+                var item        = ui.item,
+                    finish      = js.core.layer(),
+                    related,
+                    position;
+
+                if ( ui.after && ui.after.length )
+                {
+                    related     = ui.after.closest( "[data-paragraph-id]" );
+                    position    = "after";
+                }
+                else if ( ui.before && ui.before.length )
+                {
+                    related     = ui.before.closest( "[data-paragraph-id]" );
+                    position    = "before";
+                }
+                else
+                {
+                    related     = ui.container.closest( "[data-paragraph-id]" );
+                    position    = "append";
+                }
+
+                js.core.rpc( {
+                    "method"    : "Grid\\Paragraph\\Model\\Paragraph\\Rpc::moveNode",
+                    "callback"  : function ( result ) {
+                        finish();
+
+                        if ( result.success )
+                        {
+                            if ( item.data( "paragraphType" ) == "column" )
+                            {
+                                customize.reload();
+                            }
+
+                            message( {
+                                "title": js.core.translate(
+                                        "paragraph.drop.title",
+                                        js.core.userLocale
+                                    ),
+                                "message": js.core.translate(
+                                        "paragraph.drop.message",
+                                        js.core.userLocale
+                                    ).format( js.core.translate(
+                                        "paragraph.type." +
+                                        item.data( "paragraphType" ),
+                                        js.core.userLocale
+                                    ) )
+                            } );
+                        }
+                    }
+                } ).invoke( {
+                    "sourceNode"    : item.data( "paragraphId" ),
+                    "relatedNode"   : related.data( "paragraphId" ),
+                    "position"      : position
+                } );
+
+                self.header.lock = locking;
+            },
+            "start": function () {
+                locking = self.header.lock;
+                self.header.lock = true;
+            },
+            "stop": function () {
+                self.header.lock = locking;
+            }
+        } );
 
         root.on( "mousemove", mmove )
             .on( "mouseleave", leave )
-            .data( "paragraph.edit.add", add )
+            .data( "paragraph.edit.add", function () {} )
             .data( "paragraph.edit.reset", function () {
                 root.off( "mousemove", mmove );
                 root.off( "mouseleave", leave );
-                root.find( droppable + ":ui-sortable" )
-                    .sortable( "destroy" );
+                root.sortabletree( "destroy" );
                 root.removeData( "paragraph.edit.add" );
                 root.removeData( "paragraph.edit.reset" );
             } );
