@@ -386,6 +386,7 @@
             .on( "mouseleave", leave )
             .data( "paragraph.edit.add", function () {} )
             .data( "paragraph.edit.reset", function () {
+                self.header.lock = false;
                 root.off( "mousemove", mmove );
                 root.off( "mouseleave", leave );
                 root.sortabletree( "destroy" );
