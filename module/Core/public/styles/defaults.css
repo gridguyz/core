@@ -217,6 +217,16 @@ table.table-pairs td
     background-position: 50% 50%;
 }
 
+.action-button,
+.action-button:link,
+.action-button:hover,
+.action-button:focus,
+.action-button:active,
+.action-button:visited
+{
+    text-decoration: none;
+}
+
 .action-button.append
 {
     background-image: url("/images/common/buttons/button-append.png");
