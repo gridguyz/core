@@ -150,6 +150,7 @@ body,
 
 .paragraph-container.paragraph-image-container .paragraph.paragraph-image figure a.image-paragraph-link
 {
+    max-width: 100%;
     display: inline-block;
 }
 
