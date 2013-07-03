@@ -982,7 +982,7 @@ return array(
                 'site-definition' => array(
                     'elements'    => array(
                         'registrationEnabled' => array(
-                            'key'   => 'modules.User.features.registrationEnabled',
+                            'key'   => 'modules.Grid\User.features.registrationEnabled',
                             'type'  => 'ini',
                         ),
                     ),

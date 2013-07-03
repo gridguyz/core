@@ -1330,7 +1330,7 @@ BEGIN
     SELECT "value"
       INTO "v_new"
       FROM "settings"
-     WHERE "key" = 'modules.Customize.fileTemplate'
+     WHERE "key" = 'modules.Grid\Customize.fileTemplate'
      LIMIT 1;
 
     "v_new" = REPLACE( "v_new", ':SCHEMA', CURRENT_SCHEMA() );
