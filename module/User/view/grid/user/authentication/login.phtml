@@ -4,7 +4,7 @@ $this->headLink()
      ->appendStylesheet( '/styles/modules/User/login.css', 'all' );
 
 $nav    = array();
-$config = $this->config( 'user' );
+$config = $this->config( 'Grid\User' );
 
 if ( ! empty( $this->display['registerLink'] ) &&
      ! empty( $config->features->registrationEnabled ) )

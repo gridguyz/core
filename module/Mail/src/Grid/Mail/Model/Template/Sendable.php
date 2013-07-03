@@ -177,7 +177,8 @@ class Sendable implements SiteInfoAwareInterface
         {
             $value = (string) $value;
 
-            if ( $value[0] === '/' &&
+            if ( ! empty( $value ) &&
+                 $value[0] === '/' &&
                  strtolower( substr( $key, -4 ) ) === '_url' )
             {
                 $value = $variables['site_url'] . $value;
