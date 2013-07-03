@@ -228,8 +228,8 @@ class Mapper implements HydratorInterface,
 
         foreach ( $keyValues as $key )
         {
-            $hashes[] = $key . '.%';
-            $keys[] = $key;
+            $keys[]   = $key;
+            $hashes[] = addcslashes( $key, '_%|*+?{}()[]' ) . '.%';
         }
 
         return array(
