@@ -38,11 +38,4 @@ interface StructureInterface
      */
     public function getRootId();
 
-    /**
-     * Get tags of the paragraph
-     *
-     * @return array
-     */
-    public function getTags();
-
 }

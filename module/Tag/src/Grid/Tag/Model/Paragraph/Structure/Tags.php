@@ -2,7 +2,7 @@
 
 namespace Grid\Tag\Model\Paragraph\Structure;
 
-use Grid\Paragraph\Model\Paragraph\Structure\Content;
+use Grid\Tag\Model\TagsAwareInterface;
 use Grid\Paragraph\Model\Paragraph\Structure\AbstractLeaf;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 
@@ -62,9 +62,9 @@ class Tags extends AbstractLeaf
     {
         $rendered = $this->getRenderedContent();
 
-        if ( $rendered instanceof Content )
+        if ( $rendered instanceof TagsAwareInterface )
         {
-            return $rendered->localeTags;
+            return $rendered->getLocaleTags();
         }
 
         return null;

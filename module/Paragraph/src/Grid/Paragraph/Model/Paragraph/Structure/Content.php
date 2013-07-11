@@ -5,7 +5,6 @@ namespace Grid\Paragraph\Model\Paragraph\Structure;
 use ArrayIterator;
 use Zork\Stdlib\DateTime;
 use DateTime as BaseDateTime;
-use Grid\Core\Model\Uri\Structure as UriStructure;
 use Grid\User\Model\User\Structure as UserStructure;
 
 /**

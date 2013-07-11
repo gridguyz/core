@@ -6,6 +6,7 @@ use Traversable;
 use AppendIterator;
 use Zork\Factory\AdapterInterface;
 use Zork\Model\MapperAwareInterface;
+use Grid\Tag\Model\TagsAwareInterface;
 use Zork\Model\Exception\LogicException;
 use Zend\View\Renderer\RendererInterface;
 use Zork\Model\Structure\StructureAbstract;
@@ -23,6 +24,7 @@ abstract class ProxyAbstract
     implements AdapterInterface,
                ResourceInterface,
                StructureInterface,
+               TagsAwareInterface,
                MapperAwareInterface,
                EditRestrictedInterface,
                AccessRestrictedInterface,
