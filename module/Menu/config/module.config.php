@@ -229,7 +229,7 @@ return array(
                                         'model'         => 'Grid\Core\Model\SubDomain\Model',
                                         'method'        => 'findOptions',
                                         'empty_option'  => '*',
-                                        'description'   => 'menu.form.content.subdomain.current',
+                                        'description'   => 'menu.form.content.subdomain.description',
                                     ),
                                 ),
                             ),
