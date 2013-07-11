@@ -12,6 +12,8 @@ return array(
     'menu.form.target' => 'Target',
     'menu.form.type' => 'Type',
     'menu.form.content.content' => 'Content',
+    'menu.form.content.subdomain' => 'Sub-domain',
+    'menu.form.content.subdomain.current' => 'Current subdomain',
     'menu.form.uri.uri' => 'Url',
     'menu.type.container' => 'Container',
     'menu.type.content' => 'Content',

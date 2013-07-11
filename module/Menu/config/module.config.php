@@ -219,6 +219,19 @@ return array(
                                     ),
                                 ),
                             ),
+                            'subdomainId' => array(
+                                'spec'  => array(
+                                    'type'      => 'Zork\Form\Element\SelectModel',
+                                    'name'      => 'subdomainId',
+                                    'options'   => array(
+                                        'label'         => 'menu.form.content.subdomain',
+                                        'required'      => false,
+                                        'model'         => 'Grid\Core\Model\SubDomain\Model',
+                                        'method'        => 'findOptions',
+                                        'empty_option'  => 'menu.form.content.subdomain.current',
+                                    ),
+                                ),
+                            ),
                         ),
                     ),
                 ),

@@ -28,16 +28,23 @@ class Content extends ProxyAbstract
     protected $contentId = null;
 
     /**
+     * Subdomain id
+     *
+     * @var int
+     */
+    protected $subdomainId = null;
+
+    /**
      * Stored uri-model
      *
-     * @var \Core\Model\Uri\Model
+     * @var \Grid\Core\Model\Uri\Model
      */
     private $_uriModel = null;
 
     /**
      * Stored paragraph-model
      *
-     * @var \Paragraph\Model\Paragraph\Model
+     * @var \Grid\Paragraph\Model\Paragraph\Model
      */
     private $_paragraphModel = null;
 
@@ -69,19 +76,43 @@ class Content extends ProxyAbstract
      * Setter for content-id
      *
      * @param   int $id
-     * @return  \Menu\Model\Menu\Structure\Content
+     * @return  \Grid\Menu\Model\Menu\Structure\Content
      */
     public function setContentId( $id )
     {
-        $this->contentId = empty( $id ) ? null : (int) $id;
-        $this->_visible  = null;
+        $this->contentId    = empty( $id ) ? null : (int) $id;
+        $this->_uriCache    = null;
+        $this->_visible     = null;
+        return $this;
+    }
+
+    /**
+     * Getter for subdomain-id
+     *
+     * @return  string
+     */
+    public function getSubdomainId()
+    {
+        return $this->subdomainId;
+    }
+
+    /**
+     * Setter for subdomain-id
+     *
+     * @param   int $id
+     * @return  \Grid\Menu\Model\Menu\Structure\Content
+     */
+    public function setSubdomainId( $id )
+    {
+        $this->subdomainId  = empty( $id ) ? null : (int) $id;
+        $this->_uriCache    = null;
         return $this;
     }
 
     /**
      * Get the stored uri-mapper
      *
-     * @return  \Core\Model\Uri\Model
+     * @return  \Grid\Core\Model\Uri\Model
      */
     public function getUriModel()
     {
@@ -97,8 +128,8 @@ class Content extends ProxyAbstract
     /**
      * Set the stored uri-model
      *
-     * @param   \Core\Model\Uri\Model $uriModel
-     * @return  \Menu\Model\Menu\Structure\Content
+     * @param   \Grid\Core\Model\Uri\Model $uriModel
+     * @return  \Grid\Menu\Model\Menu\Structure\Content
      */
     public function setUriModel( UriModel $uriModel )
     {
@@ -109,7 +140,7 @@ class Content extends ProxyAbstract
     /**
      * Get the stored paragraph-mapper
      *
-     * @return  \Paragraph\Model\Paragraph\Model
+     * @return  \Grid\Paragraph\Model\Paragraph\Model
      */
     public function getParagraphModel()
     {
@@ -125,8 +156,8 @@ class Content extends ProxyAbstract
     /**
      * Set the stored paragraph-model
      *
-     * @param   \Paragraph\Model\Paragraph\Model $uriModel
-     * @return  \Menu\Model\Menu\Structure\Content
+     * @param   \Grid\Paragraph\Model\Paragraph\Model $uriModel
+     * @return  \Grid\Menu\Model\Menu\Structure\Content
      */
     public function setParagraphModel( ParagraphModel $paragraphModel )
     {
@@ -168,9 +199,17 @@ class Content extends ProxyAbstract
     {
         if ( empty( $this->_uriCache ) )
         {
-            if ( ! empty( $this->contentId ) &&
-                 ( $info = $this->getServiceLocator()
-                                ->get( 'Zork\Db\SiteInfo' ) ) )
+            $subdomainId = $this->getSubdomainId();
+
+            if ( empty( $subdomainId ) )
+            {
+                $info = $this->getServiceLocator()
+                             ->get( 'Zork\Db\SiteInfo' );
+
+                $subdomainId = $info->getSubdomainId();
+            }
+
+            if ( ! empty( $this->contentId ) )
             {
                 $locale = $this->getMapper()
                                ->getLocale();
@@ -178,7 +217,7 @@ class Content extends ProxyAbstract
                 $uri = $this->getUriModel()
                             ->findDefaultByContentSubdomain(
                                 $this->getContentId(),
-                                $info->getSubdomainId(),
+                                $subdomainId,
                                 $locale
                             );
 
