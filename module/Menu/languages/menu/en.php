@@ -13,7 +13,7 @@ return array(
     'menu.form.type' => 'Type',
     'menu.form.content.content' => 'Content',
     'menu.form.content.subdomain' => 'Sub-domain',
-    'menu.form.content.subdomain.current' => 'Current subdomain',
+    'menu.form.content.subdomain.description' => '* is the current subdomain, empty is the default subdomain (the domain without subdomain)',
     'menu.form.uri.uri' => 'Url',
     'menu.type.container' => 'Container',
     'menu.type.content' => 'Content',
