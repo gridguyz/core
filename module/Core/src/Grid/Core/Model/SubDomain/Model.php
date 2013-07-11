@@ -21,15 +21,15 @@ class Model implements MapperAwareInterface,
         SiteInfoAwareTrait;
 
     /**
-     * @var \Core\Model\SubDomain\Structure
+     * @var \Grid\Core\Model\SubDomain\Structure
      */
     private $actual;
 
     /**
      * Construct model
      *
-     * @param \Core\Model\SubDomain\Mapper $subDomainMapper
-     * @param \Zork\Db\SiteInfo $siteInfo
+     * @param   \Grid\Core\Model\SubDomain\Mapper $subDomainMapper
+     * @param   \Zork\Db\SiteInfo $siteInfo
      */
     public function __construct( Mapper $subDomainMapper, SiteInfo $siteInfo )
     {
@@ -40,8 +40,8 @@ class Model implements MapperAwareInterface,
     /**
      * Create a sub-domain
      *
-     * @param  array $data
-     * @return \Core\Model\SubDomain\Structure
+     * @param   array $data
+     * @return  \Grid\Core\Model\SubDomain\Structure
      */
     public function create( $data )
     {
@@ -52,8 +52,8 @@ class Model implements MapperAwareInterface,
     /**
      * Find a sub-domain by id
      *
-     * @param int $id
-     * @return \Core\Model\SubDomain\Structure
+     * @param   int $id
+     * @return  \Grid\Core\Model\SubDomain\Structure
      */
     public function find( $id )
     {
@@ -64,7 +64,7 @@ class Model implements MapperAwareInterface,
     /**
      * Find the current actual sub-domain
      *
-     * @return \Core\Model\SubDomain\Structure
+     * @return  \Grid\Core\Model\SubDomain\Structure
      */
     public function findActual()
     {
@@ -80,7 +80,7 @@ class Model implements MapperAwareInterface,
     /**
      * Find subdomains as id => subdomain pairs
      *
-     * @return array
+     * @return  array
      */
     public function findOptions()
     {
@@ -94,7 +94,7 @@ class Model implements MapperAwareInterface,
     /**
      * Get paginator for listing
      *
-     * @return \Zend\Paginator\Paginator
+     * @return  \Zend\Paginator\Paginator
      */
     public function getPaginator()
     {

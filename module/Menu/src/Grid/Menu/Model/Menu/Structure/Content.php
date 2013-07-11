@@ -3,6 +3,7 @@
 namespace Grid\Menu\Model\Menu\Structure;
 
 use Grid\Core\Model\Uri\Model as UriModel;
+use Grid\Core\Model\SubDomain\Model as SubDomainModel;
 use Grid\Paragraph\Model\Paragraph\Model as ParagraphModel;
 
 /**
@@ -40,6 +41,13 @@ class Content extends ProxyAbstract
      * @var \Grid\Core\Model\Uri\Model
      */
     private $_uriModel = null;
+
+    /**
+     * Stored subdomain-model
+     *
+     * @var \Grid\Core\Model\SubDomain\Model
+     */
+    private $_subDomainModel = null;
 
     /**
      * Stored paragraph-model
@@ -119,7 +127,7 @@ class Content extends ProxyAbstract
         if ( null === $this->_uriModel )
         {
             $this->_uriModel = $this->getServiceLocator()
-                                   ->get( 'Grid\Core\Model\Uri\Model' );
+                                    ->get( 'Grid\Core\Model\Uri\Model' );
         }
 
         return $this->_uriModel;
@@ -134,6 +142,34 @@ class Content extends ProxyAbstract
     public function setUriModel( UriModel $uriModel )
     {
         $this->_uriModel = $uriModel;
+        return $this;
+    }
+
+    /**
+     * Get the stored subdomain-mapper
+     *
+     * @return  \Grid\Core\Model\SubDomain\Model
+     */
+    public function getSubDomainModel()
+    {
+        if ( null === $this->_subDomainModel )
+        {
+            $this->_subDomainModel = $this->getServiceLocator()
+                                          ->get( 'Grid\Core\Model\SubDomain\Model' );
+        }
+
+        return $this->_subDomainModel;
+    }
+
+    /**
+     * Set the stored subdomain-model
+     *
+     * @param   \Grid\Core\Model\SubDomain\Model $subDomainModel
+     * @return  \Grid\Menu\Model\Menu\Structure\Content
+     */
+    public function setSubDomainModel( SubDomainModel $subDomainModel )
+    {
+        $this->_subDomainModel = $subDomainModel;
         return $this;
     }
 
@@ -200,35 +236,51 @@ class Content extends ProxyAbstract
         if ( empty( $this->_uriCache ) )
         {
             $subdomainId = $this->getSubdomainId();
+            $info = $this->getServiceLocator()
+                         ->get( 'Zork\Db\SiteInfo' );
 
             if ( empty( $subdomainId ) )
             {
-                $info = $this->getServiceLocator()
-                             ->get( 'Zork\Db\SiteInfo' );
-
                 $subdomainId = $info->getSubdomainId();
+            }
+            else if ( $subdomainId != $info->getSubdomainId() )
+            {
+                $subdomain = $this->getSubDomainModel()
+                                  ->find( $subdomainId );
+
+                if ( empty( $subdomain ) )
+                {
+                    $subdomainId = $info->getSubdomainId();
+                }
             }
 
             if ( ! empty( $this->contentId ) )
             {
+                $base   = '/';
                 $locale = $this->getMapper()
                                ->getLocale();
+                $uri    = $this->getUriModel()
+                               ->findDefaultByContentSubdomain(
+                                    $this->getContentId(),
+                                    $subdomainId,
+                                    $locale
+                                );
 
-                $uri = $this->getUriModel()
-                            ->findDefaultByContentSubdomain(
-                                $this->getContentId(),
-                                $subdomainId,
-                                $locale
-                            );
+                if ( ! empty( $subdomain ) )
+                {
+                    $base = 'http://' . $subdomain->subdomain .
+                            ( $subdomain->subdomain ? '.' : '' ) .
+                            $info->getDomain() . '/';
+                }
 
                 if ( empty( $uri ) )
                 {
-                    $uri = '/app/' . $locale .
+                    $uri = $base . 'app/' . $locale .
                            '/paragraph/render/' . $this->getContentId();
                 }
                 else
                 {
-                    $uri = '/' . ltrim( $uri->safeUri, '/' );
+                    $uri = $base . ltrim( $uri->safeUri, '/' );
                     $this->_uriCache = $uri;
                 }
 
