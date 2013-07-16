@@ -262,6 +262,7 @@ return array(
     'paragraph.type-group.code' => 'Code',
     'paragraph.type-group.container' => 'Container',
     'paragraph.type-group.functions' => 'Functions',
+    'paragraph.type.banner' => 'Banner',
     'paragraph.type.box' => 'Box',
     'paragraph.type.box.description' => 'Box description',
     'paragraph.type.boxes' => 'Box-area',
