@@ -168,6 +168,13 @@ body,
     display: none;
 }
 
+.paragraph-container.paragraph-banner-container .paragraph.paragraph-banner .banner-image-link
+{
+    display: block;
+    text-align: center;
+    text-decoration: none;
+}
+
 .paragraph-container.paragraph-language-container .paragraph.paragraph-language ul,
 .paragraph-container.paragraph-language-container .paragraph.paragraph-language ul li
 {
