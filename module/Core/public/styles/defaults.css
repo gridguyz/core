@@ -1265,25 +1265,6 @@ dd.ui-inputset input
     background-image: linear-gradient(to bottom, #343434 0%, #050505 100%);
 }
 
-.paragraph-like.error
-{
-    min-height: 150px;
-    padding-left: 150px;
-    background-repeat: no-repeat;
-    border: 1px solid transparent;
-    background-position: center left;
-}
-
-.paragraph-like.error.error-403
-{
-    background-image: url("/images/common/error/403.jpg");
-}
-
-.paragraph-like.error.error-404
-{
-    background-image: url("/images/common/error/404.jpg");
-}
-
 ::selection
 {
     color: #fff;
