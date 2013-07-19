@@ -26,7 +26,7 @@
             max     = parseFloat( element.attr( "max" ) || element.data( "jsNumberMax" ) ) || null,
             step    = parseFloat( element.attr( "step" ) || element.data( "jsNumberStep" ) ) || 1,
             origv   = element.val(),
-            value   = parseFloat( origv, 10 ) || 0;
+            value   = parseFloat( origv ) || 0;
 
         element.spinner( {
             "value" : value || 0,

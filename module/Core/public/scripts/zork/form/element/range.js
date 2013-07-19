@@ -25,11 +25,11 @@
         element.after( '<div class="js-range-trigger">&nbsp;</div>' );
 
         var slider  = $( "+ .js-range-trigger", element ),
-            min     = parseInt( element.attr( "min" ) || element.data( "jsRangeMin" ), 10 ) || 0,
-            max     = parseInt( element.attr( "max" ) || element.data( "jsRangeMax" ), 10 ) || 100,
-            step    = parseInt( element.attr( "step" ) || element.data( "jsRangeStep" ), 10 ) || 1,
+            min     = parseFloat( element.attr( "min" ) || element.data( "jsRangeMin" ) ) || 0,
+            max     = parseFloat( element.attr( "max" ) || element.data( "jsRangeMax" ) ) || 100,
+            step    = parseFloat( element.attr( "step" ) || element.data( "jsRangeStep" ) ) || 1,
             origv   = element.val(),
-            value   = parseInt( origv, 10 ) || 0;
+            value   = parseFloat( origv ) || 0;
 
         slider.slider( {
             "value"         : value || 0,
@@ -38,7 +38,7 @@
             "step"          : step,
             "orientation"   : element.height() > element.width() ? "vertical" : "horizontal",
             "slide"         : function ( event, ui ) {
-                var value = parseInt( ui.value ) || 0;
+                var value = parseFloat( ui.value ) || 0;
 
                 slider.attr( "title", value );
                 element.val( value )
@@ -50,7 +50,7 @@
         {
             var change = function () {
                 var change = false,
-                    value = parseInt( element.val() ) || 0 ;
+                    value = parseFloat( element.val() ) || 0 ;
 
                 if ( ! Object.isUndefined( min ) && value < min )
                 {
