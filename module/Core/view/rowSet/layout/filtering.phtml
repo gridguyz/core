@@ -59,7 +59,7 @@ $searchable = function ( $type )
             if ( $enabled && $searchable( $type ) ): ?>
 
                 <dt class="name-<?= $column ?>"><?= $name ?>:</dt>
-        <?php if ( $type instanceof Type\Set ): ?>
+        <?php if ( $type instanceof Type\Set && $type->getValues() ): ?>
 
                 <dd class="set name-<?php echo $column ?>">
                 <?php foreach ( $type->getValues() as $value => $label ): ?>
@@ -77,7 +77,7 @@ $searchable = function ( $type )
                 <?php endforeach ?>
 
                 </dd>
-        <?php elseif ( $type instanceof Type\Enum ): ?>
+        <?php elseif ( $type instanceof Type\Enum && $type->getValues() ): ?>
 
                 <dd class="enum name-<?= $column ?>">
                 <?php foreach ( $type->getValues() as $value => $label ): ?>
