@@ -24,10 +24,11 @@ class FaviconController extends AbstractActionController
 
         if ( empty( $options['headLink']['favicon']['href'] ) )
         {
-            $this->getResponse()
-                 ->setStatusCode( 404 );
-
-            return;
+            $redirect = '/uploads/_central/settings/favicon.ico';
+        }
+        else
+        {
+            $redirect = $options['headLink']['favicon']['href'];
         }
 
         return $this->redirect()
