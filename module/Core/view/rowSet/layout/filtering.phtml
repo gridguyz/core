@@ -9,8 +9,8 @@ $columns = $this->rowSet->getColumns();
 $searchable = function ( $type )
 {
     return (
-        $type instanceof Type\Set      ||
-        $type instanceof Type\Enum     ||
+        $type instanceof Type\Set      && $type->getValues() ||
+        $type instanceof Type\Enum     && $type->getValues() ||
         $type instanceof Type\Locale   ||
         $type instanceof Type\String   ||
         $type instanceof Type\Replace  ||
