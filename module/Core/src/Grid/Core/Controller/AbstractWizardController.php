@@ -3,7 +3,6 @@
 namespace Grid\Core\Controller;
 
 use Zend\Stdlib\ArrayUtils;
-use Zend\View\Model\ViewModel;
 use Grid\Core\View\Model\WizardStep;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zork\Session\ContainerAwareTrait as SessionContainerAwareTrait;
@@ -395,20 +394,17 @@ abstract class AbstractWizardController extends AbstractActionController
 
         if ( self::STEP_FINISH == $step || self::STEP_CANCEL == $step )
         {
-            $controller = preg_replace( '/Controller$/', '', get_class( $this ) );
-            $view       = new ViewModel( array(
-                'content' => $this->forward()
-                                  ->dispatch( $controller, array(
-                                      'locale' => (string) $this->locale(),
-                                      'action' => $step,
-                                  ) )
-            ) );
+            $this->getEvent()
+                 ->getRouteMatch()
+                 ->setParam( 'action', $step );
+
+            $result = $this->{$step . 'Action'}();
 
             $this->getStore()
                  ->setExpirationSeconds( 0 )
                  ->exchangeArray( array() );
 
-            return $view->setTemplate( 'grid/core/wizard/' . $step );
+            return $result;
         }
         else
         {
