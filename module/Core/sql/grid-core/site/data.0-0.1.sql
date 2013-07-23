@@ -289,3 +289,13 @@ BEGIN
          VALUES ( 'contentPlaceholder', "vLastId", 4, 5, NULL );
 
 END $$;
+
+-- insert default values for table: menu
+
+INSERT INTO "menu" ( "left", "right", "type" )
+     VALUES ( 1, 2, 'container' );
+
+-- insert default values for table: menu_label
+
+INSERT INTO "menu_label" ( "menuId", "locale", "label" )
+     VALUES ( currval( 'menu_id_seq' ), 'en', 'Main menu' );
