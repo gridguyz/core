@@ -1,5 +1,5 @@
 /**
- * Validation functionalities
+ * Wizard functionalities
  * @package zork
  * @subpackage validate
  * @author David Pozsar <david.pozsar@megaweb.hu>
@@ -112,21 +112,27 @@
      */
     global.Zork.prototype.wizard.close = function ( type, element )
     {
+        var result;
+
         if ( null !== close )
         {
             if ( "cancel" === type && null !== cancel )
             {
                 element = $( element );
-                cancel.call( element, element );
+                result = cancel.call( element, element, close );
             }
 
             if ( "finish" === type && null !== finish )
             {
                 element = $( element );
-                finish.call( element, element );
+                result = finish.call( element, element, close );
             }
 
-            close();
+            if ( result !== false )
+            {
+                close();
+            }
+
             close  = null;
             cancel = null;
             finish = null;

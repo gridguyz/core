@@ -16,7 +16,7 @@ class WizardStep extends ViewModel
     /**
      * @const string
      */
-    const DEFAULT_TEMPLATE = 'grid/core/wizard/index';
+    const DEFAULT_TEMPLATE = 'grid/core/wizard/step';
 
     /**
      * @param array|null $variables

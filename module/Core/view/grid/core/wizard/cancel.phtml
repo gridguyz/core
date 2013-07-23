@@ -1,0 +1,14 @@
+<?php $this->headLink()
+           ->appendStylesheet( '/styles/wizard.css', 'all' );
+
+?><div class="wizard">
+    <div class="wizard-step">
+        <ul class="step-stack ui-helper-clearfix">
+            <li><a href="#"><?= $this->translate( 'default.cancel' ) ?></a></li>
+        </ul>
+        <div class="step-action step-action-cancel">
+            <?= $this->content ?>
+
+        </div>
+    </div>
+</div>

@@ -3,6 +3,7 @@
 namespace Grid\Core\Controller;
 
 use Zend\Stdlib\ArrayUtils;
+use Zend\View\Model\ViewModel;
 use Grid\Core\View\Model\WizardStep;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zork\Session\ContainerAwareTrait as SessionContainerAwareTrait;
@@ -105,12 +106,11 @@ abstract class AbstractWizardController extends AbstractActionController
         ),
     );
 
-
     /**
      * Get redirect uri according to a step
      *
-     * @param string $step
-     * @return string
+     * @param   string $step
+     * @return  string
      */
     protected function redirectToStep( $step )
     {
@@ -128,7 +128,7 @@ abstract class AbstractWizardController extends AbstractActionController
     /**
      * Get session container
      *
-     * @return \Zend\Session\Container
+     * @return  \Zend\Session\Container
      */
     protected function getStore()
     {
@@ -150,8 +150,8 @@ abstract class AbstractWizardController extends AbstractActionController
     /**
      * Push step-stack
      *
-     * @param string $action
-     * @return \Core\Controller\AbstractWizardController
+     * @param   string $action
+     * @return  \Grid\Core\Controller\AbstractWizardController
      */
     protected function pushStepStack( $step )
     {
@@ -165,7 +165,7 @@ abstract class AbstractWizardController extends AbstractActionController
     /**
      * Pop step-stack
      *
-     * @return string
+     * @return  string
      */
     protected function popStepStack()
     {
@@ -179,7 +179,7 @@ abstract class AbstractWizardController extends AbstractActionController
     /**
      * Top step-stack
      *
-     * @return string
+     * @return  string
      */
     protected function topStepStack()
     {
@@ -197,7 +197,7 @@ abstract class AbstractWizardController extends AbstractActionController
     /**
      * Unset step-stack
      *
-     * @return \Core\Controller\AbstractWizardController
+     * @return  \Grid\Core\Controller\AbstractWizardController
      */
     protected function unsetStepStack()
     {
@@ -209,8 +209,8 @@ abstract class AbstractWizardController extends AbstractActionController
     /**
      * Get step-store
      *
-     * @param string $action
-     * @return array
+     * @param   string $action
+     * @return  array
      */
     public function getStepStore( $step )
     {
@@ -230,8 +230,8 @@ abstract class AbstractWizardController extends AbstractActionController
     /**
      * Get step-stores
      *
-     * @param bool $flat
-     * @return array
+     * @param   bool $flat
+     * @return  array
      */
     public function getStepStores( $flat = true )
     {
@@ -259,9 +259,9 @@ abstract class AbstractWizardController extends AbstractActionController
     /**
      * Set step-store
      *
-     * @param string $action
-     * @param array $data
-     * @return \Core\Controller\AbstractWizardController
+     * @param   string  $action
+     * @param   array   $data
+     * @return  \Grid\Core\Controller\AbstractWizardController
      */
     public function setStepStore( $step, array $data )
     {
@@ -276,8 +276,8 @@ abstract class AbstractWizardController extends AbstractActionController
     /**
      * Get step model
      *
-     * @param string $step
-     * @return \Core\View\Model\WizardStep
+     * @param   string $step
+     * @return  \Grid\Core\View\Model\WizardStep
      */
     abstract protected function getStep( $step );
 
@@ -296,9 +296,9 @@ abstract class AbstractWizardController extends AbstractActionController
     /**
      * Run a single step (which is not finish or cancel)
      *
-     * @param string $step
-     * @param WizardStep $model
-     * @return string|null the step to redirect to
+     * @param   string      $step
+     * @param   WizardStep  $model
+     * @return  string|null the step to redirect to
      */
     protected function runStep( $step, WizardStep $model = null )
     {
@@ -395,17 +395,20 @@ abstract class AbstractWizardController extends AbstractActionController
 
         if ( self::STEP_FINISH == $step || self::STEP_CANCEL == $step )
         {
-            $this->getEvent()
-                 ->getRouteMatch()
-                 ->setParam( 'action', $step );
-
-            $result = $this->{$step . 'Action'}();
+            $controller = preg_replace( '/Controller$/', '', get_class( $this ) );
+            $view       = new ViewModel( array(
+                'content' => $this->forward()
+                                  ->dispatch( $controller, array(
+                                      'locale' => (string) $this->locale(),
+                                      'action' => $step,
+                                  ) )
+            ) );
 
             $this->getStore()
                  ->setExpirationSeconds( 0 )
                  ->exchangeArray( array() );
 
-            return $result;
+            return $view->setTemplate( 'grid/core/wizard/' . $step );
         }
         else
         {
