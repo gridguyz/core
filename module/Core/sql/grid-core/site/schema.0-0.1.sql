@@ -195,8 +195,9 @@ CREATE TABLE "paragraph"
       ON DELETE CASCADE
 );
 
-CREATE INDEX ON "paragraph" ( "left"  ASC  );
-CREATE INDEX ON "paragraph" ( "right" DESC );
+CREATE INDEX ON "paragraph" ( "left"    ASC  );
+CREATE INDEX ON "paragraph" ( "right"   DESC );
+CREATE INDEX ON "paragraph" ( "rootId"  ASC  );
 
 --------------------------------------------------------------------------------
 -- table: paragraph_property                                                  --
