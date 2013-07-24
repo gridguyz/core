@@ -153,7 +153,7 @@ class ManageController extends AbstractActionController
         if ( $result->isValid() )
         {
             $this->messenger()
-                 ->add( 'user.form.confirm.success',
+                 ->add( 'user.action.confirm.success',
                         'user', Message::LEVEL_INFO );
 
             if ( $logger->hasLogger( 'application' ) )
@@ -167,7 +167,7 @@ class ManageController extends AbstractActionController
         else
         {
             $this->messenger()
-                 ->add( 'user.form.confirm.failed',
+                 ->add( 'user.action.confirm.failed',
                         'user', Message::LEVEL_ERROR );
 
             if ( $logger->hasLogger( 'application' ) )
