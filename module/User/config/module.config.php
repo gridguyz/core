@@ -400,6 +400,7 @@ return array(
             ),
             'adapter'    => array(
                 'default'   => 'Grid\User\Model\Authentication\DefaultAdapter',
+                'confirm'   => 'Grid\User\Model\Authentication\ConfirmAdapter',
             ),
         ),
     ),

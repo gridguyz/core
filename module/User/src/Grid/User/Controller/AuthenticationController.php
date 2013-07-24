@@ -77,7 +77,7 @@ class AuthenticationController extends AbstractActionController
      */
     public function loginAction()
     {
-        $auth = new AuthenticationService();
+        $auth = new AuthenticationService;
 
         if ( $auth->hasIdentity() )
         {
@@ -193,7 +193,7 @@ class AuthenticationController extends AbstractActionController
      */
     public function loginWithAction()
     {
-        $auth = new AuthenticationService();
+        $auth = new AuthenticationService;
 
         if ( $auth->hasIdentity() )
         {
@@ -309,7 +309,7 @@ class AuthenticationController extends AbstractActionController
      */
     public function logoutAction()
     {
-        $auth = new AuthenticationService();
+        $auth = new AuthenticationService;
 
         if ( ! $auth->hasIdentity() )
         {

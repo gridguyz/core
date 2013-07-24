@@ -5,6 +5,7 @@ namespace Grid\User\Controller;
 use Zork\Stdlib\Message;
 use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zork\Session\ContainerAwareTrait as SessionContainerAwareTrait;
 
 /**
  * ManageController
@@ -13,6 +14,8 @@ use Zend\Mvc\Controller\AbstractActionController;
  */
 class ManageController extends AbstractActionController
 {
+
+    use SessionContainerAwareTrait;
 
     /**
      * Registration
@@ -126,37 +129,71 @@ class ManageController extends AbstractActionController
      */
     public function confirmAction()
     {
-        $service    = $this->getServiceLocator();
-        $userModel  = $service->get( 'Grid\User\Model\User\Model' );
-        $confirm    = $service->get( 'Grid\User\Model\ConfirmHash' );
-        $hash       = $this->params()
-                           ->fromRoute( 'hash' );
+        $auth = new AuthenticationService;
 
-        if ( $confirm->has( $hash ) &&
-             ( $email = $confirm->find( $hash ) ) )
+        if ( $auth->hasIdentity() )
         {
-            $user = $userModel->findByEmail( $email );
+            return $this->redirect()
+                        ->toRoute( 'Grid\User\Authentication\Logout', array(
+                            'locale' => (string) $this->locale(),
+                        ) );
+        }
 
-            if ( ! empty( $user ) )
+        $result = $this->getServiceLocator()
+                       ->get( 'Grid\User\Authentication\Service' )
+                       ->login( array( 'hash' => $this->params()
+                                                      ->fromRoute( 'hash' ) ),
+                                $this->getSessionManager(),
+                                $auth );
+
+        /* @var $logger \Zork\Log\LoggerManager */
+        $logger = $this->getServiceLocator()
+                       ->get( 'Zork\Log\LoggerManager' );
+
+        if ( $result->isValid() )
+        {
+            $this->messenger()
+                 ->add( 'user.form.confirm.success',
+                        'user', Message::LEVEL_INFO );
+
+            if ( $logger->hasLogger( 'application' ) )
             {
-                $user->confirmed = true;
+                $logger->getLogger( 'application' )
+                       ->notice( 'user-login', array(
+                           'successful' => true,
+                       ) );
+            }
+        }
+        else
+        {
+            $this->messenger()
+                 ->add( 'user.form.confirm.failed',
+                        'user', Message::LEVEL_ERROR );
 
-                if ( $user->save() )
-                {
-                    $confirm->delete( $hash );
+            if ( $logger->hasLogger( 'application' ) )
+            {
+                $logger->getLogger( 'application' )
+                       ->warn( 'user-login', array(
+                           'successful' => false,
+                       ) );
+            }
+        }
 
-                    $this->messenger()
-                         ->add( 'user.action.confirm.success',
-                                'user', Message::LEVEL_INFO );
-                }
+        $messages  = $result->getMessages();
+        $returnUri = empty( $messages['returnUri'] )
+                    ? '/' : $messages['returnUri'];
+
+        foreach ( $messages as $index => $message )
+        {
+            if ( is_int( $index ) && is_string( $message ) )
+            {
+                $this->messenger()
+                     ->add( $message, false, Message::LEVEL_WARN );
             }
         }
 
         return $this->redirect()
-                    ->toRoute( 'Grid\User\Authentication\Login', array(
-                        'locale'    => (string) $this->locale(),
-                        'returnUri' => '/',
-                    ) );
+                    ->toUrl( $returnUri );
     }
 
 }

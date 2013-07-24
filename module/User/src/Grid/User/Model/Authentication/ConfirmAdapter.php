@@ -6,31 +6,30 @@ use Zend\Authentication\Result;
 use Zork\Model\ModelAwareTrait;
 use Zork\Model\ModelAwareInterface;
 use Zork\Model\Structure\StructureAbstract;
+use Zork\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zork\Factory\AdapterInterface as FactoryAdapterInterface;
 use Zend\Authentication\Adapter\AdapterInterface as AuthAdapterInterface;
 
 /**
- * DefaultAdapter
+ * ConfirmAdapter
  *
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
-class DefaultAdapter extends StructureAbstract
+class ConfirmAdapter extends StructureAbstract
                   implements ModelAwareInterface,
                              AuthAdapterInterface,
-                             FactoryAdapterInterface
+                             FactoryAdapterInterface,
+                             ServiceLocatorAwareInterface
 {
 
-    use ModelAwareTrait;
+    use ModelAwareTrait,
+        ServiceLocatorAwareTrait;
 
     /**
      * @var string
      */
-    protected $email;
-
-    /**
-     * @var string
-     */
-    protected $password;
+    protected $hash;
 
     /**
      * Return true if and only if $options accepted by this adapter
@@ -41,8 +40,7 @@ class DefaultAdapter extends StructureAbstract
      */
     public static function acceptsOptions( array $options )
     {
-        return isset( $options['email'] ) &&
-               isset( $options['password'] );
+        return isset( $options['hash'] );
     }
 
     /**
@@ -65,20 +63,35 @@ class DefaultAdapter extends StructureAbstract
      */
     public function authenticate()
     {
-        $user = $this->getModel()
-                     ->findByEmail( $this->email );
+        $confirm = $this->getServiceLocator()
+                        ->get( 'Grid\User\Model\ConfirmHash' );
 
-        if ( empty( $user ) )
+        if ( $confirm->has( $this->hash ) )
         {
-            return new Result( Result::FAILURE_IDENTITY_NOT_FOUND, null );
-        }
+            $user = $this->getModel()
+                         ->findByEmail( $confirm->find( $this->hash ) );
 
-        if ( ! $user->verifyPassword( $this->password, true ) )
+            if ( ! empty( $user ) )
+            {
+                $user->confirmed = true;
+
+                if ( $user->save() )
+                {
+                    $confirm->delete( $this->hash );
+                    return new Result( Result::SUCCESS, $user );
+                }
+                else
+                {
+                    return new Result( Result::FAILURE_UNCATEGORIZED, null );
+                }
+            }
+        }
+        else
         {
             return new Result( Result::FAILURE_CREDENTIAL_INVALID, null );
         }
 
-        return new Result( Result::SUCCESS, $user );
+        return new Result( Result::FAILURE_IDENTITY_NOT_FOUND, null );
     }
 
 }
