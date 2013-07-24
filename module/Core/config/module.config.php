@@ -275,13 +275,13 @@ return array(
                 array(
                     'name'      => 'apc',
                     'options'   => array(
-                        'ttl'   => 7200,
+                        'ttl'   => 14400,
                     ),
                 ) :
                 array(
                     'name'      => 'filesystem',
                     'options'   => array(
-                        'ttl'       => 7200,
+                        'ttl'       => 14400,
                         'cache_dir' => 'data/cache',
                     ),
                 ),

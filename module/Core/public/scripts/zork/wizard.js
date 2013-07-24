@@ -93,7 +93,7 @@
         }
         else
         {
-            wizard.attr( "src", params.url )
+            wizard.attr( "src", params.url );
         }
 
         return true;

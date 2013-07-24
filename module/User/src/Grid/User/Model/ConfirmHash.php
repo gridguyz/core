@@ -6,7 +6,7 @@ use Zork\Stdlib\String;
 use Zork\Cache\AbstractCacheStorage;
 
 /**
- * PasswordRequestCache
+ * ConfirmHash
  *
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
@@ -21,8 +21,8 @@ class ConfirmHash extends AbstractCacheStorage
     /**
      * Request a password-change
      *
-     * @param string $email
-     * @return string hash
+     * @param   string  $email
+     * @return  string  hash
      */
     public function create( $email )
     {
@@ -41,8 +41,8 @@ class ConfirmHash extends AbstractCacheStorage
     /**
      * Requested password change's hash is valid
      *
-     * @param string $hash
-     * @return bool
+     * @param   string  $hash
+     * @return  bool
      */
     public function has( $hash )
     {
@@ -53,8 +53,8 @@ class ConfirmHash extends AbstractCacheStorage
     /**
      * Requested password change's email by hash
      *
-     * @param string $hash
-     * @return string email
+     * @param   string  $hash
+     * @return  string  email
      */
     public function find( $hash )
     {
@@ -65,8 +65,8 @@ class ConfirmHash extends AbstractCacheStorage
     /**
      * Resolve a password change request
      *
-     * @param string $hash
-     * @return bool
+     * @param   string  $hash
+     * @return  bool
      */
     public function delete( $hash )
     {
