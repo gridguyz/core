@@ -23,7 +23,7 @@
         js.require( "jQuery.fn.autocompletegroup" );
         element = $( element );
 
-        var toggle      = !! element.data( "jsDatalistToggle" ),
+        var toggle      = element.data( "jsDatalistToggle" ) != false,
             minLength   = element.data( "jsDatalistMinLength" ) || 0,
             selected    = element.find( ":selected" ),
             input       = $( "<input type='text' />" ),
@@ -41,6 +41,11 @@
 
         input.autocompletegroup( {
             "minLength": minLength,
+            "position": {
+                "my": "left top",
+                "at": "left bottom",
+                "collision": "flip"
+            },
             "source": function ( request, response ) {
                 var result = [],
                     term = request.term

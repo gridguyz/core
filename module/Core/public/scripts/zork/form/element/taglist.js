@@ -110,7 +110,12 @@
                     search.autocomplete( {
                         "source": "/app/" + js.core.defaultLocale + "/tag/search",
                         "minLength": 2,
-                        "select": add
+                        "select": add,
+                        "position": {
+                            "my": "left top",
+                            "at": "left bottom",
+                            "collision": "flip"
+                        }
                     } )
                 )
                 .append(

@@ -213,7 +213,9 @@
         js.require( "jQuery.fn.autocompleteicon" );
         element = $( element );
 
-        var minLength   = element.data( "jsUserselectMinLength" ) || 1,
+        var opened      = false,
+            toggle      = element.data( "jsUserselectToggle" ) != false,
+            minLength   = element.data( "jsUserselectMinLength" ) || 1,
             placeholder = element.data( "jsAutocompletePlaceholder" ) ||
                           js.core.translate( "default.autoCompletePlaceholder" ),
             selected    = element.find( ":selected" ),
@@ -251,6 +253,11 @@
 
         input.autocompleteicon( {
             "minLength": minLength,
+            "position": {
+                "my": "left top",
+                "at": "left bottom",
+                "collision": "flip"
+            },
             "source": function ( request, response ) {
                 var result = [],
                     term = request.term
@@ -292,8 +299,51 @@
             "select": function ( event, ui ) {
                 event.preventDefault();
                 change.call( this, event, ui );
+            },
+            "search": function () {
+                opened = true;
+            },
+            "close": function () {
+                opened = false;
             }
         } );
+
+        if ( toggle )
+        {
+            input.after(
+                $( '<button type="button" />' )
+                    .button( {
+                        "text": false,
+                        "icons": {
+                            "primary": "ui-icon-triangle-1-s"
+                        }
+                    } )
+                    .click( function () {
+                        if ( minLength )
+                        {
+                            input.autocompleteicon( "option", "minLength", 0 );
+                        }
+
+                        if ( opened )
+                        {
+                            input.autocompleteicon( "close" );
+                        }
+                        else
+                        {
+                            input.focus()
+                                 .autocompleteicon( "search", "" );
+                        }
+
+                        if ( minLength )
+                        {
+                            input.autocompleteicon( "option", "minLength", minLength );
+                        }
+                    } )
+            );
+
+            element.parent()
+                   .inputset();
+        }
     };
 
     global.Zork.User.prototype.select.isElementConstructor = true;
@@ -308,7 +358,9 @@
         js.require( "jQuery.fn.autocompleteicon" );
         element = $( element );
 
-        var minLength   = element.data( "jsUserselectMinLength" ) || 1,
+        var opened      = false,
+            toggle      = element.data( "jsUserselectToggle" ) != false,
+            minLength   = element.data( "jsUserselectMinLength" ) || 1,
             selected    = element.find( ":selected" ),
             input       = $( "<input type='search' />" ),
             udiv        = $( '<div class="js-tag-list ui-widget" />' ),
@@ -380,6 +432,11 @@
 
         input.autocompleteicon( {
             "minLength": minLength,
+            "position": {
+                "my": "left top",
+                "at": "left bottom",
+                "collision": "flip"
+            },
             "source": function ( request, response ) {
                 var result = [],
                     term = request.term
@@ -421,8 +478,51 @@
             "select": function ( event, ui ) {
                 event.preventDefault();
                 change.call( this, event, ui );
+            },
+            "search": function () {
+                opened = true;
+            },
+            "close": function () {
+                opened = false;
             }
         } );
+
+        if ( toggle )
+        {
+            input.after(
+                $( '<button type="button" />' )
+                    .button( {
+                        "text": false,
+                        "icons": {
+                            "primary": "ui-icon-triangle-1-s"
+                        }
+                    } )
+                    .click( function () {
+                        if ( minLength )
+                        {
+                            input.autocompleteicon( "option", "minLength", 0 );
+                        }
+
+                        if ( opened )
+                        {
+                            input.autocompleteicon( "close" );
+                        }
+                        else
+                        {
+                            input.focus()
+                                 .autocompleteicon( "search", "" );
+                        }
+
+                        if ( minLength )
+                        {
+                            input.autocompleteicon( "option", "minLength", minLength );
+                        }
+                    } )
+            );
+
+            element.parent()
+                   .inputset();
+        }
     };
 
     global.Zork.User.prototype.multiSelect.isElementConstructor = true;
@@ -436,7 +536,9 @@
     {
         element = $( element );
 
-        var loggedOut   = element.data( "jsUserselectLoggedout" ) ||
+        var opened      = false,
+            toggle      = element.data( "jsUserselectToggle" ) != false,
+            loggedOut   = element.data( "jsUserselectLoggedout" ) ||
                           js.core.translate( "paragraph.form.content.userGroups.loggedOut" ),
             minLength   = element.data( "jsUserselectMinLength" ) || 0,
             selected    = element.find( ":selected" ),
@@ -511,6 +613,11 @@
 
         input.autocomplete( {
             "minLength": minLength,
+            "position": {
+                "my": "left top",
+                "at": "left bottom",
+                "collision": "flip"
+            },
             "source": function ( request, response ) {
                 var result = [],
                     term = request.term
@@ -544,10 +651,51 @@
             "select": function ( event, ui ) {
                 event.preventDefault();
                 change.call( this, event, ui );
+            },
+            "search": function () {
+                opened = true;
+            },
+            "close": function () {
+                opened = false;
             }
-        } ).on( "focus", function () {
-            input.autocomplete( "search", String( input.val() || "" ) );
         } );
+
+        if ( toggle )
+        {
+            input.after(
+                $( '<button type="button" />' )
+                    .button( {
+                        "text": false,
+                        "icons": {
+                            "primary": "ui-icon-triangle-1-s"
+                        }
+                    } )
+                    .click( function () {
+                        if ( minLength )
+                        {
+                            input.autocomplete( "option", "minLength", 0 );
+                        }
+
+                        if ( opened )
+                        {
+                            input.autocomplete( "close" );
+                        }
+                        else
+                        {
+                            input.focus()
+                                 .autocomplete( "search", "" );
+                        }
+
+                        if ( minLength )
+                        {
+                            input.autocomplete( "option", "minLength", minLength );
+                        }
+                    } )
+            );
+
+            element.parent()
+                   .inputset();
+        }
     };
 
     global.Zork.User.prototype.multiSelectGroup.isElementConstructor = true;

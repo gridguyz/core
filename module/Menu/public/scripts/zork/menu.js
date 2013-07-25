@@ -50,7 +50,9 @@
         js.require( "jQuery.fn.autocompletetitle" );
         element = $( element );
 
-        var minLength   = element.data( "jsUserselectMinLength" ) || 1,
+        var opened      = false,
+            toggle      = element.data( "jsMenuselectToggle" ) != false,
+            minLength   = element.data( "jsMenuselectMinLength" ) || 1,
             placeholder = element.data( "jsAutocompletePlaceholder" ) ||
                           js.core.translate( "default.autoCompletePlaceholder" ),
             selected    = element.find( ":selected" ),
@@ -88,6 +90,11 @@
 
         input.autocompletetitle( {
             "minLength": minLength,
+            "position": {
+                "my": "left top",
+                "at": "left bottom",
+                "collision": "flip"
+            },
             "source": function ( request, response ) {
                 var result = [],
                     term = request.term
@@ -124,8 +131,51 @@
             "select": function ( event, ui ) {
                 event.preventDefault();
                 change.call( this, event, ui );
+            },
+            "search": function () {
+                opened = true;
+            },
+            "close": function () {
+                opened = false;
             }
         } );
+
+        if ( toggle )
+        {
+            input.after(
+                $( '<button type="button" />' )
+                    .button( {
+                        "text": false,
+                        "icons": {
+                            "primary": "ui-icon-triangle-1-s"
+                        }
+                    } )
+                    .click( function () {
+                        if ( minLength )
+                        {
+                            input.autocompletetitle( "option", "minLength", 0 );
+                        }
+
+                        if ( opened )
+                        {
+                            input.autocompletetitle( "close" );
+                        }
+                        else
+                        {
+                            input.focus()
+                                 .autocompletetitle( "search", "" );
+                        }
+
+                        if ( minLength )
+                        {
+                            input.autocompletetitle( "option", "minLength", minLength );
+                        }
+                    } )
+            );
+
+            element.parent()
+                   .inputset();
+        }
     };
 
     global.Zork.Menu.prototype.select.isElementConstructor = true;
