@@ -41,7 +41,7 @@ if ( ! $this->format ): ?>
     <a class="action-button view"
        title="<?= $view->translate( 'default.view' ) ?>"
        href="/app/<?= $view->locale(); ?>/user/view/<?=
-                      urlencode( $row->displayName ) ?>">
+                      rawurlencode( $row->displayName ) ?>">
     </a>
 <?php if ( $this->isAllowed( $row, 'edit' ) ): ?>
     <a class="action-button edit"

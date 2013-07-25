@@ -128,7 +128,7 @@ class Structure extends MapperAwareAbstract
             return null;
         }
 
-        return strtr( urlencode( $this->uri ), $safe );
+        return strtr( rawurlencode( $this->uri ), $safe );
     }
 
 }
