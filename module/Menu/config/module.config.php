@@ -302,7 +302,7 @@ return array(
                                     'name'      => 'menuId',
                                     'options'   => array(
                                         'label'     => 'paragraph.form.menu.menu',
-                                        'required'  => true,
+                                        'required'  => false,
                                         'model'     => 'Grid\Menu\Model\Menu\Model',
                                         'method'    => 'findOptions',
                                     ),

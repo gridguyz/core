@@ -1,6 +1,15 @@
 <?php if ( empty( $this->navigation ) ): ?>
-<ul class="navigation <?= $this->class ?>"><li><a href="#"><?=
-    $this->translate( 'menu.warn.deleted', 'menu' ) ?></a></li></ul>
+<ul class="navigation <?= $this->class ?>"><li><a
+<?php if ( $this->isAllowed( 'menu', 'edit' ) ): ?>
+
+    href="/app/<?= $this->locale() ?>/admin/menu"
+<?php else: ?>
+
+    href="#"
+<?php endif ?>
+
+    class="menu-not-found"><?=
+    $this->translate( 'menu.warn.notFound', 'menu' ) ?></a></li></ul>
 <?php else: ?>
 <?= $this->navigation()
          ->menu()

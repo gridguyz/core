@@ -16,5 +16,5 @@ return array(
     'menu.type.container' => 'Tároló',
     'menu.type.content' => 'Tartalom',
     'menu.type.uri' => 'Url',
-    'menu.warn.deleted' => 'Menü törölve',
+    'menu.warn.notFound' => 'Menü nem található',
 );

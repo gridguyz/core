@@ -16,7 +16,7 @@
          ->setTranslatorEnabled( false )
          ->setSeparator(
              ' <span class="separator">' .
-                 $this->escapeHtml( $separator ) .
+                 $this->escapeHtml( trim( $separator ) ) .
              '</span> '
          )
          ->renderStraight( $navigation )

@@ -18,11 +18,11 @@ return array(
     'menu.type.container' => 'Container',
     'menu.type.content' => 'Content',
     'menu.type.uri' => 'Url',
-    'menu.warn.deleted' => 'Menu deleted',
-    'menu.resource' => 'Menus',
     'menu.privilege.create' => 'Create menu-point / menu',
     'menu.privilege.edit' => 'Edit menu-points / menus',
     'menu.privilege.delete' => 'Delete menu-points / menus',
+    'menu.resource' => 'Menus',
     'menu.select.main' => 'Main menu',
     'menu.select.sub' => 'Submenu, level %d',
+    'menu.warn.notFound' => 'Menu not found',
 );
