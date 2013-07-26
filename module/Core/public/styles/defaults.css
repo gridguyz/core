@@ -1221,25 +1221,25 @@ dd.ui-inputset input
     margin-left: 0;
 }
 
-.ui-overlay button,
-.ui-overlay input[type="reset"],
-.ui-overlay input[type="button"],
-.ui-overlay input[type="submit"]
+.ui-overlay form dl dd.input-submit button,
+.ui-overlay form dl dd.input-submit input[type="reset"],
+.ui-overlay form dl dd.input-submit input[type="button"],
+.ui-overlay form dl dd.input-submit input[type="submit"]
 {
     float: right;
     margin: 1em 0em 1em 1em;
 }
 
-.ui-overlay button,
-.ui-overlay input[type="reset"].ui-button-cancel,
-.ui-overlay input[type="button"].ui-button-cancel,
-.ui-overlay input[type="submit"].ui-button-cancel
+.ui-overlay form dl dd.input-submit button.ui-button-cancel,
+.ui-overlay form dl dd.input-submit input[type="reset"].ui-button-cancel,
+.ui-overlay form dl dd.input-submit input[type="button"].ui-button-cancel,
+.ui-overlay form dl dd.input-submit input[type="submit"].ui-button-cancel
 {
     float: left;
     margin: 1em 0em 1em 0em;
 }
 
-.ui-overlay form input[type="submit"][name="save"]
+.ui-overlay form dl dd.input-submit input[type="submit"][name="save"]
 {
     background: #3b63c5;
     border-color: #1f1f1f;
@@ -1251,9 +1251,9 @@ dd.ui-inputset input
     background-image: linear-gradient(to bottom, #4672e6 0%, #3154b0 100%);
 }
 
-.ui-overlay form input[type="submit"][name="save"]:focus,
-.ui-overlay form input[type="submit"][name="save"]:hover,
-.ui-overlay form input[type="submit"][name="save"]:active
+.ui-overlay form dl dd.input-submit input[type="submit"][name="save"]:focus,
+.ui-overlay form dl dd.input-submit input[type="submit"][name="save"]:hover,
+.ui-overlay form dl dd.input-submit input[type="submit"][name="save"]:active
 {
     background: #1d1d1d;
     border-color: #484848;
