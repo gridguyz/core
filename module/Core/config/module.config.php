@@ -293,7 +293,14 @@ return array(
         ),
     ),
     'translator' => array(
-        'translation_file_patterns' => array(
+        'translation_file_my_patterns'  => array(
+            'my-translations' => array(
+                'type'          => 'phpArray',
+                'base_dir'      => './data/my-translations',
+                'pattern'       => '%s/%s.php',
+            ),
+        ),
+        'translation_file_patterns'     => array(
             'admin' => array(
                 'type'          => 'phpArray',
                 'base_dir'      => __DIR__ . '/../languages/admin',
