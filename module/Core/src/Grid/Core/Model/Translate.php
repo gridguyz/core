@@ -5,7 +5,7 @@ namespace Grid\Core\Model;
 use Zork\Rpc\CallableTrait;
 use Zork\Rpc\CallableInterface;
 use Zend\I18n\Translator\TextDomain;
-use Zend\I18n\Translator\Translator;
+use Zork\I18n\Translator\Translator;
 
 /**
  * Translate
