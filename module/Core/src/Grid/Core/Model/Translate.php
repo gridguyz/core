@@ -4,6 +4,7 @@ namespace Grid\Core\Model;
 
 use Zork\Rpc\CallableTrait;
 use Zork\Rpc\CallableInterface;
+use Zend\I18n\Translator\TextDomain;
 use Zend\I18n\Translator\Translator;
 
 /**
@@ -115,12 +116,38 @@ class Translate extends Translator
         $translator = $this->getTranslator();
         $locale     = $locale ?: $translator->getLocale();
 
+        if ( ! isset( $translator->myMessages[$textDomain][$locale] ) )
+        {
+            $translator->loadMyMessages( $textDomain, $locale );
+        }
+
         if ( ! isset( $translator->messages[$textDomain][$locale] ) )
         {
             $translator->loadMessages( $textDomain, $locale );
         }
 
-        return $translator->messages[$textDomain][$locale];
+        $my     = $translator->myMessages[$textDomain][$locale];
+        $global = $translator->messages[$textDomain][$locale];
+
+        if ( $my instanceof TextDomain )
+        {
+            $my = $my->getArrayCopy();
+        }
+        else if ( empty( $my ) )
+        {
+            $my = array();
+        }
+
+        if ( $global instanceof TextDomain )
+        {
+            $global = $global->getArrayCopy();
+        }
+        else if ( empty( $global ) )
+        {
+            $global = array();
+        }
+
+        return array_replace( $global, $my );
     }
 
 }
