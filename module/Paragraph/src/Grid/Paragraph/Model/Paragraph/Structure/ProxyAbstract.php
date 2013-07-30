@@ -434,7 +434,7 @@ abstract class ProxyAbstract
      */
     public function setTags( $tags )
     {
-        $this->proxyBase->tags = (array) $tags;
+        $this->proxyBase->tags = array_filter( (array) $tags );
         return $this;
     }
 
