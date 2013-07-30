@@ -536,7 +536,8 @@
                 "finish": function ( finish ) {
                     finish = $( finish );
 
-                    var layer = js.core.layer(),
+                    var newr,
+                        layer = js.core.layer(),
                         edit  = false,
                         type  = finish.data( "paragraphType" ),
                         paragraph = {
@@ -556,7 +557,6 @@
                         if ( _root.data( "paragraphEditMode" ) === "on" )
                         {
                             edit = _root.data( "paragraphId" );
-                            js.paragraph.reset( _root );
                         }
                     }
 
@@ -642,14 +642,24 @@
 
                             }
 
-                            if ( edit )
-                            {
-                                _root = $( "#paragraph-" + edit + "-container" );
+                            newr = $( "#paragraph-" + edit + "-container" );
 
-                                if ( _root.length )
+                            if ( newr.length )
+                            {
+                                _root = newr;
+
+                                if ( edit )
                                 {
                                     js.paragraph.edit( _root );
                                 }
+                                else
+                                {
+                                    js.paragraph.reset( _root );
+                                }
+                            }
+                            else
+                            {
+                                js.paragraph.reset( _root );
                             }
                         }
                     } );
