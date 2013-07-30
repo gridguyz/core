@@ -482,6 +482,16 @@
     padding: 0em;
 }
 
+.js-dashboard form dd
+{
+    margin-left: 34%;
+}
+
+.js-dashboard form dd .description
+{
+    margin: 0.5em 0em 1em 0em;
+}
+
 .js-dashboard #box-label,
 .js-dashboard #text-label,
 .js-dashboard #padding-label,
