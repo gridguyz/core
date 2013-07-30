@@ -301,10 +301,11 @@ return array(
                                     'type'      => 'Zork\Form\Element\SelectModel',
                                     'name'      => 'menuId',
                                     'options'   => array(
-                                        'label'     => 'paragraph.form.menu.menu',
-                                        'required'  => false,
-                                        'model'     => 'Grid\Menu\Model\Menu\Model',
-                                        'method'    => 'findOptions',
+                                        'label'         => 'paragraph.form.menu.menu',
+                                        'description'   => 'paragraph.form.menu.menu.description',
+                                        'required'      => false,
+                                        'model'         => 'Grid\Menu\Model\Menu\Model',
+                                        'method'        => 'findOptions',
                                     ),
                                     'attributes'    => array(
                                         'data-js-type'  => 'js.menu.select',

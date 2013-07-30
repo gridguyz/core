@@ -197,6 +197,7 @@ return array(
     'paragraph.form.login.displayRegisterLink' => 'Display register link',
     'paragraph.form.menu.horizontal' => 'Horizontal',
     'paragraph.form.menu.menu' => 'Menu',
+    'paragraph.form.menu.menu.description' => '<a target="_blank" href="/app/%locale%/admin/menu">Manage menu</a>',
     'paragraph.form.start.type' => 'Paragraph type',
     'paragraph.form.snippet.code' => 'Code',
     'paragraph.form.snippet.create' => 'Create a snippet',
