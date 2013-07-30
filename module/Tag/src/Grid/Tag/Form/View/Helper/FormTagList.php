@@ -38,6 +38,16 @@ class FormTagList extends FormInput
         $name           = static::getName( $element );
         $closingBracket = $this->getInlineClosingBracket();
 
+        $hidden = sprintf(
+            '<input %s%s',
+            $this->createAttributesString( array(
+                'type'  => 'hidden',
+                'name'  => $element->getName(),
+                'value' => '',
+            ) ),
+            $closingBracket
+        );
+
         foreach ( $element->getValue() as $value )
         {
             $rendered .= sprintf(
@@ -69,7 +79,8 @@ class FormTagList extends FormInput
         unset( $attributes['value'] );
 
         return sprintf(
-            '<div %s>%s</div>',
+            '%s<div %s>%s</div>',
+            $hidden,
             $this->createAttributesString( $attributes ),
             $rendered
         );
