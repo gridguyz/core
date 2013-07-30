@@ -1016,6 +1016,46 @@ return array(
                                     ),
                                 ),
                             ),
+                            'fontSize'  => array(
+                                'spec'  => array(
+                                    'type'      => 'Zork\Form\Element\CssUnit',
+                                    'name'      => 'fontSize',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.customize.css.fontSize',
+                                        'required'  => false,
+                                    ),
+                                ),
+                            ),
+                            'fontFamily' => array(
+                                'spec'   => array(
+                                    'type'      => 'Zork\Form\Element\CssFontFamily',
+                                    'name'      => 'fontFamily',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.customize.css.fontFamily',
+                                        'required'  => false,
+                                    ),
+                                ),
+                            ),
+                            'textTransform' => array(
+                                'spec'  => array(
+                                    'type'      => 'Zork\Form\Element\CssTextTransform',
+                                    'name'      => 'textTransform',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.customize.css.textTransform',
+                                        'required'  => false,
+                                    ),
+                                ),
+                            ),
+                            'fontVariant' => array(
+                                'spec'  => array(
+                                    'type'      => 'Zork\Form\Element\CssFontVariant',
+                                    'name'      => 'fontVariant',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.customize.css.fontVariant',
+                                        'required'  => false,
+                                    ),
+                                ),
+                            ),
                             'backgroundColor'   => array(
                                 'spec'  => array(
                                     'type'      => 'Zork\Form\Element\Color',
