@@ -300,19 +300,19 @@
                     return false;
                 }
 
-                if ( onlyParentOf == "*" && onlyChildOf == "*" ) {
+                if ( onlyParentOf === "*" && onlyChildOf === "*" ) {
                     return true;
                 }
 
                 var parentType      = parent.data( "paragraphType" ),
                     childType       = child.data( "paragraphType" );
 
-                return parentType == onlyChildOf
-                    && childType == onlyParentOf;
+                return parentType === onlyChildOf
+                    && childType === onlyParentOf;
             },
             "horizontal": function ( item ) {
                 return $( item ).closest( ".paragraph-container" )
-                                .data( "paragraphType" ) == "column";
+                                .data( "paragraphType" ) === "column";
             },
             "change": function ( event, ui )
             {
@@ -344,7 +344,7 @@
 
                         if ( result.success )
                         {
-                            if ( item.data( "paragraphType" ) == "column" )
+                            if ( item.data( "paragraphType" ) === "column" )
                             {
                                 customize.reload();
                             }
@@ -384,13 +384,13 @@
 
         root.on( "mousemove", mmove )
             .on( "mouseleave", leave )
-            .data( "paragraph.edit.add", function () {} )
+         // .data( "paragraph.edit.add", function () {} )
             .data( "paragraph.edit.reset", function () {
                 self.header.lock = false;
                 root.off( "mousemove", mmove );
                 root.off( "mouseleave", leave );
                 root.sortabletree( "destroy" );
-                root.removeData( "paragraph.edit.add" );
+             // root.removeData( "paragraph.edit.add" );
                 root.removeData( "paragraph.edit.reset" );
             } );
     };
@@ -430,7 +430,7 @@
             header.hide( "fast" );
         }
 
-        if ( root.data( "paragraphEditMode" ) == "on" )
+        if ( root.data( "paragraphEditMode" ) === "on" )
         {
             root.removeClass( "paragraph-editmode" );
             root.data( "paragraphEditMode", "off" );
@@ -445,7 +445,7 @@
     };
 
     /**
-     * Move paragraphs mode
+     * Add paragraph
      * @param {HTMLElement} element element to move
      * @type undefined
      */
@@ -459,7 +459,7 @@
 
         if ( ! Object.isUndefined( _root ) )
         {
-            if ( _root.data( "paragraphEditMode" ) == "on" )
+            if ( _root.data( "paragraphEditMode" ) === "on" )
             {
                 edit = true;
             }
@@ -498,7 +498,7 @@
         {
             this.edit( _root );
         }
-    }
+    };
 
     global.Zork.Paragraph.prototype.add.isElementConstructor = true;
 
@@ -520,7 +520,7 @@
         {
             wizard( {
                 "url"   : "/app/" + js.core.userLocale +
-                          "/paragraph/create/" + ( child == "*" ? "" : child ) +
+                          "/paragraph/create/" + ( child === "*" ? "" : child ) +
                           "?adminLocale=" + js.core.defaultLocale,
                 "params": {
                     "parentId": id
@@ -537,6 +537,7 @@
                     finish = $( finish );
 
                     var layer = js.core.layer(),
+                        edit  = false,
                         type  = finish.data( "paragraphType" ),
                         paragraph = {
                             "id": finish.data( "paragraphId" ),
@@ -552,7 +553,11 @@
 
                     if ( _root )
                     {
-                        js.paragraph.reset( _root );
+                        if ( _root.data( "paragraphEditMode" ) === "on" )
+                        {
+                            edit = true;
+                            js.paragraph.reset( _root );
+                        }
                     }
 
                     $.ajax( {
@@ -579,7 +584,7 @@
                                 .each( function () {
                                     var self = $( this );
 
-                                    if ( self.attr( "id" ) == "customizeStyleSheet" )
+                                    if ( self.attr( "id" ) === "customizeStyleSheet" )
                                     {
                                         $( "#customizeStyleSheet" ).remove();
                                     }
@@ -636,12 +641,17 @@
                                     } );
 
                             }
+
+                            if ( edit )
+                            {
+                                js.paragraph.edit( _root );
+                            }
                         }
                     } );
                 }
             } );
         }
-    }
+    };
 
     /**
      * Show dashboard
@@ -879,7 +889,7 @@
         element = $( element );
 
         var opened      = false,
-            toggle      = element.data( "jsContentselectToggle" ) != false,
+            toggle      = element.data( "jsContentselectToggle" ) !== false,
             minLength   = element.data( "jsContentselectMinLength" ) || 1,
             placeholder = element.data( "jsAutocompletePlaceholder" ) ||
                       js.core.translate( "default.autoCompletePlaceholder" ),
