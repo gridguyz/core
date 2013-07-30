@@ -651,6 +651,15 @@
                                 if ( edit )
                                 {
                                     js.paragraph.edit( _root );
+
+                                    if ( _root.data( "paragraphType" ) === "layout" )
+                                    {
+                                        $( '[data-js-type="js.admin.menu"] .edit-layout' ).trigger( "click" );
+                                    }
+                                    else
+                                    {
+                                        $( '[data-js-type="js.admin.menu"] .edit-content' ).trigger( "click" );
+                                    }
                                 }
                                 else
                                 {
