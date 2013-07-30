@@ -19,16 +19,15 @@ class ModuleController extends AbstractAdminController
 
     public function indexAction()
     {
-        $request    = $this->getRequest();
-        $locator    = $this->getServiceLocator();
-        $model      = $locator->get( 'Grid\Core\Model\Module\Model' );
-        $structure  = $model->find(null);
-
-        $moduleConfigs = $this->getServiceLocator()
-                      ->get( 'Configuration' )
-                        ['modules']
-                        ['Grid\Core']
-                        ['modules'];
+        $request        = $this->getRequest();
+        $locator        = $this->getServiceLocator();
+        $model          = $locator->get( 'Grid\Core\Model\Module\Model' );
+        $structure      = $model->find( null );
+        $moduleConfigs  = $this->getServiceLocator()
+                               ->get( 'Configuration' )
+                                    [ 'modules'       ]
+                                    [ 'Grid\Core'     ]
+                                    [ 'modules'       ];
 
         /* @var $moduleForm \Zend\Form\Form */
         $moduleForm = $this->getServiceLocator()
@@ -38,7 +37,7 @@ class ModuleController extends AbstractAdminController
         $moduleForm->get( 'modules' )
                    ->setValueOptions($moduleConfigs);
 
-//        $moduleForm->bind( $model->getData() );
+     // $moduleForm->bind( $model->getData() );
         $moduleForm->setHydrator( $model->getMapper() )
                    ->bind( $structure );
 
@@ -58,11 +57,10 @@ class ModuleController extends AbstractAdminController
                      ->add( 'default.form.module.failed',
                             'default', Message::LEVEL_ERROR );
             }
-
         }
 
         return array(
-            'moduleForm' => $moduleForm
+            'form' => $moduleForm
         );
     }
 

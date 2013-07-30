@@ -197,6 +197,7 @@
             } );
 
         var editContNode = menu.find( "> li > .edit-content" ),
+            editContPara = menu.find( "> li > .edit-content-paragraph" ),
             editLayNode  = menu.find( "> li > .edit-layout" );
 
         editContNode.addClass( "ui-state-disabled" )
@@ -372,6 +373,16 @@
             }
 
             return false;
+        } );
+
+        editContPara.click( function ( event ) {
+            if ( content.length )
+            {
+                js.require( "js.paragraph" )
+                  .dashboard( content );
+            }
+
+            event.preventDefault();
         } );
 
         var changeParam = content.length
@@ -645,21 +656,22 @@
         layout  = para( "layout" );
         content = para( "content", "metaContent" );
 
-        $( menus ).find( "li > .edit-layout" )
-                      .toggleClass( "ui-state-default", !! layout.length )
-                  .end()
-                  .find( "li > .edit-content" )
+        $( menus ).find( "li > .edit-content" )
                       .toggleClass( "ui-state-default", !! content.length )
                       .find( ".status" )
                           .css( "display", content.length ? "" : "none" )
                       .end()
+                      .parent( "li" )
+                          .toggleClass( "disabled", ! content.length )
+                      .end()
                   .end()
-                  .find( "li > .edit-content" )
+                  .find( "li > .edit-content-paragraph" )
                       .parent( "li" )
                           .toggleClass( "disabled", ! content.length )
                       .end()
                   .end()
                   .find( "li > .edit-layout" )
+                      .toggleClass( "ui-state-default", !! layout.length )
                       .parent( "li" )
                           .toggleClass( "disabled", ! layout.length )
                       .end()

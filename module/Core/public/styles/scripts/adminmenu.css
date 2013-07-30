@@ -188,26 +188,27 @@
     background-repeat: no-repeat;
 }
 
-.js-adminmenu ul.js-adminmenu-menu li.ui-menu-item-collapsible a.edit-content+span.status
+.js-adminmenu ul.js-adminmenu-menu li.ui-menu-item-collapsible a.edit-content + span.status
 {
     background-image: url("/images/common/admin/adminmenu-edit-status-content-active.png");
 }
-.js-adminmenu ul.js-adminmenu-menu li.ui-menu-item-collapsible a.edit-layout+span.status
+
+.js-adminmenu ul.js-adminmenu-menu li.ui-menu-item-collapsible a.edit-layout + span.status
 {
     background-image: url("/images/common/admin/adminmenu-edit-status-layout-active.png");
 }
-.js-adminmenu ul.js-adminmenu-menu li.ui-menu-item-collapsible.ui-state-collapsed a.edit-content+span.status,
-.js-adminmenu ul.js-adminmenu-menu li.ui-menu-item-collapsible.ui-state-collapsed a.edit-layout+span.status
+
+.js-adminmenu ul.js-adminmenu-menu li.ui-menu-item-collapsible.ui-state-collapsed a.edit-content + span.status,
+.js-adminmenu ul.js-adminmenu-menu li.ui-menu-item-collapsible.ui-state-collapsed a.edit-layout + span.status
 {
    background-image: url("/images/common/admin/adminmenu-edit-status-default.png");
 }
-.js-adminmenu ul.js-adminmenu-menu li.ui-menu-item-collapsible.disabled a.edit-content+span.status,
-.js-adminmenu ul.js-adminmenu-menu li.ui-menu-item-collapsible.disabled a.edit-layout+span.status
+
+.js-adminmenu ul.js-adminmenu-menu li.ui-menu-item-collapsible.disabled a.edit-content + span.status,
+.js-adminmenu ul.js-adminmenu-menu li.ui-menu-item-collapsible.disabled a.edit-layout + span.status
 {
     background-image: url("/images/common/admin/adminmenu-edit-status-disabled.png");
 }
-
-
 
 .js-adminmenu ul.js-adminmenu-menu li.ui-menu-item a.dashboard
 {
@@ -263,6 +264,18 @@
 .js-adminmenu ul.js-adminmenu-menu li.ui-menu-item a.edit-content:hover
 {
     background-image: url("/images/common/buttons/button-edit-hover.png");
+    background-position: 8px center;
+}
+
+.js-adminmenu ul.js-adminmenu-menu li.ui-menu-item a.edit-content-paragraph
+{
+    background-image: url("/images/common/admin/adminmenu-icon-edit-content-paragraph.png");
+    background-position: 8px center;
+}
+
+.js-adminmenu ul.js-adminmenu-menu li.ui-menu-item a.edit-content-paragraph:hover
+{
+    background-image: url("/images/common/admin/adminmenu-icon-edit-content-paragraph-hover.png");
     background-position: 8px center;
 }
 

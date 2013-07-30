@@ -75,6 +75,10 @@ $list->runin( function ( $paragraph ) use ( $view ) { ?>
             <?= $view->translate( 'admin.menu.editContent',
                                   'admin', $view->userLocale() ) ?>
         </a></li>
+        <li><a class="edit-content-paragraph" href="#">
+            <?= $view->translate( 'admin.menu.editContentParagraph',
+                                  'admin', $view->userLocale() ) ?>
+        </a></li>
 <?php endif ?>
 <?php if ( $view->isAllowed( 'paragraph', 'create' ) ): ?>
 

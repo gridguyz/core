@@ -44,6 +44,7 @@ return array(
     'admin.menu.changeLayout.predefined' => 'Predefined layouts',
     'admin.menu.dashboard' => 'Dashboard',
     'admin.menu.editContent' => 'Edit content',
+    'admin.menu.editContentParagraph' => 'Edit actual page',
     'admin.menu.editLayout' => 'Edit layout',
     'admin.menu.fileManager' => 'File manager',
     'admin.menu.importContent.predefined' => 'Predefined contents',
