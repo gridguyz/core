@@ -253,7 +253,6 @@ body,
 .paragraph-container.paragraph-contentList-container .paragraph.paragraph-contentList .content-list .content-entry .lead-text
 {
     overflow: hidden;
-    max-height: 4em;
     text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
     -ms-text-overflow: ellipsis;
@@ -262,11 +261,6 @@ body,
     -ms-transition: max-height 1s;
     -moz-transition: max-height 1s;
     -webkit-transition: max-height 1s;
-}
-
-.paragraph-container.paragraph-contentList-container .paragraph.paragraph-contentList .content-list .content-entry:hover .lead-text
-{
-    max-height: 100em;
 }
 
 .paragraph-container.paragraph-tagCloud-container .paragraph.paragraph-tagCloud .tags,
