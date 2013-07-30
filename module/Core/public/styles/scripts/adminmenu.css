@@ -270,13 +270,13 @@
 .js-adminmenu ul.js-adminmenu-menu li.ui-menu-item a.edit-content-paragraph
 {
     background-image: url("/images/common/admin/adminmenu-icon-edit-content-paragraph.png");
-    background-position: 8px center;
+    background-position: 5px center;
 }
 
 .js-adminmenu ul.js-adminmenu-menu li.ui-menu-item a.edit-content-paragraph:hover
 {
     background-image: url("/images/common/admin/adminmenu-icon-edit-content-paragraph-hover.png");
-    background-position: 8px center;
+    background-position: 5px center;
 }
 
 .js-adminmenu ul.js-adminmenu-menu li.ui-menu-item a.edit-layout.ui-state-disabled
