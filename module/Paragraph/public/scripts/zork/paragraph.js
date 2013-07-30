@@ -555,7 +555,7 @@
                     {
                         if ( _root.data( "paragraphEditMode" ) === "on" )
                         {
-                            edit = true;
+                            edit = _root.data( "paragraphId" );
                             js.paragraph.reset( _root );
                         }
                     }
@@ -644,7 +644,12 @@
 
                             if ( edit )
                             {
-                                js.paragraph.edit( _root );
+                                _root = $( "#paragraph-" + edit + "-container" );
+
+                                if ( _root.length )
+                                {
+                                    js.paragraph.edit( _root );
+                                }
                             }
                         }
                     } );
