@@ -423,7 +423,7 @@
                             {
                                 switch ( type )
                                 {
-                                    case 'color':
+                                    case "color":
                                         if ( ! /^#[a-fA-F0-9]{6}$/.test( val ) )
                                         {
                                             isv   = false;
@@ -431,7 +431,7 @@
                                         }
                                         break;
 
-                                    case 'date':
+                                    case "date":
                                         if ( ! /^\d{4,}-\d{2}-\d{2}$/.test( val ) )
                                         {
                                             isv   = false;
@@ -439,7 +439,7 @@
                                         }
                                         break;
 
-                                    case 'datetime':
+                                    case "datetime":
                                         if ( ! /^\d{4,}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(:\d{2}(\.\d+))?(Z|[+-]\d{2}:?\d{2})$/.test( val ) )
                                         {
                                             isv   = false;
@@ -447,7 +447,7 @@
                                         }
                                         break;
 
-                                    case 'datetime-local':
+                                    case "datetime-local":
                                         if ( ! /^\d{4,}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(:\d{2}(\.\d+))?$/.test( val ) )
                                         {
                                             isv   = false;
@@ -455,7 +455,7 @@
                                         }
                                         break;
 
-                                    case 'email':
+                                    case "email":
                                         if ( ! /^[a-zA-Z0-9.!#$%&\'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*$/.test( val ) )
                                         {
                                             isv   = false;
@@ -463,7 +463,7 @@
                                         }
                                         break;
 
-                                    case 'month':
+                                    case "month":
                                         if ( ! /^\d{4,}-\d{2}$/.test( val ) )
                                         {
                                             isv   = false;
@@ -471,8 +471,8 @@
                                         }
                                         break;
 
-                                    case 'number':
-                                    case 'range':
+                                    case "number":
+                                    case "range":
                                         if ( ! /^([1-9][0-9]*|0)(\.[0-9]+)?$/.test( val ) )
                                         {
                                             isv   = false;
@@ -480,7 +480,7 @@
                                         }
                                         break;
 
-                                    case 'time':
+                                    case "time":
                                         if ( ! /^\d{2}:\d{2}(:\d{2}(\.\d+))?$/.test( val ) )
                                         {
                                             isv   = false;
@@ -488,7 +488,7 @@
                                         }
                                         break;
 
-                                    case 'url':
+                                    case "url":
                                         if ( ! /^(https?|s?ftp):\/\/[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)(\/.*)?$/.test( val ) )
                                         {
                                             isv   = false;
@@ -496,7 +496,7 @@
                                         }
                                         break;
 
-                                    case 'week':
+                                    case "week":
                                         if ( ! /^\d{4,}-W\d{2}?$/.test( val ) )
                                         {
                                             isv   = false;
@@ -678,7 +678,7 @@
     {
         element = $( element );
 
-        if ( element.data( "jsForm" ) == "basic" )
+        if ( element.data( "jsForm" ) === "basic" )
         {
             return;
         }
@@ -687,11 +687,11 @@
             attrType = String( element.attr( "type" ) || tag ),
             realType = String( element.prop( "type" ) || tag );
 
-        if ( attrType == realType )
+        if ( attrType === realType )
         {
             switch ( attrType )
             {
-                case 'color':
+                case "color":
                     var val  = element[0].getAttribute( "value" ),
                         name = String( element.attr( "name" ) || "" ),
                         text = $( '<input type="text">' ).val( val );
@@ -713,7 +713,7 @@
                                element.prop( "disabled", ! text.val() );
                            } );
 
-                    element.change( function () {
+                    element.on( "click input change", function () {
                         text.val( element.prop( "disabled" ) ? "" : element.val() );
                     } );
 
@@ -739,43 +739,43 @@
         {
             switch ( attrType )
             {
-                case 'color':
+                case "color":
                     if ( ! element.is( '[data-js-type~="js.form.element.color"]' ) )
                     {
                         js.require( "js.form.element.color" )( element );
                     }
                     break;
 
-                case 'date':
+                case "date":
                     if ( ! element.is( '[data-js-type~="js.form.element.date"]' ) )
                     {
                         js.require( "js.form.element.date" )( element );
                     }
                     break;
 
-                case 'datetime':
-                case 'datetime-local':
+                case "datetime":
+                case "datetime-local":
                     if ( ! element.is( '[data-js-type~="js.form.element.dateTime"]' ) )
                     {
                         js.require( "js.form.element.dateTime" )( element );
                     }
                     break;
 
-                case 'number':
+                case "number":
                     if ( ! element.is( '[data-js-type~="js.form.element.number"]' ) )
                     {
                         js.require( "js.form.element.number" )( element );
                     }
                     break;
 
-                case 'range':
+                case "range":
                     if ( ! element.is( '[data-js-type~="js.form.element.range"]' ) )
                     {
                         js.require( "js.form.element.range" )( element );
                     }
                     break;
 
-             /* case 'select':
+             /* case "select":
                     js.style( "/styles/scripts/selectmenu.css" );
                     js.require( "jQuery.ui.selectmenu", function () {
                         var prefix = element.data( "jsSelectIconprefix" );
@@ -789,7 +789,7 @@
                     } );
                     break; */
 
-                case 'time':
+                case "time":
                     if ( ! element.is( '[data-js-type~="js.form.element.time"]' ) )
                     {
                         js.require( "js.form.element.time" )( element );
