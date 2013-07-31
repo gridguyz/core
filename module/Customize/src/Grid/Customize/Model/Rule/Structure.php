@@ -426,15 +426,15 @@ class Structure extends MapperAwareAbstract
     {
         $y = $this->getRawProperty( 'background-position-y' );
 
-        if ( ! empty( $y ) && ! empty( $y->value ) )
-        {
-            $xyValue    = $value . ' ' . $y->value;
-            $xyPriority = empty( $priority ) ? $y->priority : $priority;
-        }
-        else if ( empty( $value ) )
+        if ( empty( $value ) )
         {
             $xyValue    = null;
             $xyPriority = null;
+        }
+        else if ( ! empty( $y ) && ! empty( $y->value ) )
+        {
+            $xyValue    = $value . ' ' . $y->value;
+            $xyPriority = empty( $priority ) ? $y->priority : $priority;
         }
         else
         {
@@ -457,15 +457,15 @@ class Structure extends MapperAwareAbstract
     {
         $x = $this->getRawProperty( 'background-position-x' );
 
-        if ( ! empty( $x ) && ! empty( $x->value ) )
-        {
-            $xyValue    = $x->value . ' ' . $value;
-            $xyPriority = empty( $priority ) ? $x->priority : $priority;
-        }
-        else if ( empty( $value ) )
+        if ( empty( $value ) )
         {
             $xyValue    = null;
             $xyPriority = null;
+        }
+        else if ( ! empty( $x ) && ! empty( $x->value ) )
+        {
+            $xyValue    = $x->value . ' ' . $value;
+            $xyPriority = empty( $priority ) ? $x->priority : $priority;
         }
         else
         {
@@ -515,7 +515,7 @@ class Structure extends MapperAwareAbstract
             }
         }
 
-        $method = 'set' . ucfirst( $name ) . 'Property';
+        $method = 'set' . String::camelize( $name, '-', false ) . 'Property';
 
         if ( is_callable( array( $this, $method ) ) )
         {
