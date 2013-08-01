@@ -869,7 +869,7 @@ return array(
                         ),
                     ),
                 ),
-                'tags' => array(
+             /* 'tags' => array(
                     'spec' => array(
                         'type'      => 'Grid\Tag\Form\Element\TagList',
                         'name'      => 'tags',
@@ -878,7 +878,7 @@ return array(
                             'required'  => false,
                         ),
                     ),
-                ),
+                ), */
                 'save' => array(
                     'spec' => array(
                         'type'      => 'Zork\Form\Element\Submit',
@@ -2525,7 +2525,7 @@ return array(
                                     ),
                                 ),
                             ),
-                            'tags' => array(
+                         /* 'tags' => array(
                                 'spec' => array(
                                     'type'      => 'Grid\Tag\Form\Element\TagList',
                                     'name'      => 'tags',
@@ -2534,7 +2534,7 @@ return array(
                                         'required'  => false,
                                     ),
                                 ),
-                            ),
+                            ), */
                         ),
                     ),
                 ),
