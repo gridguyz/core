@@ -25,7 +25,7 @@
     ],
     "support": {
         "email": "dev@megaweb.hu",
-        "source": "https://github.com/webriq/gridguyz-core"
+        "source": "https://github.com/gridguyz/core"
     },
     "require": {
         "php": ">=5.4",
