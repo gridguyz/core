@@ -9,7 +9,12 @@ $paginator->setItemCountPerPage( $this->paragraph->itemCount )
 
 if ( $paginator->getTotalItemCount() ): ?>
     <?= $this->render( 'grid/tag/contentList', array(
-        'paginator' => $paginator,
+        'paginator'         => $paginator,
+        'displayUser'       => $this->paragraph->displayUser,
+        'displayCreated'    => $this->paragraph->displayCreated,
+        'displayLeadImage'  => $this->paragraph->displayLeadImage,
+        'displayLeadText'   => $this->paragraph->displayLeadText,
+        'displayReadMore'   => $this->paragraph->displayReadMore,
     ) ) ?>
 <?php endif ?>
 

@@ -58,9 +58,34 @@ class ContentList extends AbstractLeaf
     protected $mode = self::DEFAULT_MODE;
 
     /**
-     * @var 10
+     * @var int
      */
     protected $itemCount = self::DEFAULT_ITEM_COUNT;
+
+    /**
+     * @var bool
+     */
+    protected $displayUser = true;
+
+    /**
+     * @var bool
+     */
+    protected $displayCreated = true;
+
+    /**
+     * @var bool
+     */
+    protected $displayLeadImage = true;
+
+    /**
+     * @var bool
+     */
+    protected $displayLeadText = true;
+
+    /**
+     * @var bool
+     */
+    protected $displayReadMore = true;
 
     /**
      * Get paragraph-model

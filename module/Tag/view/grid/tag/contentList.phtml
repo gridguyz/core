@@ -12,30 +12,31 @@
 <?php if ( $content->leadImage ): ?>
 
         <a href="<?= $this->escapeHtmlAttr( $link ) ?>"
-           class="lead-image"><img src="<?=
+           class="lead-image<?php if ( isset( $this->displayLeadImage ) && ! $this->displayLeadImage ): ?> ui-helper-hidden<?php endif ?>"><img src="<?=
             $this->thumbnail( $content->leadImage, array(
-                'method'    => isset( $this->imageMethod ) ? $this->imageMethod : 'fit',
-                'width'     => isset( $this->imageWidth  ) ? $this->imageWidth  : 100,
-                'height'    => isset( $this->imageHeight ) ? $this->imageHeight : 100,
+                'method'    => isset( $this->leadImageMethod )  ? $this->leadImageMethod    : 'fit',
+                'width'     => isset( $this->leadImageWidth  )  ? $this->leadImageWidth     : 100,
+                'height'    => isset( $this->leadImageHeight )  ? $this->leadImageHeight    : 100,
             ) ) ?>" /></a>
 <?php endif ?>
 <?php if ( $content->userId ): ?>
 
-        <div class="user">
+        <div class="user<?php if ( isset( $this->displayUser ) && ! $this->displayUser ): ?> ui-helper-hidden<?php endif ?>">
             <a href="<?= $this->escapeHtmlAttr( $content->user->getUri( (string) $this->locale() ) ) ?>"
                class="displayName"><?= $this->escapeHtml( $content->user->displayName ) ?></a>
         </div>
 <?php endif ?>
 
-        <div class="created" title="<?= $this->dateTime( $content->created ) ?>">
+        <div class="created<?php if ( isset( $this->displayCreated ) && ! $this->displayCreated ): ?> ui-helper-hidden<?php endif ?>"
+             title="<?= $this->dateTime( $content->created ) ?>">
             <?= $this->relativeTime( $content->created ) ?>
 
         </div>
-        <div class="lead-text">
+        <div class="lead-text<?php if ( isset( $this->displayLeadText ) && ! $this->displayLeadText ): ?> ui-helper-hidden<?php endif ?>">
             <?= $content->leadText ?>
 
         </div>
-        <div class="read-more">
+        <div class="read-more<?php if ( isset( $this->displayReadMore ) && ! $this->displayReadMore ): ?> ui-helper-hidden<?php endif ?>">
             <a href="<?= $this->escapeHtmlAttr( $link ) ?>"><?=
                $this->translate( 'default.readMore', 'default' ) ?></a>
         </div>

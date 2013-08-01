@@ -211,6 +211,71 @@ return array(
                                     ),
                                 ),
                             ),
+                            'displayUser' => array(
+                                'spec' => array(
+                                    'type'      => 'Zork\Form\Element\Checkbox',
+                                    'name'      => 'displayUser',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.contentList.displayUser',
+                                        'required'  => false,
+                                    ),
+                                    'attributes'    => array(
+                                        'checked'   => true,
+                                    ),
+                                ),
+                            ),
+                            'displayCreated' => array(
+                                'spec' => array(
+                                    'type'      => 'Zork\Form\Element\Checkbox',
+                                    'name'      => 'displayCreated',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.contentList.displayCreated',
+                                        'required'  => false,
+                                    ),
+                                    'attributes'    => array(
+                                        'checked'   => true,
+                                    ),
+                                ),
+                            ),
+                            'displayLeadImage' => array(
+                                'spec' => array(
+                                    'type'      => 'Zork\Form\Element\Checkbox',
+                                    'name'      => 'displayLeadImage',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.contentList.displayLeadImage',
+                                        'required'  => false,
+                                    ),
+                                    'attributes'    => array(
+                                        'checked'   => true,
+                                    ),
+                                ),
+                            ),
+                            'displayLeadText' => array(
+                                'spec' => array(
+                                    'type'      => 'Zork\Form\Element\Checkbox',
+                                    'name'      => 'displayLeadText',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.contentList.displayLeadText',
+                                        'required'  => false,
+                                    ),
+                                    'attributes'    => array(
+                                        'checked'   => true,
+                                    ),
+                                ),
+                            ),
+                            'displayReadMore' => array(
+                                'spec' => array(
+                                    'type'      => 'Zork\Form\Element\Checkbox',
+                                    'name'      => 'displayReadMore',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.contentList.displayReadMore',
+                                        'required'  => false,
+                                    ),
+                                    'attributes'    => array(
+                                        'checked'   => true,
+                                    ),
+                                ),
+                            ),
                             'tags' => array(
                                 'spec' => array(
                                     'type'      => 'Grid\Tag\Form\Element\TagList',
