@@ -80,7 +80,7 @@ $list->runin( function ( $paragraph ) use ( $view ) { ?>
                                   'admin', $view->userLocale() ) ?>
         </a></li>
 <?php endif ?>
-<?php if ( $view->isAllowed( 'paragraph', 'create' ) ): ?>
+<?php if ( $content->isEditable() || $paragraph->isEditable() ): ?>
 
         <li><a class="new-paragraph" href="#">
             <?= $view->translate( 'admin.menu.newParagraph',
