@@ -37,6 +37,11 @@
     margin: 0em 0.5em 0.5em 0em;
 }
 
+.content-list .content-entry .lead-image.ui-helper-hidden
+{
+    display: none;
+}
+
 .content-list .content-entry .lead-image img
 {
     border: none;
@@ -74,13 +79,33 @@
 .content-list .content-entry .user
 {
     float: left;
-    margin-right: 1ex;
+    margin-right: 0ex;
     padding-right: 1ex;
-    border-right: 1px solid #000;
-    border-color: currentColor;
 }
 
-.content-list .content-entry .read-more:after
+.content-list .content-entry .user ~ .created:before
+{
+    content: "| ";
+}
+
+.content-list .content-entry .user.ui-helper-hidden ~ .created:before,
+.content-list .content-entry .user ~ .created.ui-helper-hidden:before
+{
+    content: none;
+}
+
+.content-list .content-entry .user ~ .created.ui-helper-hidden
+{
+    display: block;
+    visibility: hidden;
+}
+
+.content-list .content-entry .user.ui-helper-hidden ~ .created.ui-helper-hidden
+{
+    display: none;
+}
+
+.content-list .content-entry:after
 {
     height: 0;
     clear: both;
@@ -91,12 +116,12 @@
 
 /* required comment for clearfix to work in Opera \*/
 
-* html .content-list .content-entry .read-more
+* html .content-list .content-entry
 {
     height: 1%;
 }
 
-.content-list .content-entry .read-more
+.content-list .content-entry
 {
     display: block;
 }

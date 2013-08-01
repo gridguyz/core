@@ -245,11 +245,6 @@ body,
     margin-left: 0.5em;
 }
 
-.paragraph-container.paragraph-contentList-container .paragraph.paragraph-contentList .read-more
-{
-    text-align: right;
-}
-
 .paragraph-container.paragraph-contentList-container .paragraph.paragraph-contentList .content-list .content-entry .lead-text
 {
     overflow: hidden;
@@ -281,15 +276,10 @@ body,
 
 .paragraph-container.paragraph-contentList-container .paragraph.paragraph-contentList .tags
 {
+    margin: 0.5em 0em;
     padding-top: 0.5em;
     border-top: 1px dotted #000;
     border-color: currentColor;
-}
-
-.paragraph-container.paragraph-contentList-container .paragraph.paragraph-contentList .tags,
-.paragraph-container.paragraph-contentList-container .paragraph.paragraph-contentList .read-more
-{
-    margin: 0.5em 0em;
 }
 
 .paragraph-container.paragraph-tagCloud-container .paragraph.paragraph-tagCloud .tags .tag .usage:before

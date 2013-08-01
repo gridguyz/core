@@ -36,7 +36,8 @@
             },
             update = function ( selector ) {
                 return function () {
-                    element.find( ".content-list .content-entry " + selector )
+                    element.find( ".content-list .content-entry" )
+                           .find( selector )
                            .toggleClass( "ui-helper-hidden", ! $( this ).prop( "checked" ) );
                 };
             };
