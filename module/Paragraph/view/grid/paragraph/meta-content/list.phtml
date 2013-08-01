@@ -10,11 +10,11 @@ if ( ! $this->format ): ?>
 <h1><?= $title ?></h1>
 <?php endif ?>
 <?= $this->rowSet( $this->paginator, $rowSet::FLAG_LAYOUT_ALL )
-         ->setColumnTranslatePrefix( 'paragraph.content.list.column' )
+         ->setColumnTranslatePrefix( 'paragraph.metaContent.list.column' )
          ->setColumnTranslatePostfix( 'title' )
          ->setColumnTranslateTextDomain( 'paragraph' )
          ->setPage( $this->page )
-         ->setHiddenColumns( array( 'id', 'publishedFrom', 'publishedTo' ) )
+         ->setHiddenColumns( array( 'id' ) )
          ->setColumns( array(
               'id'              => $rowSet::INT,
               'name'            => $rowSet->column( $rowSet::TRANSLATE,
