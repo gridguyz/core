@@ -111,6 +111,8 @@ class Language extends AbstractLeaf
         $activel    = null;
         $defaultUri = null;
         $siteInfo   = null;
+        $available  = $service->get( 'Locale' )
+                              ->getAvailableFlags();
 
         try
         {
@@ -143,36 +145,39 @@ class Language extends AbstractLeaf
         {
             foreach ( $this->locales as $locale )
             {
-                $link = array(
-                    'active'    => $activel == $locale,
-                    'uri'       => str_replace(
-                        '%locale%',
-                        $locale,
-                        $defaultUri
-                    ),
-                );
-
-                if ( $rendered instanceof Content )
+                if ( ! empty( $available[$locale] ) )
                 {
-                    if ( null === $siteInfo )
+                    $link = array(
+                        'active'    => $activel == $locale,
+                        'uri'       => str_replace(
+                            '%locale%',
+                            $locale,
+                            $defaultUri
+                        ),
+                    );
+
+                    if ( $rendered instanceof Content )
                     {
-                        $siteInfo = $service->get( 'Zork\Db\SiteInfo' );
+                        if ( null === $siteInfo )
+                        {
+                            $siteInfo = $service->get( 'Zork\Db\SiteInfo' );
+                        }
+
+                        $uri = $this->getUriModel()
+                                    ->findDefaultByContentSubdomain(
+                                        $rendered->id,
+                                        $siteInfo->getSubdomainId(),
+                                        $locale
+                                    );
+
+                        if ( ! empty( $uri ) )
+                        {
+                            $link['uri'] = '/' . $uri->safeUri;
+                        }
                     }
 
-                    $uri = $this->getUriModel()
-                                ->findDefaultByContentSubdomain(
-                                    $rendered->id,
-                                    $siteInfo->getSubdomainId(),
-                                    $locale
-                                );
-
-                    if ( ! empty( $uri ) )
-                    {
-                        $link['uri'] = '/' . $uri->safeUri;
-                    }
+                    $result[$locale] = $link;
                 }
-
-                $result[$locale] = $link;
             }
         }
 
