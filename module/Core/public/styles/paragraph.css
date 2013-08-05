@@ -168,11 +168,26 @@ body,
     display: none;
 }
 
-.paragraph-container.paragraph-banner-container .paragraph.paragraph-banner .banner-image-link
+.paragraph-container.paragraph-banner-container .paragraph.paragraph-banner .banner-image-link,
+.paragraph-container.paragraph-banner-container .paragraph.paragraph-banner .banner-not-found-link
 {
     display: block;
     text-align: center;
     text-decoration: none;
+}
+
+.paragraph-container.paragraph-banner-container .paragraph.paragraph-banner .banner-not-found-link
+{
+    color: #888;
+    opacity: 0.8;
+    height: 100px;
+    font-size: 80%;
+    background: #fff;
+    line-height: 100px;
+    vertical-align: middle;
+    border: 1px solid #ccc;
+    font-family: Arial, sans-serif;
+    filter: alpha(opacity=80);
 }
 
 .paragraph-container.paragraph-language-container .paragraph.paragraph-language ul,
