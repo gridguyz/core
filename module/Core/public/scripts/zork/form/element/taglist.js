@@ -25,7 +25,8 @@
         element = $( element ).addClass( "js-tag-list ui-widget" );
 
         var name   = element.data( "name" ),
-            search = $( '<input type="search" class="ui-state-default" />' ),
+            search = $( '<input type="search" class="ui-state-default" />' )
+                        .attr( "placeholder", js.core.translate( "default.autoCompletePlaceholder" ) ),
             seadiv = $( '<div class="js-tag-search" />' ),
             add    = function ( event, ui ) {
                 var val   = String( ui && ui.item ? ui.item.value : search.val() ),
