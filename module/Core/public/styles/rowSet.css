@@ -170,7 +170,7 @@
 
 .rowSetContainer .freeWord dl
 {
-    width: 250px;
+    min-width: 250px;
 }
 
 .rowSetContainer .freeWord dl dt
@@ -188,8 +188,8 @@
 .rowSetContainer .freeWord dl dd
 {
     clear: none;
-    float: none;
-    margin: 0px 0px 0px 10px;
+    float: left;
+    margin: 0px;
 }
 
 .rowSetContainer .search .column
