@@ -358,7 +358,7 @@ abstract class ProxyAbstract
      */
     public function isActive( $requestUri = null )
     {
-        $uri = preg_replace( '/[\\?#].*$/', '', (string) $this->getUri() );
+        $uri = rawurldecode( preg_replace( '/[\\?#].*$/', '', (string) $this->getUri() ) );
 
         if ( empty( $uri ) || '/' !== $uri[0] )
         {
@@ -389,11 +389,11 @@ abstract class ProxyAbstract
             );
         }
 
-        $requestUri = urldecode( $requestUri );
+        $requestUri = rawurldecode( $requestUri );
 
         return $requestUri === $uri || (
-            strlen( $requestUri ) > strlen( $uri ) &&
-            substr( $requestUri, 0, strlen( $uri ) + 1 ) === ( $uri . '/' )
+            mb_strlen( $requestUri ) > mb_strlen( $uri ) &&
+            mb_substr( $requestUri, 0, mb_strlen( $uri ) + 1 ) === ( $uri . '/' )
         );
     }
 
