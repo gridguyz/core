@@ -154,7 +154,7 @@ body,
 }
 
 .paragraph-container.paragraph-image-container .paragraph.paragraph-image figure img,
-.paragraph-container.paragraph-banner-container .paragraph.paragraph-banner .banner-image img
+.paragraph-container.paragraph-banner-container .paragraph.paragraph-banner .banner-image-link img
 {
     width: auto;
     height: auto;
