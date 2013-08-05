@@ -21,7 +21,7 @@ if ( $paginator->getTotalItemCount() ): ?>
 <p class="tags">
     <span class="label"><?= $this->translate( 'tag.contentList.tagsLabel', 'tag' ) ?>:</span>
 <?php $first = true;
-foreach ( (array) $this->paragraph->tags as $tag ):
+foreach ( (array) $this->paragraph->localeTags as $tag ):
     if ( $first ):
         $first = false;
     else:
