@@ -2,6 +2,8 @@
 
 namespace Grid\Paragraph\Model\Paragraph\Structure;
 
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
+
 /**
  * Title
  *
@@ -57,8 +59,15 @@ class Title extends AbstractLeaf
      */
     public function getOffset()
     {
-        $rendered = $this->getServiceLocator()
-                         ->get( 'RenderedContent' );
+        try
+        {
+            $rendered = $this->getServiceLocator()
+                             ->get( 'RenderedContent' );
+        }
+        catch ( ServiceNotFoundException $ex )
+        {
+            // do nothing
+        }
 
         if ( $rendered instanceof LayoutAwareInterface )
         {

@@ -2,6 +2,7 @@
 
 namespace Grid\Menu\Model\Paragraph\Structure;
 
+use Zend\Navigation;
 use Grid\Menu\Model\Menu\Model as MenuModel;
 use Grid\Paragraph\Model\Paragraph\Structure\AbstractLeaf;
 
@@ -103,8 +104,29 @@ class Breadcrumb extends AbstractLeaf
      */
     public function getNavigation()
     {
-        return $this->getMenuModel()
-                    ->findNavigation();
+        $service = $this->getServiceLocator();
+        $config  = $service->get( 'Grid\Menu\Model\Menu\Model' );
+
+        if ( empty( $config['view_manager']['head_defaults']['headTitle']['content'] ) )
+        {
+            $info  = $service->get( 'SiteInfo' );
+            $label = $info->getDomain();
+        }
+        else
+        {
+            $label = $config['view_manager']['head_defaults']['headTitle']['content'];
+        }
+
+        return new Navigation\Navigation( array(
+            new Navigation\Page\Uri( array(
+                'uri'       => '/',
+                'label'     => $label,
+                'active'    => true,
+                'pages'     => $this->getMenuModel()
+                                    ->findNavigation()
+                                    ->getPages(),
+            ) )
+        ) );
     }
 
 }

@@ -1,23 +1,21 @@
 <?php
-    $navigation = $this->paragraph
-                       ->navigation;
 
-    $separator  = $this->paragraph
-                       ->separator ?: $this->headTitle()
-                                           ->getSeparator();
+$headTitle  = $this->headTitle();
+$paragraph  = $this->paragraph;
+$navigation = $paragraph->navigation;
+$separator  = $paragraph->separator ?: $headTitle->getSeparator();
+
+echo $this->navigation()
+          ->breadcrumbs()
+          ->setMinDepth( 1 )
+          ->setIndent( false )
+          ->setLinkLast( true )
+          ->setTranslatorEnabled( false )
+          ->setSeparator(
+              ' <span class="separator">' .
+                  $this->escapeHtml( trim( $separator ) ) .
+              '</span> '
+          )
+          ->renderStraight( $navigation );
+
 ?>
-<?= /* preg_replace(
-    '#^\s*<a(\s+[^>]*)?>.*?</a>\s*<span(\s+[^>]*)?>.*?</span>\s*#', '', */
-    $this->navigation()
-         ->breadcrumbs()
-         ->setMinDepth( 2 )
-         ->setIndent( false )
-         ->setLinkLast( true )
-         ->setTranslatorEnabled( false )
-         ->setSeparator(
-             ' <span class="separator">' .
-                 $this->escapeHtml( trim( $separator ) ) .
-             '</span> '
-         )
-         ->renderStraight( $navigation )
- /* ) */ ?>
