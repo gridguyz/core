@@ -105,7 +105,7 @@ class Breadcrumb extends AbstractLeaf
     public function getNavigation()
     {
         $service = $this->getServiceLocator();
-        $config  = $service->get( 'Grid\Menu\Model\Menu\Model' );
+        $config  = $service->get( 'Config' );
 
         if ( empty( $config['view_manager']['head_defaults']['headTitle']['content'] ) )
         {
