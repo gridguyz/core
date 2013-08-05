@@ -175,7 +175,7 @@ class ContentList extends AbstractLeaf
     {
         return $this->getParagraphModel()
                     ->getContentPaginatorByTags(
-                        $this->getTags(),
+                        $this->getLocaleTags(),
                         $this->isModeAll()
                     );
     }
