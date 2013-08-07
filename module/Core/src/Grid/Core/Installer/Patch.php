@@ -279,19 +279,43 @@ class Patch extends AbstractPatch
      */
     protected function insertDefaultParagraph( $type )
     {
-        $data   = $this->getPatchData();
-        $first  = $this->selectFromTable(
-            array( '_central', 'paragraph' ),
-            'id',
-            array( 'type' => $type )
-        );
+        $data = $this->getPatchData();
+        $key  = $type . 'Id';
 
-        $id = $data->get(
-            'gridguyz-core',
-            $type . 'Id',
-            'Type the default ' . $type . '\'s id',
-            $first
-        );
+        if ( $data->has( 'gridguyz-core', $key ) )
+        {
+            $id = $data->get( 'gridguyz-core', $key );
+        }
+        else
+        {
+            $choices = array();
+            $first   = null;
+            $rows    = $this->selectRowsFromTable(
+                array( '_central', 'paragraph' ),
+                array( 'id', 'name' ),
+                array( 'type' => $type ),
+                array( 'id'   => 'ASC' )
+            );
+
+            foreach ( $rows as $row )
+            {
+                if ( empty( $first ) )
+                {
+                    $first = $row->id;
+                }
+
+                $choices[$row->id] = $row->name;
+            }
+
+            $data->printChoices( "Available {$type}s:", $choices );
+
+            $id = $data->get(
+                'gridguyz-core',
+                $key,
+                "Type the default $type's id",
+                $first
+            );
+        }
 
         $query = $this->query(
             'SELECT "paragraph_clone"( :schema, :id ) AS "result"',
