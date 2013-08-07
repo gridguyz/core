@@ -313,7 +313,8 @@ class Patch extends AbstractPatch
                 'gridguyz-core',
                 $key,
                 "Type the default $type's id",
-                $first
+                $first,
+                array_keys( $choices )
             );
         }
 
