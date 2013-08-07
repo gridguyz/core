@@ -60,11 +60,20 @@ class Structure extends MapperAwareAbstract
     {
         mb_internal_encoding( 'UTF-8' );
 
-        return trim( preg_replace(
+        $subdomain = trim( preg_replace(
             array( '/\s+/u', '/[^\s\pL\pN_-]/u' ),
             array( '-', '' ),
             mb_strtolower( trim( $subdomain ), 'UTF-8' )
         ), '-' );
+
+        $idn = @ idn_to_ascii( $subdomain );
+
+        if ( ! empty( $idn ) )
+        {
+            $subdomain = $idn;
+        }
+
+        return $subdomain;
     }
 
     /**
