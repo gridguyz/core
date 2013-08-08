@@ -242,9 +242,9 @@ class Structure extends MapperAwareAbstract
      */
     public function setDownloads( $downloads )
     {
-        $this->downloads = (int) $downloads &&
-                            $downloads !== 0 &&
-                            $downloads !== '0' ? null : (int) $downloads;
+        $this->downloads = empty( $downloads ) &&
+                           $downloads !== 0 &&
+                           $downloads !== '0' ? null : (int) $downloads;
 
         return $this;
     }

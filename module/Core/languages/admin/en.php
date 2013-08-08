@@ -76,6 +76,7 @@ return array(
     'admin.navTop.mailTemplateList' => 'Email templates',
     'admin.navTop.menu' => 'Menu editor',
     'admin.navTop.metaContent' => 'Meta pages',
+    'admin.navTop.packages' => 'Packages',
     'admin.navTop.page' => 'Pages',
     'admin.navTop.pageCreate' => 'Create new page',
     'admin.navTop.pageList' => 'Page list',
