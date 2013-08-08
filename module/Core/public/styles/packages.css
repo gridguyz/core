@@ -1,0 +1,61 @@
+@charset "utf-8";
+
+.package-list .warn
+{
+    color: #800000;
+    font-weight: bold;
+}
+
+.package-list .package-entry
+{
+    padding: 1em;
+    display: block;
+    margin: 1em 0em;
+    border: 1px solid #000;
+    border-color: currentColor;
+}
+
+.package-list .package-entry:after
+{
+    height: 0;
+    clear: both;
+    content: ".";
+    display: block;
+    visibility: hidden;
+}
+
+/* required comment for clearfix to work in Opera \*/
+
+* html .package-list .package-entry
+{
+    height: 1%;
+}
+
+.package-list .package-entry
+{
+    display: block;
+}
+
+/* end clearfix */
+
+.package-list .package-entry .icon
+{
+    float: left;
+    width: 100px;
+    height: 100px;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
+
+.package-list .package-entry .name
+{
+    display: block;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.package-list .package-entry .description
+{
+    display: block;
+    padding-top: 1em;
+}

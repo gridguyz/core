@@ -10,8 +10,11 @@ $this->headTitle( $title = $this->translate(
 $paginator = $this->paginator;
 
 $paginator->setPageRange( 7 )
-          ->setItemCountPerPage( 5 )
+          ->setItemCountPerPage( 10 )
           ->setCurrentPageNumber( $this->page );
+
+$this->headLink()
+     ->appendStylesheet( '/styles/packages.css' );
 
 ?>
 <h1><?= $title ?></h1>
@@ -55,11 +58,12 @@ $paginator->setPageRange( 7 )
                      alt="<?= $this->escapeHtmlAttr( $name ) ?>"/>
                 <strong class="name">
                     <?= $this->escapeHtml( $package->displayedName ) ?>
+
                 </strong>
                 <span class="description">
-                    <?= $this->escapeHtml( $package->displayedDescription ) ?>
+                    <?= nl2br( $this->escapeHtml( $package->displayedDescription ) ) ?>
+
                 </span>
-                <?php \Zend\Debug\Debug::dump( $package->toArray(), $name ) ?>
             </a>
 <?php else: ?>
 
