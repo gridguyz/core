@@ -127,8 +127,6 @@ class Module extends ModuleAbstract
 
             $link = htmlspecialchars( $url );
             $link = '<a href="' . $link . '">' . $link . '</a>';
-            $response->setContent( $link )
-                     ->send();
 
             $event->stopPropagation();
             $this->response = $response;
