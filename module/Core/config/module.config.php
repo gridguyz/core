@@ -88,13 +88,23 @@ return array(
                     ),
                 ),
             ),
-            'Grid\Core\Admin\Packages' => array(
+            'Grid\Core\Admin\Package\List' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/packages',
                     'defaults' => array(
                         'controller' => 'Grid\Core\Controller\Package',
                         'action'     => 'list',
+                    ),
+                ),
+            ),
+            'Grid\Core\Admin\Package\View' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route'    => '/app/:locale/admin/package/:vendor/:subname',
+                    'defaults' => array(
+                        'controller' => 'Grid\Core\Controller\Package',
+                        'action'     => 'view',
                     ),
                 ),
             ),

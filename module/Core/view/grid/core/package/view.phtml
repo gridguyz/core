@@ -1,0 +1,47 @@
+<?php
+/**
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$this->headTitle( $title = $this->translate(
+    'admin.navTop.packages',
+    'admin'
+) );
+
+$title .= ': ' . $this->package->displayedName;
+$this->headTitle( $this->package->displayedName );
+
+$this->headLink()
+     ->appendStylesheet( '/styles/packages.css' );
+
+?>
+<h1><?= $title ?></h1>
+<div class="page">
+    <form class="package-details">
+
+<?php if ( $this->package && $this->package->isValid() ): ?>
+
+        <img class="icon" src="/images/common/blank.gif"
+<?php if ( $this->package->displayIcon ): ?>
+
+             style="background-image: url(<?= $this->escapeHtmlAttr( $this->package->displayIcon ) ?>);"
+<?php endif ?>
+
+             alt="<?= $this->escapeHtmlAttr( $this->name ) ?>"/>
+        <h3 class="name">
+            <?= $this->escapeHtml( $this->package->displayedName ) ?>
+
+        </h3>
+        <p class="description">
+            <?= nl2br( $this->escapeHtml( $this->package->displayedDescription ) ) ?>
+
+        </p>
+        <?php \Zend\Debug\Debug::dump( $this->package->toArray() ) ?>
+<?php else: ?>
+
+        <div class="warn package-invalid">
+            <!-- invalid package: "<?= $this->name ?>" -->
+        </div>
+<?php endif ?>
+
+    </form>
+</div>

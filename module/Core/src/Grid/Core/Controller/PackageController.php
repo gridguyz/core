@@ -18,7 +18,7 @@ class PackageController extends AbstractAdminController
     );
 
     /**
-     * List packages action
+     * List packages
      */
     public function listAction()
     {
@@ -32,6 +32,33 @@ class PackageController extends AbstractAdminController
             'paginator' => $this->getServiceLocator()
                                 ->get( 'Grid\Core\Model\Package\Model' )
                                 ->getPaginator( $pattern, $order )
+        );
+    }
+
+    /**
+     * View a package
+     */
+    public function viewAction()
+    {
+        $params  = $this->params();
+        $vendor  = $params->fromRoute( 'vendor' );
+        $subname = $params->fromRoute( 'subname' );
+        $name    = $vendor . '/' . $subname;
+        $package = $this->getServiceLocator()
+                        ->get( 'Grid\Core\Model\Package\Model' )
+                        ->find( $name );
+
+        if ( empty( $package ) )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 404 );
+
+            return;
+        }
+
+        return array(
+            'name'      => $name,
+            'package'   => $package,
         );
     }
 

@@ -1,6 +1,7 @@
 @charset "utf-8";
 
-.package-list .warn
+.package-list .warn,
+.package-details .warn
 {
     color: #800000;
     font-weight: bold;
@@ -38,6 +39,7 @@
 
 /* end clearfix */
 
+.package-details .icon,
 .package-list .package-entry .icon
 {
     float: left;
@@ -45,8 +47,10 @@
     height: 100px;
     background-repeat: no-repeat;
     background-position: 50% 50%;
+    background-image: url("/images/common/admin/default-package-icon.png");
 }
 
+.package-details .name,
 .package-list .package-entry .name
 {
     display: block;
@@ -54,6 +58,7 @@
     font-weight: bold;
 }
 
+.package-details .description,
 .package-list .package-entry .description
 {
     display: block;
