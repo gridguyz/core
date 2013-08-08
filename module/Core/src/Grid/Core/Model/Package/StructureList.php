@@ -3,6 +3,8 @@
 namespace Grid\Core\Model\Package;
 
 use Iterator;
+use Countable;
+use SeekableIterator;
 use Zork\Model\MapperAwareTrait;
 use Zork\Model\MapperAwareInterface;
 
@@ -12,10 +14,17 @@ use Zork\Model\MapperAwareInterface;
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
 class StructureList implements Iterator,
+                               Countable,
+                               SeekableIterator,
                                MapperAwareInterface
 {
 
     use MapperAwareTrait;
+
+    /**
+     * @var int
+     */
+    private $index = 0;
 
     /**
      * Package names
@@ -42,7 +51,7 @@ class StructureList implements Iterator,
      */
     public function setPackageNames( array $packageNames )
     {
-        $this->packageNames = $packageNames;
+        $this->packageNames = array_values( $packageNames );
         return $this;
     }
 
@@ -66,7 +75,7 @@ class StructureList implements Iterator,
      */
     public function rewind()
     {
-        reset( $this->packageNames );
+        $this->index = 0;
         return $this;
     }
 
@@ -78,7 +87,20 @@ class StructureList implements Iterator,
      */
     public function next()
     {
-        next( $this->packageNames );
+        $this->index++;
+        return $this;
+    }
+
+    /**
+     * Seeks to a position
+     *
+     * @link    http://php.net/manual/en/seekableiterator.seek.php
+     * @param   int     $position The position to seek to.
+     * @return  void    No value is returned.
+     */
+    public function seek( $position )
+    {
+        $this->index = $position;
         return $this;
     }
 
@@ -91,7 +113,7 @@ class StructureList implements Iterator,
      */
     public function valid()
     {
-        return (bool) current( $this->packageNames );
+        return isset( $this->packageNames[$this->index] );
     }
 
     /**
@@ -102,7 +124,9 @@ class StructureList implements Iterator,
      */
     public function key()
     {
-        return current( $this->packageNames );
+        return isset( $this->packageNames[$this->index] )
+            ? $this->packageNames[$this->index]
+            : null;
     }
 
     /**
@@ -113,8 +137,26 @@ class StructureList implements Iterator,
      */
     public function current()
     {
-        return $this->getMapper()
-                    ->find( current( $this->packageNames ) );
+        $name = $this->key();
+
+        if ( $name )
+        {
+            return $this->getMapper()
+                        ->find( $name );
+        }
+
+        return null;
+    }
+
+    /**
+     * Count elements of an object
+     *
+     * @link    http://php.net/manual/en/countable.count.php
+     * @return  int     The custom count as an integer.
+     */
+    public function count()
+    {
+        return count( $this->packageNames );
     }
 
 }
