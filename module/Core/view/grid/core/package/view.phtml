@@ -17,7 +17,10 @@ $this->headLink()
 <h1><?= $title ?></h1>
 <div class="page">
     <form class="package-details">
+        <h3 class="name">
+            <?= $this->escapeHtml( $this->package->displayedName ) ?>
 
+        </h3>
 <?php if ( $this->package && $this->package->isValid() ): ?>
 
         <img class="icon" src="/images/common/blank.gif"
@@ -27,15 +30,86 @@ $this->headLink()
 <?php endif ?>
 
              alt="<?= $this->escapeHtmlAttr( $this->name ) ?>"/>
-        <h3 class="name">
-            <?= $this->escapeHtml( $this->package->displayedName ) ?>
-
-        </h3>
         <p class="description">
             <?= nl2br( $this->escapeHtml( $this->package->displayedDescription ) ) ?>
 
         </p>
-        <?php \Zend\Debug\Debug::dump( $this->package->toArray() ) ?>
+        <dl class="package-data">
+            <dt class="library-name"><?= $this->translate( 'admin.packages.name', 'admin' ) ?></dt>
+            <dd class="library-name"><?= $this->escapeHtml( $this->package->name ) ?></dd>
+<?php if ( ! empty( $this->package->homepage ) ): ?>
+
+            <dt class="homepage"><?= $this->translate( 'admin.packages.homepage', 'admin' ) ?></dt>
+            <dd class="homepage"><a href="<?= $this->escapeHtmlAttr( $this->package->homepage ) ?>"
+                                    target="_blank"><?= $this->escapeHtml( $this->package->homepage ) ?></a></dd>
+<?php endif ?>
+<?php if ( ! empty( $this->package->homepage ) ): ?>
+
+            <dt class="homepage"><?= $this->translate( 'admin.packages.homepage', 'admin' ) ?></dt>
+            <dd class="homepage"><?= $this->escapeHtml( $this->package->homepage ) ?></dd>
+<?php endif ?>
+<?php if ( ! empty( $this->package->license ) ): ?>
+
+            <dt class="license"><?= $this->translate( 'admin.packages.license', 'admin' ) ?></dt>
+            <dd class="license"><?= $this->escapeHtml( implode( ', ', $this->package->license ) ) ?></dd>
+<?php endif ?>
+<?php if ( ! empty( $this->package->keywords ) ): ?>
+
+            <dt class="keywords"><?= $this->translate( 'admin.packages.keywords', 'admin' ) ?></dt>
+            <dd class="keywords"><?= $this->escapeHtml( implode( ', ', $this->package->keywords ) ) ?></dd>
+<?php endif ?>
+<?php if ( ! empty( $this->package->availableVersion ) ): ?>
+
+            <dt class="available version"><?= $this->translate( 'admin.packages.availableVersion', 'admin' ) ?></dt>
+            <dd class="available version">
+                <?= $this->escapeHtml( $this->package->availableVersion ) ?>
+<?php if ( ! empty( $this->package->availableReference ) ): ?>
+
+                <span class="available reference">#<?= $this->escapeHtml( $this->package->availableReference ) ?></span>
+<?php endif ?>
+
+            </dd>
+<?php endif ?>
+<?php if ( ! empty( $this->package->availableTime ) ): ?>
+
+            <dt class="available time"><?= $this->translate( 'admin.packages.availableTime', 'admin' ) ?></dt>
+            <dd class="available time">
+                <?= $this->dateTime( $this->package->availableTime ) ?>
+
+            </dd>
+<?php endif ?>
+<?php if ( ! empty( $this->package->installedVersion ) ): ?>
+
+            <dt class="installed version"><?= $this->translate( 'admin.packages.installedVersion', 'admin' ) ?></dt>
+            <dd class="installed version">
+                <?= $this->escapeHtml( $this->package->installedVersion ) ?>
+<?php if ( ! empty( $this->package->installedReference ) ): ?>
+
+                <span class="installed reference">#<?= $this->escapeHtml( $this->package->installedReference ) ?></span>
+<?php endif ?>
+
+            </dd>
+<?php endif ?>
+<?php if ( ! empty( $this->package->installedTime ) ): ?>
+
+            <dt class="installed time"><?= $this->translate( 'admin.packages.installedTime', 'admin' ) ?></dt>
+            <dd class="installed time">
+                <?= $this->dateTime( $this->package->installedTime ) ?>
+
+            </dd>
+<?php endif ?>
+<?php if ( isset( $this->package->favourites ) ): ?>
+
+            <dt class="favourites"><?= $this->translate( 'admin.packages.favourites', 'admin' ) ?></dt>
+            <dd class="favourites"><?= (int) $this->package->favourites ?></dd>
+<?php endif ?>
+<?php if ( isset( $this->package->downloads ) ): ?>
+
+            <dt class="downloads"><?= $this->translate( 'admin.packages.downloads', 'admin' ) ?></dt>
+            <dd class="downloads"><?= (int) $this->package->downloads ?></dd>
+<?php endif ?>
+
+        </dl>
 <?php else: ?>
 
         <div class="warn package-invalid">

@@ -45,6 +45,7 @@
     float: left;
     width: 100px;
     height: 100px;
+    margin-right: 1em;
     background-repeat: no-repeat;
     background-position: 50% 50%;
     background-image: url("/images/common/admin/default-package-icon.png");
@@ -63,4 +64,11 @@
 {
     display: block;
     padding-top: 1em;
+}
+
+.package-details .package-data .version .reference
+{
+    opacity: 0.5;
+    font-size: smaller;
+    filter: alpha(opacity=50);
 }
