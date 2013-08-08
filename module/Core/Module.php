@@ -45,6 +45,13 @@ class Module extends ModuleAbstract
     protected $moduleManager;
 
     /**
+     * Stored response
+     *
+     * @var \Zend\Stdlib\ResponseInterface
+     */
+    protected $response;
+
+    /**
      * Initialize workflow
      *
      * @param  ModuleManagerInterface $manager
@@ -124,8 +131,9 @@ class Module extends ModuleAbstract
                      ->send();
 
             $event->setResponse( $response )
-                  ->setResult( 302 )
                   ->stopPropagation();
+
+            $this->response = $response;
         }
     }
 
@@ -159,6 +167,11 @@ class Module extends ModuleAbstract
      */
     public function onDispatch( MvcEvent $event )
     {
+        if ( $this->response )
+        {
+            return $this->response;
+        }
+
         $routeMatch = $event->getRouteMatch();
         $sm         = $event->getApplication()
                             ->getServiceManager();
