@@ -5,7 +5,7 @@ namespace Grid\Core\Controller;
 use Zork\Stdlib\Message;
 use Zork\Mvc\Controller\AbstractAdminController;
 
-class ModuleController extends AbstractAdminController
+class PackageController extends AbstractAdminController
 {
 
     /**
