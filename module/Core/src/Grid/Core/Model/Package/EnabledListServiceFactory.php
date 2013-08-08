@@ -1,32 +1,32 @@
 <?php
 
-namespace Grid\Core\Model\Settings;
+namespace Grid\Core\Model\Package;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * DefinitionServiceFactory
+ * EnabledListServiceFactory
  *
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
-class DefinitionServiceFactory implements FactoryInterface
+class EnabledListServiceFactory implements FactoryInterface
 {
 
     /**
-     * Create the definitions-service
+     * Create the enabled-list-service
      *
      * @param   \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
-     * @return  \Grid\Core\Model\Settings\Definitions
+     * @return  \Grid\Core\Model\Package\EnabledList
      */
     public function createService( ServiceLocatorInterface $serviceLocator )
     {
         // Configure the definitions
         $config     = $serviceLocator->get( 'Configuration' );
-        $srvConfig  = isset( $config['modules']['Grid\Core']['settings'] )
-                    ? (array) $config['modules']['Grid\Core']['settings']
+        $srvConfig  = isset( $config['modules']['Grid\Core']['enabledPackages'] )
+                    ? (array) $config['modules']['Grid\Core']['enabledPackages']
                     : array();
-        return new Definitions( $srvConfig );
+        return new EnabledList( $srvConfig );
     }
 
 }

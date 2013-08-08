@@ -88,6 +88,16 @@ return array(
                     ),
                 ),
             ),
+            'Grid\Core\Admin\Packages' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route'    => '/app/:locale/admin/packages',
+                    'defaults' => array(
+                        'controller' => 'Grid\Core\Controller\Package',
+                        'action'     => 'list',
+                    ),
+                ),
+            ),
             'Grid\Core\Upload\Index' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -236,6 +246,7 @@ return array(
             'Grid\Core\Controller\Uri'       => 'Grid\Core\Controller\UriController',
             'Grid\Core\Controller\SubDomain' => 'Grid\Core\Controller\SubDomainController',
             'Grid\Core\Controller\Module'    => 'Grid\Core\Controller\ModuleController',
+            'Grid\Core\Controller\Package'   => 'Grid\Core\Controller\PackageController',
         ),
     ),
     'service_manager' => array(
@@ -251,6 +262,7 @@ return array(
             'adminLocale'                               => 'Zork\Mvc\AdminLocaleServiceFactory',
             'Zend\Http\Client'                          => 'Zork\Http\Client\ServiceFactory',
             'Zend\Http\Client\Adapter\AdapterInterface' => 'Zork\Http\Client\Adapter\ServiceFactory',
+            'Grid\Core\Model\Package\EnabledList'       => 'Grid\Core\Model\Package\EnabledListServiceFactory',
             'Grid\Core\Model\Settings\Definitions'      => 'Grid\Core\Model\Settings\DefinitionServiceFactory',
             'Zork\Mvc\View\Http\ForbiddenStrategy'      => 'Zork\Mvc\View\Http\ForbiddenStrategyServiceFactory',
         ),
@@ -954,6 +966,9 @@ return array(
                 'Grid\OpenId'                 => 'default.form.module.modules.openId',
                 'Grid\DomainManager'          => 'default.form.module.modules.domainManager',
                 'Grid\MultisiteCentral'       => 'default.form.module.modules.multisiteCentral',
+            ),
+            'enabledPackages' => array(
+                'gridguyz' => 'gridguyz/*',
             ),
             'settings' => array(
                 'site-definition' => array(
