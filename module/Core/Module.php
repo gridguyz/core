@@ -130,9 +130,7 @@ class Module extends ModuleAbstract
             $response->setContent( $link )
                      ->send();
 
-            $event->setResponse( $response )
-                  ->stopPropagation();
-
+            $event->stopPropagation();
             $this->response = $response;
         }
     }
