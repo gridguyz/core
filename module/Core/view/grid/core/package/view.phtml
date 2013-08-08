@@ -43,11 +43,6 @@ $this->headLink()
             <dd class="homepage"><a href="<?= $this->escapeHtmlAttr( $this->package->homepage ) ?>"
                                     target="_blank"><?= $this->escapeHtml( $this->package->homepage ) ?></a></dd>
 <?php endif ?>
-<?php if ( ! empty( $this->package->homepage ) ): ?>
-
-            <dt class="homepage"><?= $this->translate( 'admin.packages.homepage', 'admin' ) ?></dt>
-            <dd class="homepage"><?= $this->escapeHtml( $this->package->homepage ) ?></dd>
-<?php endif ?>
 <?php if ( ! empty( $this->package->license ) ): ?>
 
             <dt class="license"><?= $this->translate( 'admin.packages.license', 'admin' ) ?></dt>

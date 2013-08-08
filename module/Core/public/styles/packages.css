@@ -72,3 +72,13 @@
     font-size: smaller;
     filter: alpha(opacity=50);
 }
+
+.package-details dl.package-data dt
+{
+    font-weight: bold;
+}
+
+.package-details dl.package-data dd
+{
+    padding-left: 1ex;
+}
