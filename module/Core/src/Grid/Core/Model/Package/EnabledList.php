@@ -42,7 +42,10 @@ class EnabledList extends ArrayIterator
         {
             foreach ( $this as $subPatterns )
             {
-                $patterns = array_merge( $patterns, $subPatterns );
+                $patterns = array_merge(
+                    $patterns,
+                    array_values( $subPatterns )
+                );
             }
         }
         else

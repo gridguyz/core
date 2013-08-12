@@ -34,7 +34,7 @@ class Mapper implements HydratorInterface,
     /**
      * @const string
      */
-    const PACKAGE_LIST_URL = 'https://packagist.org/search.json?type=gridguyz';
+    const PACKAGE_LIST_URL = 'https://packagist.org/search.json?type=gridguyz&q=%s';
 
     /**
      * @var \Zend\Http\Client
@@ -417,9 +417,57 @@ class Mapper implements HydratorInterface,
     }
 
     /**
+     * Query by contains some words
+     *
+     * @param   string  $query
+     * @param   string  $name
+     * @param   string  $description
+     * @param   array   $keywords
+     * @return  bool
+     */
+    private function contains( $query, $name, $description, array $keywords )
+    {
+        $endResult      = true;
+        $query          = mb_strtolower( $query );
+        $name           = mb_strtolower( $name );
+        $description    = mb_strtolower( $description );
+
+        foreach ( $keywords as & $keyword )
+        {
+            $keyword = mb_strtolower( $keyword );
+        }
+
+        foreach ( preg_split( '[\b\s]+', $query ) as $word )
+        {
+            if ( empty( $word ) )
+            {
+                continue;
+            }
+
+            $endResult = false;
+
+            if ( false !== strpos( $name, $word ) ||
+                 false !== strpos( $description, $word ) )
+            {
+                return true;
+            }
+
+            foreach ( $keywords as $keyword )
+            {
+                if ( false !== strpos( $keyword, $word ) )
+                {
+                    return true;
+                }
+            }
+        }
+
+        return $endResult;
+    }
+
+    /**
      * Query available & installed package names
      *
-     * @param   array|string|null   $where category, installed, name
+     * @param   array|string|null   $where category, installed, contains
      * @return  array
      */
     public function queryNames( $where = null )
@@ -451,6 +499,11 @@ class Mapper implements HydratorInterface,
             $where['category'] = null;
         }
 
+        if ( empty( $where['contains'] ) )
+        {
+            $where['contains'] = null;
+        }
+
         if ( ! isset( $where['installed'] ) || $where['installed'] )
         {
             if ( ! empty( $lock['packages'] ) )
@@ -460,7 +513,14 @@ class Mapper implements HydratorInterface,
                     if ( isset( $package['name'] ) &&
                          isset( $package['type'] ) &&
                          preg_match( Structure::VALID_TYPES, $package['type'] ) &&
-                         $enable->isEnabled( $package['name'], $where['category'] ) )
+                         $enable->isEnabled( $package['name'], $where['category'] ) && (
+                             ! $where['contains'] || $this->contains(
+                                 $where['contains'],
+                                 $package['name'],
+                                 isset( $package['description'] ) ? $package['description'] : null,
+                                 isset( $package['keywords'] ) ? (array) $package['keywords'] : array()
+                             )
+                         ) )
                     {
                         $result[] = $package['name'];
                     }
@@ -471,7 +531,10 @@ class Mapper implements HydratorInterface,
         if ( ! isset( $where['installed'] ) || ! $where['installed'] )
         {
             $total    = 0;
-            $packages = $this->queryJson( static::PACKAGE_LIST_URL );
+            $packages = $this->queryJson( sprintf(
+                static::PACKAGE_LIST_URL,
+                urlencode( $where['contains'] )
+            ) );
 
             while ( ! empty( $packages['results'] ) )
             {
@@ -501,22 +564,7 @@ class Mapper implements HydratorInterface,
             }
         }
 
-        $names = array_unique( $result );
-
-        if ( ! empty( $where['name'] ) )
-        {
-            $pattern = '#' . str_replace(
-                '\\*',
-                '.*',
-                preg_quote( (string) $where['name'], '#' )
-            ) . '#i';
-
-            $names = array_filter( $names, function ( $name ) use ( $pattern ) {
-                return (bool) preg_match( $pattern, $name );
-            } );
-        }
-
-        return $names;
+        return array_unique( $result );
     }
 
     /**
@@ -548,7 +596,7 @@ class Mapper implements HydratorInterface,
     /**
      * Find iterator
      *
-     * @param   array|string|null   $where category, installed, name
+     * @param   array|string|null   $where category, installed, contains
      * @param   bool|null           $order
      * @return  \Iterator
      */
@@ -572,7 +620,7 @@ class Mapper implements HydratorInterface,
     /**
      * Find multiple structures
      *
-     * @param   mixed|null  $where category, installed, name
+     * @param   mixed|null  $where category, installed, contains
      * @param   mixed|null  $order
      * @param   int|null    $limit
      * @param   int|null    $offset
@@ -600,7 +648,7 @@ class Mapper implements HydratorInterface,
     /**
      * Find one structure
      *
-     * @param   mixed|null  $where category, installed, name
+     * @param   mixed|null  $where category, installed, contains
      * @param   mixed|null  $order
      * @return  \Grid\Core\Model\Package\Structure
      */
@@ -620,7 +668,7 @@ class Mapper implements HydratorInterface,
     /**
      * Get paginator
      *
-     * @param   mixed|null  $where category, installed, name
+     * @param   mixed|null  $where category, installed, contains
      * @param   mixed|null  $order
      * @return  \Zend\Paginator\Paginator
      */

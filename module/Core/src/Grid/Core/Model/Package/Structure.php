@@ -324,7 +324,8 @@ class Structure extends MapperAwareAbstract
      */
     public function canRemove()
     {
-        return ! empty( $this->installedVersion );
+        return ! preg_match( '#^gridguyz/(core|multisite)$#', $this->name ) &&
+               ! empty( $this->installedVersion );
     }
 
     /**
