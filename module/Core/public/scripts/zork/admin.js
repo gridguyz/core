@@ -708,7 +708,7 @@
 
         var messageContainer = element.find( ".messages" ).text( "" ),
             outputContainer  = element.find( ".output" ).text( "" ),
-            ajaxError        = js.core.translate( "admin.packages.action.updateAll" ),
+            ajaxError        = js.core.translate( "admin.packages.update.ajaxError" ),
             checkTick        = parseInt( element.data( "jsUpdatepackagesChecktick" ), 10 ) || 1000,
             checkTimeout     = null,
             sendMessage      = function ( message, msgclass ) {
@@ -763,12 +763,12 @@
             "success": function ( data ) {
                 if ( data.started )
                 {
-                    checkTimeout = setTimeout( check, checkTick );
+                    sendMessage( ajaxError );
+                    js.console.error( data );
                 }
                 else
                 {
-                    sendMessage( ajaxError );
-                    js.console.error( data );
+                    checkTimeout = setTimeout( check, checkTick );
                 }
             },
             "error": function ( err ) {
