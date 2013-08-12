@@ -16,16 +16,6 @@ class Structure extends MapperAwareAbstract
     /**
      * @const string
      */
-    const TRUSTED_NAMES = '#^gridguyz/#';
-
-    /**
-     * @const string
-     */
-    const SYSTEM_NAMES = '#^gridguyz/(core|multisite)$#';
-
-    /**
-     * @const string
-     */
     const VALID_TYPES = '#^gridguyz-modules?#';
 
     /**
@@ -146,6 +136,21 @@ class Structure extends MapperAwareAbstract
      * @var int
      */
     protected $downloads;
+
+    /**
+     * Get url-safe name
+     *
+     * @return  string
+     */
+    public function getUrlSafeName()
+    {
+        static $safeUrl = array(
+            '%2F' => '/',
+            '%2f' => '/',
+        );
+
+        return strtr( rawurlencode( $this->name ), $safeUrl );
+    }
 
     /**
      * Set license
@@ -292,26 +297,6 @@ class Structure extends MapperAwareAbstract
     }
 
     /**
-     * Is a package a trusted package
-     *
-     * @return string
-     */
-    public function isTrusted()
-    {
-        return preg_match( static::TRUSTED_NAMES, $this->name );
-    }
-
-    /**
-     * Is a package a system package
-     *
-     * @return string
-     */
-    public function isSystem()
-    {
-        return preg_match( static::SYSTEM_NAMES, $this->name );
-    }
-
-    /**
      * Is a package a valid package
      *
      * @return string
@@ -330,6 +315,16 @@ class Structure extends MapperAwareAbstract
     {
         return empty( $this->installedVersion ) &&
              ! empty( $this->availableVersion );
+    }
+
+    /**
+     * Can remove this package
+     *
+     * @return bool
+     */
+    public function canRemove()
+    {
+        return ! empty( $this->installedVersion );
     }
 
     /**

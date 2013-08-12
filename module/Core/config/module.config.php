@@ -91,20 +91,60 @@ return array(
             'Grid\Core\Admin\Package\List' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route'    => '/app/:locale/admin/packages',
+                    'route'    => '/app/:locale/admin/package/list',
                     'defaults' => array(
                         'controller' => 'Grid\Core\Controller\Package',
                         'action'     => 'list',
                     ),
                 ),
             ),
+            'Grid\Core\Admin\Package\Update' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route'    => '/app/:locale/admin/package/update',
+                    'defaults' => array(
+                        'controller' => 'Grid\Core\Controller\Package',
+                        'action'     => 'update',
+                    ),
+                ),
+            ),
+            'Grid\Core\Admin\Package\RunUpdate' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route'    => '/app/:locale/admin/package/update/run',
+                    'defaults' => array(
+                        'controller' => 'Grid\Core\Controller\Package',
+                        'action'     => 'run-update',
+                    ),
+                ),
+            ),
             'Grid\Core\Admin\Package\View' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route'    => '/app/:locale/admin/package/:vendor/:subname',
+                    'route'    => '/app/:locale/admin/package/view/:vendor/:subname',
                     'defaults' => array(
                         'controller' => 'Grid\Core\Controller\Package',
                         'action'     => 'view',
+                    ),
+                ),
+            ),
+            'Grid\Core\Admin\Package\Install' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route'    => '/app/:locale/admin/package/install/:vendor/:subname',
+                    'defaults' => array(
+                        'controller' => 'Grid\Core\Controller\Package',
+                        'action'     => 'install',
+                    ),
+                ),
+            ),
+            'Grid\Core\Admin\Package\Remove' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route'    => '/app/:locale/admin/package/remove/:vendor/:subname',
+                    'defaults' => array(
+                        'controller' => 'Grid\Core\Controller\Package',
+                        'action'     => 'remove',
                     ),
                 ),
             ),
@@ -971,14 +1011,20 @@ return array(
                 'Grid\FacebookLogin'          => 'default.form.module.modules.facebookLogin',
                 'Grid\GoogleAnalytics'        => 'default.form.module.modules.googleAnalytics',
                 'Grid\GoogleSiteVerification' => 'default.form.module.modules.googleSiteVerification',
-                'Grid\GoogleMap'              => 'default.form.module.modules.googleMap',
-                'Grid\Vote'                   => 'default.form.module.modules.vote',
+             // 'Grid\GoogleMap'              => 'default.form.module.modules.googleMap',
+             // 'Grid\Vote'                   => 'default.form.module.modules.vote',
                 'Grid\OpenId'                 => 'default.form.module.modules.openId',
                 'Grid\DomainManager'          => 'default.form.module.modules.domainManager',
                 'Grid\MultisiteCentral'       => 'default.form.module.modules.multisiteCentral',
             ),
-            'enabledPackages' => array(
-                'gridguyz' => 'gridguyz/*',
+            'enabledPackages'   => array(
+                'system'        => array(
+                    'gridguyz'  => 'gridguyz/(core|multisite)'
+                ),
+                'function'      => array(
+                    'gridguyz'  => 'gridguyz/(?!core|multisite).*'
+                ),
+                'application'   => array(),
             ),
             'settings' => array(
                 'site-definition' => array(

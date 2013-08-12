@@ -38,17 +38,10 @@ $this->headLink()
 <?php if ( $package && $package->isValid() ):
                 $link = '/app/'
                     . $this->locale()
-                    . '/admin/package/'
-                    . implode(
-                        '/',
-                        array_map(
-                            'rawurlencode',
-                            explode( '/', $name )
-                        )
-                    ) ?>
+                    . '/admin/package/view/'
+                    . $package->urlSafeName ?>
 
-            <a class="package-entry"
-               href="<?= $this->escapeHtmlAttr( $link ) ?>">
+            <div class="package-entry">
                 <img class="icon" src="/images/common/blank.gif"
 <?php if ( $package->displayIcon ): ?>
 
@@ -56,15 +49,15 @@ $this->headLink()
 <?php endif ?>
 
                      alt="<?= $this->escapeHtmlAttr( $name ) ?>"/>
-                <strong class="name">
-                    <?= $this->escapeHtml( $package->displayedName ) ?>
-
-                </strong>
-                <span class="description">
+                <h3 class="name">
+                    <a href="<?= $this->escapeHtmlAttr( $link ) ?>"
+                       class="name-link"><?= $this->escapeHtml( $package->displayedName ) ?></a>
+                </h3>
+                <p class="description">
                     <?= nl2br( $this->escapeHtml( $package->displayedDescription ) ) ?>
 
-                </span>
-            </a>
+                </p>
+            </div>
 <?php else: ?>
 
             <div class="warn package-entry-invalid">

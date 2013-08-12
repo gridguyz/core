@@ -3,6 +3,8 @@
 namespace Grid\Core\Controller;
 
 use Zork\Stdlib\Message;
+use Zend\View\Model\JsonModel;
+use Zork\Process\BackgroundProcess;
 use Zork\Mvc\Controller\AbstractAdminController;
 
 class PackageController extends AbstractAdminController
@@ -22,16 +24,18 @@ class PackageController extends AbstractAdminController
      */
     public function listAction()
     {
-        $params  = $this->params();
-        $pattern = $params->fromPost( 'pattern', $params->fromQuery( 'pattern' ) );
-        $order   = $params->fromPost( 'order',   $params->fromQuery( 'order'   ) );
-        $page    = $params->fromPost( 'page',    $params->fromQuery( 'page', 0 ) );
+        $params = $this->params();
+        $where  = $params->fromPost( 'where', $params->fromQuery( 'where', array() ) );
+        $order  = $params->fromPost( 'order', $params->fromQuery( 'order', true    ) );
+        $page   = $params->fromPost( 'page',  $params->fromQuery( 'page', 0        ) );
 
         return array(
             'page'      => (int) $page,
+            'where'     => $where,
+            'order'     => $order,
             'paginator' => $this->getServiceLocator()
                                 ->get( 'Grid\Core\Model\Package\Model' )
-                                ->getPaginator( $pattern, $order )
+                                ->getPaginator( $where, $order )
         );
     }
 
@@ -60,6 +64,127 @@ class PackageController extends AbstractAdminController
             'name'      => $name,
             'package'   => $package,
         );
+    }
+
+    /**
+     * Update packages (info page)
+     */
+    public function updateAction()
+    {
+        return array();
+    }
+
+    /**
+     * Update packages (info page)
+     */
+    public function runUpdateAction()
+    {
+        $process = new BackgroundProcess( array(
+            'command'   => 'php',
+            'arguments' => array( './bin/update.php' ),
+        ) );
+
+        return new JsonModel( array(
+            'started' => $process->run(),
+        ) );
+    }
+
+    /**
+     * Install a package
+     */
+    public function installAction()
+    {
+        $params  = $this->params();
+        $vendor  = $params->fromRoute( 'vendor' );
+        $subname = $params->fromRoute( 'subname' );
+        $name    = $vendor . '/' . $subname;
+        $model   = $this->getServiceLocator()
+                        ->get( 'Grid\Core\Model\Package\Model' );
+        $package = $model->find( $name );
+
+        if ( empty( $package ) )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 404 );
+
+            return;
+        }
+
+        if ( ! $package->canInstall() )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 403 );
+
+            return;
+        }
+
+        if ( ! $model->install( $package ) )
+        {
+            $this->messenger()
+                 ->add( 'admin.packages.install.failed',
+                        'admin', Message::LEVEL_ERROR );
+
+            return $this->redirect()
+                        ->toRoute( 'Grid\Core\Admin\Package\View', array(
+                            'locale'    => (string) $this->locale(),
+                            'vendor'    => $vendor,
+                            'subname'   => $subname,
+                        ) );
+        }
+
+        return $this->redirect()
+                    ->toRoute( 'Grid\Core\Admin\Package\Update', array(
+                        'locale' => (string) $this->locale(),
+                    ) );
+    }
+
+    /**
+     * Install a package
+     */
+    public function removeAction()
+    {
+        $params  = $this->params();
+        $vendor  = $params->fromRoute( 'vendor' );
+        $subname = $params->fromRoute( 'subname' );
+        $name    = $vendor . '/' . $subname;
+        $model   = $this->getServiceLocator()
+                        ->get( 'Grid\Core\Model\Package\Model' );
+        $package = $model->find( $name );
+
+        if ( empty( $package ) )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 404 );
+
+            return;
+        }
+
+        if ( ! $package->canRemove() )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 403 );
+
+            return;
+        }
+
+        if ( ! $model->remove( $package ) )
+        {
+            $this->messenger()
+                 ->add( 'admin.packages.remove.failed',
+                        'admin', Message::LEVEL_ERROR );
+
+            return $this->redirect()
+                        ->toRoute( 'Grid\Core\Admin\Package\View', array(
+                            'locale'    => (string) $this->locale(),
+                            'vendor'    => $vendor,
+                            'subname'   => $subname,
+                        ) );
+        }
+
+        return $this->redirect()
+                    ->toRoute( 'Grid\Core\Admin\Package\Update', array(
+                        'locale' => (string) $this->locale(),
+                    ) );
     }
 
 }

@@ -2,13 +2,10 @@
 /**
  * @var $this \Zend\View\Renderer\PhpRenderer
  */
-$this->headTitle( $title = $this->translate(
-    'admin.navTop.packages',
-    'admin'
+$this->headTitle( $title = sprintf(
+    $this->translate( 'admin.navTop.packages.view.%s', 'admin' ),
+    $this->package->displayedName
 ) );
-
-$title .= ': ' . $this->package->displayedName;
-$this->headTitle( $this->package->displayedName );
 
 $this->headLink()
      ->appendStylesheet( '/styles/packages.css' );

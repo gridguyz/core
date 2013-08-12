@@ -419,59 +419,104 @@ class Mapper implements HydratorInterface,
     /**
      * Query available & installed package names
      *
+     * @param   array|string|null   $where category, installed, name
      * @return  array
      */
-    public function queryNames()
+    public function queryNames( $where = null )
     {
         $result = array();
         $lock   = static::getLockData();
         $enable = $this->getEnabledList();
 
-        if ( ! empty( $lock['packages'] ) )
+        if ( $where )
         {
-            foreach ( $lock['packages'] as $package )
+            if ( is_scalar( $where ) )
             {
-                if ( isset( $package['name'] ) &&
-                     isset( $package['type'] ) &&
-                     preg_match( Structure::VALID_TYPES, $package['type'] ) &&
-                     $enable->isEnabled( $package['name'] ) )
-                {
-                    $result[] = $package['name'];
-                }
-            }
-        }
-
-        $total    = 0;
-        $packages = $this->queryJson( static::PACKAGE_LIST_URL );
-
-        while ( ! empty( $packages['results'] ) )
-        {
-            foreach ( $packages['results'] as $package )
-            {
-                if ( $enable->isEnabled( $package['name'] ) )
-                {
-                    $result[] = $package['name'];
-                }
-
-                $total++;
-            }
-
-            if ( isset( $packages['total'] ) && $total >= $packages['total'] )
-            {
-                break;
-            }
-
-            if ( empty( $packages['next'] ) )
-            {
-                $packages = array();
+                $where = array(
+                    'category' => (string) $where,
+                );
             }
             else
             {
-                $packages = $this->queryJson( $packages['next'] );
+                $where = (array) $where;
+            }
+        }
+        else
+        {
+            $where = array();
+        }
+
+        if ( empty( $where['category'] ) )
+        {
+            $where['category'] = null;
+        }
+
+        if ( ! isset( $where['installed'] ) || $where['installed'] )
+        {
+            if ( ! empty( $lock['packages'] ) )
+            {
+                foreach ( $lock['packages'] as $package )
+                {
+                    if ( isset( $package['name'] ) &&
+                         isset( $package['type'] ) &&
+                         preg_match( Structure::VALID_TYPES, $package['type'] ) &&
+                         $enable->isEnabled( $package['name'], $where['category'] ) )
+                    {
+                        $result[] = $package['name'];
+                    }
+                }
             }
         }
 
-        return array_unique( $result );
+        if ( ! isset( $where['installed'] ) || ! $where['installed'] )
+        {
+            $total    = 0;
+            $packages = $this->queryJson( static::PACKAGE_LIST_URL );
+
+            while ( ! empty( $packages['results'] ) )
+            {
+                foreach ( $packages['results'] as $package )
+                {
+                    if ( $enable->isEnabled( $package['name'], $where['category'] ) )
+                    {
+                        $result[] = $package['name'];
+                    }
+
+                    $total++;
+                }
+
+                if ( isset( $packages['total'] ) && $total >= $packages['total'] )
+                {
+                    break;
+                }
+
+                if ( empty( $packages['next'] ) )
+                {
+                    $packages = array();
+                }
+                else
+                {
+                    $packages = $this->queryJson( $packages['next'] );
+                }
+            }
+        }
+
+        $names = array_unique( $result );
+
+        if ( ! empty( $where['name'] ) )
+        {
+            $pattern = '#' . str_replace(
+                '\\*',
+                '.*',
+                preg_quote( (string) $where['name'], '#' )
+            ) . '#i';
+
+            $names = array_filter( $names, function ( $name ) use ( $pattern ) {
+                return (bool) preg_match( $pattern, $name );
+            } );
+        }
+
+        return $names;
     }
 
     /**
@@ -503,26 +548,13 @@ class Mapper implements HydratorInterface,
     /**
      * Find iterator
      *
-     * @param   string|null $where
-     * @param   bool|null   $order
+     * @param   array|string|null   $where category, installed, name
+     * @param   bool|null           $order
      * @return  \Iterator
      */
     protected function findIterator( $where = null, $order = null )
     {
-        $names = $this->queryNames();
-
-        if ( $where )
-        {
-            $pattern = '#^' . str_replace(
-                '\\*',
-                '.*',
-                preg_quote( $where, '#' )
-            ) . '$#i';
-
-            $names = array_filter( $names, function ( $name ) use ( $pattern ) {
-                return (bool) preg_match( $pattern, $name );
-            } );
-        }
+        $names = $this->queryNames( $where );
 
         if ( null !== $order && '' !== $order )
         {
@@ -540,7 +572,7 @@ class Mapper implements HydratorInterface,
     /**
      * Find multiple structures
      *
-     * @param   mixed|null  $where
+     * @param   mixed|null  $where category, installed, name
      * @param   mixed|null  $order
      * @param   int|null    $limit
      * @param   int|null    $offset
@@ -568,7 +600,7 @@ class Mapper implements HydratorInterface,
     /**
      * Find one structure
      *
-     * @param   mixed|null  $where
+     * @param   mixed|null  $where category, installed, name
      * @param   mixed|null  $order
      * @return  \Grid\Core\Model\Package\Structure
      */
@@ -588,7 +620,7 @@ class Mapper implements HydratorInterface,
     /**
      * Get paginator
      *
-     * @param   mixed|null  $where
+     * @param   mixed|null  $where category, installed, name
      * @param   mixed|null  $order
      * @return  \Zend\Paginator\Paginator
      */

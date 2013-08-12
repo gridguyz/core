@@ -15,22 +15,7 @@ class EnabledList extends ArrayIterator
     /**
      * @const string
      */
-    const DELIMITER = '/';
-
-    /**
-     * Generate regexp from pattern
-     *
-     * @param   string  $pattern
-     * @return  string
-     */
-    protected static function generateRegexp( $pattern )
-    {
-        return str_replace(
-            '\\*',
-            '.*',
-            preg_quote( $pattern, static::DELIMITER )
-        );
-    }
+    const DELIMITER = '#';
 
     /**
      * Return current list entry
@@ -40,26 +25,34 @@ class EnabledList extends ArrayIterator
      */
     public function current()
     {
-        $entry = parent::current();
-
-        if ( $entry )
-        {
-            $entry = static::generateRegexp( $entry );
-        }
-
-        return $entry;
+        return (array) parent::current();
     }
 
     /**
-     * Get all-matching pattern
+     * Get all/key-matching pattern
      *
-     * @return string
+     * @param   string  $key
+     * @return  string
      */
-    public function getAllPattern()
+    public function getPattern( $key = null )
     {
+        $patterns = array();
+
+        if ( empty( $key ) )
+        {
+            foreach ( $this as $subPatterns )
+            {
+                $patterns = array_merge( $patterns, $subPatterns );
+            }
+        }
+        else
+        {
+            $patterns = $this[$key];
+        }
+
         return static::DELIMITER
              . '^'
-             . implode( '|', array_filter( iterator_to_array( $this ) ) )
+             . implode( '|', array_filter( $patterns ) )
              . '$'
              . static::DELIMITER;
     }
@@ -67,12 +60,13 @@ class EnabledList extends ArrayIterator
     /**
      * Is package (by name) enabled in listings?
      *
-     * @param   string $packageName
+     * @param   string  $packageName
+     * @param   string  $key
      * @return  bool
      */
-    public function isEnabled( $packageName )
+    public function isEnabled( $packageName, $key = null )
     {
-        return (bool) preg_match( $this->getAllPattern(), $packageName );
+        return (bool) preg_match( $this->getPattern( $key ), $packageName );
     }
 
 }
