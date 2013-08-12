@@ -717,6 +717,11 @@
                               .addClass( msgclass || "info" )
                 );
             },
+            goHome = function () {
+                global.location.href = "/app/"
+                    + ( js.core.defaultLocale || "en" )
+                    + "/admin/package/list";
+            },
             check = function () {
                 checkTimeout = null;
 
@@ -739,11 +744,13 @@
 
                         if ( ( "result" in data ) && null !== data.result )
                         {
-                            checkTimeout = setTimeout( function () {
-                                global.location.href = "/app/"
-                                      + ( js.core.defaultLocale || "en" )
-                                      + "/admin/package/list";
-                            }, checkTick );
+                            checkTimeout = setTimeout( goHome, checkTick );
+                        }
+                    },
+                    "error": function ( xhr ) {
+                        if ( 404 == xhr.status )
+                        {
+                            checkTimeout = setTimeout( goHome, checkTick );
                         }
                     },
                     "complete": function () {
@@ -768,10 +775,10 @@
                 }
                 else
                 {
-                    checkTimeout = setTimeout( check, checkTick );
+                    check();
                 }
             },
-            "error": function ( err ) {
+            "error": function ( xhr, options, err ) {
                 sendMessage( ajaxError );
                 js.console.error( err );
             }
