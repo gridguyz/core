@@ -775,7 +775,7 @@
                 }
                 else
                 {
-                    check();
+                    checkTimeout = setTimeout( check, checkTick );
                 }
             },
             "error": function ( xhr, options, err ) {
