@@ -437,7 +437,7 @@ class Mapper implements HydratorInterface,
             $keyword = mb_strtolower( $keyword );
         }
 
-        foreach ( preg_split( '[\b\s]+', $query ) as $word )
+        foreach ( preg_split( '/[\b\s]+/', $query ) as $word )
         {
             if ( empty( $word ) )
             {
