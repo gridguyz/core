@@ -504,30 +504,6 @@ class Mapper implements HydratorInterface,
             $where['contains'] = null;
         }
 
-        if ( ! isset( $where['installed'] ) || $where['installed'] )
-        {
-            if ( ! empty( $lock['packages'] ) )
-            {
-                foreach ( $lock['packages'] as $package )
-                {
-                    if ( isset( $package['name'] ) &&
-                         isset( $package['type'] ) &&
-                         preg_match( Structure::VALID_TYPES, $package['type'] ) &&
-                         $enable->isEnabled( $package['name'], $where['category'] ) && (
-                             ! $where['contains'] || $this->contains(
-                                 $where['contains'],
-                                 $package['name'],
-                                 isset( $package['description'] ) ? $package['description'] : null,
-                                 isset( $package['keywords'] ) ? (array) $package['keywords'] : array()
-                             )
-                         ) )
-                    {
-                        $result[] = $package['name'];
-                    }
-                }
-            }
-        }
-
         if ( ! isset( $where['installed'] ) || ! $where['installed'] )
         {
             $total    = 0;
@@ -542,7 +518,7 @@ class Mapper implements HydratorInterface,
                 {
                     if ( $enable->isEnabled( $package['name'], $where['category'] ) )
                     {
-                        $result[] = $package['name'];
+                        $result[$package['name']] = $package['name'];
                     }
 
                     $total++;
@@ -564,7 +540,35 @@ class Mapper implements HydratorInterface,
             }
         }
 
-        return array_unique( $result );
+        if ( ! empty( $lock['packages'] ) )
+        {
+            foreach ( $lock['packages'] as $package )
+            {
+                if ( isset( $package['name'] ) &&
+                     isset( $package['type'] ) &&
+                     preg_match( Structure::VALID_TYPES, $package['type'] ) &&
+                     $enable->isEnabled( $package['name'], $where['category'] ) && (
+                         ! $where['contains'] || $this->contains(
+                             $where['contains'],
+                             $package['name'],
+                             isset( $package['description'] ) ? $package['description'] : null,
+                             isset( $package['keywords'] ) ? (array) $package['keywords'] : array()
+                         )
+                     ) )
+                {
+                    if ( ! isset( $where['installed'] ) || $where['installed'] )
+                    {
+                        $result[$package['name']] = $package['name'];
+                    }
+                    else if ( isset( $result[$package['name']] ) )
+                    {
+                        unset( $result[$package['name']] );
+                    }
+                }
+            }
+        }
+
+        return array_values( $result );
     }
 
     /**
