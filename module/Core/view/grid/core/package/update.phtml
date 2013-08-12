@@ -2,10 +2,9 @@
 /**
  * @var $this \Zend\View\Renderer\PhpRenderer
  */
-$this->headTitle( $title = sprintf(
-    $this->translate( 'admin.navTop.packages.view.%s', 'admin' ),
-    $this->package->displayedName
-) );
+$this->headTitle(
+    $title = $this->translate( 'admin.packages.action.updateAll', 'admin' )
+);
 
 $this->headLink()
      ->appendStylesheet( '/styles/packages.css' );
@@ -18,10 +17,10 @@ $this->headLink()
 
     </p>
     <div data-js-type="js.admin.updatePackages">
-        <div class="messages"></div>
+        <div class="messages">&nbsp;</div>
         <details>
             <summary><?= $this->translate( 'admin.packages.update.details', 'admin' ) ?></summary>
-            <pre class="output"></pre>
+            <pre class="output">&nbsp;</pre>
         </details>
     </div>
 </div>

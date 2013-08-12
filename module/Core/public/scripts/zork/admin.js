@@ -681,7 +681,7 @@
     global.Zork.Admin.prototype.menu.close = function () {};
 
     /**
-     * Admin-menu element
+     * Locale form/element element
      *
      * @memberOf Zork.Admin
      */
@@ -696,5 +696,88 @@
     };
 
     global.Zork.Admin.prototype.locale.isElementConstructor = true;
+
+    /**
+     * Locale form/element element
+     *
+     * @memberOf Zork.Admin
+     */
+    global.Zork.Admin.prototype.updatePackages = function ( element )
+    {
+        element = $( element );
+
+        var messageContainer = element.find( ".messages" ).text( "" ),
+            outputContainer  = element.find( ".output" ).text( "" ),
+            ajaxError        = js.core.translate( "admin.packages.action.updateAll" ),
+            checkTick        = parseInt( element.data( "jsUpdatepackagesChecktick" ), 10 ) || 1000,
+            checkTimeout     = null,
+            sendMessage      = function ( message, msgclass ) {
+                messageContainer.append(
+                    $( "<p>" ).text( message )
+                              .addClass( msgclass || "info" )
+                );
+            },
+            check = function () {
+                checkTimeout = null;
+
+                $.ajax( {
+                    "url": "/maintenance.php?update=status",
+                    "async": true,
+                    "cache": false,
+                    "dataType": "json",
+                    "success": function ( data ) {
+                        outputContainer.text( data.output || "" );
+                        messageContainer.text( "" );
+
+                        if ( data.messages && data.messages.length )
+                        {
+                            for ( var i = 0, l = data.messages.length; i < l; ++i )
+                            {
+                                js.core.translate( data.messages[i] );
+                            }
+                        }
+
+                        if ( ( "result" in data ) && null !== data.result )
+                        {
+                            checkTimeout = setTimeout( function () {
+                                global.location.href = "/app/"
+                                      + ( js.core.defaultLocale || "en" )
+                                      + "/admin/package/list";
+                            }, checkTick );
+                        }
+                    },
+                    "complete": function () {
+                        if ( ! checkTimeout )
+                        {
+                            checkTimeout = setTimeout( check, checkTick );
+                        }
+                    }
+                } );
+            };
+
+        $.ajax( {
+            "url": "/app/" + ( js.core.defaultLocale || "en" ) + "/admin/package/update/run",
+            "async": true,
+            "cache": false,
+            "dataType": "json",
+            "success": function ( data ) {
+                if ( data.started )
+                {
+                    checkTimeout = setTimeout( check, checkTick );
+                }
+                else
+                {
+                    sendMessage( ajaxError );
+                    js.console.error( data );
+                }
+            },
+            "error": function ( err ) {
+                sendMessage( ajaxError );
+                js.console.error( err );
+            }
+        } );
+    };
+
+    global.Zork.Admin.prototype.updatePackages.isElementConstructor = true;
 
 } ( window, jQuery, zork ) );

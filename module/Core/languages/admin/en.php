@@ -134,6 +134,7 @@ return array(
     'admin.packages.downloads' => 'Downloads',
     'admin.packages.install.failed' => 'Package install failed',
     'admin.packages.remove.failed' => 'Package remove failed',
+    'admin.packages.update.ajaxError' => 'Error while starting updates',
     'admin.packages.update.details' => 'Detils',
     'admin.packages.update.done' => 'Package updates finished',
     'admin.packages.update.inProgress' => 'Please wait. Package updates are in progress. This may take a few minutes ...',
