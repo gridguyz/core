@@ -34,7 +34,7 @@ if ( ! isset( $this->filter['installed'] ) || '' === $this->filter['installed'] 
 ?>
 <h1><?= $title ?></h1>
 <div class="page">
-    <form class="package-list-form" action="?">
+    <form class="package-list-form" method="post" action="?">
         <p class="package-list-actions">
             <a href="/app/<?= $this->locale() ?>/admin/package/update"
                class="update-all button-appearance"><?= $this->translate( 'admin.packages.action.updateAll', 'admin' ) ?></a>
