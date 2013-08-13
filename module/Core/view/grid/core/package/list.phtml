@@ -16,19 +16,21 @@ $paginator->setPageRange( 7 )
 $this->headLink()
      ->appendStylesheet( '/styles/packages.css' );
 
-if ( empty( $this->filter['category'] ) )
+$filter = (array) $this->filter;
+
+if ( empty( $filter['category'] ) )
 {
-    $this->filter['category'] = '';
+    $filter['category'] = '';
 }
 
-if ( empty( $this->filter['contains'] ) )
+if ( empty( $filter['contains'] ) )
 {
-    $this->filter['contains'] = '';
+    $filter['contains'] = '';
 }
 
-if ( ! isset( $this->filter['installed'] ) || '' === $this->filter['installed'] )
+if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
 {
-    $this->filter['installed'] = null;
+    $filter['installed'] = null;
 }
 
 ?>
@@ -40,16 +42,16 @@ if ( ! isset( $this->filter['installed'] ) || '' === $this->filter['installed'] 
                class="update-all button-appearance"><?= $this->translate( 'admin.packages.action.updateAll', 'admin' ) ?></a>
         </p>
         <p class="package-list-categories">
-            <input name="filter[category]" value="<?= $this->filter['category'] ?>" />
+            <input name="filter[category]" value="<?= $filter['category'] ?>" />
             <button name="filter[category]" type="submit"
-                    value=""<?php if ( '' == $this->filter['category'] ):
+                    value=""<?php if ( '' == $filter['category'] ):
                  ?> class="active"<?php endif ?>>
                 <?= $this->translate( 'admin.packages.category.all', 'admin' ) ?>
             </button>
 <?php foreach ( $this->categories as $category ): ?>
 
             <button name="filter[category]" type="submit"
-                    value="<?= $category ?>"<?php if ( $category == $this->filter['category'] ):
+                    value="<?= $category ?>"<?php if ( $category == $filter['category'] ):
                  ?> class="active"<?php endif ?>>
                 <?= $this->translate( 'admin.packages.category.' . $category, 'admin' ) ?>
             </button>
@@ -58,23 +60,23 @@ if ( ! isset( $this->filter['installed'] ) || '' === $this->filter['installed'] 
         </p>
         <p class="package-list-search">
             <label>
-                <input type="radio" name="filter[installed]" value=""<?php if ( null === $this->filter['installed'] ):
+                <input type="radio" name="filter[installed]" value=""<?php if ( null === $filter['installed'] ):
                     ?> checked="checked"<?php endif ?>/>
                 <?= $this->translate( 'admin.packages.installed.all', 'admin' ) ?>
             </label>
             <label>
-                <input type="radio" name="filter[installed]" value="1"<?php if ( $this->filter['installed'] ):
+                <input type="radio" name="filter[installed]" value="1"<?php if ( $filter['installed'] ):
                     ?> checked="checked"<?php endif ?>/>
                 <?= $this->translate( 'admin.packages.installed.only', 'admin' ) ?>
             </label>
             <label>
-                <input type="radio" name="filter[installed]" value="0"<?php if ( null !== $this->filter['installed'] && ! $this->filter['installed'] ):
+                <input type="radio" name="filter[installed]" value="0"<?php if ( null !== $filter['installed'] && ! $filter['installed'] ):
                     ?> checked="checked"<?php endif ?>/>
                 <?= $this->translate( 'admin.packages.installed.not', 'admin' ) ?>
             </label>
             <label>
                 <?= $this->translate( 'admin.packages.contains', 'admin' ) ?>
-                <input type="search" name="filter[contains]" value="<?= $this->escapeHtmlAttr( $this->filter['contains'] ) ?>" />
+                <input type="search" name="filter[contains]" value="<?= $this->escapeHtmlAttr( $filter['contains'] ) ?>" />
             </label>
             <button type="submit">
                 <?= $this->translate( 'admin.packages.search', 'admin' ) ?>
