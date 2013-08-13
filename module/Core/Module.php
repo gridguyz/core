@@ -2,12 +2,14 @@
 
 namespace Grid\Core;
 
+use Exception;
 use Zend\Mvc\MvcEvent;
 use Zork\Stdlib\ModuleAbstract;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\ModuleManagerInterface;
 use Zork\Mvc\View\Http\InjectTemplateListener;
 use Zork\Mvc\Controller\LocaleSelectorInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
@@ -50,6 +52,31 @@ class Module extends ModuleAbstract
      * @var \Zend\Stdlib\ResponseInterface
      */
     protected $response;
+
+    /**
+     * Previous exception handler
+     *
+     * @var callable|null
+     */
+    protected $previousExceptionHandler;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->previousExceptionHandler = set_exception_handler(
+            array( $this, 'exceptionHandler' )
+        );
+    }
+
+    /**
+     * Destructor
+     */
+    public function __destruct()
+    {
+        set_exception_handler( $this->previousExceptionHandler );
+    }
 
     /**
      * Initialize workflow
@@ -132,6 +159,36 @@ class Module extends ModuleAbstract
     }
 
     /**
+     * Exception handler
+     *
+     * @param   Exception   $exception
+     * @return  void
+     */
+    public function exceptionHandler( Exception $exception )
+    {
+        if ( $this->serviceLocator &&
+             $this->serviceLocator instanceof ServiceLocatorInterface &&
+             $this->serviceLocator->has( 'Zork\Log\LoggerManager' ) )
+        {
+            try
+            {
+                /* @var $loggerManager \Zork\Log\LoggerManager */
+                $loggerManager = $this->serviceLocator->get( 'Zork\Log\LoggerManager' );
+
+                if ( $loggerManager->hasLogger( 'exception' ) )
+                {
+                    $loggerManager->getLogger( 'exception' )
+                                  ->crit( '<pre>' . $exception . '</pre>' . PHP_EOL );
+                }
+            }
+            catch ( Exception $ex )
+            {
+                // do nothing
+            }
+        }
+    }
+
+    /**
      * Listen to the dispatch.error event
      *
      * @param \Zend\EventManager\EventInterface $event
@@ -141,16 +198,9 @@ class Module extends ModuleAbstract
         /* @var $exception \Exception  */
         $exception = $event->getParam( 'exception' );
 
-        if ( $exception && $this->serviceLocator->has( 'Zork\Log\LoggerManager' ) )
+        if ( $exception && $exception instanceof Exception )
         {
-            /* @var $loggerManager \Zork\Log\LoggerManager */
-            $loggerManager = $this->serviceLocator->get( 'Zork\Log\LoggerManager' );
-
-            if ( $loggerManager->hasLogger( 'exception' ) )
-            {
-                $loggerManager->getLogger( 'exception' )
-                              ->crit( '<pre>' . $exception . '</pre>' . PHP_EOL );
-            }
+            $this->exceptionHandler( $exception );
         }
     }
 
