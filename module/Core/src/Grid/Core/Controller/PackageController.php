@@ -25,18 +25,18 @@ class PackageController extends AbstractAdminController
     public function listAction()
     {
         $params = $this->params();
-        $where  = $params->fromPost( 'where', $params->fromQuery( 'where', array() ) );
-        $order  = $params->fromPost( 'order', $params->fromQuery( 'order', true    ) );
-        $page   = $params->fromPost( 'page',  $params->fromQuery( 'page', 0        ) );
+        $filter = $params->fromPost( 'filter', $params->fromQuery( 'filter', array() ) );
+        $order  = $params->fromPost( 'order',  $params->fromQuery( 'order',  true    ) );
+        $page   = $params->fromPost( 'page',   $params->fromQuery( 'page',   0       ) );
         $model  = $this->getServiceLocator()
                        ->get( 'Grid\Core\Model\Package\Model' );
 
         return array(
-            'page'          => (int) $page,
-            'where'         => $where,
+            'page'          => (int)   $page,
+            'filter'        => (array) $filter,
             'order'         => $order,
             'categories'    => $model->getCategories(),
-            'paginator'     => $model->getPaginator( $where, $order )
+            'paginator'     => $model->getPaginator( $filter, $order )
         );
     }
 
