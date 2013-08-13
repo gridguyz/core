@@ -2,6 +2,7 @@
 
 namespace Grid\Core\Controller;
 
+use Zork\Stdlib\String;
 use Zork\Stdlib\Message;
 use Zend\View\Model\JsonModel;
 use Grid\Core\Form\TransformValues;
@@ -123,11 +124,8 @@ class PackageController extends AbstractAdminController
         }
 
         $formName = 'Grid\\Core\\Package\\Install\\'
-                  . strtr( ucwords( $name ), array(
-                        '/' => '\\',
-                        '-' => '',
-                        '_' => '',
-                    ) );
+            . String::camelize( $vendor, null, false ) . '\\'
+            . String::camelize( $subname, null, false );
 
         /* @var $forms \Zork\Form\FormService */
         if ( $forms->has( $formName ) )
