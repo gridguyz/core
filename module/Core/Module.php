@@ -163,6 +163,7 @@ class Module extends ModuleAbstract
     {
         if ( $this->response )
         {
+            $event->stopPropagation();
             return $this->response;
         }
 
