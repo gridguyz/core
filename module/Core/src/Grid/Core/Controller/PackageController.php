@@ -149,12 +149,10 @@ class PackageController extends AbstractAdminController
             if ( ! $extraValid )
             {
                 $form->add( array(
-                    'spec' => array(
-                        'type'  => 'Zork\Form\Element\Submit',
-                        'name'  => 'submit',
-                        'attributes'  => array(
-                            'value' => 'admin.packages.action.install',
-                        ),
+                    'type'  => 'Zork\Form\Element\Submit',
+                    'name'  => 'submit',
+                    'attributes'  => array(
+                        'value' => 'admin.packages.action.install',
                     ),
                 ) );
 
