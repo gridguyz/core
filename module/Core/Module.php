@@ -152,9 +152,10 @@ class Module extends ModuleAbstract
                          'X-Redirect-Reason' => $redirect->getReason(),
                      ) );
 
-            $link = htmlspecialchars( $url );
-            $link = '<a href="' . $link . '">' . $link . '</a>';
-            $this->response = $response->setContent( $link );
+            $this->response = $response->setContent( sprintf(
+                '<meta http-equiv="refresh" content="0;url=%1$s"><a href="%1$s">%1$s</a>',
+                htmlspecialchars( $url )
+            ) );
         }
     }
 
