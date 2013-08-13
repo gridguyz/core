@@ -27,6 +27,11 @@ class Model implements MapperAwareInterface
     const PACKAGE_FILE_BACKUP = './composer.json.backup';
 
     /**
+     * @const string
+     */
+    const EXTRA_FILE = './data/extra.json';
+
+    /**
      * @var array
      */
     protected static $packageData;
@@ -78,6 +83,25 @@ class Model implements MapperAwareInterface
     }
 
     /**
+     * Load json data
+     *
+     * @param   string  $file
+     * @return  mixed|null
+     */
+    protected static function loadJsonData( $file )
+    {
+        if ( ! is_file( $file ) )
+        {
+            return null;
+        }
+
+        return Json::decode(
+            @ file_get_contents( $file ),
+            Json::TYPE_ARRAY
+        );
+    }
+
+    /**
      * Load package data
      *
      * @return  mixed
@@ -91,13 +115,24 @@ class Model implements MapperAwareInterface
 
         if ( null === static::$packageData )
         {
-            static::$packageData = Json::decode(
-                @ file_get_contents( static::PACKAGE_FILE ),
-                Json::TYPE_ARRAY
-            );
+            static::$packageData = static::loadJsonData( static::PACKAGE_FILE );
         }
 
         return static::$packageData;
+    }
+
+    /**
+     * Save json data
+     *
+     * @param   mixed   $data
+     * @return  bool|int
+     */
+    protected static function saveJsonData( $file, $data )
+    {
+        return @ file_put_contents(
+            $file,
+            json_encode( $data, JSON_PRETTY_PRINT )
+        );
     }
 
     /**
@@ -120,14 +155,7 @@ class Model implements MapperAwareInterface
 
         @ copy( static::PACKAGE_FILE, static::PACKAGE_FILE_BACKUP );
 
-        $result = @ file_put_contents(
-            static::PACKAGE_FILE,
-            json_encode( $data, JSON_HEX_TAG
-                              | JSON_HEX_APOS
-                              | JSON_HEX_QUOT
-                              | JSON_HEX_AMP
-                              | JSON_PRETTY_PRINT )
-        );
+        $result = static::saveJsonData( static::PACKAGE_FILE, $data );
 
         if ( $result )
         {
@@ -143,18 +171,43 @@ class Model implements MapperAwareInterface
     }
 
     /**
+     * Merge json data
+     *
+     * @param   mixed   $data
+     * @return  bool|int
+     */
+    protected static function mergeJsonData( $file, $data )
+    {
+        return static::saveJsonData( $file, array_merge_recursive(
+            (array) static::loadJsonData( $file ),
+            $data
+        ) );
+    }
+
+    /**
      * Install a package
      *
      * @param   \Grid\Core\Model\Package\Structure  $package
+     * @param   array                               $extra
      * @return  bool|int
      */
-    public function install( Structure $package )
+    public function install( Structure $package, array $extra = array() )
     {
         $data = static::loadPackageData();
 
         if ( empty( $data['require'] ) )
         {
             return false;
+        }
+
+        if ( ! empty( $extra ) )
+        {
+            if ( ! static::mergeJsonData( static::EXTRA_FILE, $extra ) )
+            {
+                return false;
+            }
+
+            $data['extra']['patch-data-file'] = static::EXTRA_FILE;
         }
 
         $data['require'][$package->name] = '*';

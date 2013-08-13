@@ -119,6 +119,7 @@ return array(
     'admin.notAllowed.title' => 'Not allowed',
     'admin.notAllowed.description' => 'The page you have requested, is not allowed for you.',
     'admin.packages.action.install' => 'Install',
+    'admin.packages.action.install.options' => 'Install options',
     'admin.packages.action.remove' => 'Remove',
     'admin.packages.action.updateAll' => 'Update packages',
     'admin.packages.action.view' => 'View package details',
@@ -151,4 +152,8 @@ return array(
     'admin.packages.maintenance.failed' => 'Maintenance screen cannot be applied',
     'admin.packages.process.cannotRun.%s' => 'Process `%s` cannot run',
     'admin.packages.process.returned.%s.%d' => 'Process `%s` returned with error #%d',
+    'admin.packages.gridguyz.multisite.defaultDomain' => 'Default domain',
+    'admin.packages.gridguyz.multisite.defaultDomain.description' => 'Your main (central) site\'s domain. Requests with not registered domains will be redirected to here. F.ex. <kbd>mycentralsite.com</kbd>',
+    'admin.packages.gridguyz.multisite.domainPostfix' => 'Domain postfix',
+    'admin.packages.gridguyz.multisite.domainPostfix.description' => 'Child sites will be created with this ending by default. Must be different from your default domain. F.ex. <kbd>mychildsites.com</kbd>',
 );

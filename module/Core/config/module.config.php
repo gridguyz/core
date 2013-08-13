@@ -479,6 +479,46 @@ return array(
                 ),
             ),
         ),
+        'Grid\Core\Package\Install\Gridguyz\Multisite' => array(
+            'type'      => 'Grid\Core\Form\Package\Multisite',
+            'fieldsets' => array(
+                'gridguyz-multisite' => array(
+                    'spec'  => array(
+                        'name'      => 'gridguyz-multisite',
+                        'options'   => array(
+                            'label'     => 'admin.packages.action.install.options',
+                            'required'  => true,
+                        ),
+                        'elements'  => array(
+                            'defaultDomain' => array(
+                                'spec'  => array(
+                                    'type'  => 'Zork\Form\Element\Text',
+                                    'name'  => 'defaultDomain',
+                                    'options'   => array(
+                                        'required'      => true,
+                                        'pattern'       => '([a-z0-9\-]+\.)+[a-z]{2,}',
+                                        'label'         => 'admin.packages.gridguyz.multisite.defaultDomain',
+                                        'description'   => 'admin.packages.gridguyz.multisite.defaultDomain.description',
+                                    ),
+                                ),
+                            ),
+                            'domainPostfix' => array(
+                                'spec'  => array(
+                                    'type'  => 'Zork\Form\Element\Text',
+                                    'name'  => 'defaultDomain',
+                                    'options'   => array(
+                                        'required'      => true,
+                                        'pattern'       => '([a-z0-9\-]+\.)+[a-z]{2,}',
+                                        'label'         => 'admin.packages.gridguyz.multisite.domainPostfix',
+                                        'description'   => 'admin.packages.gridguyz.multisite.domainPostfix.description',
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ),
         'Grid\Core\Settings\SiteDefinition' => array(
             'type'      => 'Grid\Core\Form\Settings',
             'elements'  => array(

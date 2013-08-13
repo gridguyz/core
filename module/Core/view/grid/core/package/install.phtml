@@ -1,0 +1,23 @@
+<?php
+/**
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$this->headTitle(
+    $title = $this->translate( 'admin.packages.action.install', 'admin' )
+);
+
+$this->headTitle( $this->package->displayedName );
+
+$this->headLink()
+     ->appendStylesheet( '/styles/packages.css' );
+
+?>
+<h1><?= $title ?></h1>
+<div class="page">
+    <h3>
+        <?= $this->package->displayedName ?>
+
+    </h3>
+    <?= $this->form( $this->form, 'admin' ) ?>
+
+</div>

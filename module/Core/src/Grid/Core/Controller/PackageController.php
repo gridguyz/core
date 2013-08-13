@@ -4,6 +4,7 @@ namespace Grid\Core\Controller;
 
 use Zork\Stdlib\Message;
 use Zend\View\Model\JsonModel;
+use Grid\Core\Form\TransformValues;
 use Zork\Process\BackgroundProcess;
 use Zork\Mvc\Controller\AbstractAdminController;
 
@@ -95,12 +96,14 @@ class PackageController extends AbstractAdminController
      */
     public function installAction()
     {
+        $extra   = array();
         $params  = $this->params();
         $vendor  = $params->fromRoute( 'vendor' );
         $subname = $params->fromRoute( 'subname' );
         $name    = $vendor . '/' . $subname;
-        $model   = $this->getServiceLocator()
-                        ->get( 'Grid\Core\Model\Package\Model' );
+        $service = $this->getServiceLocator();
+        $model   = $service->get( 'Grid\Core\Model\Package\Model' );
+        $forms   = $service->get( 'Form' );
         $package = $model->find( $name );
 
         if ( empty( $package ) )
@@ -119,7 +122,58 @@ class PackageController extends AbstractAdminController
             return;
         }
 
-        if ( ! $model->install( $package ) )
+        $formName = 'Grid\\Core\\Package\\Install\\'
+                  . strtr( ucwords( $name ), array(
+                        '/' => '\\',
+                        '-' => '',
+                        '_' => '',
+                    ) );
+
+        /* @var $forms \Zork\Form\FormService */
+        if ( $forms->has( $formName ) )
+        {
+            /* @var $form \Zork\Form\Form */
+            $extraValid = false;
+            $request    = $this->getRequest();
+            $form       = $forms->get( $formName );
+
+            if ( $request->isPost() )
+            {
+                $form->setData( $request->getPost() );
+
+                if ( $form->isValid() )
+                {
+                    $extra      = $form->getData();
+                    $extraValid = true;
+                }
+            }
+
+            if ( ! $extraValid )
+            {
+                $form->add( array(
+                    'spec' => array(
+                        'type'  => 'Zork\Form\Element\Submit',
+                        'name'  => 'submit',
+                        'attributes'  => array(
+                            'value' => 'admin.packages.action.install',
+                        ),
+                    ),
+                ) );
+
+                return array(
+                    'name'      => $name,
+                    'package'   => $package,
+                    'form'      => $form,
+                );
+            }
+
+            if ( $form instanceof TransformValues )
+            {
+                $extra = $form->transformValues( $extra );
+            }
+        }
+
+        if ( ! $model->install( $package, $extra ) )
         {
             $this->messenger()
                  ->add( 'admin.packages.install.failed',
