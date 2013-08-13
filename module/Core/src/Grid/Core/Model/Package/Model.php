@@ -29,7 +29,7 @@ class Model implements MapperAwareInterface
     /**
      * @const string
      */
-    const EXTRA_FILE = './data/extra.json';
+    const EXTRA_FILE = './data/update/extra.json';
 
     /**
      * @var array
