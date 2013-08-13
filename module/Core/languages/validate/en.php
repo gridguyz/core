@@ -7,6 +7,8 @@ return array(
     'validate.between.notInclusive' => 'not inclusive',
     'validate.equal' => 'Doesn\'t match',
     'validate.forbidden' => '\'%value%\' is forbidden',
+    'validate.identical.notMatch' => 'Does not match',
+    'validate.notIdentical.match' => 'Unexpected match',
     'validate.inArray' => '\'%value%\' is not in the valid values',
     'validate.invalidAlnum' => 'Only english and number characters allowed',
     'validate.invalidAlpha' => 'Only english characters allowed',

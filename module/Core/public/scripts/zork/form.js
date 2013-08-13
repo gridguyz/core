@@ -173,6 +173,16 @@
 
             return res;
         },
+        checkNotIdentical = function ( form, token, value ) {
+            var res = checkToken( form, token );
+
+            if ( ! Boolean.isBoolean( res ) )
+            {
+                res = res != value;
+            }
+
+            return res;
+        },
         checkLessThan = function ( form, token, value ) {
             var res = checkToken( form, token );
 
@@ -525,6 +535,11 @@
                             {
                                 isv   = false;
                                 emsg  = "validate.identical.notMatch";
+                            }
+                            else if ( ! checkNotIdentical( form, self.attr( "data-validate-not-identical" ), val ) )
+                            {
+                                isv   = false;
+                                emsg  = "validate.notIdentical.match";
                             }
                             else if ( ! checkAlternate( form, self.attr( "data-validate-alternate" ), val ) )
                             {
