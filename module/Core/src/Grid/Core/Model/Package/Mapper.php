@@ -515,6 +515,15 @@ class Mapper implements HydratorInterface,
             $where['contains'] = null;
         }
 
+        if ( ! isset( $where['installed'] ) || '' === $where['installed'] )
+        {
+            $where['installed'] = null;
+        }
+        else
+        {
+            $where['installed'] = (bool) $where['installed'];
+        }
+
         if ( ! isset( $where['installed'] ) || ! $where['installed'] )
         {
             $total    = 0;
