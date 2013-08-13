@@ -18,6 +18,11 @@ class Patch extends AbstractPatch
     /**
      * @const int
      */
+    const DEVELOPER_GROUP = 1;
+
+    /**
+     * @const int
+     */
     const SITE_OWNER_GROUP = 2;
 
     /**
@@ -54,6 +59,15 @@ class Patch extends AbstractPatch
     {
         if ( $this->isZeroVersion( $from ) )
         {
+            $developer = $this->selectFromTable( 'user', 'id', array(
+                'groupId' => static::DEVELOPER_GROUP,
+            ) );
+
+            if ( ! $developer )
+            {
+                $developer = $this->insertDeveloper();
+            }
+
             $platformOwner = $this->selectFromTable( 'user', 'id', array(
                 'groupId' => static::SITE_OWNER_GROUP,
             ) );
@@ -141,6 +155,67 @@ class Patch extends AbstractPatch
 
     /**
      * Insert developer user
+     *
+     * @return  int|null
+     */
+    protected function insertDeveloper()
+    {
+        $data   = $this->getPatchData();
+        $create = $data->get(
+            'gridguyz-core',
+            'developer',
+            'Do you want to create a developer user? (y/n)',
+            'n',
+            array( 'y', 'n', 'yes', 'no', 't', 'f', 'true', 'false', '1', '0' )
+        );
+
+        if ( in_array( strtolower( $create ),
+             array( 'n', 'no', 'f', 'false', '0', '' ) ) )
+        {
+            return null;
+        }
+
+        $email = $data->get(
+            'gridguyz-core',
+            'developer-email',
+            'Type the developer\'s email (must be valid email)',
+            null,
+            '/^[A-Z0-9\._%\+-]+@[A-Z0-9\.-]+\.[A-Z]{2,4}$/i',
+            3
+        );
+
+        $displayName = $data->get(
+            'gridguyz-core',
+            'developer-displayName',
+            'Type the developer\'s display name',
+            strstr( $email, '@', true )
+        );
+
+        $password = $data->get(
+            'gridguyz-core',
+            'developer-password',
+            'Type the developer\'s password',
+            $this->createPasswordSalt( 6 ),
+            true
+        );
+
+        return $this->insertIntoTable(
+            'user',
+            array(
+                'email'         => $email,
+                'displayName'   => $displayName,
+                'passwordHash'  => $this->createPasswordHash( $password ),
+                'groupId'       => static::DEVELOPER_GROUP,
+                'state'         => 'active',
+                'confirmed'     => 't',
+                'locale'        => 'en',
+            ),
+            true
+        );
+    }
+
+    /**
+     * Insert platform-owner user
      *
      * @return  int
      */
