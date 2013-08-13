@@ -506,7 +506,7 @@ return array(
                             'domainPostfix' => array(
                                 'spec'  => array(
                                     'type'  => 'Zork\Form\Element\Text',
-                                    'name'  => 'defaultDomain',
+                                    'name'  => 'domainPostfix',
                                     'options'   => array(
                                         'required'      => true,
                                         'pattern'       => '([a-z0-9\-]+\.)+[a-z]{2,}',
