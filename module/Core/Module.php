@@ -191,9 +191,9 @@ class Module extends ModuleAbstract
     /**
      * Listen to the dispatch.error event
      *
-     * @param \Zend\EventManager\EventInterface $event
+     * @param \Zend\Mvc\MvcEvent $event
      */
-    public function onDispatchError( EventInterface $event )
+    public function onDispatchError( MvcEvent $event )
     {
         /* @var $exception \Exception  */
         $exception = $event->getParam( 'exception' );
@@ -201,6 +201,12 @@ class Module extends ModuleAbstract
         if ( $exception && $exception instanceof Exception )
         {
             $this->exceptionHandler( $exception );
+        }
+
+        if ( $this->response )
+        {
+            $event->stopPropagation();
+            return $this->response;
         }
     }
 
