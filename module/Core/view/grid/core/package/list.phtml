@@ -10,19 +10,73 @@ $this->headTitle( $title = $this->translate(
 $paginator = $this->paginator;
 
 $paginator->setPageRange( 7 )
-          ->setItemCountPerPage( 10 )
+          ->setItemCountPerPage( 5 )
           ->setCurrentPageNumber( $this->page );
 
 $this->headLink()
      ->appendStylesheet( '/styles/packages.css' );
 
+if ( empty( $this->where['category'] ) )
+{
+    $this->where['category'] = '';
+}
+
+if ( empty( $this->where['contains'] ) )
+{
+    $this->where['contains'] = '';
+}
+
+if ( ! isset( $this->where['installed'] ) || '' === $this->where['installed'] )
+{
+    $this->where['installed'] = null;
+}
+
 ?>
 <h1><?= $title ?></h1>
 <div class="page">
-    <form class="package-list-form">
+    <form class="package-list-form" action="?">
         <p class="package-list-actions">
             <a href="/app/<?= $this->locale() ?>/admin/package/update"
                class="update-all button-appearance"><?= $this->translate( 'admin.packages.action.updateAll', 'admin' ) ?></a>
+        </p>
+        <p class="package-list-categories">
+            <input name="where[category]" value="<?= $this->where['category'] ?>" />
+            <button type="submit" value=""<?php if ( '' == $this->where['category'] ):
+                 ?> class="active"<?php endif ?>>
+                <?= $this->translate( 'admin.packages.category.all', 'admin' ) ?>
+            </button>
+<?php foreach ( $this->categories as $category ): ?>
+
+            <button type="submit" value="<?= $category ?>"<?php if ( $category == $this->where['category'] ):
+                 ?> class="active"<?php endif ?>>
+                <?= $this->translate( 'admin.packages.category.' . $category, 'admin' ) ?>
+            </button>
+<?php endforeach ?>
+
+        </p>
+        <p class="package-list-search">
+            <label>
+                <input type="radio" name="where[installed]" value=""<?php if ( null === $this->where['installed'] ):
+                    ?> checked="checked"<?php endif ?>/>
+                <?= $this->translate( 'admin.packages.installed.all', 'admin' ) ?>
+            </label>
+            <label>
+                <input type="radio" name="where[installed]" value="1"<?php if ( $this->where['installed'] ):
+                    ?> checked="checked"<?php endif ?>/>
+                <?= $this->translate( 'admin.packages.installed.only', 'admin' ) ?>
+            </label>
+            <label>
+                <input type="radio" name="where[installed]" value="0"<?php if ( null !== $this->where['installed'] && ! $this->where['installed'] ):
+                    ?> checked="checked"<?php endif ?>/>
+                <?= $this->translate( 'admin.packages.installed.not', 'admin' ) ?>
+            </label>
+            <label>
+                <?= $this->translate( 'admin.packages.contains', 'admin' ) ?>
+                <input type="search" name="where[contains]" value="<?= $this->escapeHtmlAttr( $this->where['contains'] ) ?>" />
+            </label>
+            <button type="submit">
+                <?= $this->translate( 'admin.packages.search', 'admin' ) ?>
+            </button>
         </p>
         <?= $paginationControl = $this->paginationControl(
             $paginator,

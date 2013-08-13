@@ -110,6 +110,17 @@ class Mapper implements HydratorInterface,
     }
 
     /**
+     * Get categories
+     *
+     * @return  array
+     */
+    public function getCategories()
+    {
+        return $this->getEnabledList()
+                    ->getKeys();
+    }
+
+    /**
      * Lazy-load lock data
      *
      * @return  array

@@ -67,6 +67,17 @@ class Model implements MapperAwareInterface
     }
 
     /**
+     * Get categories
+     *
+     * @return  array
+     */
+    public function getCategories()
+    {
+        return $this->getMapper()
+                    ->getCategories();
+    }
+
+    /**
      * Load package data
      *
      * @return  mixed

@@ -28,14 +28,15 @@ class PackageController extends AbstractAdminController
         $where  = $params->fromPost( 'where', $params->fromQuery( 'where', array() ) );
         $order  = $params->fromPost( 'order', $params->fromQuery( 'order', true    ) );
         $page   = $params->fromPost( 'page',  $params->fromQuery( 'page', 0        ) );
+        $model  = $this->getServiceLocator()
+                       ->get( 'Grid\Core\Model\Package\Model' );
 
         return array(
-            'page'      => (int) $page,
-            'where'     => $where,
-            'order'     => $order,
-            'paginator' => $this->getServiceLocator()
-                                ->get( 'Grid\Core\Model\Package\Model' )
-                                ->getPaginator( $where, $order )
+            'page'          => (int) $page,
+            'where'         => $where,
+            'order'         => $order,
+            'categories'    => $model->getCategories(),
+            'paginator'     => $model->getPaginator( $where, $order )
         );
     }
 

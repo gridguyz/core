@@ -72,4 +72,14 @@ class EnabledList extends ArrayIterator
         return (bool) preg_match( $this->getPattern( $key ), $packageName );
     }
 
+    /**
+     * Get all keys
+     *
+     * @return  array
+     */
+    public function getKeys()
+    {
+        return array_keys( $this->getArrayCopy() );
+    }
+
 }
