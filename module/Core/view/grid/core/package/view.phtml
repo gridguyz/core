@@ -60,7 +60,8 @@ $this->headLink()
             <label class="module" onclick="this.blur();">
                 <input type="hidden" name="modules[<?= $this->escapeHtmlAttr( $moduleName ) ?>]" value="" />
                 <input type="checkbox" name="modules[<?= $this->escapeHtmlAttr( $moduleName ) ?>]" value="1"<?php if ( $single ):
-                    ?> onchange="this.form.submit();"<?php endif ?> />
+                    ?> onchange="this.form.submit();"<?php endif ?><?php if ( $this->isModuleLoaded( $moduleName ) ):
+                    ?> checked="checked"<?php endif ?> />
                 <?= $this->escapeHtml( $moduleLabel ) ?>
 
             </label>
