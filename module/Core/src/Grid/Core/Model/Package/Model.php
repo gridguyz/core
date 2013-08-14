@@ -3,6 +3,7 @@
 namespace Grid\Core\Model\Package;
 
 use Zend\Json\Json;
+use Zend\Stdlib\ArrayUtils;
 use Zork\Model\MapperAwareTrait;
 use Zork\Model\MapperAwareInterface;
 
@@ -189,7 +190,7 @@ class Model implements MapperAwareInterface
      */
     protected static function mergeJsonData( $file, $data )
     {
-        return static::saveJsonData( $file, array_merge_recursive(
+        return static::saveJsonData( $file, ArrayUtils::merge(
             (array) static::loadJsonData( $file ),
             $data
         ) );
