@@ -113,7 +113,7 @@ class PackageController extends AbstractAdminController
         }
 
         $process = new BackgroundProcess( array(
-            'command'   => BackgroundProcess::getPhpBinary(),
+            'command'   => 'php',
             'arguments' => array( './bin/update.php' ),
         ) );
 
