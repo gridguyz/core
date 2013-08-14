@@ -126,6 +126,7 @@ INSERT INTO "user_right" ( "label", "group", "resource", "privilege", "optional"
             ( NULL, 'paragraph.content', 'paragraph.content', 'create', TRUE ),
             ( NULL, 'paragraph.content', 'paragraph.content', 'edit', TRUE ),
             ( NULL, 'paragraph.content', 'paragraph.content', 'delete', TRUE ),
+            ( NULL, 'paragraph.content', 'uploads', 'manage', TRUE ),
             ( NULL, 'paragraph.content', 'uri', 'view', TRUE ),
             ( NULL, 'paragraph.content', 'uri', 'create', TRUE ),
             ( NULL, 'paragraph.content', 'uri', 'edit', TRUE ),

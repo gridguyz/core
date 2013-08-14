@@ -417,6 +417,12 @@ return array(
                 'pattern'       => '%s.php',
                 'text_domain'   => 'system',
             ),
+            'uploads' => array(
+                'type'          => 'phpArray',
+                'base_dir'      => __DIR__ . '/../languages/uploads',
+                'pattern'       => '%s.php',
+                'text_domain'   => 'uploads',
+            ),
             'uri' => array(
                 'type'          => 'phpArray',
                 'base_dir'      => __DIR__ . '/../languages/uri',
