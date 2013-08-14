@@ -36,10 +36,43 @@ $this->headLink()
 <?php endif ?>
 
              alt="<?= $this->escapeHtmlAttr( $this->name ) ?>"/>
-        <p class="description">
+        <div class="time">
+<?php if ( isset( $this->package->installedTime ) ): ?>
+
+                    <?= $this->translate( 'admin.packages.installedTime', 'admin' ) ?>:
+                    <?= $this->dateTime( $this->package->installedTime ) ?>
+<?php elseif ( isset( $this->package->availableTime ) ): ?>
+
+                    <?= $this->translate( 'admin.packages.availableTime', 'admin' ) ?>:
+                    <?= $this->dateTime( $this->package->availableTime ) ?>
+<?php endif ?>
+
+        </div>
+        <div class="description">
             <?= nl2br( $this->escapeHtml( $this->package->displayedDescription ) ) ?>
 
-        </p>
+        </div>
+<?php if ( ! empty( $this->package->modules ) ): $single = 1 == count( $this->package->modules ); ?>
+
+        <form class="modules" method="post" action="?">
+<?php foreach ( $this->package->modules as $moduleName => $moduleLabel ): ?>
+
+            <label class="module" onclick="this.blur();">
+                <input type="hidden" name="modules[<?= $this->escapeHtmlAttr( $moduleName ) ?>]" value="" />
+                <input type="checkbox" name="modules[<?= $this->escapeHtmlAttr( $moduleName ) ?>]" value="1"<?php if ( $single ):
+                    ?> onchange="this.form.submit();"<?php endif ?> />
+                <?= $this->escapeHtml( $moduleLabel ) ?>
+
+            </label>
+<?php endforeach ?>
+<?php if ( ! $single ): ?>
+
+            <button type="submit"><?= $this->translate( 'default.save' ) ?></button>
+<?php endif ?>
+
+        </form>
+<?php endif ?>
+
         <dl class="package-data">
             <dt class="library-name"><?= $this->translate( 'admin.packages.name', 'admin' ) ?></dt>
             <dd class="library-name"><?= $this->escapeHtml( $this->package->name ) ?></dd>

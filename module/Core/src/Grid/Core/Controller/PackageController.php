@@ -33,10 +33,18 @@ class PackageController extends AbstractAdminController
         $model  = $this->getServiceLocator()
                        ->get( 'Grid\Core\Model\Package\Model' );
 
+        $canModify = $model->canModify();
+
+        if ( ! $canModify )
+        {
+            $filter['installed'] = true;
+        }
+
         return array(
             'page'          => (int)   $page,
             'filter'        => (array) $filter,
             'order'         => $order,
+            'canModify'     => $canModify,
             'categories'    => $model->getCategories(),
             'paginator'     => $model->getPaginator( $filter, $order )
         );
@@ -74,6 +82,17 @@ class PackageController extends AbstractAdminController
      */
     public function updateAction()
     {
+        $model = $this->getServiceLocator()
+                      ->get( 'Grid\Core\Model\Package\Model' );
+
+        if ( ! $model->canModify() )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 403 );
+
+            return;
+        }
+
         return array();
     }
 
@@ -82,6 +101,17 @@ class PackageController extends AbstractAdminController
      */
     public function runUpdateAction()
     {
+        $model = $this->getServiceLocator()
+                      ->get( 'Grid\Core\Model\Package\Model' );
+
+        if ( ! $model->canModify() )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 403 );
+
+            return;
+        }
+
         $process = new BackgroundProcess( array(
             'command'   => BackgroundProcess::getPhpBinary(),
             'arguments' => array( './bin/update.php' ),

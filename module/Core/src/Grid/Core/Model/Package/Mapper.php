@@ -10,6 +10,7 @@ use Zork\Model\MapperAwareInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 use Zork\Model\Mapper\ReadOnlyMapperInterface;
 use Zork\Model\Mapper\ReadListMapperInterface;
+use Zend\ModuleManager\ModuleManagerInterface;
 
 /**
  * Mapper
@@ -45,6 +46,11 @@ class Mapper implements HydratorInterface,
      * @var \Grid\Core\Model\Package\EnabledList
      */
     protected $enabledList;
+
+    /**
+     * @var \Zend\ModuleManager\ModuleManagerInterface
+     */
+    protected $moduleManager;
 
     /**
      * @var array
@@ -104,16 +110,37 @@ class Mapper implements HydratorInterface,
     }
 
     /**
+     * @return  \Zend\ModuleManager\ModuleManagerInterface
+     */
+    public function getModuleManager()
+    {
+        return $this->moduleManager;
+    }
+
+    /**
+     * @param   \Zend\ModuleManager\ModuleManagerInterface $moduleManager
+     * @return  \Core\View\Helper\AppService
+     */
+    public function setModuleManager( ModuleManagerInterface $moduleManager )
+    {
+        $this->moduleManager = $moduleManager;
+        return $this;
+    }
+
+    /**
      * Construct mapper
      *
-     * @param   \Zend\Http\Client                       $httpClient
-     * @param   \Grid\Core\Model\Package\EnabledList    $enabledList
+     * @param   \Zend\Http\Client                           $httpClient
+     * @param   \Grid\Core\Model\Package\EnabledList        $enabledList
+     * @param   \Zend\ModuleManager\ModuleManagerInterface  $moduleManager
      */
-    public function __construct( HttpClient     $httpClient,
-                                 EnabledList    $enabledList )
+    public function __construct( HttpClient             $httpClient,
+                                 EnabledList            $enabledList,
+                                 ModuleManagerInterface $moduleManager)
     {
         $this->setHttpClient( $httpClient )
-             ->setEnabledList( $enabledList );
+             ->setEnabledList( $enabledList )
+             ->setModuleManager( $moduleManager );
     }
 
     /**
@@ -125,6 +152,25 @@ class Mapper implements HydratorInterface,
     {
         return $this->getEnabledList()
                     ->getKeys();
+    }
+
+    /**
+     * Is module loaded
+     *
+     * @param   string  $module
+     * @return  bool
+     */
+    public function canModify()
+    {
+        $modules = $this->getModuleManager()
+                        ->getModules();
+
+        if ( ! in_array( 'Grid\MultisitePlatform', $modules ) )
+        {
+            return true;
+        }
+
+        return in_array( 'Grid\MultisiteCentral', $modules );
     }
 
     /**
@@ -267,6 +313,11 @@ class Mapper implements HydratorInterface,
                     if ( ! empty( $package['extra']['display-description'] ) )
                     {
                         $data['displayDescription'] = $package['extra']['display-description'];
+                    }
+
+                    if ( ! empty( $package['extra']['modules'] ) )
+                    {
+                        $data['modules'] = (array) $package['extra']['modules'];
                     }
 
                     break;
@@ -425,6 +476,12 @@ class Mapper implements HydratorInterface,
                          ! empty( $versionData['extra']['display-description'] ) )
                     {
                         $data['displayDescription'] = $versionData['extra']['display-description'];
+                    }
+
+                    if ( empty( $data['modules'] ) &&
+                         ! empty( $versionData['extra']['modules'] ) )
+                    {
+                        $data['modules'] = $versionData['extra']['modules'];
                     }
                 }
             }

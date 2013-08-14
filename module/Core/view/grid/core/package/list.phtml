@@ -38,9 +38,13 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
 <div class="page">
     <form class="package-list-form" method="post" action="?">
         <p class="package-list-actions">
+<?php if ( $this->canModify ): ?>
+
             <a href="/app/<?= $this->locale() ?>/admin/package/update"
                class="update-all button-appearance"><?= $this->translate( 'admin.packages.action.updateAll', 'admin' ) ?></a>
         </p>
+<?php endif ?>
+
         <p class="package-list-categories">
             <input name="filter[category]" type="hidden" value="<?= $filter['category'] ?>" />
             <button name="filter[category]" type="submit"
@@ -59,23 +63,31 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
 
         </p>
         <p class="package-list-search">
-            <label>
-                <input type="radio" name="filter[installed]" value=""<?php if ( null === $filter['installed'] ):
-                    ?> checked="checked"<?php endif ?>/>
-                <?= $this->translate( 'admin.packages.installed.all', 'admin' ) ?>
-            </label>
-            <label>
-                <input type="radio" name="filter[installed]" value="1"<?php if ( $filter['installed'] ):
-                    ?> checked="checked"<?php endif ?>/>
-                <?= $this->translate( 'admin.packages.installed.only', 'admin' ) ?>
-            </label>
-            <label>
-                <input type="radio" name="filter[installed]" value="0"<?php if ( null !== $filter['installed'] && ! $filter['installed'] ):
-                    ?> checked="checked"<?php endif ?>/>
-                <?= $this->translate( 'admin.packages.installed.not', 'admin' ) ?>
-            </label>
-            <label>
-                <?= $this->translate( 'admin.packages.contains', 'admin' ) ?>
+<?php if ( $this->canModify ): ?>
+
+            <select name="filter[installed]">
+                <option value=""<?php if ( null === $filter['installed'] ):
+                    ?> selected="selected"<?php endif ?>>
+                    <?= $this->translate( 'admin.packages.installed.all', 'admin' ) ?>
+
+                </option>
+                <option value="1"<?php if ( $filter['installed'] ):
+                    ?> selected="selected"<?php endif ?>>
+                    <?= $this->translate( 'admin.packages.installed.only', 'admin' ) ?>
+
+                </option>
+                <option value="0"<?php if ( null !== $filter['installed'] && ! $filter['installed'] ):
+                    ?> selected="selected"<?php endif ?>>
+                    <?= $this->translate( 'admin.packages.installed.not', 'admin' ) ?>
+
+                </option>
+            </select>
+<?php else: ?>
+
+            <input type="hidden" name="filter[installed]" value="1" />
+<?php endif ?>
+
+            <label title="<?= $this->escapeHtmlAttr( $this->translate( 'admin.packages.contains', 'admin' ) ) ?>">
                 <input type="search" name="filter[contains]" value="<?= $this->escapeHtmlAttr( $filter['contains'] ) ?>" />
             </label>
             <button type="submit">
@@ -122,6 +134,18 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
 
                     <a href="/app/<?= $this->locale() ?>/admin/package/view/<?= $package->urlSafeName ?>"
                        class="name-link"><?= $this->escapeHtml( $package->displayedName ) ?></a>
+                </div>
+                <div class="time">
+<?php if ( isset( $package->installedTime ) ): ?>
+
+                    <?= $this->translate( 'admin.packages.installedTime', 'admin' ) ?>:
+                    <?= $this->dateTime( $package->installedTime ) ?>
+<?php elseif ( isset( $package->availableTime ) ): ?>
+
+                    <?= $this->translate( 'admin.packages.availableTime', 'admin' ) ?>:
+                    <?= $this->dateTime( $package->availableTime ) ?>
+<?php endif ?>
+
                 </div>
                 <div class="description">
                     <?= nl2br( $this->escapeHtml( $package->displayedDescription ) ) ?>

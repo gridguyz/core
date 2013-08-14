@@ -124,6 +124,13 @@ class Structure extends MapperAwareAbstract
     protected $displayDescription;
 
     /**
+     * Field: modules
+     *
+     * @var int
+     */
+    protected $modules = array();
+
+    /**
      * Field: favourites
      *
      * @var int
@@ -221,6 +228,18 @@ class Structure extends MapperAwareAbstract
     public function setAvailableTime( $time )
     {
         $this->availableTime = $this->convertToDateTime( $time );
+        return $this;
+    }
+
+    /**
+     * Set modules
+     *
+     * @param   array   $modules
+     * @return  \Grid\Core\Model\Package\Structure
+     */
+    public function setModules( $modules )
+    {
+        $this->modules = (array) $modules;
         return $this;
     }
 
@@ -375,14 +394,32 @@ class Structure extends MapperAwareAbstract
     }
 
     /**
+     * Can modify packages
+     *
+     * @return  bool
+     */
+    public function canModify()
+    {
+        $mapper = $this->getMapper();
+
+        if ( empty( $mapper ) )
+        {
+            return false;
+        }
+
+        return $mapper->canModity();
+    }
+
+    /**
      * Can install this package
      *
      * @return bool
      */
     public function canInstall()
     {
-        return empty( $this->installedVersion ) &&
-             ! empty( $this->availableVersion );
+        return $this->canModify() &&
+               empty( $this->installedVersion ) &&
+               ! empty( $this->availableVersion );
     }
 
     /**
@@ -392,7 +429,8 @@ class Structure extends MapperAwareAbstract
      */
     public function canRemove()
     {
-        return ! preg_match( '#^gridguyz/(core|multisite)$#', $this->name ) &&
+        return $this->canModify() &&
+               ! preg_match( '#^gridguyz/(core|multisite)$#', $this->name ) &&
                ! empty( $this->installedVersion );
     }
 
@@ -403,15 +441,17 @@ class Structure extends MapperAwareAbstract
      */
     public function canUpdate()
     {
-        return $this->canInstall() || (
-            ! empty( $this->installedVersion ) && (
-                ( ( $this->availableVersion == 'dev-master' ||
-                    $this->installedVersion == 'dev-master' ) &&
-                  $this->installedReference != $this->availableReference ) ||
-                version_compare(
-                    $this->availableVersion,
-                    $this->installedVersion,
-                    '>'
+        return $this->canModify() &&(
+            $this->canInstall() || (
+                ! empty( $this->installedVersion ) && (
+                    ( ( $this->availableVersion == 'dev-master' ||
+                        $this->installedVersion == 'dev-master' ) &&
+                      $this->installedReference != $this->availableReference ) ||
+                    version_compare(
+                        $this->availableVersion,
+                        $this->installedVersion,
+                        '>'
+                    )
                 )
             )
         );

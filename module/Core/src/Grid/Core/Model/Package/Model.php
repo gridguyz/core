@@ -83,6 +83,17 @@ class Model implements MapperAwareInterface
     }
 
     /**
+     * Can modify packages
+     *
+     * @return  bool
+     */
+    public function canModify()
+    {
+        return $this->getMapper()
+                    ->canModify();
+    }
+
+    /**
      * Load json data
      *
      * @param   string  $file
