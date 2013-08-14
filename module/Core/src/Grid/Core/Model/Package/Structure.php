@@ -315,7 +315,7 @@ class Structure extends MapperAwareAbstract
             '/^GPL-(\d+\.\d+)\+?$/i'        => 'http://www.gnu.org/licenses/gpl-$1-standalone.html',
             '/^LGPL-(\d+\.\d+)\+?$/i'       => 'http://www.gnu.org/licenses/lgpl-$1-standalone.html',
             '/^MIT$/i'                      => 'http://opensource.org/licenses/MIT',
-            '/^propertary$/i'               => '',
+            '/^proprietary/i'               => '',
             '/^([^\(].*)$/i'                => function ( $matches ) use ( $mapper ) {
                 static $uris = array(
                     'http://opensource.org/licenses/%s',
