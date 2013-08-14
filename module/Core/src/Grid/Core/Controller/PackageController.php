@@ -114,7 +114,7 @@ class PackageController extends AbstractAdminController
 
         $process = new BackgroundProcess( array(
             'command'   => 'php',
-            'arguments' => array( './bin/update.php' ),
+            'arguments' => array( realpath( './bin/update.php' ) ),
         ) );
 
         return new JsonModel( array(
