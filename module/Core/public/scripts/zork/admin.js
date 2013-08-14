@@ -734,11 +734,22 @@
                         outputContainer.text( data.output || "" );
                         messageContainer.text( "" );
 
-                        if ( data.messages && data.messages.length )
+                        if ( data.messages )
                         {
-                            for ( var i = 0, l = data.messages.length; i < l; ++i )
+                            var t;
+
+                            for ( var i in data.messages )
                             {
-                                js.core.translate( data.messages[i] );
+                                t = String( js.core.translate( i ) );
+
+                                if ( data.messages[i] &&
+                                     Array.isArray( data.messages[i] ) &&
+                                     data.messages[i].length )
+                                {
+                                    t = t.format.apply( t, data.messages[i] );
+                                }
+
+                                sendMessage( t );
                             }
                         }
 
