@@ -13,10 +13,42 @@ class Structure extends MapperAwareAbstract
 {
 
     /**
-     * Field: modules
-     *
-     * @var array
+     * @var int
      */
-    public $modules = array();
+    protected $id;
+
+    /**
+     * @var string
+     */
+    protected $module;
+
+    /**
+     * @var bool
+     */
+    protected $enabled;
+
+    /**
+     * Set module name
+     *
+     * @param   string  $name
+     * @return  \Grid\Core\Model\Module\Structure
+     */
+    public function setModule( $name )
+    {
+        $this->module = (string) $name;
+        return $this;
+    }
+
+    /**
+     * Set enabed flag
+     *
+     * @param   bool    $flag
+     * @return  \Grid\Core\Model\Module\Structure
+     */
+    public function setEnabled( $flag = true )
+    {
+        $this->module = (bool) $flag;
+        return $this;
+    }
 
 }

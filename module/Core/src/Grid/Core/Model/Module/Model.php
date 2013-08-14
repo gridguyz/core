@@ -8,7 +8,7 @@ use Zork\Model\MapperAwareInterface;
 /**
  * Model
  *
- * @author Sipi
+ * @author David Pozsar <david.pozsar@megaweb.hu>
  */
 class Model implements MapperAwareInterface
 {
@@ -25,17 +25,40 @@ class Model implements MapperAwareInterface
         $this->setMapper( $moduleMapper );
     }
 
-
     /**
-     * Find module elements by configurations
+     * Create a module
      *
-     * @return \Core\Model\Module\Structure
-     *      *
+     * @param   array   $data
+     * @return  \Grid\Core\Model\SubDomain\Structure
      */
-    public function find( $filter = null )
+    public function create( $data )
     {
         return $this->getMapper()
-                    ->find( $filter );
+                    ->create( $data );
+    }
+
+    /**
+     * Find a module by id
+     *
+     * @param   int     $id
+     * @return  \Grid\Core\Model\SubDomain\Structure
+     */
+    public function find( $id )
+    {
+        return $this->getMapper()
+                    ->find( $id );
+    }
+
+    /**
+     * Find a module by name
+     *
+     * @param   string  $name
+     * @return  \Grid\Core\Model\SubDomain\Structure
+     */
+    public function findByName( $name )
+    {
+        return $this->getMapper()
+                    ->findByName( $name );
     }
 
 }

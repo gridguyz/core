@@ -78,16 +78,6 @@ return array(
                     ),
                 ),
             ),
-            'Grid\Core\Admin\System\Module' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route'    => '/app/:locale/admin/system/modules',
-                    'defaults' => array(
-                        'controller' => 'Grid\Core\Controller\Module',
-                        'action'     => 'index',
-                    ),
-                ),
-            ),
             'Grid\Core\Admin\Package\List' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -295,7 +285,6 @@ return array(
             'Grid\Core\Controller\Settings'  => 'Grid\Core\Controller\SettingsController',
             'Grid\Core\Controller\Uri'       => 'Grid\Core\Controller\UriController',
             'Grid\Core\Controller\SubDomain' => 'Grid\Core\Controller\SubDomainController',
-            'Grid\Core\Controller\Module'    => 'Grid\Core\Controller\ModuleController',
             'Grid\Core\Controller\Package'   => 'Grid\Core\Controller\PackageController',
         ),
     ),
@@ -461,25 +450,6 @@ return array(
                         'name'      => 'adminLocale',
                         'options'   => array(
                             'required'  => true,
-                        ),
-                    ),
-                ),
-            ),
-        ),
-        'Grid\Core\Module' => array(
-            'elements'  => array(
-                'modules' => array(
-                    'spec' => array(
-                        'type'  => 'Zork\Form\Element\MultiCheckbox',
-                        'name'  => 'modules',
-                    ),
-                ),
-                'submit' => array(
-                    'spec' => array(
-                        'type'  => 'Zork\Form\Element\Submit',
-                        'name'  => 'submit',
-                        'attributes'  => array(
-                            'value' => 'default.form.module.submit',
                         ),
                     ),
                 ),
@@ -1043,27 +1013,24 @@ return array(
                     'order'         => 999,
                     'parentOnly'    => true,
                     'pages'         => array(
-                        'modules'       => array(
-                            'label'         => 'admin.navTop.system.modules',
+                        'packages'  => array(
+                            'label'         => 'admin.navTop.packages',
                             'textDomain'    => 'admin',
-                            'route'         => 'Grid\Core\Admin\System\Module',
+                            'route'         => 'Grid\Core\Admin\Package\List',
                             'order'         => 1,
-                            'resource'      => 'sysadmin.modules',
-                            'privilege'     => 'edit',
+                            'resource'      => 'package',
+                            'privilege'     => 'manage',
                         ),
                     ),
                 ),
-            ),
-            // Configuration of choosable modules
-            'modules' => array(
-                'Grid\FacebookLogin'          => 'default.form.module.modules.facebookLogin',
-                'Grid\GoogleAnalytics'        => 'default.form.module.modules.googleAnalytics',
-                'Grid\GoogleSiteVerification' => 'default.form.module.modules.googleSiteVerification',
-             // 'Grid\GoogleMap'              => 'default.form.module.modules.googleMap',
-             // 'Grid\Vote'                   => 'default.form.module.modules.vote',
-                'Grid\OpenId'                 => 'default.form.module.modules.openId',
-                'Grid\DomainManager'          => 'default.form.module.modules.domainManager',
-                'Grid\MultisiteCentral'       => 'default.form.module.modules.multisiteCentral',
+                'sysadmin' => array(
+                    'label'         => 'admin.navTop.sysadmin',
+                    'textDomain'    => 'admin',
+                    'uri'           => '#',
+                    'order'         => 1000,
+                    'parentOnly'    => true,
+                    'pages'         => array(),
+                ),
             ),
             'enabledPackages'   => array(
                 'system'        => array(
@@ -1178,7 +1145,10 @@ return array(
         'template_map'              => array(
             'grid/core/admin/dashboard'     => __DIR__ . '/../view/grid/core/admin/dashboard.phtml',
             'grid/core/admin/not-allowed'   => __DIR__ . '/../view/grid/core/admin/not-allowed.phtml',
-            'grid/core/module/index'        => __DIR__ . '/../view/grid/core/module/index.phtml',
+            'grid/core/package/install'     => __DIR__ . '/../view/grid/core/package/install.phtml',
+            'grid/core/package/list'        => __DIR__ . '/../view/grid/core/package/list.phtml',
+            'grid/core/package/update'      => __DIR__ . '/../view/grid/core/package/update.phtml',
+            'grid/core/package/view'        => __DIR__ . '/../view/grid/core/package/view.phtml',
             'grid/core/settings/index'      => __DIR__ . '/../view/grid/core/settings/index.phtml',
             'grid/core/sub-domain/edit'     => __DIR__ . '/../view/grid/core/sub-domain/edit.phtml',
             'grid/core/sub-domain/list'     => __DIR__ . '/../view/grid/core/sub-domain/list.phtml',

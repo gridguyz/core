@@ -129,6 +129,8 @@ return array(
     'admin.packages.category.application' => 'Appz',
     'admin.packages.contains' => 'Contains',
     'admin.packages.name' => 'Library name',
+    'admin.packages.modules.success' => 'Module settings saved',
+    'admin.packages.modules.failed' => 'Module settings save failed',
     'admin.packages.homepage' => 'Homepage',
     'admin.packages.license' => 'License',
     'admin.packages.keywords' => 'Keywords',

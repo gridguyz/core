@@ -17,7 +17,7 @@ class PackageController extends AbstractAdminController
      */
     protected $aclRights = array(
         '' => array(
-            'sysadmin.packages' => 'edit',
+            'package' => 'manage',
         ),
     );
 
@@ -59,9 +59,9 @@ class PackageController extends AbstractAdminController
         $vendor  = $params->fromRoute( 'vendor' );
         $subname = $params->fromRoute( 'subname' );
         $name    = $vendor . '/' . $subname;
-        $package = $this->getServiceLocator()
-                        ->get( 'Grid\Core\Model\Package\Model' )
-                        ->find( $name );
+        $service = $this->getServiceLocator();
+        $package = $service->get( 'Grid\Core\Model\Package\Model' )
+                           ->find( $name );
 
         if ( empty( $package ) )
         {
@@ -69,6 +69,61 @@ class PackageController extends AbstractAdminController
                  ->setStatusCode( 404 );
 
             return;
+        }
+
+        $modules = (array) $params->fromPost(
+            'modules',
+            $params->fromQuery(
+                'modules',
+                array()
+            )
+        );
+
+        if ( ! empty( $modules ) )
+        {
+            $saved = 0;
+            $model = $service->get( 'Grid\Core\Model\Module\Model' );
+
+            foreach ( $modules as $name => $enabled )
+            {
+                if ( empty( $name ) )
+                {
+                    continue;
+                }
+
+                $name   = (string) $name;
+                $module = $model->findByName( $name );
+
+                if ( empty( $module ) )
+                {
+                    $module = $model->create( array(
+                        'module'    => $name,
+                        'enabled'   => $enabled,
+                    ) );
+                }
+                else
+                {
+                    $module->enabled = $enabled;
+                }
+
+                $saved += $module->save();
+            }
+
+            if ( $saved )
+            {
+                $this->messenger()
+                     ->add( 'admin.packages.modules.success',
+                            'admin', Message::LEVEL_INFO );
+
+                return $this->redirect()
+                            ->toUrl( '?refresh' );
+            }
+            else
+            {
+                $this->messenger()
+                     ->add( 'admin.packages.modules.failed',
+                            'admin', Message::LEVEL_WARN );
+            }
         }
 
         return array(
