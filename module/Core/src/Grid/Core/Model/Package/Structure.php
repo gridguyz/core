@@ -407,7 +407,7 @@ class Structure extends MapperAwareAbstract
             return false;
         }
 
-        return $mapper->canModity();
+        return $mapper->canModify();
     }
 
     /**
