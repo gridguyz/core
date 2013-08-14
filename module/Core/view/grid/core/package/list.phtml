@@ -100,13 +100,15 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
 <?php if ( $package && $package->isValid() ): ?>
 
             <div class="package-entry">
-                <img class="icon" src="/images/common/blank.gif"
+                <a href="/app/<?= $this->locale() ?>/admin/package/view/<?= $package->urlSafeName ?>"
+                   class="icon-link"><img
+                   class="icon" src="/images/common/blank.gif"
 <?php if ( $package->displayIcon ): ?>
 
-                     style="background-image: url(<?= $this->escapeHtmlAttr( $package->displayIcon ) ?>);"
+                   style="background-image: url(<?= $this->escapeHtmlAttr( $package->displayIcon ) ?>);"
 <?php endif ?>
 
-                     alt="<?= $this->escapeHtmlAttr( $name ) ?>"/>
+                   alt="<?= $this->escapeHtmlAttr( $name ) ?>"/></a>
                 <div class="name">
 <?php if ( $package->canInstall() ): ?>
 

@@ -297,6 +297,74 @@ class Structure extends MapperAwareAbstract
     }
 
     /**
+     * Get license uris
+     *
+     * @return  array
+     */
+    public function getLicenseUris()
+    {
+        $result             = array();
+        $mapper             = $this->getMapper();
+        $licenseUrlPatterns = array(
+            '/^cc-(by-sa|by-nd|by-nc|by-nc-sa|by-nc-nd)-(\d+\.\d+)$/i' => function ( $matches ) {
+                return 'http://creativecommons.org/licenses/' . strtolower( $matches[1] ) . '/' . $matches[2];
+            },
+            '/^cc0-(\d+\.\d+)$/i'           => 'http://creativecommons.org/publicdomain/zero/$1',
+            '/^Apache-(\d+\.\d+)$/i'        => 'http://www.apache.org/licenses/LICENSE-$1',
+            '/^Artistic-(\d+)\.(\d+)$/i'    => 'http://www.perlfoundation.org/artistic_license_$1_$2',
+            '/^GPL-(\d+\.\d+)\+?$/i'        => 'http://www.gnu.org/licenses/gpl-$1-standalone.html',
+            '/^LGPL-(\d+\.\d+)\+?$/i'       => 'http://www.gnu.org/licenses/lgpl-$1-standalone.html',
+            '/^MIT$/i'                      => 'http://opensource.org/licenses/MIT',
+            '/^propertary$/i'               => '',
+            '/^([^\(].*)$/i'                => function ( $matches ) use ( $mapper ) {
+                static $uris = array(
+                    'http://opensource.org/licenses/%s',
+                    'http://spdx.org/licenses/%s'
+                );
+
+                if ( empty( $mapper ) )
+                {
+                    return '';
+                }
+
+                foreach ( $uris as $uriPattern )
+                {
+                    $uri = vsprintf( $uriPattern, $matches );
+
+                    if ( $mapper->getHttpClient( $uri )
+                                ->send()
+                                ->isOk() )
+                    {
+                        return $uri;
+                    }
+                }
+
+                return '';
+            },
+        );
+
+        foreach ( $this->license as $license )
+        {
+            foreach ( $licenseUrlPatterns as $pattern => $replacement )
+            {
+                $count  = 0;
+                $method = is_callable( $replacement ) ? 'preg_replace_callback' : 'preg_replace';
+                $uri    = $method( $pattern, $replacement, $license, 1, $count );
+
+                if ( $count && $uri )
+                {
+                    $result[$license] = $uri;
+                    continue 2;
+                }
+            }
+
+            $result[$license] = '';
+        }
+
+        return $result;
+    }
+
+    /**
      * Is a package a valid package
      *
      * @return string

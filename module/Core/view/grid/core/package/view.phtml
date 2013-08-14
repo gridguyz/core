@@ -52,7 +52,19 @@ $this->headLink()
 <?php if ( ! empty( $this->package->license ) ): ?>
 
             <dt class="license"><?= $this->translate( 'admin.packages.license', 'admin' ) ?></dt>
-            <dd class="license"><?= $this->escapeHtml( implode( ', ', $this->package->license ) ) ?></dd>
+            <dd class="license">
+<?php foreach ( $this->package->licenseUris as $license => $uri ): ?>
+<?php if ( $uri ): ?>
+
+                <a href="<?= $this->escapeHtmlAttr( $uri ) ?>"
+                   target="_blank"><?= $this->escapeHtml( $license ) ?></a>
+<?php else: ?>
+
+                <span><?= $this->escapeHtml( $license ) ?></span>
+<?php endif ?>
+<?php endforeach ?>
+
+            </dd>
 <?php endif ?>
 <?php if ( ! empty( $this->package->keywords ) ): ?>
 

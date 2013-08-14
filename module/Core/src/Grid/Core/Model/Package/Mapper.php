@@ -59,7 +59,14 @@ class Mapper implements HydratorInterface,
      */
     public function getHttpClient( $uri = null )
     {
-        return clone $this->httpClient;
+        $client = clone $this->httpClient;
+
+        if ( $uri )
+        {
+            $client->setUri( $uri );
+        }
+
+        return $client;
     }
 
     /**
@@ -155,8 +162,7 @@ class Mapper implements HydratorInterface,
      */
     protected function queryJson( $uri )
     {
-        $response = $this->getHttpClient()
-                         ->setUri( $uri )
+        $response = $this->getHttpClient( $uri )
                          ->send();
 
         if ( $response->isOk() )
