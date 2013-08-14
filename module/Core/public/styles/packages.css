@@ -7,9 +7,34 @@
     font-weight: bold;
 }
 
+.package-list-search,
 .package-list-actions
 {
     text-align: right;
+}
+
+.package-list-search select
+{
+    float: left;
+}
+
+.package-list-categories
+{
+    padding: 0em 1em;
+    border-bottom: 1px solid #000;
+    border-color: currentColor;
+}
+
+.package-list-categories button
+{
+    margin-bottom: 0px;
+    vertical-align: bottom;
+}
+
+.package-list-categories button.active
+{
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
 
 .package-list .package-entry
@@ -99,7 +124,9 @@
     font-weight: bold;
 }
 
+.package-details .time,
 .package-details .description,
+.package-list .package-entry .time,
 .package-list .package-entry .description
 {
     display: block;
