@@ -124,6 +124,12 @@
     font-weight: bold;
 }
 
+.package-details .modules
+{
+    clear: both;
+    text-align: center;
+}
+
 .package-details .time,
 .package-details .description,
 .package-list .package-entry .time,

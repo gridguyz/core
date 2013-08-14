@@ -13,7 +13,7 @@ $this->headLink()
 ?>
 <h1><?= $title ?></h1>
 <div class="page">
-    <form class="package-details">
+    <form class="package-details" method="post" action="?">
         <h3 class="name">
             <?= $this->escapeHtml( $this->package->displayedName ) ?>
 
@@ -54,7 +54,7 @@ $this->headLink()
         </div>
 <?php if ( ! empty( $this->package->modules ) ): $single = 1 == count( $this->package->modules ); ?>
 
-        <form class="modules" method="post" action="?">
+        <div class="modules">
 <?php foreach ( $this->package->modules as $moduleName => $moduleLabel ): ?>
 
             <label class="module" onclick="this.blur();">
@@ -70,7 +70,7 @@ $this->headLink()
             <button type="submit"><?= $this->translate( 'default.save' ) ?></button>
 <?php endif ?>
 
-        </form>
+        </div>
 <?php endif ?>
 
         <dl class="package-data">
