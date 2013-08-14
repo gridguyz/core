@@ -130,9 +130,9 @@
     text-align: center;
 }
 
-.package-details .time,
+.package-details .short-time,
 .package-details .description,
-.package-list .package-entry .time,
+.package-list .package-entry .short-time,
 .package-list .package-entry .description
 {
     display: block;

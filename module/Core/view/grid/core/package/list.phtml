@@ -135,7 +135,7 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
                     <a href="/app/<?= $this->locale() ?>/admin/package/view/<?= $package->urlSafeName ?>"
                        class="name-link"><?= $this->escapeHtml( $package->displayedName ) ?></a>
                 </div>
-                <div class="time">
+                <div class="short-time">
 <?php if ( isset( $package->installedTime ) ): ?>
 
                     <?= $this->translate( 'admin.packages.installedTime', 'admin' ) ?>:
