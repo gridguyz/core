@@ -11,6 +11,7 @@ use Zork\Mvc\View\Http\InjectTemplateListener;
 use Zork\Mvc\Controller\LocaleSelectorInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ModuleManager\Feature\InitProviderInterface;
+use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
 
@@ -21,6 +22,7 @@ use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
  */
 class Module extends ModuleAbstract
           implements InitProviderInterface,
+                     ServiceProviderInterface,
                      BootstrapListenerInterface,
                      ViewHelperProviderInterface
 {
@@ -262,6 +264,24 @@ class Module extends ModuleAbstract
             $sm->get( 'Locale' )
                ->setCurrent( $locale );
         }
+    }
+
+    /**
+     * Expected to return \Zend\ServiceManager\Config object or array to
+     * seed such an object.
+     *
+     * @return array|\Zend\ServiceManager\Config
+     */
+    public function getServiceConfig()
+    {
+        return array(
+            'instances' => array(
+                'moduleManager' => $this->moduleManager,
+            ),
+            'aliases' => array(
+                'Zend\ModuleManager\ModuleManagerInterface' => 'moduleManager',
+            ),
+        );
     }
 
     /**
