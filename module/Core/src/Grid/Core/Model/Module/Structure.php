@@ -47,7 +47,7 @@ class Structure extends MapperAwareAbstract
      */
     public function setEnabled( $flag = true )
     {
-        $this->module = (bool) $flag;
+        $this->enabled = (bool) $flag;
         return $this;
     }
 
