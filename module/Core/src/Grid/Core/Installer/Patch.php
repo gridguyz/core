@@ -496,42 +496,11 @@ class Patch extends AbstractPatch
      */
     protected function mergePackagesConfig()
     {
-        $installer  = $this->getInstaller();
-        $config     = 'packages.local';
-        $file       = $installer->getConfigFile( $config );
-
-        if ( is_file( $file . '.dist' ) )
-        {
-            if ( ! is_file( $file ) )
-            {
-                @ copy( $file . '.dist', $file );
-            }
-            else
-            {
-                $oldData = $installer->getConfigData( $config );
-                @ unlink( $file );
-                @ copy( $file . '.dist', $file );
-                $installer->clearConfigDataCache( $config );
-                $data = $installer->getConfigData( $config );
-                $installer::merge( $data, $oldData );
-
-                if ( ! empty( $data['modules']['Grid\Core']['enabledPackages'] ) )
-                {
-                    $data['modules']['Grid\Core']['enabledPackages'] = (array) $data['modules']['Grid\Core']['enabledPackages'];
-
-                    foreach ( $data['modules']['Grid\Core']['enabledPackages'] as &$packages )
-                    {
-                        if ( ! is_array( $packages ) )
-                        {
-                            $packages = (array) $packages;
-                        }
-
-                        $packages = array_unique( $packages );
-                    }
-                }
-
-                $installer->setConfigData( $config, $data );
-            }
-        }
+        $this->getInstaller()
+             ->mergeConfigData(
+                 'packages.local',
+                 include __DIR__ . '/../../../../config/default.packages.php'
+             );
     }
+
 }
