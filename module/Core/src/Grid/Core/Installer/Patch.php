@@ -513,7 +513,7 @@ class Patch extends AbstractPatch
                 @ copy( $file . '.dist', $file );
                 $installer->clearConfigDataCache( $config );
 
-                $data = self::merge(
+                $data = $installer::merge(
                     $installer->getConfigData( $config ),
                     $data
                 );
