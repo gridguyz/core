@@ -84,6 +84,17 @@ class Model implements MapperAwareInterface
     }
 
     /**
+     * Get enabled pattern count
+     *
+     * @return  int
+     */
+    public function getEnabledPatternCount()
+    {
+        return $this->getMapper()
+                    ->getEnabledPatternCount();
+    }
+
+    /**
      * Can modify packages
      *
      * @return  bool

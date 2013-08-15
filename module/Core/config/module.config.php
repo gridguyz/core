@@ -1020,6 +1020,12 @@ return array(
                             'order'         => 1,
                             'resource'      => 'package',
                             'privilege'     => 'manage',
+                            'dependencies'  => array(
+                                'Grid\Core\Model\Package\Model::getEnabledPatternCount' => array(
+                                    'service'   => 'Grid\Core\Model\Package\Model',
+                                    'method'    => 'getEnabledPatternCount'
+                                ),
+                            ),
                         ),
                     ),
                 ),
@@ -1033,12 +1039,8 @@ return array(
                 ),
             ),
             'enabledPackages'   => array(
-                'system'        => array(
-                    'gridguyz'  => 'gridguyz/(core|multisite)'
-                ),
-                'function'      => array(
-                    'gridguyz'  => 'gridguyz/(?!core|multisite).*'
-                ),
+                'system'        => array(),
+                'function'      => array(),
                 'application'   => array(),
             ),
             'settings' => array(

@@ -155,6 +155,17 @@ class Mapper implements HydratorInterface,
     }
 
     /**
+     * Get enabled pattern count
+     *
+     * @return  array
+     */
+    public function getEnabledPatternCount()
+    {
+        return $this->getEnabledList()
+                    ->getPatternCount();
+    }
+
+    /**
      * Is module loaded
      *
      * @param   string  $module
