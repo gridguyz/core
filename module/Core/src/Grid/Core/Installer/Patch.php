@@ -508,12 +508,12 @@ class Patch extends AbstractPatch
             }
             else
             {
-                $data = $installer->getConfigData( $config );
+                $oldData = $installer->getConfigData( $config );
                 @ unlink( $file );
                 @ copy( $file . '.dist', $file );
                 $installer->clearConfigDataCache( $config );
-                $distData = $installer->getConfigData( $config );
-                $data     = $installer::merge( $distData, $data );
+                $data = $installer->getConfigData( $config );
+                $installer::merge( $data, $oldData );
 
                 if ( ! empty( $data['modules']['Grid\Core']['enabledPackages'] ) )
                 {
