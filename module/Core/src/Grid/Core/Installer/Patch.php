@@ -522,14 +522,14 @@ class Patch extends AbstractPatch
                 {
                     $data['modules']['Grid\Core']['enabledPackages'] = (array) $data['modules']['Grid\Core']['enabledPackages'];
 
-                    foreach ( $data['modules']['Grid\Core']['enabledPackages'] as &$packages )
+                    foreach ( $data['modules']['Grid\Core']['enabledPackages'] as $key => $packages )
                     {
-                        if ( ! is_array() )
+                        if ( ! is_array( $packages ) )
                         {
                             $packages = (array) $packages;
                         }
 
-                        $packages = array_unique( $packages );
+                        $data['modules']['Grid\Core']['enabledPackages'][$key] = array_unique( $packages );
                     }
                 }
 
