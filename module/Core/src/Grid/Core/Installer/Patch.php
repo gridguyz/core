@@ -512,24 +512,21 @@ class Patch extends AbstractPatch
                 @ unlink( $file );
                 @ copy( $file . '.dist', $file );
                 $installer->clearConfigDataCache( $config );
-
-                $data = $installer::merge(
-                    $installer->getConfigData( $config ),
-                    $data
-                );
+                $distData = $installer->getConfigData( $config );
+                $data     = $installer::merge( $distData, $data );
 
                 if ( ! empty( $data['modules']['Grid\Core']['enabledPackages'] ) )
                 {
                     $data['modules']['Grid\Core']['enabledPackages'] = (array) $data['modules']['Grid\Core']['enabledPackages'];
 
-                    foreach ( $data['modules']['Grid\Core']['enabledPackages'] as $key => $packages )
+                    foreach ( $data['modules']['Grid\Core']['enabledPackages'] as &$packages )
                     {
                         if ( ! is_array( $packages ) )
                         {
                             $packages = (array) $packages;
                         }
 
-                        $data['modules']['Grid\Core']['enabledPackages'][$key] = array_unique( $packages );
+                        $packages = array_unique( $packages );
                     }
                 }
 
