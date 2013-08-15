@@ -10,7 +10,9 @@ return array(
                 'function'      => array(
                     'gridguyz'  => 'gridguyz/(?!core|multisite).*',
                 ),
-                'application'   => array(),
+                'application'   => array(
+                    // reserved for 3rd party packages
+                ),
             ),
         ),
     ),
