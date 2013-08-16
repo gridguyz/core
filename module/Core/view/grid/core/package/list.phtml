@@ -147,24 +147,28 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
                 <span class="time-label"><?= $this->translate( 'admin.packages.availableTime', 'admin' ) ?>:</span>
                 <span class="time-value"><?= $this->dateTime( $package->availableTime ) ?></span>
 <?php endif ?>
-<?php if ( isset( $this->package->favourites ) ): ?>
+<?php if ( isset( $package->favourites ) ): ?>
 
                 <span class="number favourites" title="<?= $this->translate( 'admin.packages.favourites', 'admin' )
-                    ?>"><?= (int) $this->package->favourites ?></span>
+                    ?>"><?= (int) $package->favourites ?></span>
 <?php endif ?>
-<?php if ( isset( $this->package->downloads ) ): ?>
+<?php if ( isset( $package->downloads ) ): ?>
 
                 <span class="number downloads" title="<?= $this->translate( 'admin.packages.downloads', 'admin' )
-                    ?>"><?= (int) $this->package->downloads ?></span>
+                    ?>"><?= (int) $package->downloads ?></span>
 <?php endif ?>
 
             </div>
-<?php if ( ! empty( $package->availableVersion ) && ! empty( $package->modules ) ): $single = 1 == count( $package->modules ); ?>
+<?php if ( ! empty( $package->installedVersion ) && ! empty( $package->modules ) ): $single = 1 == count( $package->modules ); ?>
 
             <form class="modules" method="post" action="?">
                 <input name="filter[category]" type="hidden" value="<?= $this->escapeHtmlAttr( $filter['category'] ) ?>" />
-                <input name="filter[installed]" type="hidden" value="<?= $filter['installed'] === null ? '' : ( $filter['installed'] ? '1' : '0' ) ?>" />
                 <input name="filter[contains]" type="hidden" value="<?= $this->escapeHtmlAttr( $filter['contains'] ) ?>" />
+<?php if ( $this->canModify ): ?>
+
+                <input name="filter[installed]" type="hidden" value="<?= $filter['installed'] === null ? '' : ( $filter['installed'] ? '1' : '0' ) ?>" />
+<?php endif ?>
+
                 <p class="modules-header"><?= $this->translate( 'admin.packages.modules.activation', 'admin' ) ?></p>
 <?php foreach ( $package->modules as $moduleName => $moduleLabel ): ?>
 
@@ -286,8 +290,12 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
 
     <form class="package-list-form" method="post" action="?">
         <input name="filter[category]" type="hidden" value="<?= $this->escapeHtmlAttr( $filter['category'] ) ?>" />
-        <input name="filter[installed]" type="hidden" value="<?= $filter['installed'] === null ? '' : ( $filter['installed'] ? '1' : '0' ) ?>" />
         <input name="filter[contains]" type="hidden" value="<?= $this->escapeHtmlAttr( $filter['contains'] ) ?>" />
+<?php if ( $this->canModify ): ?>
+
+        <input name="filter[installed]" type="hidden" value="<?= $filter['installed'] === null ? '' : ( $filter['installed'] ? '1' : '0' ) ?>" />
+<?php endif ?>
+
         <?= $paginationControl ?>
 
     </form>

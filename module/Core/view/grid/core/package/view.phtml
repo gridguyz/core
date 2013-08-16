@@ -47,9 +47,19 @@ $this->headLink()
                     <span class="time-label"><?= $this->translate( 'admin.packages.availableTime', 'admin' ) ?>:</span>
                     <span class="time-value"><?= $this->dateTime( $this->package->availableTime ) ?></span>
 <?php endif ?>
+<?php if ( isset( $this->package->favourites ) ): ?>
+
+                <span class="number favourites" title="<?= $this->translate( 'admin.packages.favourites', 'admin' )
+                    ?>"><?= (int) $this->package->favourites ?></span>
+<?php endif ?>
+<?php if ( isset( $this->package->downloads ) ): ?>
+
+                <span class="number downloads" title="<?= $this->translate( 'admin.packages.downloads', 'admin' )
+                    ?>"><?= (int) $this->package->downloads ?></span>
+<?php endif ?>
 
         </div>
-<?php if ( ! empty( $this->package->availableVersion ) && ! empty( $this->package->modules ) ): $single = 1 == count( $this->package->modules ); ?>
+<?php if ( ! empty( $this->package->installedVersion ) && ! empty( $this->package->modules ) ): $single = 1 == count( $this->package->modules ); ?>
 
         <div class="modules">
 <?php foreach ( $this->package->modules as $moduleName => $moduleLabel ): ?>
