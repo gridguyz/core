@@ -196,42 +196,42 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
                 <p class="additional-info-header"><?= $this->translate( 'admin.packages.additionalInfo', 'admin' ) ?></p>
                 <dl class="package-data right">
                     <dt class="library-name"><?= $this->translate( 'admin.packages.libraryName', 'admin' ) ?></dt>
-                    <dd class="library-name"><?= $this->escapeHtml( $this->package->name ) ?></dd>
+                    <dd class="library-name"><?= $this->escapeHtml( $package->name ) ?></dd>
                     <dt class="library-description"><?= $this->translate( 'admin.packages.libraryDescription', 'admin' ) ?></dt>
-                    <dd class="library-description"><?= $this->escapeHtml( $this->package->description ) ?></dd>
-<?php if ( ! empty( $this->package->availableVersion ) ): ?>
+                    <dd class="library-description"><?= $this->escapeHtml( $package->description ) ?></dd>
+<?php if ( ! empty( $package->availableVersion ) ): ?>
 
                     <dt class="available version"><?= $this->translate( 'admin.packages.availableVersion', 'admin' ) ?></dt>
                     <dd class="available version">
-                        <?= $this->escapeHtml( $this->package->availableVersion ) ?>
-<?php if ( ! empty( $this->package->availableReference ) ): ?>
+                        <?= $this->escapeHtml( $package->availableVersion ) ?>
+<?php if ( ! empty( $package->availableReference ) ): ?>
 
-                        <span class="available reference">#<?= $this->escapeHtml( $this->package->availableReference ) ?></span>
+                        <span class="available reference">#<?= $this->escapeHtml( $package->availableReference ) ?></span>
 <?php endif ?>
 
                     </dd>
 <?php endif ?>
-<?php if ( ! empty( $this->package->availableTime ) ): ?>
+<?php if ( ! empty( $package->availableTime ) ): ?>
 
                     <dt class="available time"><?= $this->translate( 'admin.packages.availableTime', 'admin' ) ?></dt>
                     <dd class="available time">
-                        <?= $this->dateTime( $this->package->availableTime ) ?>
+                        <?= $this->dateTime( $package->availableTime ) ?>
 
                     </dd>
 <?php endif ?>
                 </dl>
                 <dl class="package-data left">
-<?php if ( ! empty( $this->package->homepage ) ): ?>
+<?php if ( ! empty( $package->homepage ) ): ?>
 
                     <dt class="homepage"><?= $this->translate( 'admin.packages.homepage', 'admin' ) ?></dt>
-                    <dd class="homepage"><a href="<?= $this->escapeHtmlAttr( $this->package->homepage ) ?>"
-                                            target="_blank"><?= $this->escapeHtml( $this->package->homepage ) ?></a></dd>
+                    <dd class="homepage"><a href="<?= $this->escapeHtmlAttr( $package->homepage ) ?>"
+                                            target="_blank"><?= $this->escapeHtml( $package->homepage ) ?></a></dd>
 <?php endif ?>
-<?php if ( ! empty( $this->package->license ) ): ?>
+<?php if ( ! empty( $package->license ) ): ?>
 
                     <dt class="license"><?= $this->translate( 'admin.packages.license', 'admin' ) ?></dt>
                     <dd class="license">
-<?php foreach ( $this->package->licenseUris as $license => $uri ): ?>
+<?php foreach ( $package->licenseUris as $license => $uri ): ?>
 <?php if ( $uri ): ?>
 
                         <a href="<?= $this->escapeHtmlAttr( $uri ) ?>"
@@ -244,28 +244,28 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
 
                     </dd>
 <?php endif ?>
-<?php if ( ! empty( $this->package->keywords ) ): ?>
+<?php if ( ! empty( $package->keywords ) ): ?>
 
                     <dt class="keywords"><?= $this->translate( 'admin.packages.keywords', 'admin' ) ?></dt>
-                    <dd class="keywords"><?= $this->escapeHtml( implode( ', ', $this->package->keywords ) ) ?></dd>
+                    <dd class="keywords"><?= $this->escapeHtml( implode( ', ', $package->keywords ) ) ?></dd>
 <?php endif ?>
-<?php if ( ! empty( $this->package->installedVersion ) ): ?>
+<?php if ( ! empty( $package->installedVersion ) ): ?>
 
                     <dt class="installed version"><?= $this->translate( 'admin.packages.installedVersion', 'admin' ) ?></dt>
                     <dd class="installed version">
-                        <?= $this->escapeHtml( $this->package->installedVersion ) ?>
-<?php if ( ! empty( $this->package->installedReference ) ): ?>
+                        <?= $this->escapeHtml( $package->installedVersion ) ?>
+<?php if ( ! empty( $package->installedReference ) ): ?>
 
-                        <span class="installed reference">#<?= $this->escapeHtml( $this->package->installedReference ) ?></span>
+                        <span class="installed reference">#<?= $this->escapeHtml( $package->installedReference ) ?></span>
 <?php endif ?>
 
                     </dd>
 <?php endif ?>
-<?php if ( ! empty( $this->package->installedTime ) ): ?>
+<?php if ( ! empty( $package->installedTime ) ): ?>
 
                     <dt class="installed time"><?= $this->translate( 'admin.packages.installedTime', 'admin' ) ?></dt>
                     <dd class="installed time">
-                        <?= $this->dateTime( $this->package->installedTime ) ?>
+                        <?= $this->dateTime( $package->installedTime ) ?>
 
                     </dd>
 <?php endif ?>
