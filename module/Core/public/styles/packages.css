@@ -56,7 +56,8 @@
     background: #f8f8ff;
 }
 
-.package-list .package-entry:after
+.package-list .package-entry:after,
+.package-list .package-entry .additional-info:after
 {
     height: 0;
     clear: both;
@@ -67,12 +68,14 @@
 
 /* required comment for clearfix to work in Opera \*/
 
-* html .package-list .package-entry
+* html .package-list .package-entry,
+* html .package-list .package-entry .additional-info
 {
     height: 1%;
 }
 
-.package-list .package-entry
+.package-list .package-entry,
+.package-list .package-entry .additional-info
 {
     display: block;
 }
@@ -97,13 +100,6 @@
     color: #fec;
 }
 
-.package-list .package-entry .action.view
-{
-    right: 1em;
-    bottom: 1em;
-    position: absolute;
-}
-
 .package-details .icon,
 .package-list .package-entry .icon
 {
@@ -124,15 +120,16 @@
     font-weight: bold;
 }
 
-.package-details .modules
+.package-details .modules,
+.package-list .package-entry .modules
 {
-    clear: both;
-    text-align: center;
+    width: 30%;
+    float: right;
 }
 
-.package-details .short-time,
+.package-details .short-infos,
 .package-details .description,
-.package-list .package-entry .short-time,
+.package-list .package-entry .short-infos,
 .package-list .package-entry .description
 {
     display: block;
@@ -152,12 +149,24 @@
     filter: alpha(opacity=50);
 }
 
-.package-details dl.package-data dt
+.package-details dl.package-data dt,
+.package-list .package-entry dl.package-data dt
 {
     font-weight: bold;
 }
 
-.package-details dl.package-data dd
+.package-details dl.package-data dd,
+.package-list .package-entry dl.package-data dd
 {
     padding-left: 1ex;
+}
+
+.package-details .package-data.left
+{
+    float: left;
+}
+
+.package-details .package-data.right
+{
+    float: right;
 }

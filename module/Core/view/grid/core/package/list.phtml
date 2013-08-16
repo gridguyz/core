@@ -195,7 +195,7 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
             </div>
             <a href="/app/<?= $this->locale() ?>/admin/package/view/<?= $package->urlSafeName ?>"
                onclick="$(this).next('.additional-info').toggle(); return false;"
-               class="action view button-appearance"><?= $this->translate( 'admin.packages.action.view', 'admin' ) ?></a>
+               class="button-appearance"><?= $this->translate( 'admin.packages.action.view', 'admin' ) ?></a>
             <div class="additional-info" style="display: none;">
                 <p class="additional-info-header"><?= $this->translate( 'admin.packages.additionalInfo', 'admin' ) ?></p>
                 <dl class="package-data right">
