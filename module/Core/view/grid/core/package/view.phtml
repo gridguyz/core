@@ -26,6 +26,7 @@ $this->headLink()
 <?php elseif ( $this->package->canRemove() ): ?>
 
                     <a href="/app/<?= $this->locale() ?>/admin/package/remove/<?= $this->package->urlSafeName ?>"
+                       onclick="return js.require('js.ui.dialog').confirm(this);"
                        class="action remove button-appearance"><?= $this->translate( 'admin.packages.action.remove', 'admin' ) ?></a>
 <?php endif ?>
 
@@ -52,7 +53,7 @@ $this->headLink()
             <?= nl2br( $this->escapeHtml( $this->package->displayedDescription ) ) ?>
 
         </div>
-<?php if ( ! empty( $this->package->modules ) ): $single = 1 == count( $this->package->modules ); ?>
+<?php if ( ! empty( $this->package->availableVersion ) && ! empty( $this->package->modules ) ): $single = 1 == count( $this->package->modules ); ?>
 
         <div class="modules">
 <?php foreach ( $this->package->modules as $moduleName => $moduleLabel ): ?>

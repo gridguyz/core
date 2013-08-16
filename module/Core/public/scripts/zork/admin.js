@@ -726,7 +726,7 @@
                 checkTimeout = null;
 
                 $.ajax( {
-                    "url": "/maintenance.php?update=status",
+                    "url": "/app/maintenance.php?update=status",
                     "async": true,
                     "cache": false,
                     "dataType": "json",

@@ -33,6 +33,14 @@ class PackageController extends AbstractAdminController
         $model  = $this->getServiceLocator()
                        ->get( 'Grid\Core\Model\Package\Model' );
 
+        if ( ! $model->getEnabledPatternCount() )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 404 );
+
+            return;
+        }
+
         $canModify = $model->canModify();
 
         if ( ! $canModify )
@@ -60,10 +68,10 @@ class PackageController extends AbstractAdminController
         $subname = $params->fromRoute( 'subname' );
         $name    = $vendor . '/' . $subname;
         $service = $this->getServiceLocator();
-        $package = $service->get( 'Grid\Core\Model\Package\Model' )
-                           ->find( $name );
+        $model   = $service->get( 'Grid\Core\Model\Package\Model' );
+        $package = $model->find( $name );
 
-        if ( empty( $package ) )
+        if ( ! $model->getEnabledPatternCount() || empty( $package ) )
         {
             $this->getResponse()
                  ->setStatusCode( 404 );
@@ -81,8 +89,8 @@ class PackageController extends AbstractAdminController
 
         if ( ! empty( $modules ) )
         {
-            $saved = 0;
-            $model = $service->get( 'Grid\Core\Model\Module\Model' );
+            $saved       = 0;
+            $moduleModel = $service->get( 'Grid\Core\Model\Module\Model' );
 
             foreach ( $modules as $name => $enabled )
             {
@@ -92,11 +100,11 @@ class PackageController extends AbstractAdminController
                 }
 
                 $name   = (string) $name;
-                $module = $model->findByName( $name );
+                $module = $moduleModel->findByName( $name );
 
                 if ( empty( $module ) )
                 {
-                    $module = $model->create( array(
+                    $module = $moduleModel->create( array(
                         'module'    => $name,
                         'enabled'   => $enabled,
                     ) );
@@ -140,6 +148,14 @@ class PackageController extends AbstractAdminController
         $model = $this->getServiceLocator()
                       ->get( 'Grid\Core\Model\Package\Model' );
 
+        if ( ! $model->getEnabledPatternCount() )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 404 );
+
+            return;
+        }
+
         if ( ! $model->canModify() )
         {
             $this->getResponse()
@@ -158,6 +174,14 @@ class PackageController extends AbstractAdminController
     {
         $model = $this->getServiceLocator()
                       ->get( 'Grid\Core\Model\Package\Model' );
+
+        if ( ! $model->getEnabledPatternCount() )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 404 );
+
+            return;
+        }
 
         if ( ! $model->canModify() )
         {
@@ -191,6 +215,14 @@ class PackageController extends AbstractAdminController
         $model   = $service->get( 'Grid\Core\Model\Package\Model' );
         $forms   = $service->get( 'Form' );
         $package = $model->find( $name );
+
+        if ( ! $model->getEnabledPatternCount() )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 404 );
+
+            return;
+        }
 
         if ( empty( $package ) )
         {
@@ -286,6 +318,14 @@ class PackageController extends AbstractAdminController
         $model   = $this->getServiceLocator()
                         ->get( 'Grid\Core\Model\Package\Model' );
         $package = $model->find( $name );
+
+        if ( ! $model->getEnabledPatternCount() )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 404 );
+
+            return;
+        }
 
         if ( empty( $package ) )
         {

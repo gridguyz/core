@@ -151,6 +151,8 @@ class Patch extends AbstractPatch
                 }
             }
         }
+
+        $this->mergePackagesConfig();
     }
 
     /**
@@ -413,7 +415,7 @@ class Patch extends AbstractPatch
      * Insert default menu
      *
      * @param   int $content
-     * @retirn  int
+     * @return  int
      */
     protected function insertDefaultMenu( $content )
     {
@@ -472,7 +474,7 @@ class Patch extends AbstractPatch
      *
      * @param   int $layout
      * @param   int $content
-     * @retirn  int
+     * @return  int
      */
     protected function insertDefaultSubDomain( $layout, $content )
     {
@@ -485,6 +487,20 @@ class Patch extends AbstractPatch
                 'defaultContentId'  => $content,
             )
         );
+    }
+
+    /**
+     * Merge packages config
+     *
+     * @return  void
+     */
+    protected function mergePackagesConfig()
+    {
+        $this->getInstaller()
+             ->mergeConfigData(
+                 'packages.local',
+                 include __DIR__ . '/../../../../config/default.packages.php'
+             );
     }
 
 }

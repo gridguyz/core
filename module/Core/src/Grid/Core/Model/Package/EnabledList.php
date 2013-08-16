@@ -82,4 +82,21 @@ class EnabledList extends ArrayIterator
         return array_keys( $this->getArrayCopy() );
     }
 
+    /**
+     * Get pattern count
+     *
+     * @return  int
+     */
+    public function getPatternCount()
+    {
+        $count = 0;
+
+        foreach ( $this as $patterns )
+        {
+            $count += count( $patterns );
+        }
+
+        return $count;
+    }
+
 }
