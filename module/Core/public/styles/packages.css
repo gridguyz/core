@@ -141,6 +141,14 @@
     padding-bottom: 1.5em;
 }
 
+.package-list .package-entry .name,
+.package-list .package-entry .short-infos,
+.package-list .package-entry .description,
+.package-list .package-entry .description ~ .button-appearance
+{
+    margin-left: 120px;
+}
+
 .package-details .package-data .version .reference
 {
     opacity: 0.5;
@@ -161,12 +169,27 @@
     padding-left: 1ex;
 }
 
-.package-details .package-data.left
+.package-list .package-entry .additional-info
+{
+    clear: both;
+}
+
+.package-list .package-entry .package-data.left
 {
     float: left;
 }
 
-.package-details .package-data.right
+.package-list .package-entry .package-data.right
 {
     float: right;
+}
+
+.package-list .package-entry .package-data.left,
+.package-list .package-entry .package-data.right
+{
+    width: 50%;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
