@@ -540,6 +540,9 @@ return array(
                             'required'  => true,
                         ),
                     ),
+                   'flags' => array(
+                        'priority' => -1000,
+                    ),
                 ),
                 'register' => array(
                     'spec' => array(
@@ -548,6 +551,9 @@ return array(
                         'attributes'    => array(
                             'value'     => 'user.form.register.submit',
                         ),
+                    ),
+                    'flags' => array(
+                        'priority' => -1010,
                     ),
                 ),
             ),
@@ -706,6 +712,9 @@ return array(
                             'value'     => 'user.form.create.submit',
                         ),
                     ),
+                    'flags' => array(
+                        'priority' => -1000,
+                    ),
                 ),
             ),
         ),
@@ -789,6 +798,9 @@ return array(
                         'attributes'    => array(
                             'value'     => 'user.form.edit.submit',
                         ),
+                    ),
+                    'flags' => array(
+                        'priority' => -1000,
                     ),
                 ),
             ),

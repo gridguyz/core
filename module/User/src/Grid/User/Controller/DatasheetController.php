@@ -87,14 +87,15 @@ class DatasheetController extends AbstractActionController
      */
     public function editAction()
     {
-        $params     = $this->params();
-        $request    = $this->getRequest();
-        $locator    = $this->getServiceLocator();
-        $displayn   = $params->fromRoute( 'displayName' );
-        $model      = $locator->get( 'Grid\User\Model\User\Model' );
-        $form       = $locator->get( 'Form' )
-                              ->create( 'Grid\User\Edit' );
-        $user       = $model->findByDisplayName( $displayn );
+        $params           = $this->params();
+        $request          = $this->getRequest();
+        $locator          = $this->getServiceLocator();
+        $displayn         = $params->fromRoute( 'displayName' );
+        $model            = $locator->get( 'Grid\User\Model\User\Model' );
+        $form             = $locator->get( 'Form' )
+                                   ->create( 'Grid\User\Edit' );
+        $user             = $model->findByDisplayName( $displayn );
+        $datasheetService = $locator->get( 'Grid\User\Datasheet\Service' );
 
         $this->paragraphLayout();
 
@@ -117,6 +118,8 @@ class DatasheetController extends AbstractActionController
 
         $this->fixUserForm( $form, $user->id );
 
+        $datasheetService->form($form,$user);
+        
         /* @var $form \Zend\Form\Form */
         $form->setHydrator( $model->getMapper() )
              ->bind( $user );
@@ -125,7 +128,7 @@ class DatasheetController extends AbstractActionController
         {
             $form->setData( $request->getPost() );
 
-            if ( $form->isValid() && $user->save() )
+            if ( $form->isValid() && $datasheetService->save($user) )
             {
                 $this->messenger()
                      ->add( 'user.form.edit.success',
@@ -239,11 +242,12 @@ class DatasheetController extends AbstractActionController
      */
     public function deleteAction()
     {
-        $params     = $this->params();
-        $locator    = $this->getServiceLocator();
-        $displayn   = $params->fromRoute( 'displayName' );
-        $model      = $locator->get( 'Grid\User\Model\User\Model' );
-        $user       = $model->findByDisplayName( $displayn );
+        $params           = $this->params();
+        $locator          = $this->getServiceLocator();
+        $displayn         = $params->fromRoute( 'displayName' );
+        $model            = $locator->get( 'Grid\User\Model\User\Model' );
+        $user             = $model->findByDisplayName( $displayn );
+        $datasheetService = $locator->get( 'Grid\User\Datasheet\Service' );
 
         if ( empty( $user ) )
         {
@@ -268,7 +272,7 @@ class DatasheetController extends AbstractActionController
             return;
         }
 
-        if ( $user->delete() )
+        if( $datasheetService->delete($user) )
         {
             $this->messenger()
                  ->add( 'user.action.delete.success',

@@ -98,12 +98,13 @@ class AdminController extends AbstractListExportController
      */
     public function createAction()
     {
-        $request    = $this->getRequest();
-        $locator    = $this->getServiceLocator();
-        $model      = $locator->get( 'Grid\User\Model\User\Model' );
-        $form       = $locator->get( 'Form' )
-                              ->create( 'Grid\User\Create' );
-        $user       = $model->create( array() );
+        $request          = $this->getRequest();
+        $locator          = $this->getServiceLocator();
+        $model            = $locator->get( 'Grid\User\Model\User\Model' );
+        $form             = $locator->get( 'Form' )          
+                                    ->create( 'Grid\User\Create' );
+        $user             = $model->create( array() );
+        $datasheetService = $locator->get( 'Grid\User\Datasheet\Service' );
 
         if ( ! $this->getPermissionsModel()
                     ->isAllowed( 'user', 'create' ) )
@@ -113,18 +114,18 @@ class AdminController extends AbstractListExportController
 
             return;
         }
-
+        
         $this->fixUserForm( $form );
 
         /* @var $form \Zend\Form\Form */
         $form->setHydrator( $model->getMapper() )
              ->bind( $user );
-
+     
         if ( $request->isPost() )
         {
             $form->setData( $request->getPost() );
 
-            if ( $form->isValid() && $user->save() )
+            if ( $form->isValid() && $datasheetService->save($user) )
             {
                 $this->messenger()
                      ->add( 'user.form.create.success',
@@ -183,14 +184,15 @@ class AdminController extends AbstractListExportController
      */
     public function editAction()
     {
-        $params     = $this->params();
-        $request    = $this->getRequest();
-        $locator    = $this->getServiceLocator();
-        $model      = $locator->get( 'Grid\User\Model\User\Model' );
-        $form       = $locator->get( 'Form' )
-                              ->create( 'Grid\User\Edit' );
-        $user       = $model->find( $params->fromRoute( 'id' ) );
-
+        $params           = $this->params();
+        $request          = $this->getRequest();
+        $locator          = $this->getServiceLocator();
+        $model            = $locator->get( 'Grid\User\Model\User\Model' );
+        $form             = $locator->get( 'Form' )
+                                    ->create( 'Grid\User\Edit' );
+        $user             = $model->find( $params->fromRoute( 'id' ) );
+        $datasheetService = $locator->get( 'Grid\User\Datasheet\Service' );
+        
         if ( empty( $user ) )
         {
             $this->getResponse()
@@ -210,6 +212,8 @@ class AdminController extends AbstractListExportController
 
         $this->fixUserForm( $form, $user->id );
 
+        $datasheetService->form($form,$user);
+        
         /* @var $form \Zend\Form\Form */
         $form->setHydrator( $model->getMapper() )
              ->bind( $user );
@@ -218,7 +222,7 @@ class AdminController extends AbstractListExportController
         {
             $form->setData( $request->getPost() );
 
-            if ( $form->isValid() && $user->save() )
+            if ( $form->isValid() && $datasheetService->save($user) )
             {
                 $this->messenger()
                      ->add( 'user.form.edit.success',
@@ -470,11 +474,12 @@ class AdminController extends AbstractListExportController
      */
     public function deleteAction()
     {
-        $params     = $this->params();
-        $locator    = $this->getServiceLocator();
-        $model      = $locator->get( 'Grid\User\Model\User\Model' );
-        $user       = $model->find( $params->fromRoute( 'id' ) );
-
+        $params          = $this->params();
+        $locator         = $this->getServiceLocator();
+        $model           = $locator->get( 'Grid\User\Model\User\Model' );
+        $user            = $model->find( $params->fromRoute( 'id' ) );
+        $datasheetService = $locator->get( 'Grid\User\Datasheet\Service' );
+        
         if ( empty( $user ) )
         {
             $this->getResponse()
@@ -492,7 +497,7 @@ class AdminController extends AbstractListExportController
             return;
         }
 
-        if ( $user->delete() )
+        if( $datasheetService->delete($user) )
         {
             $this->messenger()
                  ->add( 'user.action.delete.success',
