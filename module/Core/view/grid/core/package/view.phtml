@@ -37,20 +37,16 @@ $this->headLink()
 <?php endif ?>
 
              alt="<?= $this->escapeHtmlAttr( $this->name ) ?>"/>
-        <div class="short-time">
+        <div class="short-infos">
 <?php if ( isset( $this->package->installedTime ) ): ?>
 
-                    <?= $this->translate( 'admin.packages.installedTime', 'admin' ) ?>:
-                    <?= $this->dateTime( $this->package->installedTime ) ?>
+                    <span class="time-label"><?= $this->translate( 'admin.packages.installedTime', 'admin' ) ?>:</span>
+                    <span class="time-value"><?= $this->dateTime( $this->package->installedTime ) ?></span>
 <?php elseif ( isset( $this->package->availableTime ) ): ?>
 
-                    <?= $this->translate( 'admin.packages.availableTime', 'admin' ) ?>:
-                    <?= $this->dateTime( $this->package->availableTime ) ?>
+                    <span class="time-label"><?= $this->translate( 'admin.packages.availableTime', 'admin' ) ?>:</span>
+                    <span class="time-value"><?= $this->dateTime( $this->package->availableTime ) ?></span>
 <?php endif ?>
-
-        </div>
-        <div class="description">
-            <?= nl2br( $this->escapeHtml( $this->package->displayedDescription ) ) ?>
 
         </div>
 <?php if ( ! empty( $this->package->availableVersion ) && ! empty( $this->package->modules ) ): $single = 1 == count( $this->package->modules ); ?>
@@ -75,9 +71,15 @@ $this->headLink()
         </div>
 <?php endif ?>
 
+        <div class="description">
+            <?= nl2br( $this->escapeHtml( $this->package->displayedDescription ) ) ?>
+
+        </div>
         <dl class="package-data">
-            <dt class="library-name"><?= $this->translate( 'admin.packages.name', 'admin' ) ?></dt>
+            <dt class="library-name"><?= $this->translate( 'admin.packages.libraryName', 'admin' ) ?></dt>
             <dd class="library-name"><?= $this->escapeHtml( $this->package->name ) ?></dd>
+            <dt class="library-description"><?= $this->translate( 'admin.packages.libraryDescription', 'admin' ) ?></dt>
+            <dd class="library-description"><?= $this->escapeHtml( $this->package->description ) ?></dd>
 <?php if ( ! empty( $this->package->homepage ) ): ?>
 
             <dt class="homepage"><?= $this->translate( 'admin.packages.homepage', 'admin' ) ?></dt>

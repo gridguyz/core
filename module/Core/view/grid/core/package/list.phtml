@@ -36,17 +36,17 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
 ?>
 <h1><?= $title ?></h1>
 <div class="page">
-    <form class="package-list-form" method="post" action="?">
-        <p class="package-list-actions">
+    <p class="package-list-actions">
 <?php if ( $this->canModify ): ?>
 
-            <a href="/app/<?= $this->locale() ?>/admin/package/update"
-               class="update-all button-appearance"><?= $this->translate( 'admin.packages.action.updateAll', 'admin' ) ?></a>
-        </p>
+        <a href="/app/<?= $this->locale() ?>/admin/package/update"
+           class="update-all button-appearance"><?= $this->translate( 'admin.packages.action.updateAll', 'admin' ) ?></a>
+    </p>
 <?php endif ?>
 
+    <form class="package-list-form" method="post" action="?">
         <p class="package-list-categories">
-            <input name="filter[category]" type="hidden" value="<?= $filter['category'] ?>" />
+            <input name="filter[category]" type="hidden" value="<?= $this->escapeHtmlAttr( $filter['category'] ) ?>" />
             <button name="filter[category]" type="submit"
                     value=""<?php if ( '' == $filter['category'] ):
                  ?> class="active"<?php endif ?>>
@@ -100,72 +100,194 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
             'paginator/default'
         ) ?>
 
-        <div class="package-list">
+    </form>
+    <div class="package-list">
 <?php if ( ! $paginator->getTotalItemCount() ): ?>
 
-            <div class="warn package-list-empty">
-                <?= $this->translate( 'default.rowSet.noData' ) ?>
-            </div>
+        <div class="warn package-list-empty">
+            <?= $this->translate( 'default.rowSet.noData' ) ?>
+        </div>
 <?php else: ?>
 
 <?php foreach ( $paginator as $name => $package ): ?>
 <?php if ( $package && $package->isValid() ): ?>
 
-            <div class="package-entry">
-                <a href="/app/<?= $this->locale() ?>/admin/package/view/<?= $package->urlSafeName ?>"
-                   class="icon-link"><img
-                   class="icon" src="/images/common/blank.gif"
+        <div class="package-entry">
+            <a href="/app/<?= $this->locale() ?>/admin/package/view/<?= $package->urlSafeName ?>"
+               class="icon-link"><img
+               class="icon" src="/images/common/blank.gif"
 <?php if ( $package->displayIcon ): ?>
 
-                   style="background-image: url(<?= $this->escapeHtmlAttr( $package->displayIcon ) ?>);"
+               style="background-image: url(<?= $this->escapeHtmlAttr( $package->displayIcon ) ?>);"
 <?php endif ?>
 
-                   alt="<?= $this->escapeHtmlAttr( $name ) ?>"/></a>
-                <div class="name">
+               alt="<?= $this->escapeHtmlAttr( $name ) ?>"/></a>
+            <div class="name">
 <?php if ( $package->canInstall() ): ?>
 
-                    <a href="/app/<?= $this->locale() ?>/admin/package/install/<?= $package->urlSafeName ?>"
-                       class="action install button-appearance"><?= $this->translate( 'admin.packages.action.install', 'admin' ) ?></a>
+                <a href="/app/<?= $this->locale() ?>/admin/package/install/<?= $package->urlSafeName ?>"
+                   class="action install button-appearance"><?= $this->translate( 'admin.packages.action.install', 'admin' ) ?></a>
 <?php elseif ( $package->canRemove() ): ?>
 
-                    <a href="/app/<?= $this->locale() ?>/admin/package/remove/<?= $package->urlSafeName ?>"
-                       onclick="return js.require('js.ui.dialog').confirm(this);"
-                       class="action remove button-appearance"><?= $this->translate( 'admin.packages.action.remove', 'admin' ) ?></a>
+                <a href="/app/<?= $this->locale() ?>/admin/package/remove/<?= $package->urlSafeName ?>"
+                   onclick="return js.require('js.ui.dialog').confirm(this);"
+                   class="action remove button-appearance"><?= $this->translate( 'admin.packages.action.remove', 'admin' ) ?></a>
 <?php endif ?>
 
-                    <a href="/app/<?= $this->locale() ?>/admin/package/view/<?= $package->urlSafeName ?>"
-                       class="name-link"><?= $this->escapeHtml( $package->displayedName ) ?></a>
-                </div>
-                <div class="short-time">
+                <a href="/app/<?= $this->locale() ?>/admin/package/view/<?= $package->urlSafeName ?>"
+                   class="name-link"><?= $this->escapeHtml( $package->displayedName ) ?></a>
+            </div>
+            <div class="short-infos">
 <?php if ( isset( $package->installedTime ) ): ?>
 
-                    <?= $this->translate( 'admin.packages.installedTime', 'admin' ) ?>:
-                    <?= $this->dateTime( $package->installedTime ) ?>
+                <span class="time-label"><?= $this->translate( 'admin.packages.installedTime', 'admin' ) ?>:</span>
+                <span class="time-value"><?= $this->dateTime( $package->installedTime ) ?>
 <?php elseif ( isset( $package->availableTime ) ): ?>
 
-                    <?= $this->translate( 'admin.packages.availableTime', 'admin' ) ?>:
-                    <?= $this->dateTime( $package->availableTime ) ?>
+                <span class="time-label"><?= $this->translate( 'admin.packages.availableTime', 'admin' ) ?>:</span>
+                <span class="time-value"><?= $this->dateTime( $package->availableTime ) ?></span>
+<?php endif ?>
+<?php if ( isset( $this->package->favourites ) ): ?>
+
+                <span class="number favourites" title="<?= $this->translate( 'admin.packages.favourites', 'admin' )
+                    ?>"><?= (int) $this->package->favourites ?></span>
+<?php endif ?>
+<?php if ( isset( $this->package->downloads ) ): ?>
+
+                <span class="number downloads" title="<?= $this->translate( 'admin.packages.downloads', 'admin' )
+                    ?>"><?= (int) $this->package->downloads ?></span>
 <?php endif ?>
 
-                </div>
-                <div class="description">
-                    <?= nl2br( $this->escapeHtml( $package->displayedDescription ) ) ?>
-
-                    <a href="/app/<?= $this->locale() ?>/admin/package/view/<?= $package->urlSafeName ?>"
-                       class="action view button-appearance"><?= $this->translate( 'admin.packages.action.view', 'admin' ) ?></a>
-                </div>
             </div>
+<?php if ( ! empty( $package->availableVersion ) && ! empty( $package->modules ) ): $single = 1 == count( $package->modules ); ?>
+
+            <form class="modules" method="post" action="?">
+                <input name="filter[category]" type="hidden" value="<?= $this->escapeHtmlAttr( $filter['category'] ) ?>" />
+                <input name="filter[installed]" type="hidden" value="<?= $filter['installed'] === null ? '' : ( $filter['installed'] ? '1' : '0' ) ?>" />
+                <input name="filter[contains]" type="hidden" value="<?= $this->escapeHtmlAttr( $filter['contains'] ) ?>" />
+                <p class="modules-header"><?= $this->translate( 'admin.packages.modules.activation', 'admin' ) ?></p>
+<?php foreach ( $package->modules as $moduleName => $moduleLabel ): ?>
+
+                <label class="module" onclick="this.blur();">
+                    <input type="hidden" name="modules[<?= $this->escapeHtmlAttr( $moduleName ) ?>]" value="" />
+                    <input type="checkbox" name="modules[<?= $this->escapeHtmlAttr( $moduleName ) ?>]" value="1"<?php if ( $single ):
+                        ?> onchange="this.form.submit();"<?php endif ?><?php if ( $this->isModuleLoaded( $moduleName ) ):
+                        ?> checked="checked"<?php endif ?> />
+                    <?= $this->escapeHtml( $moduleLabel ) ?>
+
+                </label>
+<?php endforeach ?>
+<?php if ( ! $single ): ?>
+
+                <button type="submit"><?= $this->translate( 'default.save' ) ?></button>
+<?php endif ?>
+
+            </form>
+<?php endif ?>
+
+            <div class="description">
+                <?= nl2br( $this->escapeHtml( $package->displayedDescription ) ) ?>
+
+            </div>
+            <a href="/app/<?= $this->locale() ?>/admin/package/view/<?= $package->urlSafeName ?>"
+               onclick="$(this).next('.additional-info').toggle(); return false;"
+               class="action view button-appearance"><?= $this->translate( 'admin.packages.action.view', 'admin' ) ?></a>
+            <div class="additional-info" style="display: none;">
+                <p class="additional-info-header"><?= $this->translate( 'admin.packages.additionalInfo', 'admin' ) ?></p>
+                <dl class="package-data right">
+                    <dt class="library-name"><?= $this->translate( 'admin.packages.libraryName', 'admin' ) ?></dt>
+                    <dd class="library-name"><?= $this->escapeHtml( $this->package->name ) ?></dd>
+                    <dt class="library-description"><?= $this->translate( 'admin.packages.libraryDescription', 'admin' ) ?></dt>
+                    <dd class="library-description"><?= $this->escapeHtml( $this->package->description ) ?></dd>
+<?php if ( ! empty( $this->package->availableVersion ) ): ?>
+
+                    <dt class="available version"><?= $this->translate( 'admin.packages.availableVersion', 'admin' ) ?></dt>
+                    <dd class="available version">
+                        <?= $this->escapeHtml( $this->package->availableVersion ) ?>
+<?php if ( ! empty( $this->package->availableReference ) ): ?>
+
+                        <span class="available reference">#<?= $this->escapeHtml( $this->package->availableReference ) ?></span>
+<?php endif ?>
+
+                    </dd>
+<?php endif ?>
+<?php if ( ! empty( $this->package->availableTime ) ): ?>
+
+                    <dt class="available time"><?= $this->translate( 'admin.packages.availableTime', 'admin' ) ?></dt>
+                    <dd class="available time">
+                        <?= $this->dateTime( $this->package->availableTime ) ?>
+
+                    </dd>
+<?php endif ?>
+                </dl>
+                <dl class="package-data left">
+<?php if ( ! empty( $this->package->homepage ) ): ?>
+
+                    <dt class="homepage"><?= $this->translate( 'admin.packages.homepage', 'admin' ) ?></dt>
+                    <dd class="homepage"><a href="<?= $this->escapeHtmlAttr( $this->package->homepage ) ?>"
+                                            target="_blank"><?= $this->escapeHtml( $this->package->homepage ) ?></a></dd>
+<?php endif ?>
+<?php if ( ! empty( $this->package->license ) ): ?>
+
+                    <dt class="license"><?= $this->translate( 'admin.packages.license', 'admin' ) ?></dt>
+                    <dd class="license">
+<?php foreach ( $this->package->licenseUris as $license => $uri ): ?>
+<?php if ( $uri ): ?>
+
+                        <a href="<?= $this->escapeHtmlAttr( $uri ) ?>"
+                           target="_blank"><?= $this->escapeHtml( $license ) ?></a>
 <?php else: ?>
 
-            <div class="warn package-entry-invalid">
-                <!-- invalid package: "<?= $name ?>" -->
+                        <span><?= $this->escapeHtml( $license ) ?></span>
+<?php endif ?>
+<?php endforeach ?>
+
+                    </dd>
+<?php endif ?>
+<?php if ( ! empty( $this->package->keywords ) ): ?>
+
+                    <dt class="keywords"><?= $this->translate( 'admin.packages.keywords', 'admin' ) ?></dt>
+                    <dd class="keywords"><?= $this->escapeHtml( implode( ', ', $this->package->keywords ) ) ?></dd>
+<?php endif ?>
+<?php if ( ! empty( $this->package->installedVersion ) ): ?>
+
+                    <dt class="installed version"><?= $this->translate( 'admin.packages.installedVersion', 'admin' ) ?></dt>
+                    <dd class="installed version">
+                        <?= $this->escapeHtml( $this->package->installedVersion ) ?>
+<?php if ( ! empty( $this->package->installedReference ) ): ?>
+
+                        <span class="installed reference">#<?= $this->escapeHtml( $this->package->installedReference ) ?></span>
+<?php endif ?>
+
+                    </dd>
+<?php endif ?>
+<?php if ( ! empty( $this->package->installedTime ) ): ?>
+
+                    <dt class="installed time"><?= $this->translate( 'admin.packages.installedTime', 'admin' ) ?></dt>
+                    <dd class="installed time">
+                        <?= $this->dateTime( $this->package->installedTime ) ?>
+
+                    </dd>
+<?php endif ?>
+
+                </dl>
             </div>
+        </div>
+<?php else: ?>
+
+        <div class="warn package-entry-invalid">
+            <!-- invalid package: "<?= $name ?>" -->
+        </div>
 <?php endif ?>
 <?php endforeach ?>
 <?php endif ?>
 
-        </div>
+    </div>
 
+    <form class="package-list-form" method="post" action="?">
+        <input name="filter[category]" type="hidden" value="<?= $this->escapeHtmlAttr( $filter['category'] ) ?>" />
+        <input name="filter[installed]" type="hidden" value="<?= $filter['installed'] === null ? '' : ( $filter['installed'] ? '1' : '0' ) ?>" />
+        <input name="filter[contains]" type="hidden" value="<?= $this->escapeHtmlAttr( $filter['contains'] ) ?>" />
         <?= $paginationControl ?>
 
     </form>
