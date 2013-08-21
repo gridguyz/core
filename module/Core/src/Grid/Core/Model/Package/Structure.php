@@ -2,7 +2,10 @@
 
 namespace Grid\Core\Model\Package;
 
+use Locale;
+use Traversable;
 use Zork\Stdlib\DateTime;
+use Zork\Stdlib\ArrayUtils;
 use Zork\Model\Structure\MapperAwareAbstract;
 
 /**
@@ -17,6 +20,16 @@ class Structure extends MapperAwareAbstract
      * @const string
      */
     const VALID_TYPES = '#^gridguyz-modules?#';
+
+    /**
+     * @const string
+     */
+    const FALLBACK_LOCALE = 'en';
+
+    /**
+     * @const int
+     */
+    const DEFAULT_ICON_SIZE = 100;
 
     /**
      * Field: name
@@ -105,23 +118,23 @@ class Structure extends MapperAwareAbstract
     /**
      * Field: displayIcon
      *
-     * @var string
+     * @var array
      */
-    protected $displayIcon;
+    protected $displayIcon = array();
 
     /**
      * Field: displayName
      *
-     * @var string
+     * @var array
      */
-    protected $displayName;
+    protected $displayName = array();
 
     /**
      * Field: displayDescription
      *
-     * @var string
+     * @var array
      */
-    protected $displayDescription;
+    protected $displayDescription = array();
 
     /**
      * Field: modules
@@ -274,15 +287,155 @@ class Structure extends MapperAwareAbstract
     }
 
     /**
+     * Set display icon
+     *
+     * @param   array   $displayIcon
+     * @return  \Grid\Core\Model\Package\Structure
+     */
+    public function setDisplayIcon( $displayIcon )
+    {
+        if ( empty( $displayIcon ) )
+        {
+            $displayIcon = array();
+        }
+        else if ( $displayIcon instanceof Traversable )
+        {
+            $displayIcon = ArrayUtils::iteratorToArray( $displayIcon );
+        }
+        else if ( ! is_array( $displayIcon ) )
+        {
+            $displayIcon = (array) $displayIcon;
+        }
+
+        if ( ! isset( $displayIcon[static::DEFAULT_ICON_SIZE] ) )
+        {
+            reset( $displayIcon );
+            $key = key( $displayIcon );
+            $displayIcon[static::DEFAULT_ICON_SIZE] = $displayIcon[$key];
+            unset( $displayIcon[$key] );
+        }
+
+        $this->displayIcon = $displayIcon;
+        return $this;
+    }
+
+    /**
+     * Set display name
+     *
+     * @param   array   $displayName
+     * @return  \Grid\Core\Model\Package\Structure
+     */
+    public function setDisplayName( $displayName )
+    {
+        if ( empty( $displayName ) )
+        {
+            $displayName = array();
+        }
+        else if ( $displayName instanceof Traversable )
+        {
+            $displayName = ArrayUtils::iteratorToArray( $displayName );
+        }
+        else if ( ! is_array( $displayName ) )
+        {
+            $displayName = (array) $displayName;
+        }
+
+        if ( ! isset( $displayName[static::FALLBACK_LOCALE] ) )
+        {
+            reset( $displayName );
+            $key = key( $displayName );
+            $displayName[static::FALLBACK_LOCALE] = $displayName[$key];
+            unset( $displayName[$key] );
+        }
+
+        $this->displayName = $displayName;
+        return $this;
+    }
+
+    /**
+     * Set display description
+     *
+     * @param   array   $displayDescription
+     * @return  \Grid\Core\Model\Package\Structure
+     */
+    public function setDisplayDescription( $displayDescription )
+    {
+        if ( empty( $displayDescription ) )
+        {
+            $displayDescription = array();
+        }
+        else if ( $displayDescription instanceof Traversable )
+        {
+            $displayDescription = ArrayUtils::iteratorToArray( $displayDescription );
+        }
+        else if ( ! is_array( $displayDescription ) )
+        {
+            $displayDescription = (array) $displayDescription;
+        }
+
+        if ( ! isset( $displayDescription[static::FALLBACK_LOCALE] ) )
+        {
+            reset( $displayDescription );
+            $key = key( $displayDescription );
+            $displayDescription[static::FALLBACK_LOCALE] = $displayDescription[$key];
+            unset( $displayDescription[$key] );
+        }
+
+        $this->displayDescription = $displayDescription;
+        return $this;
+    }
+
+    /**
+     * Get displayed icon
+     *
+     * @param   int  $maxSize
+     * @return  string|null
+     */
+    public function getDisplayedIcon( $maxSize = self::DEFAULT_ICON_SIZE )
+    {
+        if ( empty( $this->displayIcon ) )
+        {
+            return null;
+        }
+
+        $foundSize = 0;
+        $foundIcon = null;
+
+        foreach ( $this->displayIcon as $size => $icon )
+        {
+            if ( $size >= $foundSize && $size <= $maxSize )
+            {
+                $foundSize = $size;
+                $foundIcon = $icon;
+            }
+        }
+
+        return $foundIcon;
+    }
+
+    /**
      * Get displayed name
      *
-     * @return string
+     * @param   string  $locale
+     * @return  string
      */
-    public function getDisplayedName()
+    public function getDisplayedName( $locale = self::FALLBACK_LOCALE )
     {
-        if ( ! empty( $this->displayName ) )
+        if ( ! empty( $this->displayName[$locale] ) )
         {
-            return $this->displayName;
+            return $this->displayName[$locale];
+        }
+
+        $language = Locale::getPrimaryLanguage( $locale );
+
+        if ( ! empty( $this->displayName[$language] ) )
+        {
+            return $this->displayName[$language];
+        }
+
+        if ( ! empty( $this->displayName[static::FALLBACK_LOCALE] ) )
+        {
+            return $this->displayName[static::FALLBACK_LOCALE];
         }
 
         if ( ! empty( $this->description ) && strpos( $this->description, "\n" ) )
@@ -297,13 +450,26 @@ class Structure extends MapperAwareAbstract
     /**
      * Get displayed description
      *
-     * @return string
+     * @param   string  $locale
+     * @return  string
      */
-    public function getDisplayedDescription()
+    public function getDisplayedDescription( $locale = self::FALLBACK_LOCALE )
     {
-        if ( ! empty( $this->displayDescription ) )
+        if ( ! empty( $this->displayDescription[$locale] ) )
         {
-            return $this->displayDescription;
+            return $this->displayDescription[$locale];
+        }
+
+        $language = Locale::getPrimaryLanguage( $locale );
+
+        if ( ! empty( $this->displayDescription[$language] ) )
+        {
+            return $this->displayDescription[$language];
+        }
+
+        if ( ! empty( $this->displayDescription[static::FALLBACK_LOCALE] ) )
+        {
+            return $this->displayDescription[static::FALLBACK_LOCALE];
         }
 
         if ( ! empty( $this->description ) && strpos( $this->description, "\n" ) )

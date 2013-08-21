@@ -2,9 +2,12 @@
 /**
  * @var $this \Zend\View\Renderer\PhpRenderer
  */
+$locale         = (string) $this->locale();
+$packageName    = $this->package->getDisplayedName( $locale );
+
 $this->headTitle( $title = sprintf(
     $this->translate( 'admin.navTop.packages.view.%s', 'admin' ),
-    $this->package->displayedName
+    $packageName
 ) );
 
 $this->headLink()
@@ -15,25 +18,25 @@ $this->headLink()
 <div class="page">
     <form class="package-details" method="post" action="?">
         <h3 class="name">
-            <?= $this->escapeHtml( $this->package->displayedName ) ?>
+            <?= $this->escapeHtml( $packageName ) ?>
 
         </h3>
 <?php if ( $this->package && $this->package->isValid() ): ?>
 <?php if ( $this->package->canInstall() ): ?>
 
-                    <a href="/app/<?= $this->locale() ?>/admin/package/install/<?= $this->package->urlSafeName ?>"
+                    <a href="/app/<?= $locale ?>/admin/package/install/<?= $this->package->urlSafeName ?>"
                        class="action install button-appearance"><?= $this->translate( 'admin.packages.action.install', 'admin' ) ?></a>
 <?php elseif ( $this->package->canRemove() ): ?>
 
-                    <a href="/app/<?= $this->locale() ?>/admin/package/remove/<?= $this->package->urlSafeName ?>"
+                    <a href="/app/<?= $locale ?>/admin/package/remove/<?= $this->package->urlSafeName ?>"
                        onclick="return js.require('js.ui.dialog').confirm(this);"
                        class="action remove button-appearance"><?= $this->translate( 'admin.packages.action.remove', 'admin' ) ?></a>
 <?php endif ?>
 
         <img class="icon" src="/images/common/blank.gif"
-<?php if ( $this->package->displayIcon ): ?>
+<?php $icon = $this->package->getDisplayedIcon(); if ( ! empty( $icon ) ): ?>
 
-             style="background-image: url(<?= $this->escapeHtmlAttr( $this->package->displayIcon ) ?>);"
+             style="background-image: url(<?= $this->escapeHtmlAttr( $icon ) ?>);"
 <?php endif ?>
 
              alt="<?= $this->escapeHtmlAttr( $this->name ) ?>"/>
@@ -82,7 +85,7 @@ $this->headLink()
 <?php endif ?>
 
         <div class="description">
-            <?= nl2br( $this->escapeHtml( $this->package->displayedDescription ) ) ?>
+            <?= nl2br( $this->escapeHtml( $this->package->getDisplayedDescription( $locale ) ) ) ?>
 
         </div>
         <dl class="package-data">

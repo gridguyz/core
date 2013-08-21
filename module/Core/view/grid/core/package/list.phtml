@@ -33,13 +33,15 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
     $filter['installed'] = null;
 }
 
+$locale = (string) $this->locale();
+
 ?>
 <h1><?= $title ?></h1>
 <div class="page">
     <p class="package-list-actions">
 <?php if ( $this->canModify ): ?>
 
-        <a href="/app/<?= $this->locale() ?>/admin/package/update"
+        <a href="/app/<?= $locale ?>/admin/package/update"
            class="update-all button-appearance"><?= $this->translate( 'admin.packages.action.updateAll', 'admin' ) ?></a>
     </p>
 <?php endif ?>
@@ -113,31 +115,31 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
 <?php if ( $package && $package->isValid() ): ?>
 
         <div class="package-entry<?php if ( $package->isInstalled() ): ?> installed<?php endif ?>">
-            <a href="/app/<?= $this->locale() ?>/admin/package/view/<?= $package->urlSafeName ?>"
+            <a href="/app/<?= $locale ?>/admin/package/view/<?= $package->urlSafeName ?>"
                onclick="$(this).closest('.package-entry').find('.additional-info').toggle(); return false;"
                class="icon-link"><img
                class="icon" src="/images/common/blank.gif"
-<?php if ( $package->displayIcon ): ?>
+<?php $icon = $package->getDisplayedIcon(); if ( ! empty( $icon ) ): ?>
 
-               style="background-image: url(<?= $this->escapeHtmlAttr( $package->displayIcon ) ?>);"
+               style="background-image: url(<?= $this->escapeHtmlAttr( $icon ) ?>);"
 <?php endif ?>
 
                alt="<?= $this->escapeHtmlAttr( $name ) ?>"/></a>
             <div class="name">
 <?php if ( $package->canInstall() ): ?>
 
-                <a href="/app/<?= $this->locale() ?>/admin/package/install/<?= $package->urlSafeName ?>"
+                <a href="/app/<?= $locale ?>/admin/package/install/<?= $package->urlSafeName ?>"
                    class="action install button-appearance"><?= $this->translate( 'admin.packages.action.install', 'admin' ) ?></a>
 <?php elseif ( $package->canRemove() ): ?>
 
-                <a href="/app/<?= $this->locale() ?>/admin/package/remove/<?= $package->urlSafeName ?>"
+                <a href="/app/<?= $locale ?>/admin/package/remove/<?= $package->urlSafeName ?>"
                    onclick="return js.require('js.ui.dialog').confirm(this);"
                    class="action remove button-appearance"><?= $this->translate( 'admin.packages.action.remove', 'admin' ) ?></a>
 <?php endif ?>
 
-                <a href="/app/<?= $this->locale() ?>/admin/package/view/<?= $package->urlSafeName ?>"
+                <a href="/app/<?= $locale ?>/admin/package/view/<?= $package->urlSafeName ?>"
                    onclick="$(this).closest('.package-entry').find('.additional-info').toggle(); return false;"
-                   class="name-link"><?= $this->escapeHtml( $package->displayedName ) ?></a>
+                   class="name-link"><?= $this->escapeHtml( $package->getDisplayedName( $locale ) ) ?></a>
             </div>
             <div class="short-infos">
 <?php if ( isset( $package->installedTime ) ): ?>
@@ -192,10 +194,10 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
 <?php endif ?>
 
             <div class="description">
-                <?= nl2br( $this->escapeHtml( $package->displayedDescription ) ) ?>
+                <?= nl2br( $this->escapeHtml( $package->getDisplayedDescription( $locale ) ) ) ?>
 
             </div>
-            <a href="/app/<?= $this->locale() ?>/admin/package/view/<?= $package->urlSafeName ?>"
+            <a href="/app/<?= $locale ?>/admin/package/view/<?= $package->urlSafeName ?>"
                onclick="$(this).closest('.package-entry').find('.additional-info').toggle(); return false;"
                class="button-appearance"><?= $this->translate( 'admin.packages.action.view', 'admin' ) ?></a>
             <div class="additional-info" style="display: none;">
