@@ -28,26 +28,26 @@ class EnabledList extends ArrayIterator
     {
         if ( ! empty( $order ) )
         {
-            $p = array();
+            $packagesOrdered = array();
             asort( $order );
 
             foreach ( $order as $key => $_ )
             {
-                if ( ! isset( $packages[$key] ) )
+                if ( isset( $packages[$key] ) )
                 {
-                    $p[$key] = $packages[$key];
+                    $packagesOrdered[$key] = $packages[$key];
                 }
             }
 
             foreach ( $packages as $key => $data )
             {
-                if ( ! isset( $p[$key] ) )
+                if ( ! isset( $packagesOrdered[$key] ) )
                 {
-                    $p[$key] = $data;
+                    $packagesOrdered[$key] = $data;
                 }
             }
 
-            $packages = $p;
+            $packages = $packagesOrdered;
         }
 
         parent::__construct( $packages );
