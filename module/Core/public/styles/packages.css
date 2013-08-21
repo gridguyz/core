@@ -224,11 +224,18 @@
 .package-details .short-infos .number,
 .package-list .package-entry .short-infos .number
 {
+    color: #000;
     position: relative;
     display: inline-block;
+    margin: 0px 0px 0px 12px;
     padding: 6px 12px 6px 32px;
     background: #f1f1f1 none no-repeat 10px 50%;
-    box-shadow: 1px 1px 1px #d7dbe6;
+    box-shadow: 1px 1px 0px #d7dbe6;
+}
+
+.package-list .package-entry.installed .short-infos .number
+{
+    box-shadow: 1px 1px 0px #123;
 }
 
 .package-details .short-infos .number:before,
