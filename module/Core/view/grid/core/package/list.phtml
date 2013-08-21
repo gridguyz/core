@@ -112,8 +112,9 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
 <?php foreach ( $paginator as $name => $package ): ?>
 <?php if ( $package && $package->isValid() ): ?>
 
-        <div class="package-entry">
+        <div class="package-entry<?php if ( $package->isInstalled() ): ?> installed<?php endif ?>">
             <a href="/app/<?= $this->locale() ?>/admin/package/view/<?= $package->urlSafeName ?>"
+               onclick="$(this).closest('.package-entry').find('.additional-info').toggle(); return false;"
                class="icon-link"><img
                class="icon" src="/images/common/blank.gif"
 <?php if ( $package->displayIcon ): ?>
@@ -135,6 +136,7 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
 <?php endif ?>
 
                 <a href="/app/<?= $this->locale() ?>/admin/package/view/<?= $package->urlSafeName ?>"
+                   onclick="$(this).closest('.package-entry').find('.additional-info').toggle(); return false;"
                    class="name-link"><?= $this->escapeHtml( $package->displayedName ) ?></a>
             </div>
             <div class="short-infos">
@@ -194,7 +196,7 @@ if ( ! isset( $filter['installed'] ) || '' === $filter['installed'] )
 
             </div>
             <a href="/app/<?= $this->locale() ?>/admin/package/view/<?= $package->urlSafeName ?>"
-               onclick="$(this).next('.additional-info').toggle(); return false;"
+               onclick="$(this).closest('.package-entry').find('.additional-info').toggle(); return false;"
                class="button-appearance"><?= $this->translate( 'admin.packages.action.view', 'admin' ) ?></a>
             <div class="additional-info" style="display: none;">
                 <p class="additional-info-header"><?= $this->translate( 'admin.packages.additionalInfo', 'admin' ) ?></p>

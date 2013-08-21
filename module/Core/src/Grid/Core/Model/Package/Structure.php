@@ -384,13 +384,23 @@ class Structure extends MapperAwareAbstract
     }
 
     /**
-     * Is a package a valid package
+     * Is this package a valid package
      *
-     * @return string
+     * @return  bool
      */
     public function isValid()
     {
         return preg_match( static::VALID_TYPES, $this->type );
+    }
+
+    /**
+     * Is this package already installed
+     *
+     * @return  bool
+     */
+    public function isInstalled()
+    {
+        return ! empty( $this->installedVersion );
     }
 
     /**
