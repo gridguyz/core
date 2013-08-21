@@ -252,7 +252,44 @@ class Structure extends MapperAwareAbstract
      */
     public function setModules( $modules )
     {
-        $this->modules = (array) $modules;
+        if ( empty( $modules ) )
+        {
+            $modules = array();
+        }
+        else if ( $modules instanceof Traversable )
+        {
+            $modules = ArrayUtils::iteratorToArray( $modules );
+        }
+        else if ( ! is_array( $modules ) )
+        {
+            $modules = (array) $modules;
+        }
+
+        foreach ( $modules as $key => &$labels )
+        {
+            if ( empty( $labels ) )
+            {
+                $labels = array();
+            }
+            else if ( $labels instanceof Traversable )
+            {
+                $labels = ArrayUtils::iteratorToArray( $labels );
+            }
+            else if ( ! is_array( $labels ) )
+            {
+                $labels = (array) $labels;
+            }
+
+            if ( ! isset( $labels[static::FALLBACK_LOCALE] ) )
+            {
+                reset( $labels );
+                $key = key( $labels );
+                $labels[static::FALLBACK_LOCALE] = $labels[$key];
+                unset( $labels[$key] );
+            }
+        }
+
+        $this->modules = $modules;
         return $this;
     }
 
@@ -479,6 +516,40 @@ class Structure extends MapperAwareAbstract
         }
 
         return $this->description;
+    }
+
+    /**
+     * Get displayed modules
+     *
+     * @param   string  $locale
+     * @return  array
+     */
+    public function getDisplayedModules( $locale = self::FALLBACK_LOCALE )
+    {
+        $modules    = array();
+        $language   = Locale::getPrimaryLanguage( $locale );
+
+        foreach ( $this->modules as $name => $labels )
+        {
+            if ( ! empty( $labels[$locale] ) )
+            {
+                $modules[$name] = $labels[$locale];
+            }
+            else if ( ! empty( $labels[$language] ) )
+            {
+                $modules[$name] = $labels[$language];
+            }
+            else if ( ! empty( $labels[static::FALLBACK_LOCALE] ) )
+            {
+                $modules[$name] = $labels[static::FALLBACK_LOCALE];
+            }
+            else
+            {
+                $modules[$name] = reset( $labels );
+            }
+        }
+
+        return $modules;
     }
 
     /**
