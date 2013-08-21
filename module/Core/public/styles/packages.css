@@ -314,6 +314,11 @@
     margin: 2em 0em 0em 0em;
 }
 
+.package-list .package-entry .additional-info a:hover
+{
+    color: #000;
+}
+
 .package-list .package-entry .additional-info:before
 {
     top: 0px;
