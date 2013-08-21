@@ -18,6 +18,42 @@ class EnabledList extends ArrayIterator
     const DELIMITER = '#';
 
     /**
+     * Constructor
+     *
+     * @param   array   $packages
+     * @param   array   $order
+     */
+    public function __construct( array $packages    = array(),
+                                 array $order       = array() )
+    {
+        if ( ! empty( $order ) )
+        {
+            $p = array();
+            asort( $order );
+
+            foreach ( $order as $key => $_ )
+            {
+                if ( ! isset( $packages[$key] ) )
+                {
+                    $p[$key] = $packages[$key];
+                }
+            }
+
+            foreach ( $packages as $key => $data )
+            {
+                if ( ! isset( $p[$key] ) )
+                {
+                    $p[$key] = $data;
+                }
+            }
+
+            $packages = $p;
+        }
+
+        parent::__construct( $packages );
+    }
+
+    /**
      * Return current list entry
      *
      * @link    http://php.net/manual/en/arrayiterator.current.php

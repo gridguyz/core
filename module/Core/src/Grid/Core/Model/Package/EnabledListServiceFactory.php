@@ -23,10 +23,13 @@ class EnabledListServiceFactory implements FactoryInterface
     {
         // Configure the definitions
         $config     = $serviceLocator->get( 'Configuration' );
-        $srvConfig  = isset( $config['modules']['Grid\Core']['enabledPackages'] )
+        $packages   = isset( $config['modules']['Grid\Core']['enabledPackages'] )
                     ? (array) $config['modules']['Grid\Core']['enabledPackages']
                     : array();
-        return new EnabledList( $srvConfig );
+        $order      = isset( $config['modules']['Grid\Core']['enabledPackagesOrder'] )
+                    ? (array) $config['modules']['Grid\Core']['enabledPackagesOrder']
+                    : array();
+        return new EnabledList( $packages, $order );
     }
 
 }
