@@ -164,7 +164,7 @@
     margin-right: 1em;
     background-repeat: no-repeat;
     background-position: 50% 50%;
-    background-image: url("/images/common/admin/default-package-icon.png");
+    background-image: url("/images/common/admin/packages/default-icon.png");
 }
 
 .package-details .name,
