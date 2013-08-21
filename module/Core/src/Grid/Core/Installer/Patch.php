@@ -365,9 +365,11 @@ class Patch extends AbstractPatch
         }
         else
         {
-            $choices = array();
-            $first   = null;
-            $rows    = $this->selectRowsFromTable(
+            $choices    = array();
+            $labelToId  = array();
+            $first      = null;
+            $nextLabel  = 'a';
+            $rows       = $this->selectRowsFromTable(
                 array( '_central', 'paragraph' ),
                 array( 'id', 'name' ),
                 array( 'type' => $type ),
@@ -378,10 +380,11 @@ class Patch extends AbstractPatch
             {
                 if ( empty( $first ) )
                 {
-                    $first = $row->id;
+                    $first = $nextLabel; // $row->id;
                 }
 
-                $choices[$row->id] = $row->name;
+                $labelToId[$nextLabel] = $row->id;
+                $choices[$nextLabel++] = $row->name . ' (#' . $row->id . ')';
             }
 
             $data->printChoices( "Available {$type}s:", $choices );
@@ -391,15 +394,23 @@ class Patch extends AbstractPatch
                 $key,
                 "Type the default $type's id",
                 $first,
-                array_keys( $choices )
+                array_merge(
+                    array_keys( $labelToId ),
+                    array_values( $labelToId )
+                )
             );
+
+            if ( isset( $labelToId[$id] ) )
+            {
+                $id = $labelToId[$id];
+            }
         }
 
         $query = $this->query(
             'SELECT "paragraph_clone"( :schema, :id ) AS "result"',
             array(
                 'schema'    => '_central',
-                'id'        => $id,
+                'id'        => (int) $id,
             )
         );
 
