@@ -315,6 +315,7 @@ class Module extends ModuleAbstract
                 'formMultiCheckbox'         => 'Zork\Form\View\Helper\FormMultiCheckbox',
                 'formMultiCheckboxGroup'    => 'Zork\Form\View\Helper\FormMultiCheckboxGroup',
                 'captcha/regeneratable'     => 'Zork\Form\View\Helper\Captcha\Regeneratable',
+                'markdown'                  => 'Grid\Core\View\Helper\Markdown',
             ),
             'factories'         => array(
                 'config'            => function () use ( $serviceLocator ) {

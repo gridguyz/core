@@ -194,7 +194,7 @@ $locale = (string) $this->locale();
 <?php endif ?>
 
             <div class="description">
-                <?= nl2br( $this->escapeHtml( $package->getDisplayedDescription( $locale ) ) ) ?>
+                <?= $this->markdown( $package->getDisplayedDescription( $locale ) ) ?>
 
             </div>
             <a href="/app/<?= $locale ?>/admin/package/view/<?= $package->urlSafeName ?>"

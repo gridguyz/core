@@ -85,7 +85,7 @@ $this->headLink()
 <?php endif ?>
 
         <div class="description">
-            <?= nl2br( $this->escapeHtml( $this->package->getDisplayedDescription( $locale ) ) ) ?>
+            <?= $this->markdown( $this->package->getDisplayedDescription( $locale ) ) ?>
 
         </div>
         <dl class="package-data">
