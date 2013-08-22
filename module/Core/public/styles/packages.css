@@ -284,6 +284,12 @@
     margin-left: 120px;
 }
 
+.package-details .description,
+.package-list .package-entry .description
+{
+    text-align: justify;
+}
+
 .package-details dl.package-data,
 .package-list .package-entry dl.package-data
 {
