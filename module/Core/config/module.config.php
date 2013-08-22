@@ -348,7 +348,7 @@ return array(
             'my-translations' => array(
                 'type'          => 'phpArray',
                 'base_dir'      => './data/my-translations',
-                'pattern'       => '%s/%s.php',
+                'pattern'       => '%s/%s/%s.php',
             ),
         ),
         'translation_file_patterns'     => array(
