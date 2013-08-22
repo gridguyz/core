@@ -228,9 +228,7 @@
 }
 
 .package-details .short-infos,
-.package-details .description,
 .package-list .package-entry .short-infos,
-.package-list .package-entry .description
 {
     display: block;
     padding-top: 1em;
@@ -276,11 +274,6 @@
 .package-list .package-entry .short-infos .number.downloads
 {
     background-image: url("/images/common/admin/packages/downloads.png");
-}
-
-.package-list .package-entry .description
-{
-    padding-bottom: 1.5em;
 }
 
 .package-list .package-entry .name,
