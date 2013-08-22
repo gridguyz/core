@@ -124,7 +124,7 @@ return array(
     'admin.packages.action.updateAll' => 'Update packages',
     'admin.packages.action.view' => 'View package details',
     'admin.packages.additionalInfo' => 'Additional info',
-    'admin.packages.category.all' => 'All pacakges',
+    'admin.packages.category.all' => 'All packages',
     'admin.packages.category.system' => 'System',
     'admin.packages.category.function' => 'Functions',
     'admin.packages.category.application' => 'Appz',
