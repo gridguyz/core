@@ -195,7 +195,7 @@
 {
     width: 30%;
     float: right;
-    margin-left: 20px;
+    margin-left: 1em;
 }
 
 .package-details .modules .modules-header,
@@ -207,6 +207,10 @@
     position: relative;
     background: #4a78eb;
     margin: 0px 0px 10px 0px;
+    border-radius: 2px;
+    -ms-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
 }
 
 .package-details .modules .modules-header:before,
@@ -228,10 +232,11 @@
 }
 
 .package-details .short-infos,
-.package-list .package-entry .short-infos,
+.package-list .package-entry .short-infos
 {
     display: block;
-    padding-top: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
 }
 
 .package-details .short-infos .number,
@@ -281,13 +286,14 @@
 .package-list .package-entry .description,
 .package-list .package-entry .description ~ .button-appearance
 {
-    margin-left: 120px;
+    margin-left: 115px;
 }
 
 .package-details .description,
 .package-list .package-entry .description
 {
     text-align: justify;
+    margin-right: 320px;
 }
 
 .package-details dl.package-data,
@@ -329,7 +335,11 @@
     padding: 1em 0em;
     position: relative;
     background: #ebf1ff;
-    margin: 2em 0em 0em 0em;
+    margin: 1em 0em 0em 0em;
+    border-radius: 2px;
+    -ms-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
 }
 
 .package-list .package-entry .additional-info a:hover
