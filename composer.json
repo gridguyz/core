@@ -57,6 +57,12 @@
         ]
     },
     "extra": {
+        "display-name": {
+            "en": "Core Code Package"
+        },
+        "display-description": {
+            "en": "This package contains central and indispensable functions that set the stage for you to unleash your creativity.\nAlways installed and configured!"
+        },
         "patch-classes": {
             "Grid\\Core\\Installer\\Patch": "module/Core/src/Grid/Core/Installer/Patch.php"
         }
