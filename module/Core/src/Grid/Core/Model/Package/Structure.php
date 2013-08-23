@@ -447,6 +447,34 @@ class Structure extends MapperAwareAbstract
             }
         }
 
+        if ( ! empty( $foundIcon ) )
+        {
+            $replace = array(
+                '%version%'     => '0',
+                '%reference%'   => '-',
+            );
+
+            if ( ! empty( $this->availableVersion ) )
+            {
+                $replace['%version%'] = $this->availableVersion;
+            }
+            else if ( ! empty( $this->installedVersion ) )
+            {
+                $replace['%version%'] = $this->installedVersion;
+            }
+
+            if ( ! empty( $this->availableReference ) )
+            {
+                $replace['%reference%'] = $this->availableReference;
+            }
+            else if ( ! empty( $this->installedReference ) )
+            {
+                $replace['%reference%'] = $this->installedReference;
+            }
+
+            $foundIcon = strtr( $foundIcon, $replace );
+        }
+
         return $foundIcon;
     }
 
