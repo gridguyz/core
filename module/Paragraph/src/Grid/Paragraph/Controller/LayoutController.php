@@ -33,7 +33,8 @@ class LayoutController extends AbstractListController
         $params     = $this->params();
         $request    = $this->getRequest();
         $locator    = $this->getServiceLocator();
-        $model      = $locator->get( 'Grid\Paragraph\Model\Paragraph\Model' );
+        $model      = $locator->get( 'Grid\Paragraph\Model\Paragraph\Model' )
+                              ->setLocale( $this->getAdminLocale() );
         $form       = $locator->get( 'Form' )
                               ->create( 'Grid\Paragraph\Layout' );
 
@@ -130,7 +131,8 @@ class LayoutController extends AbstractListController
 
         $params     = $this->params();
         $locator    = $this->getServiceLocator();
-        $model      = $locator->get( 'Grid\Paragraph\Model\Paragraph\Model' );
+        $model      = $locator->get( 'Grid\Paragraph\Model\Paragraph\Model' )
+                              ->setLocale( $this->getAdminLocale() );
         $paragraph  = $model->find( $params->fromRoute( 'id' ) );
 
         if ( empty( $paragraph ) || $paragraph->type !== 'layout' )
