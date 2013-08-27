@@ -108,7 +108,8 @@ class Language extends AbstractLeaf
     {
         $result     = array();
         $service    = $this->getServiceLocator();
-        $activel    = null;
+        $rendered   = null;
+        $activeLoc  = null;
         $defaultUri = null;
         $siteInfo   = null;
         $available  = $service->get( 'Locale' )
@@ -125,7 +126,7 @@ class Language extends AbstractLeaf
             }
 
             $defaultUri = '/app/%locale%/paragraph/render/' . $rendered->id;
-            $activel    = $rendered->getMapper()->getLocale();
+            $activeLoc  = $rendered->getMapper()->getLocale();
         }
         catch ( ServiceNotFoundException $ex )
         {
@@ -137,7 +138,7 @@ class Language extends AbstractLeaf
             if ( preg_match( '#^/?app/([^/]+)/(.*)$#', $requestUri, $matches ) )
             {
                 $defaultUri = '/app/%locale%/' . $matches[2];
-                $activel    = $matches[1];
+                $activeLoc  = $matches[1];
             }
         }
 
@@ -148,7 +149,7 @@ class Language extends AbstractLeaf
                 if ( ! empty( $available[$locale] ) )
                 {
                     $link = array(
-                        'active'    => $activel == $locale,
+                        'active'    => $activeLoc == $locale,
                         'uri'       => str_replace(
                             '%locale%',
                             $locale,
