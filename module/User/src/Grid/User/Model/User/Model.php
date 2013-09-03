@@ -217,6 +217,18 @@ class Model implements MapperAwareInterface
         return $this->getMapper()
                     ->hasAssociatedIdentity( $userId, $identity );
     }
+    
+   /**
+     * Find users by group
+     *
+     * @param   int  $groupId
+     * @return  \User\Model\User\Structure[]
+     */
+    public function findAllByGroupId( $groupId )
+    {
+        return $this->getMapper()
+                    ->findAll( array( 'groupId' => (int) $groupId ) );
+    }
 
     /**
      * Associate identity
