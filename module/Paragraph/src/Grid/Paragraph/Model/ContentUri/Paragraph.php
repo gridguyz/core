@@ -1,6 +1,6 @@
 <?php
 
-namespace Grid\Core\Model\ContentUri;
+namespace Grid\Paragraph\Model\ContentUri;
 
 use Grid\Core\Model\ContentUri\AdapterAbstract;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
