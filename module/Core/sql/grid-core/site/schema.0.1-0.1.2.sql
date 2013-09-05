@@ -382,7 +382,7 @@ BEGIN
                 WHERE "id"    = "v_root"
                   AND "type"  = 'content' ) THEN
 
-        SELECT "paragraph_update_search_content"(
+        PERFORM "paragraph_update_search_content"(
             "v_root",
             "r_row"."locale"
         );
