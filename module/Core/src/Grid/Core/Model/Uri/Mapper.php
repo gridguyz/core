@@ -40,7 +40,7 @@ class Mapper extends ReadWriteMapperAbstract
     /**
      * Contructor
      *
-     * @param \Core\Model\Uri\Structure $uriStructurePrototype
+     * @param   \Grid\Core\Model\Uri\Structure $uriStructurePrototype
      */
     public function __construct( Structure $uriStructurePrototype = null )
     {
@@ -50,9 +50,9 @@ class Mapper extends ReadWriteMapperAbstract
     /**
      * Get by subdomain & uri
      *
-     * @param int $subdomainId
-     * @param string $uri
-     * @return \Core\Model\Uri\Structure|null
+     * @param   int     $subdomainId
+     * @param   string  $uri
+     * @return  \Grid\Core\Model\Uri\Structure|null
      */
     public function findBySubdomainUri( $subdomainId, $uri )
     {
@@ -65,10 +65,10 @@ class Mapper extends ReadWriteMapperAbstract
     /**
      * Get default by content & subdomain
      *
-     * @param int $contentId
-     * @param int $subdomainId
-     * @param string|array $locales
-     * @return \Core\Model\Uri\Structure|null
+     * @param   int             $contentId
+     * @param   int             $subdomainId
+     * @param   string|array    $locales
+     * @return  \Grid\Core\Model\Uri\Structure|null
      */
     public function findDefaultByContentSubdomain( $contentId,
                                                    $subdomainId,
@@ -122,6 +122,45 @@ class Mapper extends ReadWriteMapperAbstract
                     $exprStr . ' ELSE 0.0 END DESC',
                 $exprParams,
                 $exprTypes
+            ),
+            'locale'    => 'DESC',
+            'default'   => 'DESC',
+            'id'        => 'ASC',
+        ) );
+    }
+
+    /**
+     * Get default by content & locale
+     *
+     * @param   int         $contentId
+     * @param   string      $locale
+     * @param   int|null    $preferredSubdomainId
+     * @return  \Grid\Core\Model\Uri\Structure|null
+     */
+    public function findDefaultByContentLocale( $contentId,
+                                                $locale,
+                                                $preferredSubdomainId = null )
+    {
+        $locale = (string) $locale;
+        $priLng = Locale::getPrimaryLanguage( $locale );
+
+        if ( $priLng != $locale )
+        {
+            $locale = array( $locale, $priLng );
+        }
+
+        $platform = $this->getDbAdapter()
+                         ->getPlatform();
+
+        return $this->findOne( array(
+            'contentId'     => $contentId,
+            'locale'        => $locale,
+        ), array(
+            new Expression(
+                'CASE ' . $platform->quoteIdentifier( 'subdomainId' ) .
+                    ' WHEN ? THEN 1 ELSE 0 END DESC',
+                array( (int) $preferredSubdomainId ),
+                array( Expression::TYPE_VALUE )
             ),
             'locale'    => 'DESC',
             'default'   => 'DESC',

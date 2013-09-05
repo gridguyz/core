@@ -19,7 +19,7 @@ class Model implements MapperAwareInterface
     /**
      * Construct model
      *
-     * @param \Core\Model\Uri\Mapper $userMapper
+     * @param   \Grid\Core\Model\Uri\Mapper $userMapper
      */
     public function __construct( Mapper $uriMapper )
     {
@@ -29,8 +29,8 @@ class Model implements MapperAwareInterface
     /**
      * Find a seo-friendy uri by id
      *
-     * @param int $id
-     * @return \Core\Model\Uri\Structure
+     * @param   int     $id
+     * @return  \Grid\Core\Model\Uri\Structure
      */
     public function find( $id )
     {
@@ -41,8 +41,8 @@ class Model implements MapperAwareInterface
     /**
      * Create a seo-friendy uri
      *
-     * @param int $data
-     * @return \Core\Model\Uri\Structure
+     * @param   int     $data
+     * @return  \Grid\Core\Model\Uri\Structure
      */
     public function create( $data )
     {
@@ -53,9 +53,9 @@ class Model implements MapperAwareInterface
     /**
      * Get uri (structure) by subdomain & uri
      *
-     * @param int $subdomainId
-     * @param string $uri
-     * @return \Core\Model\Uri\Structure
+     * @param   int     $subdomainId
+     * @param   string  $uri
+     * @return  \Grid\Core\Model\Uri\Structure
      */
     public function findBySubdomainUri( $subdomainId, $uri )
     {
@@ -66,10 +66,10 @@ class Model implements MapperAwareInterface
     /**
      * Get default by content & subdomain
      *
-     * @param int $contentId
-     * @param int $subdomainId
-     * @param string $locales
-     * @return \Core\Model\Uri\Structure|null
+     * @param   int             $contentId
+     * @param   int             $subdomainId
+     * @param   string|array    $locales
+     * @return  \Grid\Core\Model\Uri\Structure|null
      */
     public function findDefaultByContentSubdomain( $contentId,
                                                    $subdomainId,
@@ -80,6 +80,26 @@ class Model implements MapperAwareInterface
                         $contentId,
                         $subdomainId,
                         $locales
+                    );
+    }
+
+    /**
+     * Get default by content & locale
+     *
+     * @param   int         $contentId
+     * @param   string      $locale
+     * @param   int|null    $preferredSubdomainId
+     * @return  \Grid\Core\Model\Uri\Structure|null
+     */
+    public function findDefaultByContentLocale( $contentId,
+                                                $locale,
+                                                $preferredSubdomainId = null )
+    {
+        return $this->getMapper()
+                    ->findDefaultByContentLocale(
+                        $contentId,
+                        $locale,
+                        $preferredSubdomainId
                     );
     }
 
@@ -106,7 +126,7 @@ class Model implements MapperAwareInterface
     /**
      * Get paginator for listing
      *
-     * @return \Zend\Paginator\Paginator
+     * @return  \Zend\Paginator\Paginator
      */
     public function getPaginator()
     {
