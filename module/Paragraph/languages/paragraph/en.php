@@ -305,6 +305,7 @@ return array(
     'paragraph.type.menu.description' => 'Menu description',
     'paragraph.type.metaContent' => 'Meta-content',
     'paragraph.type.metaContent.description' => 'Meta-content description',
+    'paragraph.type.search' => 'Search',
     'paragraph.type.siteWizard' => 'Site wizard',
     'paragraph.type.siteWizard.description' => 'Site wizard description',
     'paragraph.type.infobar' => 'Info bar',
