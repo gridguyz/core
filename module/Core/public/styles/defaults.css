@@ -36,6 +36,13 @@ a img
     outline: none;
 }
 
+mark
+{
+    color: inherit;
+    font-weight: bold;
+    background-color: rgba(240, 240, 64, 0.7);
+}
+
 *[unselectable]
 {
     user-select: none;
