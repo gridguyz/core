@@ -32,7 +32,7 @@ DECLARE
     "c_trigger"     NO SCROLL CURSOR FOR
                               SELECT *
                                 FROM "table_plugin_trigger"
-                               WHERE "tables" @> "p_tables"
+                               WHERE "tables" && "p_tables"
                                  AND "create" IS NOT NULL;
 BEGIN
 
@@ -81,7 +81,7 @@ DECLARE
     "c_trigger"     NO SCROLL CURSOR FOR
                               SELECT *
                                 FROM "table_plugin_trigger"
-                               WHERE "tables" @> "p_tables"
+                               WHERE "tables" && "p_tables"
                                  AND "drop" IS NOT NULL;
 BEGIN
 
