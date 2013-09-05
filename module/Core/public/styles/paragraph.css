@@ -314,7 +314,13 @@ body,
 
 .paragraph-container.paragraph-search-container .paragraph.paragraph-search form dt.label-search
 {
+    float: none;
+    width: auto;
+    height: 2em;
     display: block;
+    text-align: left;
+    line-height: 2em;
+    margin: 0.5em 8ex 0.5em 1em;
 }
 
 .paragraph-container.paragraph-search-container .paragraph.paragraph-search form dd.input-select
