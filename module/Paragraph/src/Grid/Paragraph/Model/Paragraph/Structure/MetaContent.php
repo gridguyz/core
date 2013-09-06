@@ -2,6 +2,10 @@
 
 namespace Grid\Paragraph\Model\Paragraph\Structure;
 
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
+use Grid\Tag\Model\TagsAwareInterface;
+
+
 /**
  * Content
  *
@@ -202,5 +206,76 @@ class MetaContent extends AbstractRoot
 
         return parent::prepareCreate();
     }
+    
+    /**
+     * Get tags of the paragraph
+     *
+     * @return array
+     */
+    function getTags() 
+    { 
+        if( $this->getRenderedMetaContent() instanceof TagsAwareInterface  )
+        {
+            return array_unique(
+                        array_merge( 
+                            parent::getTags(), 
+                            $this->getRenderedMetaContent()->getTags() 
+                   ));
+        }
+        return parent::getTags();
+    }
+    
+    /**
+     * Get tag ids of the paragraph
+     *
+     * @return array
+     */
+    function getTagIds() 
+    { 
+        if( $this->getRenderedMetaContent() instanceof TagsAwareInterface  )
+        {
+            return array_unique(
+                        array_merge( 
+                            parent::getTagIds(), 
+                            $this->getRenderedMetaContent()->getTagIds() 
+                   ));
+        }
+        return parent::getTagIds();
+    }
 
+    /**
+     * Get locale-tags of the paragraph
+     *
+     * @return array
+     */
+    function getLocaleTags() 
+    { 
+        if( $this->getRenderedMetaContent() instanceof TagsAwareInterface  )
+        {
+            return array_unique(
+                        array_merge( 
+                            parent::getLocaleTags(), 
+                            $this->getRenderedMetaContent()->getLocaleTags() 
+                   ));
+        }
+        return parent::getLocaleTags(); 
+    }
+    
+    /**
+     * Get RenderedMetaContent
+     * 
+     * @return null|object
+     */
+    public function getRenderedMetaContent()
+    {
+        try
+        {
+            return $this->getServiceLocator()
+                        ->get('RenderedMetaContent');
+        }
+        catch ( ServiceNotFoundException $e)
+        {
+            return null;
+        }
+    }
 }
