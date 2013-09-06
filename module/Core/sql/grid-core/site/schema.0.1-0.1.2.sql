@@ -150,12 +150,22 @@ DECLARE
                                    WHERE "paragraph_property"."paragraphId" = "p_paragraph_id"
                                      AND "paragraph_property"."locale"      = '*';
     "c_properties"      NO SCROLL CURSOR FOR
-                                  SELECT "paragraph_property".*
+                                  SELECT ( COALESCE( "property_locale", "property_language", "property_fallback" ) ).*
                                     FROM "paragraph"
-                                    JOIN "paragraph_property"
-                                      ON "paragraph_property"."paragraphId" = "paragraph"."id"
+                               LEFT JOIN "paragraph_property" AS "property_locale"
+                                      ON "property_locale"."paragraphId"    = "paragraph"."id"
+                                     AND "property_locale"."locale"         = "p_locale"
+                               LEFT JOIN "paragraph_property" AS "property_language"
+                                      ON "property_language"."paragraphId"  = "paragraph"."id"
+                                     AND "property_language"."locale"       = SUBSTRING( "p_locale" FOR 2 )
+                               LEFT JOIN "paragraph_property" AS "property_fallback"
+                                      ON "property_fallback"."paragraphId"  = "paragraph"."id"
+                                     AND "property_language"."locale"       NOT IN ( '', '*' )
                                    WHERE "paragraph"."rootId"               = "p_paragraph_id"
-                                     AND "paragraph_property"."locale"      = "p_locale"
+                                GROUP BY "paragraph"."left",
+                                         "paragraph"."right",
+                                         ( COALESCE( "property_locale", "property_language", "property_fallback" ) )
+                                  HAVING ( COALESCE( "property_locale", "property_language", "property_fallback" ) )."paragraphId" IS NOT NULL
                                 ORDER BY "paragraph"."left"     ASC,
                                          "paragraph"."right"    DESC;
 BEGIN
