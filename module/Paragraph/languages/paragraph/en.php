@@ -245,6 +245,7 @@ return array(
     'paragraph.layout.privilege.view' => 'View layouts',
     'paragraph.metaContent.error.403' => '403 error',
     'paragraph.metaContent.error.404' => '404 error',
+    'paragraph.metaContent.search.results' => 'Search results',
     'paragraph.metaContent.user.datasheet' => 'User: datasheet',
     'paragraph.metaContent.user.register' => 'User: register',
     'paragraph.metaContent.user.passwordChangeRequest' => 'User: password-change request',
