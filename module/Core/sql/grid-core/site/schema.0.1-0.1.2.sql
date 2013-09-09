@@ -162,6 +162,7 @@ DECLARE
                                       ON "property_fallback"."paragraphId"  = "paragraph"."id"
                                      AND "property_language"."locale"       NOT IN ( '', '*' )
                                    WHERE "paragraph"."rootId"               = "p_paragraph_id"
+                                     AND "paragraph"."type"                 <> 'widget'
                                 GROUP BY "paragraph"."left",
                                          "paragraph"."right",
                                          ( COALESCE( "property_locale", "property_language", "property_fallback" ) )
@@ -266,28 +267,17 @@ BEGIN
             CONTINUE;
         END IF;
 
-        IF "v_value" ~ '^\s*<' OR "v_value" ~ '<(p|div|b|i|strong|span)[\s>]' THEN
-            -- strip scripts, styles
-            "v_value" = regexp_replace( "v_value", '<(script|style)(\s[^>]*)?>.*?</>', '', 'gi' );
-        ELSE
-            -- convert to html
-            "v_value" = REPLACE( "v_value", '&', '&amp;' );
-            "v_value" = REPLACE( "v_value", '<', '&lt;' );
-            "v_value" = REPLACE( "v_value", '>', '&gt;' );
-            "v_value" = REPLACE( "v_value", '"', '&quot;' );
-            "v_value" = '<p>' || "v_value" || '</p>';
-        END IF;
+        "v_value" = regexp_replace( "v_value", '<(script|style){1,1}?(\s[^>]*)??>.*?</\1>', ' ', 'gi' );
+        "v_value" = regexp_replace( "v_value", '<[bh]r(\s[^>]*)?>', E'\n', 'gi' );
+        "v_value" = regexp_replace( "v_value", '</(address|blockquote|div|h[1-6]|noscript|p|pre|table)>', E'\n', 'gi' );
+        "v_value" = regexp_replace( "v_value", '</?[A-Za-z][^>]*>', ' ', 'g' );
+        "v_value" = TRIM( BOTH E' \t\n\r' FROM "v_value" );
 
         IF "r_properties"."paragraphId" = "p_paragraph_id" THEN
 
             CASE "r_properties"."name"
 
                 WHEN 'title' THEN
-                    "v_value" = regexp_replace( "v_value", '<[^>]*>', '', 'g' );
-                    "v_value" = REPLACE( "v_value", '&quot;', '"' );
-                    "v_value" = REPLACE( "v_value", '&gt;', '>' );
-                    "v_value" = REPLACE( "v_value", '&lt;', '<' );
-                    "v_value" = REPLACE( "v_value", '&amp;', '&' );
                     "v_title" = "v_title" || "v_value" || ' ';
 
                 WHEN 'metaKeywords' THEN
@@ -382,20 +372,26 @@ BEGIN
 
     END IF;
 
-    SELECT "rootId"
-      INTO "v_root"
-      FROM "paragraph"
-     WHERE "id" = "r_row"."paragraphId";
+    IF "r_row"."locale" IS NOT NULL AND
+       "r_row"."locale" <> '' AND
+       "r_row"."locale" <> '*' THEN
 
-    IF EXISTS( SELECT *
-                 FROM "paragraph"
-                WHERE "id"    = "v_root"
-                  AND "type"  = 'content' ) THEN
+        SELECT "rootId"
+          INTO "v_root"
+          FROM "paragraph"
+         WHERE "id" = "r_row"."paragraphId";
 
-        PERFORM "paragraph_update_search_content"(
-            "v_root",
-            "r_row"."locale"
-        );
+        IF EXISTS( SELECT *
+                     FROM "paragraph"
+                    WHERE "id"    = "v_root"
+                      AND "type"  = 'content' ) THEN
+
+            PERFORM "paragraph_update_search_content"(
+                "v_root",
+                "r_row"."locale"
+            );
+
+        END IF;
 
     END IF;
 
