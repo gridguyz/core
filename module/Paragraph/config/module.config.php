@@ -322,6 +322,11 @@ return array(
         ),
     ),
     'factory' => array(
+        'Grid\Core\Model\ContentUri\Factory' => array(
+            'adapter'   => array(
+                'paragraph'     => 'Grid\Paragraph\Model\ContentUri\Paragraph',
+            ),
+        ),
         'Grid\ApplicationLog\Model\Log\StructureFactory' => array(
             'adapter'    => array(
                 'content-view'  => 'Grid\Paragraph\Model\Log\Structure\ContentView',

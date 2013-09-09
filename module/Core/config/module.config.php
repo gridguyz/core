@@ -427,9 +427,15 @@ return array(
         ),
     ),
     'factory' => array(
+        'Grid\Core\Model\ContentUri\Factory' => array(
+            'dependency'    => 'Grid\Core\Model\ContentUri\AdapterInterface',
+            'adapter'       => array(
+                'default-fallback'  => 'Grid\Core\Model\ContentUri\DefaultFallback',
+            ),
+        ),
         'Grid\Core\Model\Settings\StructureFactory' => array(
-            'dependency' => 'Grid\Core\Model\Settings\StructureAbstract',
-            'adapter'    => array(
+            'dependency'    => 'Grid\Core\Model\Settings\StructureAbstract',
+            'adapter'       => array(
                 'default-fallback'  => 'Grid\Core\Model\Settings\Structure\DefaultFallback',
                 'site-definition'   => 'Grid\Core\Model\Settings\Structure\SiteDefinition',
                 'locale'            => 'Grid\Core\Model\Settings\Structure\Locale',

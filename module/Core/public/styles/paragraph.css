@@ -300,6 +300,45 @@ body,
     border-color: currentColor;
 }
 
+.paragraph-container.paragraph-search-container .paragraph.paragraph-search form dt
+{
+    display: none;
+}
+
+.paragraph-container.paragraph-search-container .paragraph.paragraph-search form dd
+{
+    float: none;
+    margin: 0.5em 1em;
+    text-align: center;
+}
+
+.paragraph-container.paragraph-search-container .paragraph.paragraph-search form dt.label-search
+{
+    float: none;
+    width: auto;
+    height: 2em;
+    display: block;
+    text-align: left;
+    line-height: 2em;
+    margin: 0.5em 8ex 0.5em 1em;
+}
+
+.paragraph-container.paragraph-search-container .paragraph.paragraph-search form dd.input-select
+{
+    top: 0em;
+    right: 0em;
+    margin: 0em 1em;
+    position: absolute;
+}
+
+.paragraph-container.paragraph-search-container .paragraph.paragraph-search form dd.input-select,
+.paragraph-container.paragraph-search-container .paragraph.paragraph-search form dd.input-select select
+{
+    width: 6ex;
+    min-width: 6ex;
+    max-width: 6ex;
+}
+
 .paragraph-container.paragraph-tagCloud-container .paragraph.paragraph-tagCloud .tags .tag .usage:before
 {
     content: "(";
