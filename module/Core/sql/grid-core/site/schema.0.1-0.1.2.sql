@@ -400,6 +400,67 @@ BEGIN
 END $$;
 
 --------------------------------------------------------------------------------
+-- function: paragraph_update_search_id_trigger()                             --
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION "paragraph_update_search_id_trigger"()
+          RETURNS TRIGGER
+              SET search_path FROM CURRENT
+         LANGUAGE plpgsql
+               AS $$
+BEGIN
+
+    IF OLD."id" = NEW."id" THEN
+        RETURN NEW;
+    END IF;
+
+    IF NOT EXISTS( SELECT TRUE
+                     FROM INFORMATION_SCHEMA.TABLES
+                    WHERE TABLE_SCHEMA = CURRENT_SCHEMA
+                      AND TABLE_NAME   = 'search' ) THEN
+
+        RETURN NEW;
+
+    END IF;
+
+    UPDATE "search_content"
+       SET "contentId" = NEW."id"
+     WHERE "type" LIKE 'paragraph.%'
+       AND "contentId" = OLD."id";
+
+    RETURN NEW;
+
+END $$;
+
+--------------------------------------------------------------------------------
+-- function: paragraph_delete_search_id_trigger()                             --
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION "paragraph_delete_search_id_trigger"()
+          RETURNS TRIGGER
+              SET search_path FROM CURRENT
+         LANGUAGE plpgsql
+               AS $$
+BEGIN
+
+    IF NOT EXISTS( SELECT TRUE
+                     FROM INFORMATION_SCHEMA.TABLES
+                    WHERE TABLE_SCHEMA = CURRENT_SCHEMA
+                      AND TABLE_NAME   = 'search' ) THEN
+
+        RETURN OLD;
+
+    END IF;
+
+    DELETE FROM "search_content"
+          WHERE "type" LIKE 'paragraph.%'
+            AND "contentId" = OLD."id";
+
+    RETURN OLD;
+
+END $$;
+
+--------------------------------------------------------------------------------
 -- trigger: 1000_search_update_paragraph_content                              --
 --------------------------------------------------------------------------------
 
@@ -410,3 +471,23 @@ CREATE TRIGGER "1000_paragraph_update_search_content"
             ON "paragraph_property"
            FOR EACH ROW
        EXECUTE PROCEDURE "paragraph_update_search_content_trigger"();
+
+--------------------------------------------------------------------------------
+-- trigger: 1000_paragraph_update_search_id                                   --
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER "1000_paragraph_update_search_id"
+         AFTER UPDATE OF "id"
+            ON "paragraph"
+           FOR EACH ROW
+       EXECUTE PROCEDURE "paragraph_update_search_id_trigger"();
+
+--------------------------------------------------------------------------------
+-- trigger: 1000_paragraph_delete_search_id                                   --
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER "1000_paragraph_delete_search_id"
+         AFTER DELETE
+            ON "paragraph"
+           FOR EACH ROW
+       EXECUTE PROCEDURE "paragraph_delete_search_id_trigger"();
