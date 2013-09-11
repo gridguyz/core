@@ -15,6 +15,7 @@ return array(
     'customize.form.important' => 'Important',
     'customize.form.import.file' => 'Import from file',
     'customize.form.import.submit' => 'Import',
+    'customize.form.extra.css' => 'Extra CSS content',
     'customize.list.column.actions.title' => 'Actions',
     'customize.list.column.media.title' => 'Media query',
     'customize.list.column.rootName.title' => 'Root name',

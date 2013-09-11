@@ -58,6 +58,7 @@ return array(
     'admin.navTop.customize' => 'Customize',
     'admin.navTop.customize.ruleCreate' => 'Create new CSS rule',
     'admin.navTop.customize.ruleList' => 'List CSS rules',
+    'admin.navTop.customize.editExtra' => 'Edit extra CSS',
     'admin.navTop.dashboard' => 'Dashboard',
     'admin.navTop.domain' => 'Domains',
     'admin.navTop.domainCreate' => 'Create new domain',

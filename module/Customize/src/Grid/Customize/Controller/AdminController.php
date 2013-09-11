@@ -107,6 +107,55 @@ class AdminController extends AbstractListController
     }
 
     /**
+     * Edit extra css
+     */
+    public function editExtraAction()
+    {
+        $request    = $this->getRequest();
+        $locator    = $this->getServiceLocator();
+        $model      = $locator->get( 'Grid\Customize\Model\Extra\Model' );
+        $form       = $locator->get( 'Form' )
+                              ->get( 'Grid\Customize\Extra' );
+        $extra      = $model->find();
+
+        /* @var $form \Zend\Form\Form */
+        $form->setHydrator( $model->getMapper() )
+             ->bind( $extra );
+
+        if ( $request->isPost() )
+        {
+            $form->setData( $request->getPost() );
+
+            if ( $form->isValid() && $extra->save() )
+            {
+                $this->messenger()
+                     ->add( 'customize.form.success',
+                            'customize', Message::LEVEL_INFO );
+
+                return $this->redirect()
+                            ->toRoute( 'Grid\Customize\Admin\EditExtra', array(
+                                'locale' => (string) $this->locale(),
+                            ), array(
+                                'query' => array(
+                                    'refresh' => true,
+                                ),
+                            ) );
+            }
+            else
+            {
+                $this->messenger()
+                     ->add( 'customize.form.failed',
+                            'customize', Message::LEVEL_ERROR );
+            }
+        }
+
+        return array(
+            'form'  => $form,
+            'extra' => $extra,
+        );
+    }
+
+    /**
      * Delete a rule
      */
     public function deleteAction()

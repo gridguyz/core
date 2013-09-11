@@ -57,6 +57,16 @@ return array(
                     ),
                 ),
             ),
+            'Grid\Customize\Admin\EditExtra' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route'         => '/app/:locale/admin/customize/edit-extra',
+                    'defaults'      => array(
+                        'controller'    => 'Grid\Customize\Controller\Admin',
+                        'action'        => 'edit-extra',
+                    ),
+                ),
+            ),
             'Grid\Customize\Admin\List' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -143,6 +153,14 @@ return array(
                             'resource'      => 'customize',
                             'privilege'     => 'create',
                         ),
+                        'editExtra' => array(
+                            'order'         => 3,
+                            'label'         => 'admin.navTop.customize.editExtra',
+                            'textDomain'    => 'admin',
+                            'route'         => 'Grid\Customize\Admin\EditExtra',
+                            'resource'      => 'customize',
+                            'privilege'     => 'edit',
+                        ),
                     ),
                 ),
             ),
@@ -195,6 +213,32 @@ return array(
                         'options'   => array(
                             'label'     => 'customize.form.properties',
                             'required'  => false,
+                        ),
+                    ),
+                ),
+                'save'      => array(
+                    'spec'  => array(
+                        'type'      => 'Zork\Form\Element\Submit',
+                        'name'      => 'save',
+                        'attributes'    => array(
+                            'value'     => 'customize.form.submit',
+                        ),
+                    ),
+                ),
+            ),
+        ),
+        'Grid\Customize\Extra' => array(
+            'elements' => array(
+                'css' => array(
+                    'spec'  => array(
+                        'type'      => 'Zork\Form\Element\Textarea',
+                        'name'      => 'css',
+                        'options'   => array(
+                            'label'     => 'customize.form.extra.css',
+                            'required'  => true,
+                        ),
+                        'attributes'    => array(
+                            'data-js-type'  => 'js.form.element.codeEditor',
                         ),
                     ),
                 ),
