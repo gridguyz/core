@@ -23,21 +23,23 @@
         element = $( element );
         element.css( { "display": "block", "width": "100%" } );
 
-        var title = element.attr( "title" );
+        var title = element.attr( "title" ),
+            min   = parseFloat( element.attr( "min" ) || element.data( "jsProgressMin" ) ) || 0,
+            max   = parseFloat( element.attr( "max" ) || element.data( "jsProgressMax" ) ) || 100,
+            indet = ( element.attr( "value" ) === null ||
+                      element.attr( "value" ) === "" ) &&
+                    ( element.data( "jsProgressValue" ) === null ||
+                      element.data( "jsProgressValue" ) === "" ||
+                      element.data( "jsProgressValue" ) === false ),
+            value = indet ? false : parseFloat( element.attr( "value" ) || element.data( "jsProgressValue" ) );
+
         if ( title ) { title += "\n"; }
         title += element.text().replace( [ /^\s+/, /\s+$/ ], '' );
         element.attr( "title", title ).empty();
 
-        var val = parseFloat( element.attr( "value" ) ||
-            ( element.data( "jsProgressValue" ) / 100 ) );
-
-        if ( element.attr( "max" ) )
-        {
-            val = val / parseFloat( element.attr( "max" ) );
-        }
-
         element.progressbar( {
-            "value": 100 * val
+            "max": max - min,
+            "value": value === false ? false : value - min
         } );
     };
 
