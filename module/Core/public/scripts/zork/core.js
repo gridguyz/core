@@ -3176,8 +3176,8 @@
                     content.width( minWidth )
                            .height( minHeight );
 
-                    content.width( ( cwidth   = inner.outerWidth() + 20 ) + 25 );
-                    content.height( ( cheight = inner.outerHeight() ) + 25 );
+                    content.width(  Math.max( minWidth,  ( cwidth  = inner.outerWidth() + 20 ) + 25 ) );
+                    content.height( Math.max( minHeight, ( cheight = inner.outerHeight()     ) + 25 ) );
 
                     setTimeout( function () {
                         content.width( cwidth );
