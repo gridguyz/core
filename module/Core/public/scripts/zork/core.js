@@ -3216,6 +3216,7 @@
             update = function () {
                 setTimeout( intervalFunc, 100 );
                 setTimeout( intervalFunc, 1100 );
+                setTimeout( intervalFunc, 2200 );
             };
 
         layer.css( {
