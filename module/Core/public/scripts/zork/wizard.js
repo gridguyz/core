@@ -64,7 +64,7 @@
         }
 
         wizard.attr( {
-                    "src"               : "javascript:void(0)",
+                    "src"               : "",
                     "frameborder"       : "0",
                     "allowtransparency" : "true"
                 } )
@@ -92,7 +92,9 @@
             } );
 
             if ( ! ( "submit" in params ) || params.submit ) {
-                params.form.submit();
+                setTimeout( function () {
+                    params.form.submit();
+                }, 1 );
             }
         }
         else
