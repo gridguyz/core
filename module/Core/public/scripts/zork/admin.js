@@ -95,15 +95,15 @@
                 switch ( position )
                 {
                     case "right":
-                        return display ?
-                            "ui-icon-circle-triangle-e" :
-                            "ui-icon-circle-triangle-w";
+                        return display
+                            ? "ui-icon-circle-triangle-e"
+                            : "ui-icon-circle-triangle-w";
 
                     case "left":
                     default:
-                        return display ?
-                            "ui-icon-circle-triangle-w" :
-                            "ui-icon-circle-triangle-e";
+                        return display
+                            ? "ui-icon-circle-triangle-w"
+                            : "ui-icon-circle-triangle-e";
                 }
             },
             changePos   = function ( pos ) {
@@ -156,34 +156,55 @@
 
         var menuOriginWidth;
 
-        setTimeout(function()
-        {
-            menuOriginWidth = parseInt(menu.width());
-            if( !display )
-            {
-                menu.css( {"overflow":"hidden", "width":"32px"} );
-                menu.find("span.status").hide();
-            }
-        },400);
+        setTimeout( function() {
+            menuOriginWidth = parseInt( menu.width() );
 
-        toggle.click( function ()
-        {
+            if ( ! display )
+            {
+                menu.css( {
+                        "width": "32px",
+                        "overflow": "hidden"
+                    } )
+                    .find( "span.status" )
+                        .hide();
+            }
+        }, 400 );
+
+        toggle.click( function () {
             openRpc( display = ! display );
             toggle.button( "option", "icons", { "primary": icon() } );
 
             if ( display )
             {
                 text.show( "fast" );
-                menu.css('overflow','visible');
-                menu.animate({'width':menuOriginWidth+''},'fast');
-                menu.find("span.status").show('fast');
+                menu.css( "overflow", "visible" )
+                    .animate( {
+                        "width": menuOriginWidth + "px"
+                    }, {
+                        "duration": "fast",
+                        "complete": function () {
+                            menu.css( "width", "auto" );
+                            menuOriginWidth = Math.max(
+                                menuOriginWidth,
+                                parseInt( menu.width() )
+                            );
+                        }
+                    } )
+                    .find( "span.status" )
+                        .show( "fast" );
             }
             else
             {
                 text.hide( "fast" );
-                menu.css('overflow','hidden');
-                menu.animate({'width':'32px'},'fast');
-                menu.find("span.status").hide('fast');
+                menu.css( {
+                        "overflow": "hidden",
+                        "width": menuOriginWidth + "px"
+                    } )
+                    .animate( {
+                        "width": "32px"
+                    }, "fast" )
+                    .find( "span.status" )
+                        .hide( "fast" );
             }
         } );
 
@@ -440,8 +461,8 @@
                 } ) ) ); */
 
                 tabs.css( {
-                        "max-width": "80%",
-                        "min-width": "600px"
+                        "width": "845px",
+                        "height": "450px"
                     } )
                     .tabs( {
                         "cache": true,
@@ -455,6 +476,9 @@
                                     "default.error", js.core.userLocale
                                 ) );
                             }
+                        },
+                        "beforeLoad": function ( event, ui ) {
+                            ui.panel.html( "" );
                         },
                         "load": function ( event, ui ) {
                             var panel = $( ui.panel ),
@@ -524,8 +548,8 @@
                 } ) ) );
 
                 tabs.css( {
-                        "max-width": "80%",
-                        "min-width": "600px"
+                        "width": "600px",
+                        "height": "400px"
                     } )
                     .tabs( {
                         "cache": true,
@@ -539,6 +563,9 @@
                                     "default.error", js.core.userLocale
                                 ) );
                             }
+                        },
+                        "beforeLoad": function ( event, ui ) {
+                            ui.panel.html( "" );
                         },
                         "load": function ( event, ui ) {
                             var panel = $( ui.panel ),

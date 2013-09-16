@@ -76,7 +76,11 @@
                     "min-height"        : "100px"
                 } );
 
-        close = js.core.layer( wizard );
+        close = js.core.layer( {
+            "minWidth": 600,
+            "minHeight": 100,
+            "content": wizard
+        } );
 
         if ( "form" in params && params.form )
         {

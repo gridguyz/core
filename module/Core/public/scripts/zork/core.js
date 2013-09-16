@@ -3149,7 +3149,9 @@
             content = false;
         }
 
-        var layer = $( '<div class="ui-overlay" />' ),
+        var minWidth = 100,
+            minHeight = 100,
+            layer = $( '<div class="ui-overlay" />' ),
             overlay = $( '<div class="ui-widget-overlay" />' ),
             shadow = $( '<div class="ui-widget-shadow" />' ),
             intervalFunc = function () {
@@ -3168,8 +3170,8 @@
                         return;
                     }
 
-                    content.width( 100 )
-                           .height( 100 );
+                    content.width( minWidth )
+                           .height( minHeight );
 
                     content.width( ( cwidth   = inner.outerWidth() + 20 ) + 25 );
                     content.height( ( cheight = inner.outerHeight() ) + 25 );
@@ -3199,17 +3201,21 @@
                 sleft   = parseInt( shadow.css( "borderLeftWidth" ), 10 )
                         + parseInt( shadow.css( "paddingLeft" ), 10 );
 
-                shadow.css( {
+                shadow.stop( true, false ).animate( {
                     "width"         : parseInt( width * 2, 10 ) + "px",
                     "height"        : parseInt( height * 2, 10 ) + "px",
                     "margin-top"    : "-" + parseInt( height + stop, 10 ) + "px",
                     "margin-left"   : "-" + parseInt( width + sleft, 10 ) + "px"
-                } );
+                }, "fast" );
 
-                content.css( {
+                content.stop( true, false ).animate( {
                     "margin-top": "-" + parseInt( height, 10 ) + "px",
                     "margin-left": "-" + parseInt( width, 10 ) + "px"
-                } );
+                }, "fast" );
+            },
+            update = function () {
+                setTimeout( intervalFunc, 100 );
+                setTimeout( intervalFunc, 1100 );
             };
 
         layer.css( {
@@ -3220,6 +3226,12 @@
             "height"    : "100%",
             "z-index"   : 100
         } );
+
+        if ( "minWidth" in content || "minHeight" in content ) {
+            minWidth  = Math.max( minWidth,  content.minWidth  || 0 );
+            minHeight = Math.max( minHeight, content.minHeight || 0 );
+            content   = content.content || "";
+        }
 
         content = $( content || '<img src="/images/scripts/loading.gif" />' );
 
@@ -3245,22 +3257,16 @@
 
         if ( content.is( "iframe" ) )
         {
-            content.on( "load", function () {
-                intervalFunc();
-                setTimeout( intervalFunc, 2000 );
-            } );
+            content.on( "load", update );
         }
 
         if ( content.is( ".ui-tabs" ) )
         {
-            content.on( "tabsactivate tabsload", function () {
-                intervalFunc();
-                setTimeout( intervalFunc, 2000 );
-            } );
+            content.on( "tabsactivate tabsload", update );
         }
 
-        content.on( "load", "img, script, iframe", intervalFunc );
-        content.on( "tabsactivate tabsload", ".ui-tabs", intervalFunc );
+        content.on( "load", "img, script, iframe", update );
+        content.on( "tabsactivate tabsload", ".ui-tabs", update );
 
         return function () {
             if ( Function.isFunction( resume ) )
@@ -3847,205 +3853,4 @@
         check();
     } () );
 
-    /**
-     * window.open override
-     *
-     * @deprecated
-     * @param {String} url URL
-     * @param {String} windowName iframe name
-     * @param {String} windowFeatures in format:
-     * "feature1=on,feature2=0,feature3=200"
-     * <pre>
-     * Booleans can be "yes"|"no"|"1"|"0"
-     * Supported features:
-     *  {Number} width default: 500
-     *  {Number} height default: 300
-     *  {Boolean} resizable default: yes
-     *  {Boolean} scrollbars default: yes (yes means overflow: auto - no means hidden)
-     * </pre>
-     * /
-    global.open = function ( url, windowName, windowFeatures )
-    {
-        js.require( "js.ui.dialog" );
-
-        var name = String( windowName || ( "window_open_" + js.generateId.number() ) ),
-            features = parseQuery( windowFeatures, ",", "=" ),
-            loaded = false,
-            onload = null,
-            result = null,
-            dialogId = null,
-            dialog = null,
-            close = function ()
-            {
-                js.ui.dialog.destroy( dialogId );
-            };
-
-        features.width = parseInt( features.width, 10 ) || 500;
-        features.height = parseInt( features.height, 10 ) || 300;
-
-        if ( !! url )
-        {
-            var frame = $(
-                '<iframe src="' + String( url ).replace( '"', '&quot;' ) +
-                '" name="' + name.replace( '"', '&quot;' ) +
-                '" width="' + features.width +
-                '" height="' + features.height +
-                '" allowtransparency="true"></iframe>'
-            );
-
-            frame.css( "border", "none" );
-            frame.css( "width", String( features.width ) + "px" );
-            frame.css( "height", String( features.height ) + "px" );
-
-            onload = function ()
-            {
-                if ( loaded ) {return;}
-                loaded = true;
-                var win = this.contentWindow ||
-                        this.contentDocument.window ||
-                        $( "body", this ).window;
-
-                win.opener = win.parent;
-
-                var opener = ( win.opener || win.parent ),
-                    titlebar = opener.$( "#ui-dialog-title-" + dialogId ),
-                    title = win.document.getElementsByTagName( "title" );
-
-                titlebar.text( title.length > 0 ? title[0].innerHTML : "" );
-                win.close = close;
-            };
-
-            frame.on( "load", onload );
-            frame.on( "readystatechange", onload );
-
-            if ( features.scrollbars === "0" || features.scrollbars === "no" )
-            {
-                frame.css( "overflow", "hidden" );
-            }
-
-            js.ui.dialog( {
-                "title": js.core.translate( "default.loading" ),
-                "message": frame,
-                "modal": true,
-                "resizable": ( features.resizable === "0" ||
-                    features.resizable === "no" ) ? false : true
-            } );
-
-            dialogId = js.ui.dialog.getLastId();
-
-            result = frame[0].contentWindow ||
-                frame[0].contentDocument.window ||
-                ( typeof frame[0].body !== "undefined" ?
-                    frame[0].body.window : null ) ||
-                ( typeof frame[0].document !== "undefined" ?
-                    frame[0].document.window : null ) ||
-                js.console.error( "Window not found" );
-
-            result.close = close;
-        }
-        else
-        {
-            dialogId = js.ui.dialog.getNextId();
-
-            js.ui.dialog( {
-                "title": js.core.translate( "default.loading" ),
-                "message": '<div id="' + dialogId + '-frame" class="frame-' +
-                    name + '"></div>',
-                "modal": true,
-                "resizable": ( features.resizable === "0" ||
-                    features.resizable === "no" ) ? false : true
-            } );
-
-            global._close = global.close;
-            global.close = function ()
-            {
-                close();
-                global.close = global._close;
-            };
-
-            var parseTags = function ( html )
-            {
-                var matches;
-                html = html.replace( /<html([^>]*)>/im, '<div id="' +
-                    dialogId + "-" + name + '-html"$1>' );
-                html = html.replace( "</html>", "</div>" );
-
-                matches = /<title[^>]*>(.*)<\/title>/im.exec( html );
-                if ( !! matches )
-                {
-                    $( "#ui-dialog-title-" + dialogId ).text( matches[1] );
-                }
-
-                html = html.replace( /<head([^>]*)>.*<\/head>/im, "" );
-
-                if ( ! onload )
-                {
-                    matches = /<body[^>]*onload=(['"])([^'"]*)\1/im.
-                        exec( html );
-                    if ( !! matches )
-                    {
-                        onload = new Function( "event", matches[2] );
-                        html = html.replace(
-                            /<body([^>]*)onload=(['"])[^'"]*\2([^>]*)>/im,
-                            "<body$1$3>"
-                        );
-                    }
-                }
-
-                html = html.replace( /<body([^>]*)>/im, '<div id="' +
-                    dialogId + "-" + name + '-body"$1>' );
-                html = html.replace( "</body>", "</div>" );
-
-                return html;
-            };
-
-            result = {
-                "close": global.close,
-                "document": {
-                    "body": null,
-                    "open": function ()
-                    { / * do nothing ;) * / },
-                    "write": function ( html )
-                    {
-                        this.innerHTML += parseTags( html );
-                    },
-                    "writeln": function (html)
-                    {
-                        this.innerHTML += parseTags( html + "\n" );
-                    },
-                    "close": function ()
-                    {
-                        $( "#" + dialogId + "-frame" ).html( this.innerHTML );
-
-                        this.body = $( "#" + dialogId + "-" +
-                            name + "-body" )[0];
-
-                        if ( !! onload )
-                        {
-                            onload();
-                        }
-                    },
-                    "innerHTML": "",
-                    "window": null
-                }
-            };
-
-            result.document.window = result;
-        }
-
-        dialog = $( "#" + dialogId );
-        dialog.css( {
-            "width": String( features.width ) + "px",
-            "height": ( !! url ) ? ( String( features.height ) + "px" ) : "auto",
-            "padding": "0px",
-            "overflow": "hidden"
-        } );
-
-        dialog.parent().css( {
-            "width": String( features.width ) + "px"
-        } );
-
-        return result;
-    };
-    */
 } ( window, jQuery ) );
