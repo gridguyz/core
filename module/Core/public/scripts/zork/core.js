@@ -3158,7 +3158,10 @@
                 var cwidth, cheight, inner, width, height, stop, sleft,
                     aheight = $( global ).height() - 10;
 
-                content.css( "height", "auto" );
+                shadow.stop( true, false );
+                content.stop( true, false )
+                       .css( "height", "auto" );
+
                 if ( content.is( "iframe" ) )
                 {
                     try
@@ -3201,14 +3204,14 @@
                 sleft   = parseInt( shadow.css( "borderLeftWidth" ), 10 )
                         + parseInt( shadow.css( "paddingLeft" ), 10 );
 
-                shadow.stop( true, false ).animate( {
+                shadow.animate( {
                     "width"         : parseInt( width * 2, 10 ) + "px",
                     "height"        : parseInt( height * 2, 10 ) + "px",
                     "margin-top"    : "-" + parseInt( height + stop, 10 ) + "px",
                     "margin-left"   : "-" + parseInt( width + sleft, 10 ) + "px"
                 }, "fast" );
 
-                content.stop( true, false ).animate( {
+                content.animate( {
                     "margin-top": "-" + parseInt( height, 10 ) + "px",
                     "margin-left": "-" + parseInt( width, 10 ) + "px"
                 }, "fast" );
