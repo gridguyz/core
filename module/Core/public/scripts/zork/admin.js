@@ -480,7 +480,11 @@
                         "beforeLoad": function ( event, ui ) {
                             ui.panel.html( "" )
                                     .append(
-                                        $( "<p>" ).css( "text-align", "center" )
+                                        $( "<p>" ).css( {
+                                                       "margin": "0px",
+                                                       "padding": "50px",
+                                                       "text-align": "center"
+                                                   } )
                                                   .text( js.core.translate( "default.loading" ) )
                                     );
                         },
@@ -571,7 +575,11 @@
                         "beforeLoad": function ( event, ui ) {
                             ui.panel.html( "" )
                                     .append(
-                                        $( "<p>" ).css( "text-align", "center" )
+                                        $( "<p>" ).css( {
+                                                       "margin": "0px",
+                                                       "padding": "50px",
+                                                       "text-align": "center"
+                                                   } )
                                                   .text( js.core.translate( "default.loading" ) )
                                     );
                         },
