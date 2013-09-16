@@ -3155,7 +3155,10 @@
             overlay = $( '<div class="ui-widget-overlay" />' ),
             shadow = $( '<div class="ui-widget-shadow" />' ),
             intervalFunc = function () {
-                var cwidth, cheight, inner, width, height, stop, sleft,
+                var cwidth, cheight,
+                    width, height,
+                    inner, iwidth, iheight,
+                    stop, sleft,
                     aheight = $( global ).height() - 10;
 
                 shadow.stop( true, false );
@@ -3179,8 +3182,41 @@
                     content.width( minWidth )
                            .height( minHeight );
 
-                    content.width(  cwidth  = Math.max( minWidth,  inner.outerWidth() + 20 ) )
-                           .height( cheight = Math.max( minHeight, inner.outerHeight()     ) )
+                    try
+                    {
+                        iwidth  = inner.outerWidth();
+                        iheight = inner.outerHeight();
+                    }
+                    catch ( e )
+                    {
+                        js.console.dir( e );
+
+                        if ( "stack" in e )
+                        {
+                            js.console.log( e.stack );
+                        }
+
+                        try
+                        {
+                            iwidth  = inner.width();
+                            iheight = inner.height();
+                        }
+                        catch ( e )
+                        {
+                            js.console.dir( e );
+
+                            if ( "stack" in e )
+                            {
+                                js.console.log( e.stack );
+                            }
+
+                            iwidth  = content.width();
+                            iheight = content.height();
+                        }
+                    }
+
+                    content.width(  cwidth  = Math.max( minWidth,  iwidth + 20 ) )
+                           .height( cheight = Math.max( minHeight, iheight     ) )
                            .css( {
                                "paddint-right": "25px",
                                "padding-bottom": "25px"
@@ -3239,7 +3275,8 @@
             "z-index"   : 100
         } );
 
-        if ( "minWidth" in content || "minHeight" in content ) {
+        if ( "object" == typeof content &&
+             ( "minWidth" in content || "minHeight" in content ) ) {
             minWidth  = Math.max( minWidth,  content.minWidth  || 0 );
             minHeight = Math.max( minHeight, content.minHeight || 0 );
             content   = content.content || "";
