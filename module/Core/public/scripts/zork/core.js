@@ -3160,7 +3160,10 @@
 
                 shadow.stop( true, false );
                 content.stop( true, false )
-                       .css( "height", "auto" );
+                       .css( {
+                            "height": "auto",
+                            "padding": "0px"
+                        } );
 
                 if ( content.is( "iframe" ) )
                 {
@@ -3176,18 +3179,24 @@
                     content.width( minWidth )
                            .height( minHeight );
 
-                    content.width(  Math.max( minWidth,  ( cwidth  = inner.outerWidth() + 20 ) + 25 ) );
-                    content.height( Math.max( minHeight, ( cheight = inner.outerHeight()     ) + 25 ) );
+                    content.width(  cwidth  = Math.max( minWidth,  inner.outerWidth() + 20 ) )
+                           .height( cheight = Math.max( minHeight, inner.outerHeight()     ) )
+                           .css( {
+                               "paddint-right": "25px",
+                               "padding-bottom": "25px"
+                           } );
 
                     setTimeout( function () {
-                        content.width( cwidth );
-                        content.height( cheight );
+                        content.css( {
+                            "paddint-right": "0px",
+                            "padding-bottom": "0px"
+                        } );
                     }, 1 );
                 }
                 else
                 {
-                    cwidth  = content.width();
-                    cheight = content.height();
+                    cwidth  = Math.max( minWidth,  content.width()  );
+                    cheight = Math.max( minHeight, content.height() );
                 }
 
                 if ( cheight > aheight )

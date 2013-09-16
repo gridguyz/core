@@ -478,7 +478,11 @@
                             }
                         },
                         "beforeLoad": function ( event, ui ) {
-                            ui.panel.html( "" );
+                            ui.panel.html( "" )
+                                    .append(
+                                        $( "<p>" ).css( "text-align", "center" )
+                                                  .text( js.core.translate( "default.loading" ) )
+                                    );
                         },
                         "load": function ( event, ui ) {
                             var panel = $( ui.panel ),
@@ -565,7 +569,11 @@
                             }
                         },
                         "beforeLoad": function ( event, ui ) {
-                            ui.panel.html( "" );
+                            ui.panel.html( "" )
+                                    .append(
+                                        $( "<p>" ).css( "text-align", "center" )
+                                                  .text( js.core.translate( "default.loading" ) )
+                                    );
                         },
                         "load": function ( event, ui ) {
                             var panel = $( ui.panel ),
