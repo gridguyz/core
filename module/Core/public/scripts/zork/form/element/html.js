@@ -140,6 +140,14 @@
         "theme_advanced_resizing"           : true,
         "theme_advanced_resize_horizontal"  : false,
         "buttonSet"                         : "advanced",
+        "setup"                             : function ( editor ) {
+            editor.onLoadContent.add( function( editor ) {
+                setTimeout( function () {
+                    $( editor.contentAreaContainer ).find( "iframe" )
+                                                    .trigger( "load" );
+                }, 1 );
+            } );
+        },
         "onchange_callback"                 : $.extend( function ( element ) {
             return function ( instance ) {
                 element.trigger( "change" );
