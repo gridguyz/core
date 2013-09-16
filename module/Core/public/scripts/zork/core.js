@@ -3270,6 +3270,15 @@
         if ( content.is( "iframe" ) )
         {
             content.on( "load", update );
+
+            try
+            {
+                content.contents()
+                       .on( "load", "img, script, iframe", update );
+            }
+            catch ( e )
+            {
+            }
         }
 
         if ( content.is( ".ui-tabs" ) )
