@@ -3333,7 +3333,28 @@
             content   = content.content || "";
         }
 
-        content = $( content || '<img src="/images/scripts/loading.gif" />' );
+        if ( content )
+        {
+            content = $( content );
+        }
+        else
+        {
+            if ( 100 === minWidth && 100 === minHeight )
+            {
+                minWidth  = 20;
+                minHeight = 20;
+            }
+
+            content = $( '<div>' )
+                        .append( '<img src="/images/scripts/loading.gif" />' )
+                        .width( minWidth )
+                        .height( minHeight )
+                        .css( {
+                            "line-height": minHeight + "px",
+                            "text-align": "center",
+                            "vertical-align": "middle"
+                        } );
+        }
 
         layer.append( overlay )
              .append( shadow )
