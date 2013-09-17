@@ -125,6 +125,7 @@ return array(
     'admin.packages.action.updateAll' => 'Update appz',
     'admin.packages.action.view' => 'View app details',
     'admin.packages.additionalInfo' => 'Additional info',
+    'admin.packages.authors' => 'Author(s)',
  /* 'admin.packages.category.all' => 'All packages',
     'admin.packages.category.system' => 'System',
     'admin.packages.category.function' => 'Functions',

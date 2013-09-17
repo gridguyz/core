@@ -256,6 +256,21 @@ $locale = (string) $this->locale();
 <?php endif ?>
 
                 </dl>
+                <dl class="package-data full">
+<?php $authors = $package->getDisplayedAuthors( $locale ); if ( ! empty( $authors ) ): ?>
+
+                    <dt class="authors"><?= $this->translate( 'admin.packages.authors', 'admin' ) ?></dt>
+                    <dd class="authors">
+<?php foreach ( $authors as $author ): ?>
+
+                        <a href="<?= empty( $author['url'] ) ? '#' : $author['url'] ?>"
+                           class="author"><?= $this->escapeHtml( $author['name'] ) ?></a>
+<?php endforeach ?>
+
+                    </dd>
+<?php endif ?>
+
+                </dl>
             </div>
         </div>
 <?php else: ?>

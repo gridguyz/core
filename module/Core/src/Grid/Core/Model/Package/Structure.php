@@ -4,8 +4,12 @@ namespace Grid\Core\Model\Package;
 
 use Locale;
 use Traversable;
+use ArrayAccess;
+use ArrayIterator;
 use Zork\Stdlib\DateTime;
 use Zork\Stdlib\ArrayUtils;
+use CallbackFilterIterator;
+use Zork\Iterator\CallbackMapIterator;
 use Zork\Model\Structure\MapperAwareAbstract;
 
 /**
@@ -72,6 +76,13 @@ class Structure extends MapperAwareAbstract
      * @var array
      */
     protected $keywords = array();
+
+    /**
+     * Field: authors
+     *
+     * @var array
+     */
+    protected $authors = array();
 
     /**
      * Field: availableTime
@@ -193,6 +204,46 @@ class Structure extends MapperAwareAbstract
     public function setKeywords( $keywords )
     {
         $this->keywords = (array) $keywords;
+        return $this;
+    }
+
+    /**
+     * Set authors
+     *
+     * @param   array   $authors
+     * @return  \Grid\Core\Model\Package\Structure
+     */
+    public function setAuthors( $authors )
+    {
+        if ( ! $authors instanceof Traversable )
+        {
+            $authors = new ArrayIterator( (array) $authors );
+        }
+
+        $this->authors = ArrayUtils::iteratorToArray(
+            new CallbackMapIterator(
+                new CallbackFilterIterator(
+                    $authors,
+                    function ( $author ) {
+                        return ! empty( $author->name )   || ! empty( $author->email )
+                            || ! empty( $author['name'] ) || ! empty( $author['email'] );
+                    }
+                ),
+                function ( $author ) {
+                    if ( ! $author instanceof ArrayAccess )
+                    {
+                        $author = (array) $author;
+                    }
+
+                    return array(
+                        'name'      => isset( $author['name'] )     ? $author['name']     : null,
+                        'email'     => isset( $author['email'] )    ? $author['email']    : null,
+                        'homepage'  => isset( $author['homepage'] ) ? $author['homepage'] : null,
+                    );
+                }
+            )
+        );
+
         return $this;
     }
 
@@ -544,6 +595,49 @@ class Structure extends MapperAwareAbstract
         }
 
         return $this->description;
+    }
+
+    /**
+     * Get displayed authors
+     *
+     * @param   string  $locale
+     * @return  array
+     */
+    public function getDisplayedAuthors( $locale = self::FALLBACK_LOCALE )
+    {
+        $result = array();
+        $mapper = $this->getMapper();
+
+        foreach ( $this->authors as $author )
+        {
+            if ( $mapper && ! empty( $author['email'] ) &&
+                 ( $user = $mapper->getUserByEmail( $author['email'] ) ) )
+            {
+                $insert = array(
+                    'name' => $user->displayName,
+                    'url'  => '/app/' . $locale . '/user/view/' . rawurlencode( $user->displayName ),
+                );
+            }
+            else if ( ! empty( $author['name'] ) || ! empty( $author['email'] ) )
+            {
+                $insert = array(
+                    'name' => isset( $author['name'] )
+                            ? $author['name']
+                            : strstr( $author['email'], '@', true ),
+                    'url'  => isset( $author['homepage'] )
+                            ? $author['homepage']
+                            : null,
+                );
+            }
+            else
+            {
+                continue;
+            }
+
+            $result[] = $insert;
+        }
+
+        return $result;
     }
 
     /**

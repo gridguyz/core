@@ -11,6 +11,7 @@ use Zend\Stdlib\Hydrator\HydratorInterface;
 use Zork\Model\Mapper\ReadOnlyMapperInterface;
 use Zork\Model\Mapper\ReadListMapperInterface;
 use Zend\ModuleManager\ModuleManagerInterface;
+use Grid\User\Model\User\Mapper as UserMapper;
 
 /**
  * Mapper
@@ -51,6 +52,16 @@ class Mapper implements HydratorInterface,
      * @var \Zend\ModuleManager\ModuleManagerInterface
      */
     protected $moduleManager;
+
+    /**
+     * @var \Grid\User\Model\User\Mapper
+     */
+    protected $userMapper;
+
+    /**
+     * @var array
+     */
+    protected static $userCache = array();
 
     /**
      * @var array
@@ -128,19 +139,40 @@ class Mapper implements HydratorInterface,
     }
 
     /**
+     * @return  \Grid\User\Model\User\Mapper
+     */
+    public function getUserMapper()
+    {
+        return $this->userMapper;
+    }
+
+    /**
+     * @param   \Grid\User\Model\User\Mapper    $userMapper
+     * @return  \Core\View\Helper\AppService
+     */
+    public function setUserMapper( UserMapper $userMapper )
+    {
+        $this->userMapper = $userMapper;
+        return $this;
+    }
+
+    /**
      * Construct mapper
      *
      * @param   \Zend\Http\Client                           $httpClient
      * @param   \Grid\Core\Model\Package\EnabledList        $enabledList
      * @param   \Zend\ModuleManager\ModuleManagerInterface  $moduleManager
+     * @param   \Grid\User\Model\User\Mapper                $userMapper
      */
     public function __construct( HttpClient             $httpClient,
                                  EnabledList            $enabledList,
-                                 ModuleManagerInterface $moduleManager)
+                                 ModuleManagerInterface $moduleManager,
+                                 UserMapper             $userMapper )
     {
         $this->setHttpClient( $httpClient )
              ->setEnabledList( $enabledList )
-             ->setModuleManager( $moduleManager );
+             ->setModuleManager( $moduleManager )
+             ->setUserMapper( $userMapper );
     }
 
     /**
@@ -163,6 +195,23 @@ class Mapper implements HydratorInterface,
     {
         return $this->getEnabledList()
                     ->getPatternCount();
+    }
+
+    /**
+     * Get user by email
+     *
+     * @param   string  $email
+     * @return  \Grid\User\Model\User\Structure
+     */
+    public function getUserByEmail( $email )
+    {
+        if ( ! array_key_exists( $email, static::$userCache ) )
+        {
+            static::$userCache[$email] = $this->getUserMapper()
+                                              ->findByEmail( $email );
+        }
+
+        return static::$userCache[$email];
     }
 
     /**
@@ -304,6 +353,11 @@ class Mapper implements HydratorInterface,
                     if ( ! empty( $package['keywords'] ) )
                     {
                         $data['keywords'] = (array) $package['keywords'];
+                    }
+
+                    if ( ! empty( $package['authors'] ) )
+                    {
+                        $data['authors'] = (array) $package['authors'];
                     }
 
                     if ( ! empty( $package['homepage'] ) )
@@ -463,6 +517,12 @@ class Mapper implements HydratorInterface,
                          ! empty( $versionData['keywords'] ) )
                     {
                         $data['keywords'] = (array) $versionData['keywords'];
+                    }
+
+                    if ( empty( $data['authors'] ) &&
+                         ! empty( $versionData['authors'] ) )
+                    {
+                        $data['authors'] = (array) $versionData['authors'];
                     }
 
                     if ( empty( $data['homepage'] ) &&
