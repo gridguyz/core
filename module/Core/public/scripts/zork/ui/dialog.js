@@ -379,11 +379,11 @@
             params.name = params.name   || params.id;
 
             params.message = dialog.frame.template
-                .replace( '{id}', params.id )
-                .replace( '{name}', params.name )
-                .replace( '{url}', params.url )
-                .replace( '{width}', ( Number( params.width ) || 600 ) - 50 )
-                .replace( '{height}', ( Number( params.height ) || 400 ) - 50 );
+                .replace( /\{id\}/ig, params.id )
+                .replace( /\{name\}/ig, params.name )
+                .replace( /\{url\}/ig, params.url )
+                .replace( /\{width\}/ig, ( Number( params.width ) || 600 ) - 50 )
+                .replace( /\{height\}/ig, ( Number( params.height ) || 400 ) - 50 );
 
             url = params.url;
             delete params.id;
@@ -1050,10 +1050,10 @@
                                 inputs[i].checked ? ' checked="checked"' : ''
                             ) + 'value="' +
                                 String( inputs[i]["default"] || "" )
-                                    .replace( '&', '&amp;' )
-                                    .replace( '>', '&gt;' )
-                                    .replace( '<', '&lt;' )
-                                    .replace( '"', '&quot;' ) + '" />' );
+                                    .replace( /&/g, '&amp;' )
+                                    .replace( />/g, '&gt;' )
+                                    .replace( /</g, '&lt;' )
+                                    .replace( /"/g, '&quot;' ) + '" />' );
                     }
                 }
 

@@ -601,7 +601,10 @@
 
                                 for ( var i in pars )
                                 {
-                                    emsg = emsg.replace( '%' + i + '%', pars[i] );
+                                    emsg = emsg.replace(
+                                        new RegExp( "%" + RegExp.escape( i ) + "%", "g" ),
+                                        pars[i]
+                                    );
                                 }
 
                                 if ( hasv && hasc )

@@ -14,7 +14,7 @@
     }
 
     var encode = function ( str ) {
-            return String( str ).replace( '"', '\\22' );
+            return String( str ).replace( /"/g, '\\22' );
         },
         decode = function ( str ) {
             return String( str ).replace(

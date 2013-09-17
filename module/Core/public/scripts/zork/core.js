@@ -50,14 +50,14 @@
      */
     var addSlashes = function ( str, bothSlashes )
     {
-        str = str.replace( "\\", "\\\\" ).
-            replace( '"', '\\"' ).
-            replace( String.fromCharCode( 0 ), "\\x00" ).
-            replace( "\n", "\\n" );
+        str = str.replace( /\\/g, "\\\\" )
+                 .replace( /"/g, '\\"' )
+                 .replace( new RegExp( String.fromCharCode( 0 ), "g" ), "\\x00" )
+                 .replace( /\n/g, "\\n" );
 
         if ( !! bothSlashes )
         {
-            str = str.replace( "'", "\\'" );
+            str = str.replace( /'/g, "\\'" );
         }
 
         return str;
@@ -543,6 +543,28 @@
             {
                 return obj instanceof RegExp ||
                     Object.prototype.toString.call( obj ) === "[object RegExp]";
+            }
+        );
+    }
+
+    if ( ! RegExp.escape )
+    {
+        js.property( RegExp, "escape",
+            /**
+             * Escape a string for regexp
+             *
+             * @param {String} str
+             * @returns {String}
+             * @type String
+             * @memberOf RegExp
+             * @name escape
+             */
+            function regExpEscape( str )
+            {
+                return String( str ).replace(
+                    /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g,
+                    "\\$&"
+                );
             }
         );
     }
@@ -3775,7 +3797,7 @@
             {
                 html.addClass( classBase + i ).addClass( classBase + i + "-" +
                     parseInt( js.core.browser[i], 10 ) ).addClass( classBase +
-                    i + "-" + String( js.core.browser[i] ).replace( ".", "-" ) );
+                    i + "-" + String( js.core.browser[i] ).replace( /\./g, "-" ) );
             }
         }
 

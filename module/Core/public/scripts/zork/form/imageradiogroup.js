@@ -64,10 +64,10 @@
         element.find( "label" ).each( function(idx,eleRadioItem) {
             var input = $(eleRadioItem).find( ":radio, :checkbox" ),
                           iconSrc = imageSrcPattern
-                                    .replace("[value]",input.attr( "value")),
+                                    .replace(/\[value\]/g, input.attr("value")),
                           descrText = js.core.translate(
                                         descriptionKeyPattern
-                                        .replace("[value]",input.attr( "value"))
+                                        .replace(/\[value\]/g, input.attr("value"))
                                      ,js.core.userLocale),
                         button = $( '<div class="button"/>' )
                                  .html("<span>"+js.core.translate( "default.select", js.core.userLocale )+"</span>" );

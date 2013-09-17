@@ -326,7 +326,7 @@
 
         var text = js.core.translate( "validate.between" );
         text = text.replace(
-            [ "%value%", "%min%", "%max%", "%inclusive%" ],
+            [ /%value%/g, /%min%/g, /%max%/g, /%inclusive%/g ],
             [ val, min, max, inclusive ?
                     js.core.translate( "validate.between.inclusive" ) :
                     js.core.translate( "validate.between.notInclusive" ) ]
@@ -360,7 +360,7 @@
             if ( val.length < min )
             {
                 return fault( js.core.translate( "validate.length.lower" ).replace(
-                    [ "%value%", "%length%", "%min%" ],
+                    [ /%value%/g, /%length%/g, /%min%/g ],
                     [ val, val.length, min ]
                 ) );
             }
@@ -374,7 +374,7 @@
             {
                 return fault(
                     js.core.translate( "validate.length.higher" ).replace(
-                        [ "%value%", "%length%", "%max%" ],
+                        [ /%value%/g, /%length%/g, /%max%/g ],
                         [ val, val.length, max ]
                     )
                 );

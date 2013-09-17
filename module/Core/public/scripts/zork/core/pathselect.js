@@ -28,17 +28,16 @@
         dialogInput     = null,
         nop             = function () {},
         validName       = function ( name ) {
-            return name
-                .replace( /^\.+/, "" )
-                .replace( '"', "'" )
-                .replace( "<", "_" )
-                .replace( ">", "_" )
-                .replace( "*", "_" )
-                .replace( "?", "_" )
-                .replace( ":", "-" )
-                .replace( "|", "-" )
-                .replace( "\\", "-" )
-                .replace( "/", "-" );
+            return name.replace( /^\.+/, "" )
+                       .replace( /"/g, "'" )
+                       .replace( /</g, "_" )
+                       .replace( />/g, "_" )
+                       .replace( /\*/g, "_" )
+                       .replace( /\?/g, "_" )
+                       .replace( /:/g, "-" )
+                       .replace( /|/g, "-" )
+                       .replace( /\\/g, "-" )
+                       .replace( /\//g, "-" );
         },
         dirname         = function ( path ) {
             path = path.replace( /\\/g, "/" );

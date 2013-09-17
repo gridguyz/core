@@ -135,8 +135,8 @@
     {
         sessionGet = function ( key )
         {
-            var nameEQ = prefix + String( key ).replace( "_61", "=" ).
-                replace( "__", "_" ) + '=',
+            var nameEQ = prefix + String( key ).replace( /_61/g, "=" ).
+                replace( /__/g, "_" ) + '=',
                 ca = global.document.cookie.split( ';' ),
                 i, l = ca.length;
 
@@ -153,7 +153,7 @@
                 {
                     return $.parseJSON(
                         c.substring( nameEQ.length, c.length ).
-                            replace( "\\59", ";" ).replace( "\\\\", "\\" )
+                            replace( /\\59/g, ";" ).replace( /\\\\/g, "\\" )
                     );
                 }
             }
@@ -173,9 +173,9 @@
 
             var expires = '; expires=' + date.toGMTString();
             global.document.cookie = prefix +
-                key.replace( "_", "__" ).replace( "=", "_61" ) + '=' +
+                key.replace( /_/g, "__" ).replace( /=/g, "_61" ) + '=' +
                 ( Object.isUndefined( value ) ? "" : $.toJSON( value ).
-                    replace( "\\", "\\\\" ).replace( ";", "\\59" ) ) +
+                    replace( /\\/g, "\\\\" ).replace( /;/g, "\\59" ) ) +
                 expires + '; path=/';
         };
     }
@@ -356,7 +356,7 @@
                 var keys = ( _localStorage.
                         getAttribute( "keys" ) || "").split( ";" ),
                     keyInsert = String( key ).
-                        replace( "\\", "\\\\" ).replace( ";", "\\59" ),
+                        replace( /\\/g, "\\\\" ).replace( /;/g, "\\59" ),
                     index = keys.indexOf( keyInsert );
 
                 if ( Object.isUndefined( value ) )
@@ -403,7 +403,7 @@
                 for ( i = 0; i < l; ++i )
                 {
                     var key = keys[i].
-                            replace( "\\59", ";" ).replace( "\\\\", "\\" ),
+                            replace( /\\59/g, ";" ).replace( /\\\\/g, "\\" ),
                         value = _localStorage.
                             getAttribute( prefix + key ).split( ";", 3 );
                     callback( key, value[0], value[1] );
@@ -426,7 +426,7 @@
         {
             return sessionGet( key );
         }
-        
+
         return sessionSet( key, value );
     };
 
@@ -446,7 +446,7 @@
             js.console.error( "cache not supported" );
             return null;
         }
-        
+
         if ( typeof value === "undefined" )
         {
             var get = cacheGet( key );
@@ -456,9 +456,9 @@
         }
 
         ttl = ttl || this.cache.defaultTtl;
-        
+
         cacheSet( key, value, ttl );
-        
+
         if ( ( value !== null ) && ( cacheGet( key ).length < 1 ) && ttl > 0 )
         {
             var now = Date.now(),
@@ -492,7 +492,7 @@
                 minHit = null;
                 minKey = null;
                 cacheIterator( iterate );
-                
+
                 if ( minKey === null )
                 {
                     return null;
