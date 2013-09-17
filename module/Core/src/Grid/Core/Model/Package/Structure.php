@@ -7,7 +7,7 @@ use Traversable;
 use ArrayAccess;
 use ArrayIterator;
 use Zork\Stdlib\DateTime;
-use Zork\Stdlib\ArrayUtils;
+use Zend\Stdlib\ArrayUtils;
 use CallbackFilterIterator;
 use Zork\Iterator\CallbackMapIterator;
 use Zork\Model\Structure\MapperAwareAbstract;
