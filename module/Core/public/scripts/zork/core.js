@@ -3154,11 +3154,34 @@
             layer = $( '<div class="ui-overlay" />' ),
             overlay = $( '<div class="ui-widget-overlay" />' ),
             shadow = $( '<div class="ui-widget-shadow" />' ),
+            getBorderWidth = function ( elem, side ) {
+                var width = String( elem.css( "border-" + side + "-width" ) );
+
+                switch ( width.toLowerCase() )
+                {
+                    case "thin":
+                        return 1;
+                        break;
+
+                    case "medium":
+                        return 2;
+                        break;
+
+                    case "thick":
+                        return 3;
+                        break;
+
+                    default:
+                        return parseInt( width, 10 ) || 0;
+                        break;
+                }
+            },
             intervalFunc = function () {
                 var cwidth, cheight,
                     width, height,
                     inner, iwidth, iheight,
                     stop, sleft,
+                    btop, bleft,
                     aheight = $( global ).height() - 10;
 
                 shadow.stop( true, false );
@@ -3248,14 +3271,12 @@
                     content.css( "height", cheight = aheight );
                 }
 
-                width   = ( cwidth / 2 )
-                        + parseInt( shadow.css( "borderLeftWidth" ), 10 );
-                height  = ( cheight / 2 )
-                        + parseInt( shadow.css( "borderTopWidth" ), 10 );
-                stop    = parseInt( shadow.css( "borderTopWidth" ), 10 )
-                        + parseInt( shadow.css( "paddingTop" ), 10 );
-                sleft   = parseInt( shadow.css( "borderLeftWidth" ), 10 )
-                        + parseInt( shadow.css( "paddingLeft" ), 10 );
+                btop   = getBorderWidth( shadow, "top"  );
+                bleft  = getBorderWidth( shadow, "left" );
+                width  = ( cwidth  / 2 ) + bleft;
+                height = ( cheight / 2 ) + btop;
+                stop   = btop  + ( parseInt( shadow.css( "paddingTop"  ), 10 ) || 0 );
+                sleft  = bleft + ( parseInt( shadow.css( "paddingLeft" ), 10 ) || 0 );
 
                 shadow.animate( {
                     "width"         : parseInt( width * 2, 10 ) + "px",
