@@ -263,7 +263,7 @@ $locale = (string) $this->locale();
                     <dd class="authors">
 <?php foreach ( $authors as $author ): ?>
 
-                        <a href="<?= empty( $author['url'] ) ? '#' : $author['url'] ?>"
+                        <a href="<?= empty( $author['url'] ) ? '#' : $author['url'] ?>" target="_blank"
                            class="author"><?= $this->escapeHtml( $author['name'] ) ?></a>
 <?php endforeach ?>
 

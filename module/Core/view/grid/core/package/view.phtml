@@ -171,6 +171,18 @@ $this->headLink()
             <dt class="downloads"><?= $this->translate( 'admin.packages.downloads', 'admin' ) ?></dt>
             <dd class="downloads"><?= (int) $this->package->downloads ?></dd>
 <?php endif ?>
+<?php $authors = $this->package->getDisplayedAuthors( $locale ); if ( ! empty( $authors ) ): ?>
+
+            <dt class="authors"><?= $this->translate( 'admin.packages.authors', 'admin' ) ?></dt>
+            <dd class="authors">
+<?php foreach ( $authors as $author ): ?>
+
+                <a href="<?= empty( $author['url'] ) ? '#' : $author['url'] ?>" target="_blank"
+                   class="author"><?= $this->escapeHtml( $author['name'] ) ?></a>
+<?php endforeach ?>
+
+            </dd>
+<?php endif ?>
 
         </dl>
 <?php else: ?>
