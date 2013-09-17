@@ -3179,6 +3179,13 @@
                         return;
                     }
 
+                    if ( ! inner.length || ! inner[0].body )
+                    {
+                        // not fully loaded yet
+                        setTimeout(intervalFunc, 1000);
+                        return;
+                    }
+
                     content.width( minWidth )
                            .height( minHeight );
 
@@ -3263,7 +3270,7 @@
             },
             update = function () {
                 setTimeout( intervalFunc, 100 );
-                setTimeout( intervalFunc, 1100 );
+                setTimeout( intervalFunc, 1600 );
             };
 
         layer.css( {
