@@ -12,10 +12,10 @@
 .js-code-editor .js-code-editor-bar
 {
     z-index: 1;
-    margin: 0px;
     padding: 1px;
     height: 32px;
     display: block;
+    margin: 0px 18px;
     text-align: right;
     margin-bottom: -34px;
 }
