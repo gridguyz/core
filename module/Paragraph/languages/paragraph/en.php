@@ -271,7 +271,7 @@ return array(
     'paragraph.type-group.central' => 'Central-related',
     'paragraph.type-group.code' => 'Code',
     'paragraph.type-group.container' => 'Container',
-    'paragraph.type-group.functions' => 'Functions',
+    'paragraph.type-group.functions' => 'Appz',
     'paragraph.type.banner' => 'Banner',
     'paragraph.type.box' => 'Box',
     'paragraph.type.box.description' => 'Box description',
