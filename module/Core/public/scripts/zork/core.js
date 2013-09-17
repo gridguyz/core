@@ -3183,7 +3183,7 @@
                     {
                         // not fully loaded yet
                         js.console.log( "iframe not fully loaded yet, wait more 1000 ms" );
-                        setTimeout(intervalFunc, 1000);
+                        setTimeout( intervalFunc, 1000 );
                         return;
                     }
 
