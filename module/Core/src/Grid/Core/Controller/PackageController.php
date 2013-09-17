@@ -120,7 +120,7 @@ class PackageController extends AbstractAdminController
             'filter'        => (array) $filter,
             'order'         => $order,
             'canModify'     => $canModify,
-            'categories'    => $model->getCategories(),
+         // 'categories'    => $model->getCategories(),
             'paginator'     => $model->getPaginator( $filter, $order )
         );
     }

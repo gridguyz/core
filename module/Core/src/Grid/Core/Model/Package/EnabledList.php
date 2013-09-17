@@ -67,14 +67,14 @@ class EnabledList extends ArrayIterator
     /**
      * Get all/key-matching pattern
      *
-     * @param   string  $key
+     * @param   null|string|array   $key
      * @return  string
      */
-    public function getPattern( $key = null )
+    public function getPattern( $keys = null )
     {
         $patterns = array();
 
-        if ( empty( $key ) )
+        if ( empty( $keys ) )
         {
             foreach ( $this as $subPatterns )
             {
@@ -84,9 +84,24 @@ class EnabledList extends ArrayIterator
                 );
             }
         }
+        else if ( is_array( $keys ) )
+        {
+            foreach ( $keys as $key )
+            {
+                $key = (string) $key;
+
+                if ( ! empty( $this[(string) $key] ) )
+                {
+                    $patterns = array_merge(
+                        $patterns,
+                        array_values( $this[(string) $key] )
+                    );
+                }
+            }
+        }
         else
         {
-            $patterns = $this[$key];
+            $patterns = $this[(string) $keys];
         }
 
         return static::DELIMITER
@@ -99,13 +114,13 @@ class EnabledList extends ArrayIterator
     /**
      * Is package (by name) enabled in listings?
      *
-     * @param   string  $packageName
-     * @param   string  $key
+     * @param   string              $packageName
+     * @param   null|string|array   $keys
      * @return  bool
      */
-    public function isEnabled( $packageName, $key = null )
+    public function isEnabled( $packageName, $keys = null )
     {
-        return (bool) preg_match( $this->getPattern( $key ), $packageName );
+        return (bool) preg_match( $this->getPattern( $keys ), $packageName );
     }
 
     /**

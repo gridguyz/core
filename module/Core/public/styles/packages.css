@@ -18,40 +18,6 @@
     float: left;
 }
 
-.package-list-categories
-{
-    padding: 0em;
-    border-bottom: 1px solid #000;
-}
-
-.package-list-categories button
-{
-    color: #fff;
-    font-size: 90%;
-    padding: 0.4em 2em;
-    background: #7d7e81;
-    vertical-align: bottom;
-    margin: 0px 0px 1px 0px;
-}
-
-.package-list-categories button.active
-{
-    color: #4a78eb;
-    background: #000;
-    padding-top: 1em;
-    border-color: #000;
-    margin-bottom: -1px;
-    padding-bottom: 1em;
-}
-
-.package-list-categories button:hover
-{
-    color: #fff;
-    background: #5080f1;
-    border-color: #5080f1;
-    text-shadow: 1px 1px 0px #0c3fb9;
-}
-
 .package-list .package-entry
 {
     padding: 1em;

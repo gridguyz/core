@@ -583,6 +583,10 @@ class Mapper implements HydratorInterface,
         {
             $where['category'] = null;
         }
+        else
+        {
+            $where['category'] = (array) $where['category'];
+        }
 
         if ( empty( $where['contains'] ) )
         {

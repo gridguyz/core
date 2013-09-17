@@ -18,11 +18,6 @@ $this->headLink()
 
 $filter = (array) $this->filter;
 
-if ( empty( $filter['category'] ) )
-{
-    $filter['category'] = '';
-}
-
 if ( empty( $filter['contains'] ) )
 {
     $filter['contains'] = '';
@@ -47,23 +42,6 @@ $locale = (string) $this->locale();
 <?php endif ?>
 
     <form class="package-list-form" method="post" action="?">
-        <p class="package-list-categories">
-            <input name="filter[category]" type="hidden" value="<?= $this->escapeHtmlAttr( $filter['category'] ) ?>" />
-            <button name="filter[category]" type="submit"
-                    value=""<?php if ( '' == $filter['category'] ):
-                 ?> class="active"<?php endif ?>>
-                <?= $this->translate( 'admin.packages.category.all', 'admin' ) ?>
-            </button>
-<?php foreach ( $this->categories as $category ): ?>
-
-            <button name="filter[category]" type="submit"
-                    value="<?= $category ?>"<?php if ( $category == $filter['category'] ):
-                 ?> class="active"<?php endif ?>>
-                <?= $this->translate( 'admin.packages.category.' . $category, 'admin' ) ?>
-            </button>
-<?php endforeach ?>
-
-        </p>
         <p class="package-list-search">
 <?php if ( $this->canModify ): ?>
 
@@ -166,7 +144,6 @@ $locale = (string) $this->locale();
 <?php if ( ! empty( $package->installedVersion ) && ! empty( $package->modules ) ): $single = 1 == count( $package->modules ); ?>
 
             <form class="modules" method="post" action="?">
-                <input name="filter[category]" type="hidden" value="<?= $this->escapeHtmlAttr( $filter['category'] ) ?>" />
                 <input name="filter[contains]" type="hidden" value="<?= $this->escapeHtmlAttr( $filter['contains'] ) ?>" />
 <?php if ( $this->canModify ): ?>
 
@@ -293,7 +270,6 @@ $locale = (string) $this->locale();
     </div>
 
     <form class="package-list-form" method="post" action="?">
-        <input name="filter[category]" type="hidden" value="<?= $this->escapeHtmlAttr( $filter['category'] ) ?>" />
         <input name="filter[contains]" type="hidden" value="<?= $this->escapeHtmlAttr( $filter['contains'] ) ?>" />
 <?php if ( $this->canModify ): ?>
 
