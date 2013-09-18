@@ -214,6 +214,8 @@
     margin: 0px 0px 0px 12px;
     padding: 6px 12px 6px 32px;
     background: #f1f1f1 none no-repeat 10px 50%;
+    font-size: 100% !important;
+    line-height: 110% !important;
     box-shadow: 1px 1px 0px #d7dbe6;
     border-radius: 2px;
     -ms-border-radius: 2px;
@@ -359,4 +361,9 @@
     margin-right: 0px;
     padding-left: 0px;
     padding-right: 0px;
+}
+
+.package-list-paragraph .package-list .package-entry .description
+{
+    margin-right: 0px;
 }
