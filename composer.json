@@ -11,6 +11,12 @@
     "homepage": "http://gridguyz.com/",
     "authors": [
         {
+            "name": "Gridguyz developer team",
+            "email": "dev@megaweb.hu",
+            "homepage": "http://gridguyz.com/",
+            "role": "Developer team"
+        },
+        {
             "name": "Mihály Farkas",
             "email": "mihaly.farkas@megaweb.hu",
             "homepage": "http://gridguyz.com/",
