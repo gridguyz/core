@@ -33,9 +33,9 @@ $locale = (string) $this->locale();
 ?>
 <h1><?= $title ?></h1>
 <div class="page">
-    <p class="package-list-actions">
 <?php if ( $this->canModify ): ?>
 
+    <p class="package-list-actions">
         <a href="/app/<?= $locale ?>/admin/package/update"
            class="update-all button-appearance"><?= $this->translate( 'admin.packages.action.updateAll', 'admin' ) ?></a>
     </p>
@@ -72,6 +72,7 @@ $locale = (string) $this->locale();
             </label>
             <button type="submit">
                 <?= $this->translate( 'admin.packages.search', 'admin' ) ?>
+
             </button>
         </p>
         <?= $paginationControl = $this->paginationControl(
@@ -102,7 +103,8 @@ $locale = (string) $this->locale();
                style="background-image: url(<?= $this->escapeHtmlAttr( $icon ) ?>);"
 <?php endif ?>
 
-               alt="<?= $this->escapeHtmlAttr( $name ) ?>"/></a>
+               title="<?= $this->escapeHtmlAttr( $name ) ?>"
+               alt="<?= $this->escapeHtmlAttr( $name ) ?>" /></a>
             <div class="name">
 <?php if ( $package->canInstall() ): ?>
 
