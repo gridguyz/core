@@ -64,7 +64,7 @@ class Model implements MapperAwareInterface
      *
      * @param   string|null $where
      * @param   bool|null   $order
-     * @return  \Grid\Core\Model\Package\Structure
+     * @return  \Zend\Paginator\Paginator
      */
     public function getPaginator( $where = null, $order = null )
     {
