@@ -176,6 +176,11 @@ class ViewWidget extends AbstractHelper
                 $service = $serviceLocator->get( $service );
             }
 
+            if ( $service instanceof ServiceLocatorAwareInterface )
+            {
+                $service->setServiceLocator( $serviceLocator );
+            }
+
             $content = $service->render( $view, $content, $params );
         }
 
