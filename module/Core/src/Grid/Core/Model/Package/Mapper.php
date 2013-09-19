@@ -729,13 +729,13 @@ class Mapper implements HydratorInterface,
                         {
                             $result[$package['name']] = $package['name'];
                         }
-                        else if ( empty( $package['author'] ) )
+                        else if ( empty( $package['authors'] ) )
                         {
                             unset( $result[$package['name']] );
                         }
                         else
                         {
-                            foreach ( (array) $package['author'] as $author )
+                            foreach ( (array) $package['authors'] as $author )
                             {
                                 if ( ! empty( $author['email'] ) && $author['email'] == $where['author'] )
                                 {
