@@ -16,7 +16,26 @@ class AppService extends AbstractHelper
               implements ServiceLocatorAwareInterface
 {
 
-    use ServiceLocatorAwareTrait;
+    use ServiceLocatorAwareTrait
+    {
+        ServiceLocatorAwareTrait::setServiceLocator as protected setExactServiceLocator;
+    }
+
+    /**
+     * Set service locator
+     *
+     * @param   ServiceLocatorInterface $serviceLocator
+     * @return  AppService
+     */
+    public function setServiceLocator( ServiceLocatorInterface $serviceLocator )
+    {
+        if ( null === $this->serviceLocator )
+        {
+            $this->setExactServiceLocator( $serviceLocator );
+        }
+
+        return $this;
+    }
 
     /**
      * Constructor
