@@ -321,11 +321,6 @@ class Module extends ModuleAbstract
                 'config'            => function () use ( $serviceLocator ) {
                     return new \Zork\View\Helper\Config( $serviceLocator->get( 'Config' ) );
                 },
-                'viewWidget'        => function () use ( $serviceLocator ) {
-                    $config = $serviceLocator->get( 'Config' );
-                    $widgetConfig = empty( $config['view_widgets'] ) ? array() : $config['view_widgets'];
-                    return \Zork\View\Helper\ViewWidget::factory( $serviceLocator, $widgetConfig );
-                },
                 'domain'            => function () use ( $serviceLocator ) {
                     return new \Zork\View\Helper\Domain(
                         $serviceLocator->get( 'Zork\Db\SiteInfo' )
@@ -355,6 +350,11 @@ class Module extends ModuleAbstract
                 },
                 'appService'        => function () use ( $serviceLocator ) {
                     return new View\Helper\AppService( $serviceLocator );
+                },
+                'viewWidget'        => function () use ( $serviceLocator ) {
+                    $config = $serviceLocator->get( 'Config' );
+                    $widgetConfig = empty( $config['view_widgets'] ) ? array() : $config['view_widgets'];
+                    return View\Helper\ViewWidget::factory( $serviceLocator, $widgetConfig );
                 },
                 'isModuleLoaded'    => function () use ( $moduleManager ) {
                     return new View\Helper\IsModuleLoaded( $moduleManager );
