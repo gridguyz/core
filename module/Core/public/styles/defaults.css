@@ -116,24 +116,24 @@ mark
 
 .paginationControl .link.number
 {
-    color: #acadb1;
     font-size: 14px;
     font-weight: bold;
+    color: #acadb1 !important;
 }
 
 .paginationControl .link.number:hover
 {
-    color: #000000;
+    color: #000000 !important;
 }
 
 .paginationControl .link.number.current
 {
-    color: #5080f1;
+    color: #5080f1 !important;
 }
 
 .paginationControl .link.number.current:hover
 {
-    color: #000000;
+    color: #000000 !important;
 }
 
 .paginationControl .link.first,
@@ -147,9 +147,9 @@ mark
     line-height: 0px;
     overflow: hidden;
     text-indent: 24px;
-    color: transparent;
     background-color: #d0d2d7;
     background-repeat: no-repeat;
+    color: transparent !important;
 }
 
 .paginationControl .link.first
