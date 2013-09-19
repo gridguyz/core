@@ -57,7 +57,7 @@ class ViewWidget extends AbstractHelper
      */
     protected function addWidgets( $widget, $partials )
     {
-        if ( isset( $this->widgets[$widget] ) )
+        if ( ! isset( $this->widgets[$widget] ) )
         {
             $this->widgets[$widget] = new PriorityQueue;
         }
