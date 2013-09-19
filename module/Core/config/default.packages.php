@@ -8,7 +8,7 @@ return array(
                     'gridguyz'  => 'gridguyz/(core|multisite).*',
                 ),
                 'function'      => array(
-                    'gridguyz'  => 'gridguyz/(?!core|multisite|private-).*',
+                    'gridguyz'  => 'gridguyz/(?!core|multisite).*',
                 ),
                 'application'   => array(
                     // reserved for 3rd party packages
