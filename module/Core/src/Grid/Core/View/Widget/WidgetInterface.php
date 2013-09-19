@@ -9,7 +9,7 @@ use Zend\View\Renderer\RendererInterface;
  *
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
-class WidgetInterface
+interface WidgetInterface
 {
 
     /**
