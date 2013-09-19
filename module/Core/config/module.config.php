@@ -1206,7 +1206,7 @@ return array(
                     'rel'       => 'stylesheet',
                     'type'      => 'text/css',
                     'href'      => '/styles/ui/custom' . ( ! $debug ? '.min' : '' ) . '.css',
-                                // 'http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css',
+                                // 'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css',
                 ),
                 'defaults'      => array(
                     'rel'       => 'stylesheet',
