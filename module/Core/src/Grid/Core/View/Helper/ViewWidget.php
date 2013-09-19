@@ -170,8 +170,8 @@ class ViewWidget extends AbstractHelper
         $view    = $this->getView();
         $content = (string) $content;
 
-        if ( empty( $view ) || ! method_exists( $view, 'plugin' ) ||
-             empty( $widget ) || ! array_key_exists( $widget, $this->widgets ) )
+        if ( empty( $view ) || empty( $widget ) ||
+             ! array_key_exists( $widget, $this->widgets ) )
         {
             return $content;
         }
@@ -185,7 +185,6 @@ class ViewWidget extends AbstractHelper
             $params = (array) $params;
         }
 
-        $partialPlugin  = $view->plugin( 'partial' );
         $serviceLocator = $this->getServiceLocator();
 
         foreach ( $this->widgets[$widget] as $partialDescription )
@@ -197,7 +196,7 @@ class ViewWidget extends AbstractHelper
                 $services[$serviceAlias] = $serviceLocator->get( $serviceName );
             }
 
-            $content = $partialPlugin(
+            $content = $view->render(
                 $partialDescription['partial'],
                 array_merge(
                     $services,
@@ -210,6 +209,8 @@ class ViewWidget extends AbstractHelper
                 )
             );
         }
+
+        return $content;
     }
 
     /**
