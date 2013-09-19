@@ -612,10 +612,10 @@ class Mapper implements HydratorInterface,
     /**
      * Query available & installed package names
      *
-     * @param   array|string|null   $where category, installed, contains
+     * @param   array|string|null   $where category, installed, contains, author
      * @return  array
      */
-    public function queryNames( $where = null )
+    protected function queryNames( $where = null )
     {
         $result = array();
         $lock   = static::getLockData();
@@ -662,7 +662,16 @@ class Mapper implements HydratorInterface,
             $where['installed'] = (bool) $where['installed'];
         }
 
-        if ( ! isset( $where['installed'] ) || ! $where['installed'] )
+        if ( ! isset( $where['author'] ) || '' === $where['author'] )
+        {
+            $where['author'] = null;
+        }
+        else
+        {
+            $where['author'] = (string) $where['author'];
+        }
+
+        if ( null === $where['author'] && ( ! isset( $where['installed'] ) || ! $where['installed'] ) )
         {
             $total    = 0;
             $packages = $this->queryJson( sprintf(
@@ -716,7 +725,27 @@ class Mapper implements HydratorInterface,
                 {
                     if ( ! isset( $where['installed'] ) || $where['installed'] )
                     {
-                        $result[$package['name']] = $package['name'];
+                        if ( null === $where['author'] )
+                        {
+                            $result[$package['name']] = $package['name'];
+                        }
+                        else if ( empty( $package['author'] ) )
+                        {
+                            unset( $result[$package['name']] );
+                        }
+                        else
+                        {
+                            foreach ( (array) $package['author'] as $author )
+                            {
+                                if ( ! empty( $author['email'] ) && $author['email'] == $where['author'] )
+                                {
+                                    $result[$package['name']] = $package['name'];
+                                    continue 2;
+                                }
+                            }
+
+                            unset( $result[$package['name']] );
+                        }
                     }
                     else if ( isset( $result[$package['name']] ) )
                     {

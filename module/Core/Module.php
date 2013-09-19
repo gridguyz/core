@@ -321,6 +321,11 @@ class Module extends ModuleAbstract
                 'config'            => function () use ( $serviceLocator ) {
                     return new \Zork\View\Helper\Config( $serviceLocator->get( 'Config' ) );
                 },
+                'viewWidget'        => function () use ( $serviceLocator ) {
+                    $config = $serviceLocator->get( 'Config' );
+                    $widgetConfig = empty( $config['view_widgets'] ) ? array() : $config['view_widgets'];
+                    return \Zork\View\Helper\ViewWidget::factory( $serviceLocator, $widgetConfig );
+                },
                 'domain'            => function () use ( $serviceLocator ) {
                     return new \Zork\View\Helper\Domain(
                         $serviceLocator->get( 'Zork\Db\SiteInfo' )
