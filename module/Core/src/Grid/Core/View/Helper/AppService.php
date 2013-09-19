@@ -4,6 +4,7 @@ namespace Grid\Core\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
 /**
@@ -15,32 +16,7 @@ class AppService extends AbstractHelper
               implements ServiceLocatorAwareInterface
 {
 
-    /**
-     * @var \Zend\ServiceManager\ServiceLocatorInterface
-     */
-    protected $serviceLocator;
-
-    /**
-     * @return \Zend\ServiceManager\ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
-     * @return \Core\View\Helper\AppService
-     */
-    public function setServiceLocator( ServiceLocatorInterface $serviceLocator )
-    {
-        if ( null === $this->serviceLocator )
-        {
-            $this->serviceLocator = $serviceLocator;
-        }
-
-        return $this;
-    }
+    use ServiceLocatorAwareTrait;
 
     /**
      * Constructor

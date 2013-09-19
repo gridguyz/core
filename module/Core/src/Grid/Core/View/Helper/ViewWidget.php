@@ -5,6 +5,7 @@ namespace Grid\Core\View\Helper;
 use Zend\Stdlib\PriorityQueue;
 use Zend\View\Helper\AbstractHelper;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
 /**
@@ -16,10 +17,12 @@ class ViewWidget extends AbstractHelper
               implements ServiceLocatorAwareInterface
 {
 
+    use ServiceLocatorAwareTrait;
+
     /**
-     * @var \Zend\ServiceManager\ServiceLocatorInterface
+     * @const string
      */
-    protected $serviceLocator;
+    const WIDGET_INTERFACE = 'Grid\Core\View\Widget\WidgetInterface';
 
     /**
      * @var \Zend\Stdlib\PriorityQueue[]
@@ -27,23 +30,33 @@ class ViewWidget extends AbstractHelper
     protected $widgets = array();
 
     /**
-     * @return \Zend\ServiceManager\ServiceLocatorInterface
+     * Add a widget
+     *
+     * @param   string      $widget
+     * @param   string      $service
+     * @param   int|null    $priority
+     * @return  ViewWidget
      */
-    public function getServiceLocator()
+    public function addWidget( $widget, $service, $priority = null )
     {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
-     * @return \Core\View\Helper\AppService
-     */
-    public function setServiceLocator( ServiceLocatorInterface $serviceLocator )
-    {
-        if ( null === $this->serviceLocator )
+        if ( ! isset( $this->widgets[$widget] ) )
         {
-            $this->serviceLocator = $serviceLocator;
+            $this->widgets[$widget] = new PriorityQueue;
         }
+
+        if ( ! is_a( $service, static::WIDGET_INTERFACE, true ) )
+        {
+            throw new \InvalidArgumentException( sprintf(
+                '%s: $service must implement "%s"',
+                __METHOD__,
+                static::WIDGET_INTERFACE
+            ) );
+        }
+
+        $this->widgets[$widget]->insert(
+            $service,
+            null === $priority ? 1 : (int) $priority
+        );
 
         return $this;
     }
@@ -55,78 +68,47 @@ class ViewWidget extends AbstractHelper
      * @param   \Traversable|array  $partials
      * @return  ViewWidget
      */
-    protected function addWidgets( $widget, $partials )
+    public function addWidgets( $widget, $services )
     {
-        if ( ! isset( $this->widgets[$widget] ) )
+        foreach ( $services as $key => $description )
         {
-            $this->widgets[$widget] = new PriorityQueue;
-        }
-
-        foreach ( $partials as $partialDescription )
-        {
-            $priority = null;
-
-            if ( $partialDescription instanceof \Traversable )
+            if ( null === $description || is_scalar( $description ) )
             {
-                $partialDescription = iterator_to_array( $partialDescription );
-            }
-            else if ( ! is_array( $partialDescription ) )
-            {
-                $partialDescription = (array) $partialDescription;
-            }
-
-            if ( empty( $partialDescription['partial'] ) )
-            {
-                continue;
-            }
-
-            if ( array_key_exists( 'priority', $partialDescription ) )
-            {
-                $priority = $partialDescription['priority'];
-                unset( $partialDescription['priority'] );
-            }
-
-            if ( array_key_exists( 'services', $partialDescription ) )
-            {
-                if ( $partialDescription['services'] instanceof \Traversable )
-                {
-                    $partialDescription['services'] = iterator_to_array( $partialDescription['services'] );
-                }
-                else if ( ! is_array( $partialDescription['services'] ) )
-                {
-                    $partialDescription['services'] = (array) $partialDescription['services'];
-                }
+                $service    = $key;
+                $priority   = null === $description ? null : (int) $description;
             }
             else
             {
-                $partialDescription['services'] = array();
+                if ( $description instanceof \Traversable )
+                {
+                    $description = iterator_to_array( $description );
+                }
+                else if ( ! $description instanceof \ArrayAccess )
+                {
+                    $description = (array) $description;
+                }
+
+                if ( ! isset( $description['service'] ) )
+                {
+                    continue;
+                }
+
+                $service = $description['service'];
+
+                if ( isset( $description['priority'] ) )
+                {
+                    $priority = (int) $description['priority'];
+                }
+                else
+                {
+                    $priority = null;
+                }
             }
 
-            $this->widgets[$widget]->insert(
-                $partialDescription,
-                null === $priority ? 1 : (int) $priority
-            );
+            $this->addWidget( $widget, $service, $priority );
         }
 
         return $this;
-    }
-
-    /**
-     * Add a widget
-     *
-     * @param   string  $widget
-     * @param   string  $partial
-     * @param   array   $services
-     * @param   int     $priority
-     * @return  ViewWidget
-     */
-    public function addWidget( $widget, $partial, $services = array(), $priority = null )
-    {
-        return $this->addWidgets( $widget, array( array(
-            'partial'   => (string) $partial,
-            'services'  => $services,
-            'priority'  => $priority,
-        ) ) );
     }
 
     /**
@@ -149,9 +131,9 @@ class ViewWidget extends AbstractHelper
     {
         $viewWidget = new static( $serviceLocator );
 
-        foreach ( $widgets as $widget => $partials )
+        foreach ( $widgets as $widget => $services )
         {
-            $viewWidget->addWidgets( $widget, $partials );
+            $viewWidget->addWidgets( $widget, $services );
         }
 
         return $viewWidget;
@@ -187,27 +169,14 @@ class ViewWidget extends AbstractHelper
 
         $serviceLocator = $this->getServiceLocator();
 
-        foreach ( $this->widgets[$widget] as $partialDescription )
+        foreach ( $this->widgets[$widget] as $service )
         {
-            $services = array();
-
-            foreach ( $partialDescription['services'] as $serviceAlias => $serviceName )
+            if ( is_scalar( $service ) )
             {
-                $services[$serviceAlias] = $serviceLocator->get( $serviceName );
+                $service = $serviceLocator->get( $service );
             }
 
-            $content = $view->render(
-                $partialDescription['partial'],
-                array_merge(
-                    $services,
-                    $params,
-                    array(
-                        'content'   => $content,
-                        'services'  => $services,
-                        'params'    => $params,
-                    )
-                )
-            );
+            $content = $service->render( $view, $content, $params );
         }
 
         return $content;
