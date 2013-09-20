@@ -41,6 +41,7 @@ $identity   = $auth->getIdentity();
 <?php if ( ! empty( $this->display['adminUiLink'] ) &&
            $this->isAllowed( 'admin', 'ui' ) ): ?>
 
+        <br />
         <a class="linkToAdminUi" href="<?=
             $this->url( 'Grid\Core\Admin\Dashboard', array(
                 'locale' => $identity->locale,
