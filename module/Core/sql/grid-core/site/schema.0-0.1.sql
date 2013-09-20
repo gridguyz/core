@@ -247,8 +247,8 @@ CREATE TABLE "customize_rule"
 (
     "id"          SERIAL              NOT NULL,
     "selector"    CHARACTER VARYING   NOT NULL,
-    "paragraphId" INTEGER,
     "media"       CHARACTER VARYING   NOT NULL    DEFAULT '',
+    "paragraphId" INTEGER,
 
     PRIMARY KEY ( "id" ),
     UNIQUE ( "selector", "media" ),
