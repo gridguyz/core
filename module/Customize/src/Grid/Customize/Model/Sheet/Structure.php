@@ -136,17 +136,20 @@ class Structure extends MapperAwareAbstract
 
         if ( empty( $file ) )
         {
+            $path   = null;
             $handle = null;
             $result = '';
         }
         else if ( is_resource( $file ) )
         {
+            $path   = null;
             $handle = $file;
             $result = true;
         }
         else
         {
-            $handle = @ fopen( $file, 'w' );
+            $path   = (string) $file;
+            $handle = @ fopen( $path, 'w' );
             $result = true;
 
             if ( ! $handle )
@@ -163,6 +166,11 @@ class Structure extends MapperAwareAbstract
             if ( $handle )
             {
                 @ fclose( $handle );
+
+                if ( $path )
+                {
+                    @ unlink( $path );
+                }
             }
 
             return $result;
@@ -178,6 +186,11 @@ class Structure extends MapperAwareAbstract
                 if ( $handle )
                 {
                     @ fclose( $handle );
+
+                    if ( $path )
+                    {
+                        @ unlink( $path );
+                    }
                 }
 
                 return $result;
@@ -189,6 +202,11 @@ class Structure extends MapperAwareAbstract
             if ( $handle )
             {
                 @ fclose( $handle );
+
+                if ( $path )
+                {
+                    @ unlink( $path );
+                }
             }
 
             return $result;
@@ -210,6 +228,11 @@ class Structure extends MapperAwareAbstract
                         if ( $handle )
                         {
                             @ fclose( $handle );
+
+                            if ( $path )
+                            {
+                                @ unlink( $path );
+                            }
                         }
 
                         return $result;
@@ -225,6 +248,11 @@ class Structure extends MapperAwareAbstract
                     if ( $handle )
                     {
                         @ fclose( $handle );
+
+                        if ( $path )
+                        {
+                            @ unlink( $path );
+                        }
                     }
 
                     return $result;
@@ -245,6 +273,11 @@ class Structure extends MapperAwareAbstract
                     if ( $handle )
                     {
                         @ fclose( $handle );
+
+                        if ( $path )
+                        {
+                            @ unlink( $path );
+                        }
                     }
 
                     return $result;
@@ -262,6 +295,11 @@ class Structure extends MapperAwareAbstract
                         if ( $handle )
                         {
                             @ fclose( $handle );
+
+                            if ( $path )
+                            {
+                                @ unlink( $path );
+                            }
                         }
 
                         return $result;
@@ -276,6 +314,11 @@ class Structure extends MapperAwareAbstract
                     if ( $handle )
                     {
                         @ fclose( $handle );
+
+                        if ( $path )
+                        {
+                            @ unlink( $path );
+                        }
                     }
 
                     return $result;
@@ -290,6 +333,11 @@ class Structure extends MapperAwareAbstract
                 if ( $handle )
                 {
                     @ fclose( $handle );
+
+                    if ( $path )
+                    {
+                        @ unlink( $path );
+                    }
                 }
 
                 return $result;
