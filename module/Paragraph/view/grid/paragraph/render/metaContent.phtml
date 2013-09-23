@@ -1,7 +1,7 @@
 <?php
 
 $this->headTitle()
-     ->append( $this->paragraph->title );
+     ->splice( 1, 0, array( $this->paragraph->title ) );
 
 if ( ! empty( $this->paragraph->metaRobots ) )
 {
