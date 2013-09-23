@@ -2,8 +2,6 @@
 
 use Zork\View\Helper\OpenGraph;
 
-$this->headTitle( $this->user->displayName );
-
 $this->headLink()
      ->appendStylesheet( '/styles/modules/User/view.css', 'all' );
 
@@ -123,3 +121,4 @@ $this->placeholder( 'content' )->captureStart();
         )
     )
 ) ?>
+<?php $this->headTitle( $this->user->displayName ); ?>
