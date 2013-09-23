@@ -304,6 +304,7 @@ return array(
             'Grid\Core\Model\Package\EnabledList'       => 'Grid\Core\Model\Package\EnabledListServiceFactory',
             'Grid\Core\Model\Settings\Definitions'      => 'Grid\Core\Model\Settings\DefinitionServiceFactory',
             'Zork\Mvc\View\Http\ForbiddenStrategy'      => 'Zork\Mvc\View\Http\ForbiddenStrategyServiceFactory',
+            'Zork\Mvc\View\Http\InjectHeadDefaults'     => 'Zork\Mvc\View\Http\InjectHeadDefaultsServiceFactory',
         ),
         'aliases' => array(
             'Zork\Cache\CacheManager'           => 'cacheManager',
@@ -1146,6 +1147,7 @@ return array(
         'layout'                    => 'layout/layout',
         'strategies'                => array(
             'ViewJsonStrategy',
+            'Zork\Mvc\View\Http\InjectHeadDefaults',
         ),
         'mvc_strategies'            => array(
             'Zork\Mvc\View\Http\ForbiddenStrategy',
