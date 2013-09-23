@@ -97,108 +97,211 @@ class Structure extends MapperAwareAbstract
     }
 
     /**
-     * Render rules to a css-file
+     * Render line
      *
-     * @param string $filePath
-     * @return \Customize\Model\Sheet\Structure
+     * @param   null|resource   $handle
+     * @param   string          $line
+     * @param   string|bool     $result
+     * @return  bool
      */
-    public function render( $filePath )
+    protected function renderLine( $handle, $line, $result )
     {
-        static $escape = array( '"' => '\\"' );
-        $handle = @ fopen( $filePath, 'w' );
+        $write = $line . self::RENDER_EOL;
 
         if ( $handle )
         {
-            fwrite(
-                $handle,
-                '@charset "' . strtr( self::RENDER_CHARSET, $escape ) . '";' .
-                self::RENDER_EOL
-            );
-
-            foreach ( $this->imports as $import )
+            if ( false === fwrite( $handle, $write ) )
             {
-                fwrite(
-                    $handle,
-                    '@import url("' . strtr( $import, $escape ) . '");' .
-                    self::RENDER_EOL
-                );
+                $result = false;
+                return true;
             }
-
-            fwrite( $handle, self::RENDER_EOL );
-
-            $media = '';
-            foreach ( $this->rules as $rule )
-            {
-                $newMedia = (string) $rule->media;
-
-                if ( $media != $newMedia )
-                {
-                    if ( $media )
-                    {
-                        fwrite(
-                            $handle,
-                            '}' . self::RENDER_EOL .
-                            self::RENDER_EOL
-                        );
-                    }
-
-                    $media = $newMedia;
-
-                    fwrite(
-                        $handle,
-                        '@media ' . $media .
-                        self::RENDER_EOL . '{' .
-                        self::RENDER_EOL
-                    );
-                }
-
-                $rawPropertyNames = $rule->getRawPropertyNames();
-
-                if ( ! empty( $rawPropertyNames ) )
-                {
-                    fwrite(
-                        $handle,
-                        ( $media ? "\t" : '' ) .
-                        $rule->selector .
-                        self::RENDER_EOL .
-                        ( $media ? "\t" : '' ) . '{' .
-                        self::RENDER_EOL
-                    );
-
-                    foreach ( $rawPropertyNames as $propery )
-                    {
-                        fwrite(
-                            $handle,
-                            ( $media ? "\t" : '' ) .
-                            "\t" . $propery . ': ' .
-                            $rule->getRawPropertyValue( $propery ) .
-                            $rule->getRawPropertyPostfix( $propery ) . ';' .
-                            self::RENDER_EOL
-                        );
-                    }
-
-                    fwrite(
-                        $handle,
-                        ( $media ? "\t" : '' ) .
-                        '}' . self::RENDER_EOL .
-                        self::RENDER_EOL
-                    );
-                }
-            }
-
-            if ( $media )
-            {
-                fwrite(
-                    $handle,
-                    '}' . self::RENDER_EOL .
-                    self::RENDER_EOL
-                );
-            }
-
-            fclose( $handle );
+        }
+        else
+        {
+            $result .= $write;
         }
 
-        return $this;
+        return false;
+    }
+
+    /**
+     * Render rules to a css-file
+     *
+     * @param   string|resource|null    $file
+     * @return  bool|string
+     */
+    public function render( $file = null )
+    {
+        static $escape = array( '"' => '\\"' );
+
+        if ( empty( $file ) )
+        {
+            $handle = null;
+            $result = '';
+        }
+        else if ( is_resource( $file ) )
+        {
+            $handle = $file;
+            $result = true;
+        }
+        else
+        {
+            $handle = @ fopen( $file, 'w' );
+            $result = true;
+
+            if ( ! $handle )
+            {
+                return false;
+            }
+        }
+
+        if ( $this->renderLine( $handle,
+                                '@charset "' . strtr( self::RENDER_CHARSET,
+                                                      $escape ) . '";',
+                                $result ) )
+        {
+            if ( $handle )
+            {
+                @ fclose( $handle );
+            }
+
+            return $result;
+        }
+
+        foreach ( $this->imports as $import )
+        {
+            if ( $this->renderLine( $handle,
+                                    '@import url("' . strtr( $import,
+                                                             $escape ) . '");',
+                                    $result ) )
+            {
+                if ( $handle )
+                {
+                    @ fclose( $handle );
+                }
+
+                return $result;
+            }
+        }
+
+        if ( $this->renderLine( $handle, '', $result ) )
+        {
+            if ( $handle )
+            {
+                @ fclose( $handle );
+            }
+
+            return $result;
+        }
+
+        $media = '';
+        foreach ( $this->rules as $rule )
+        {
+            $newMedia = (string) $rule->media;
+
+            if ( $media != $newMedia )
+            {
+                if ( $media )
+                {
+                    if ( $this->renderLine( $handle,
+                                            '}' . self::RENDER_EOL,
+                                            $result ) )
+                    {
+                        if ( $handle )
+                        {
+                            @ fclose( $handle );
+                        }
+
+                        return $result;
+                    }
+                }
+
+                $media = $newMedia;
+
+                if ( $this->renderLine( $handle,
+                                        '@media ' . $media . self::RENDER_EOL . '{',
+                                        $result ) )
+                {
+                    if ( $handle )
+                    {
+                        @ fclose( $handle );
+                    }
+
+                    return $result;
+                }
+            }
+
+            $rawPropertyNames = $rule->getRawPropertyNames();
+
+            if ( ! empty( $rawPropertyNames ) )
+            {
+                if ( $this->renderLine( $handle,
+                                        ( $media ? "\t" : '' ) .
+                                        $rule->selector .
+                                        self::RENDER_EOL .
+                                        ( $media ? "\t" : '' ) . '{',
+                                        $result ) )
+                {
+                    if ( $handle )
+                    {
+                        @ fclose( $handle );
+                    }
+
+                    return $result;
+                }
+
+                foreach ( $rawPropertyNames as $propery )
+                {
+                    if ( $this->renderLine( $handle,
+                                            ( $media ? "\t" : '' ) .
+                                            "\t" . $propery . ': ' .
+                                            $rule->getRawPropertyValue( $propery ) .
+                                            $rule->getRawPropertyPostfix( $propery ) . ';',
+                                            $result ) )
+                    {
+                        if ( $handle )
+                        {
+                            @ fclose( $handle );
+                        }
+
+                        return $result;
+                    }
+                }
+
+                if ( $this->renderLine( $handle,
+                                        ( $media ? "\t" : '' ) .
+                                        '}' . self::RENDER_EOL,
+                                        $result ) )
+                {
+                    if ( $handle )
+                    {
+                        @ fclose( $handle );
+                    }
+
+                    return $result;
+                }
+            }
+        }
+
+        if ( $media )
+        {
+            if ( $this->renderLine( $handle, '}', $result ) )
+            {
+                if ( $handle )
+                {
+                    @ fclose( $handle );
+                }
+
+                return $result;
+            }
+        }
+
+        if ( $handle )
+        {
+            @ fclose( $handle );
+        }
+
+        return $result;
     }
 
     /**
