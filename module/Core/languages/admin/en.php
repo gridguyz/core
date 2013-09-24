@@ -96,6 +96,7 @@ return array(
     'admin.navTop.subDomain' => 'Sub-domains',
     'admin.navTop.subDomainCreate' => 'Create new sub-domain',
     'admin.navTop.subDomainList' => 'Sub-domain list',
+    'admin.navTop.sysadmin' => 'SysAdmin',
     'admin.navTop.system' => 'System',
     'admin.navTop.system.gitLog' => 'Git log',
     'admin.navTop.system.modules' => 'Modules',
