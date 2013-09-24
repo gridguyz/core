@@ -319,7 +319,9 @@ class Module extends ModuleAbstract
             ),
             'factories'         => array(
                 'config'            => function () use ( $serviceLocator ) {
-                    return new \Zork\View\Helper\Config( $serviceLocator->get( 'Config' ) );
+                    return new \Zork\View\Helper\Config(
+                        $serviceLocator->get( 'Config' )
+                    );
                 },
                 'domain'            => function () use ( $serviceLocator ) {
                     return new \Zork\View\Helper\Domain(
@@ -327,26 +329,12 @@ class Module extends ModuleAbstract
                     );
                 },
                 'locale'            => function () use ( $serviceLocator ) {
-                    $locale = $serviceLocator->get( 'Locale' );
-                    return new \Zork\View\Helper\Locale( $locale );
+                    return new \Zork\View\Helper\Locale(
+                        $serviceLocator->get( 'Locale' )
+                    );
                 },
                 'adminLocale'       => function () use ( $serviceLocator ) {
                     return $serviceLocator->get( 'AdminLocale' );
-                },
-                'headDefaults'      => function () use ( $serviceLocator ) {
-                    $config = $serviceLocator->get( 'Config' );
-                    $config = $config['view_manager'];
-
-                    if ( isset( $config['head_defaults'] ) )
-                    {
-                        $definitions = $config['head_defaults'];
-                    }
-                    else
-                    {
-                        $definitions = array();
-                    }
-
-                    return new \Zork\View\Helper\HeadDefaults( $definitions );
                 },
                 'appService'        => function () use ( $serviceLocator ) {
                     return new View\Helper\AppService( $serviceLocator );
