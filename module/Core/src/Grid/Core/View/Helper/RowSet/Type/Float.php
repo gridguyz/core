@@ -2,6 +2,8 @@
 
 namespace Grid\Core\View\Helper\RowSet\Type;
 
+use NumberFormatter;
+
 /**
  * Float
  *
