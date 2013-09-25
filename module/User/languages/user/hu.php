@@ -35,7 +35,6 @@ return array(
     'user.form.logout.submit' => 'Kilépés',
     'user.form.logout.success' => 'Kilépés sikeres',
     'user.form.logout.title' => 'Kilépés',
-    'user.form.logout.toAdminUI' => '[Admin <abbr title="Felhasználói interfész">UI</abbr>]',
     'user.form.openId.identity' => 'OpenID azonosító url',
     'user.form.passwordChange.check' => 'Jelszó megerősítése',
     'user.form.passwordChange.check.description' => 'Kérem, erősítse meg az előbb megadott jelszót.',

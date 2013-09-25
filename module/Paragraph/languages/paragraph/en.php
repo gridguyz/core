@@ -196,7 +196,6 @@ return array(
     'paragraph.form.layout.success' => 'Save success',
     'paragraph.form.layout.tags' => 'Tags',
     'paragraph.form.layout.title' => 'Layout',
-    'paragraph.form.login.displayAdminUiLink' => 'Display Admin-UI link',
     'paragraph.form.login.displayLoginWithLink' => 'Display login-with link',
     'paragraph.form.login.displayPasswordRequestLink' => 'Display password-request link',
     'paragraph.form.login.displayRegisterLink' => 'Display register link',

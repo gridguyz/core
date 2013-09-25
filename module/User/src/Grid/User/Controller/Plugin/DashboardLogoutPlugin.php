@@ -35,9 +35,7 @@ class DashboardLogoutPlugin extends AbstractPlugin
 
         $view = new ViewModel( array(
             'form'      => $form,
-            'display'   => array(
-                'adminUiLink' => false,
-            )
+            'display'   => array(),
         ) );
 
         return $view->setTemplate( 'grid/core/admin/dashboard.logout' );

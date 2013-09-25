@@ -29,6 +29,10 @@ $identity   = $auth->getIdentity();
                 'locale'        => (string) $this->locale(),
                 'displayName'   => $identity->displayName,
             ) ) ?>"><?= $identity->displayName ?></a>
+        <br />
+        <span class="containerForEmail">
+            <?= $this->escapeHtml( $identity->email ) ?>
+        </span>
 <?php $this->placeholder( 'userData' )->captureEnd(); ?>
 <?= $this->viewWidget(
         'Grid\User\Authentication\Logout',
@@ -38,24 +42,7 @@ $identity   = $auth->getIdentity();
             'display'   => $this->display,
         )
     ) ?>
-<?php if ( ! empty( $this->display['adminUiLink'] ) &&
-           $this->isAllowed( 'admin', 'ui' ) ): ?>
 
-        <br />
-        <a class="linkToAdminUi" href="<?=
-            $this->url( 'Grid\Core\Admin\Dashboard', array(
-                'locale' => $identity->locale,
-            ), array(
-                'query' => array( 'adminLocale' => (string) $this->locale() ),
-            ) ) ?>"><?=
-            $this->translate( 'user.form.logout.toAdminUI', 'user' )
-           ?></a>
-<?php endif ?>
-
-        <br />
-        <span class="containerForEmail">
-            <?= $this->escapeHtml( $identity->email ) ?>
-        </span>
     </p>
 
     <?= $this->form( $this->form, 'user' ) ?>
