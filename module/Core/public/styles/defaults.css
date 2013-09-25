@@ -1273,6 +1273,11 @@ dd.ui-inputset input
     background-image: linear-gradient(to bottom, #343434 0%, #050505 100%);
 }
 
+.global-credit-amount-container
+{
+    font-weight: bold;
+}
+
 .global-credit-amount
 {
     padding: 2px 4px;
