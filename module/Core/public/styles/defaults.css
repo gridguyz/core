@@ -1273,6 +1273,29 @@ dd.ui-inputset input
     background-image: linear-gradient(to bottom, #343434 0%, #050505 100%);
 }
 
+.global-credit-amount-container
+{
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.global-credit-amount
+{
+    padding: 2px 4px;
+    color: #b0c1e4 !important;
+    background: #424242 !important;
+    border-radius: 4px;
+    -ms-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    box-shadow: 1px 1px 5px #888;
+}
+
+a.global-credit-amount:hover
+{
+    color: #fff !important;
+}
+
 ::selection
 {
     color: #fff;
