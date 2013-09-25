@@ -1,4 +1,7 @@
 <?php
+
+use Zend\Authentication\AuthenticationService;
+
 /**
  * @var $this \Zend\View\Renderer\PhpRenderer
  */
@@ -8,6 +11,7 @@ $this->headTitle( $title = $this->translate(
 ) );
 
 $paginator = $this->paginator;
+$auth      = new AuthenticationService();
 
 $paginator->setPageRange( 7 )
           ->setItemCountPerPage( 5 )
@@ -33,6 +37,9 @@ $locale = (string) $this->locale();
 ?>
 <h1><?= $title ?></h1>
 <div class="page">
+    <?= $this->viewWidget( 'Grid\Core\Package\List', '', array(
+        'user' => $auth->getIdentity(),
+    ) ) ?>
 <?php if ( $this->canModify ): ?>
 
     <p class="package-list-actions">
