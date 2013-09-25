@@ -9,7 +9,7 @@ use NumberFormatter;
  *
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
-class Float implements TypeInterface
+class Float implements AbstractHelper
 {
 
     /**
