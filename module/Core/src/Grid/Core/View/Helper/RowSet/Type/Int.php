@@ -9,7 +9,7 @@ use NumberFormatter;
  *
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
-class Int implements AbstractHelper
+class Int extends AbstractHelper
 {
 
     /**
