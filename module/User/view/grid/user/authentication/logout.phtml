@@ -10,9 +10,9 @@ $identity   = $auth->getIdentity();
 
 <div class="user-authentication user-logout">
     <h3><?= $this->translate( 'user.welcome', 'user' ) ?></h3>
-    <p>
-
 <?php $this->placeholder( 'userData' )->captureStart(); ?>
+
+    <p>
 <?php if ( ! empty( $this->display['centralWelcomeLink'] ) &&
            $this->isAllowed( 'central', 'welcome' ) ): ?>
 
@@ -33,6 +33,7 @@ $identity   = $auth->getIdentity();
         <span class="containerForEmail">
             <?= $this->escapeHtml( $identity->email ) ?>
         </span>
+    </p>
 <?php $this->placeholder( 'userData' )->captureEnd(); ?>
 <?= $this->viewWidget(
         'Grid\User\Authentication\Logout',
@@ -42,8 +43,6 @@ $identity   = $auth->getIdentity();
             'display'   => $this->display,
         )
     ) ?>
-
-    </p>
 
     <?= $this->form( $this->form, 'user' ) ?>
 
