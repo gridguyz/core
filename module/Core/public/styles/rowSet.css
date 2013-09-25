@@ -100,15 +100,15 @@
     float: right;
     border: none;
     padding: 0px;
+    cursor: pointer;
     position: relative;
     margin-left: -20px;
-    background-color: transparent;
+    text-decoration: none;
     background-image: none;
     background-repeat: no-repeat;
+    color: transparent !important;
     background-position: center center;
-    color: transparent;
-    cursor: pointer;
-    text-decoration: none;
+    background-color: transparent !important;
 }
 
 .rowSetContainer .rowSet .header .column .order ~ .order
