@@ -1282,6 +1282,7 @@ dd.ui-inputset input
 .global-credit-amount
 {
     padding: 2px 4px;
+    font-weight: bold;
     color: #b0c1e4 !important;
     background: #424242 !important;
     border-radius: 4px;
