@@ -1284,10 +1284,10 @@ dd.ui-inputset input
     font-weight: bold;
     color: #b0c1e4 !important;
     background: #424242 !important;
-    border-radius: 4px;
-    -ms-border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
+    border-radius: 6px;
+    -ms-border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
     box-shadow: 1px 1px 5px #888;
 }
 
