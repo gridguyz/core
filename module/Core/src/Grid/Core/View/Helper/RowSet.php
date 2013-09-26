@@ -958,7 +958,6 @@ class RowSet extends AbstractHelper
 
         $store      = $this->getStore();
         $columns    = $this->getColumns();
-        $orders     = array_filter( $store['orders'] );
         $adapter    = $this->getPaginator()
                            ->getAdapter();
 
@@ -989,6 +988,8 @@ class RowSet extends AbstractHelper
                 $store[$map] = $requested;
             }
         }
+
+        $orders = array_filter( $store['orders'] );
 
         if ( $store['freeWord'] ||
              ! empty( $store['search'] ) ||
