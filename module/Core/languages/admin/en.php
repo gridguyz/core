@@ -155,6 +155,7 @@ return array(
     'admin.packages.update.ajaxError' => 'Error while starting updates',
     'admin.packages.update.details' => 'Details',
     'admin.packages.update.done' => 'Package updates finished',
+    'admin.packages.update.installer' => 'Module installer updated',
     'admin.packages.update.inProgress' => 'Please wait. Package updates are in progress. This may take a few minutes ...',
     'admin.packages.git.pulled' => 'Application updated',
     'admin.packages.maintenance.failed' => 'Maintenance screen cannot be applied',
