@@ -993,6 +993,8 @@ class RowSet extends AbstractHelper
                           ->getPlatform();
 
         $freeSearch = '';
+        $freeParams = array();
+        $freeTypes  = array();
         $reqmap     = array(
             'columns'   => 'enable',
             'search'    => 'search',
@@ -1041,22 +1043,30 @@ class RowSet extends AbstractHelper
                             $freeSearch .= ' || \' \' || ';
                         }
 
-                        $freeSearch .= 'COALESCE( TEXT( ' .
-                            $platform->quoteIdentifier( $column ) .
-                            ' ), \'\' )';
+                        $freeSearch  .= 'COALESCE( TEXT( ? ), \'\' )';
+                        $freeParams[] = $column;
+                        $freeTypes[]  = Expression::TYPE_IDENTIFIER;
                     }
                 }
             }
 
             if ( $freeSearch )
             {
-                $predicates = array();
+                $predicates     = array();
+                $freeExpression = new Expression(
+                    $freeSearch,
+                    $freeParams,
+                    $freeTypes
+                );
 
                 foreach ( $freeWords as $freeWord )
                 {
-                    $predicates[] = new ILike(
-                        $freeSearch,
-                        '%' . trim( $this->escapeLike( $freeWord ), '%' ) . '%'
+                    $predicates[] = new Predicate\Operator(
+                        $freeExpression,
+                        'ILIKE',
+                        '%' . trim( $this->escapeLike( $freeWord ), '%' ) . '%',
+                        Predicate\Operator::TYPE_VALUE,
+                        Predicate\Operator::TYPE_LITERAL
                     );
                 }
 
