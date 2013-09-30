@@ -22,34 +22,10 @@
         form    = $( form );
         element = $( element );
 
-        var linkToUser = element.find( ".linkToUser" ),
-            before = !! linkToUser.nextAll( ".linkToAdminUi" ).length,
-            remove = function () {
-                linkToUser.nextAll( ".linkToAdminUi" ).remove();
-            },
-            add = function () {
-                if ( ! linkToUser.nextAll( ".linkToAdminUi" ).length )
-                {
-                    linkToUser.after(
-                        $( "<a />" )
-                            .addClass( "linkToAdminUi" )
-                            .attr( "href", "/app/" + js.core.defaultLoacle + "/admin" )
-                            .html( js.core.translate( "user.form.logout.toAdminUI" ) )
-                    );
-                }
-            };
-
-        form.find( ":input[name='paragraph-login[displayAdminUiLink]']" )
-            .on( "click change", function () {
-                this.checked ? add() : remove();
-            } );
-
         return {
             "update": function () {
-                before = form.find( ":input[name='paragraph-login[displayAdminUiLink]']" ).is( ":checked" );
             },
             "restore": function () {
-                before ? add() : remove();
             }
         };
     };

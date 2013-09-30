@@ -53,7 +53,6 @@ return array(
     'user.form.logout.submit' => 'Logout',
     'user.form.logout.success' => 'Logout success',
     'user.form.logout.title' => 'Logout',
-    'user.form.logout.toAdminUI' => '[Admin <abbr title="User interface">UI</abbr>]',
     'user.form.openId.title' => 'OpenID',
     'user.form.openId.identity' => 'OpenID identity url',
     'user.form.passwordChange.check' => 'Repeat password',

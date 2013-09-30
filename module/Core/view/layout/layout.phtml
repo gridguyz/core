@@ -1,43 +1,37 @@
 <?php
 
 use Zork\Stdlib\Message;
+use Zork\Mvc\Controller\Plugin\MiddleLayoutInterface;
 
-$fbLocaleAliases = array(
-    'en' => 'en_US',
-    'de' => 'de_DE',
-    'fr' => 'fr_FR',
-    'es' => 'es_ES',
-    'hu' => 'hu_HU',
-);
-
-$this->headDefaults();
 $siteInfo = $this->siteInfo();
 $uploads  = '/uploads/' . $siteInfo->getSchema();
 
 if ( ! empty( $this->middleLayout ) &&
-     $this->middleLayout instanceof \Zork\Mvc\Controller\Plugin\MiddleLayoutInterface )
+     $this->middleLayout instanceof MiddleLayoutInterface )
 {
-    $content = $this->render( $this->middleLayout->getTemplate(), array_merge(
-        $this->middleLayout->getVariables(),
-        array( 'content' => $this->content )
-    ) );
+    $content = $this->render(
+        $this->middleLayout
+             ->getTemplate(),
+        array_merge(
+            $this->middleLayout
+                 ->getVariables(),
+            array(
+                'content' => $this->content,
+            )
+        )
+    );
 }
 else
 {
     $content = $this->content;
 }
 
-$locale = (string) $this->locale();
-
-if ( ! empty( $fbLocaleAliases[$locale] ) )
-{
-    $locale = $fbLocaleAliases[$locale];
-}
-
 $this->openGraph()
      ->append( array(
-         'og:locale'    => $locale,
-         'og:site_name' => $this->headTitle()->slice( 0, 1 ),
+         'og:locale'    => $this->openGraph()
+                                ->getSafeLocale( (string) $this->locale() ),
+         'og:site_name' => $this->headTitle()
+                                ->slice( 0, 1 ),
      ) );
 
 ?>

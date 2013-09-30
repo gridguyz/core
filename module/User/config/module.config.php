@@ -902,16 +902,6 @@ return array(
                                     ),
                                 ),
                             ),
-                            'displayAdminUiLink' => array(
-                                'spec' => array(
-                                    'type'      => 'Zork\Form\Element\Checkbox',
-                                    'name'      => 'displayAdminUiLink',
-                                    'options'   => array(
-                                        'label'     => 'paragraph.form.login.displayAdminUiLink',
-                                        'required'  => false,
-                                    ),
-                                ),
-                            ),
                             'displayRegisterLink' => array(
                                 'spec' => array(
                                     'type'      => 'Zork\Form\Element\Checkbox',
@@ -1065,7 +1055,6 @@ return array(
         ),
         'Grid\User' => array(
             'display' => array(
-                'adminUiLink'           => true,
                 'registerLink'          => true,
                 'passwordRequestLink'   => true,
                 'loginWithLink'         => true,

@@ -35,7 +35,7 @@
                        .replace( /\*/g, "_" )
                        .replace( /\?/g, "_" )
                        .replace( /:/g, "-" )
-                       .replace( /|/g, "-" )
+                       .replace( /\|/g, "-" )
                        .replace( /\\/g, "-" )
                        .replace( /\//g, "-" );
         },

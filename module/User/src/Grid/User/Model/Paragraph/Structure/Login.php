@@ -34,13 +34,6 @@ class Login extends AbstractLeaf
     protected static $viewOpen = 'grid/paragraph/render/login';
 
     /**
-     * Display admin-ui link
-     *
-     * @var bool
-     */
-    protected $displayAdminUiLink;
-
-    /**
      * Display register link
      *
      * @var bool
@@ -60,18 +53,6 @@ class Login extends AbstractLeaf
      * @var bool
      */
     protected $displayLoginWithLink;
-
-    /**
-     * Display admin-ui link
-     *
-     * @param bool $flag
-     * @return \User\Model\Paragraph\Structure\Login
-     */
-    public function setDisplayAdminUiLink( $flag )
-    {
-        $this->displayAdminUiLink = (bool) $flag;
-        return $this;
-    }
 
     /**
      * Display register link
@@ -148,11 +129,6 @@ class Login extends AbstractLeaf
                              [ 'modules' ]
                              [ 'Grid\User' ]
                              [ 'display' ];
-
-        if ( null !== $this->displayAdminUiLink )
-        {
-            $display['adminUiLink'] = (bool) $this->displayAdminUiLink;
-        }
 
         if ( null !== $this->displayRegisterLink )
         {

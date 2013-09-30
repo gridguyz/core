@@ -1,4 +1,7 @@
 <?php
+
+use Zend\Authentication\AuthenticationService;
+
 /**
  * @var $this \Zend\View\Renderer\PhpRenderer
  */
@@ -8,6 +11,7 @@ $this->headTitle( $title = $this->translate(
 ) );
 
 $paginator = $this->paginator;
+$auth      = new AuthenticationService();
 
 $paginator->setPageRange( 7 )
           ->setItemCountPerPage( 5 )
@@ -40,6 +44,10 @@ $locale = (string) $this->locale();
            class="update-all button-appearance"><?= $this->translate( 'admin.packages.action.updateAll', 'admin' ) ?></a>
     </p>
 <?php endif ?>
+
+    <?= $this->viewWidget( 'Grid\Core\Package\List', '', array(
+        'user' => $auth->getIdentity(),
+    ) ) ?>
 
     <form class="package-list-form" method="post" action="?">
         <p class="package-list-search">

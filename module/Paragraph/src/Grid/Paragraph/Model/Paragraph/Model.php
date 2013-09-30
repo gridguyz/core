@@ -215,8 +215,44 @@ class Model implements MapperAwareInterface,
                     ),
                 );
                 $columns = array(
+                    'title' => new Expression(
+                        '( SELECT ?
+                             FROM ? AS ?
+                            WHERE ?.? = ?.?
+                              AND ?.? = ?
+                         ORDER BY CASE ?.?
+                                      WHEN ? THEN 3
+                                      WHEN ? THEN 2
+                                      ELSE 1
+                                  END DESC
+                            LIMIT 1 )',
+                        array(
+                            'value',
+                            'paragraph_property', 'paragraph_property_title',
+                            'paragraph', 'id',
+                            'paragraph_property_title', 'paragraphId',
+                            'paragraph_property_title', 'name',
+                            'title',
+                            'paragraph_property_title', 'locale',
+                            $this->getLocale(),
+                            $this->getPrimaryLanguage(),
+                        ),
+                        array(
+                            Expression::TYPE_IDENTIFIER,
+                            Expression::TYPE_IDENTIFIER, Expression::TYPE_IDENTIFIER,
+                            Expression::TYPE_IDENTIFIER, Expression::TYPE_IDENTIFIER,
+                            Expression::TYPE_IDENTIFIER, Expression::TYPE_IDENTIFIER,
+                            Expression::TYPE_IDENTIFIER, Expression::TYPE_IDENTIFIER,
+                            Expression::TYPE_VALUE,
+                            Expression::TYPE_IDENTIFIER, Expression::TYPE_IDENTIFIER,
+                            Expression::TYPE_VALUE,
+                            Expression::TYPE_VALUE,
+                        )
+                    ),
                     'defaultFor' => new Expression(
-                        '( SELECT COUNT(*) FROM ? WHERE ?.? = ?.? )',
+                        '( SELECT COUNT(*)
+                             FROM ?
+                            WHERE ?.? = ?.? )',
                         array(
                             'subdomain',
                             'subdomain', 'defaultContentId',

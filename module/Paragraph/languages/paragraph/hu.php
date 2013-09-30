@@ -123,7 +123,6 @@ return array(
     'paragraph.form.layout.submit' => 'Mentés',
     'paragraph.form.layout.success' => 'Mentés sikeres',
     'paragraph.form.layout.title' => 'Elrendezés',
-    'paragraph.form.login.displayAdminUiLink' => 'Admin-FI link megjelenítése',
     'paragraph.form.login.displayLoginWithLink' => 'Bejelentkezés ezzel ... link megjelenítése',
     'paragraph.form.login.displayPasswordRequestLink' => 'Jelszó-változtatási kérelem link megjelenítése',
     'paragraph.form.login.displayRegisterLink' => 'Regisztrációs link megjelenítése',

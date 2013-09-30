@@ -13,6 +13,16 @@
     text-align: right;
 }
 
+.package-list-actions
+{
+    float: right;
+}
+
+.package-list-form
+{
+    clear: both;
+}
+
 .package-list-search select
 {
     float: left;
