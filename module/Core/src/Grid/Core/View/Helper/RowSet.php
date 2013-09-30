@@ -1066,7 +1066,7 @@ class RowSet extends AbstractHelper
                         'ILIKE',
                         '%' . trim( $this->escapeLike( $freeWord ), '%' ) . '%',
                         Predicate\Operator::TYPE_VALUE,
-                        Predicate\Operator::TYPE_LITERAL
+                        Predicate\Operator::TYPE_VALUE
                     );
                 }
 
