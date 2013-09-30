@@ -6,6 +6,7 @@ use Zork\Stdlib\String;
 use Zork\Paginator\Adapter\DbSelect;
 use Zend\Db\Sql\Predicate;
 use Zend\Db\Sql\Expression;
+use Zork\Db\Sql\Predicate\ILike;
 use Zend\Paginator\Paginator;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\HelperInterface;
@@ -941,6 +942,26 @@ class RowSet extends AbstractHelper
     }
 
     /**
+     * Escape like
+     *
+     * @param   string  $like
+     * @return  string
+     */
+    protected function escapeLike( $like )
+    {
+        return strtr(
+            $like,
+            array(
+                '\\'    => '\\\\',
+                '_'     => '\\_',
+                '%'     => '\\%',
+                '?'     => '_',
+                '*'     => '%',
+            )
+        );
+    }
+
+    /**
      * @return void
      */
     protected function parseRequest()
@@ -971,7 +992,7 @@ class RowSet extends AbstractHelper
         $platform   = $sql->getAdapter()
                           ->getPlatform();
 
-        $vector     = '';
+        $freeSearch = '';
         $reqmap     = array(
             'columns'   => 'enable',
             'search'    => 'search',
@@ -989,9 +1010,10 @@ class RowSet extends AbstractHelper
             }
         }
 
-        $orders = array_filter( $store['orders'] );
+        $orders     = array_filter( $store['orders'] );
+        $freeWords  = array_filter( preg_split( '/\s+/', $store['freeWord'] ) );
 
-        if ( $store['freeWord'] ||
+        if ( ! empty( $freeWords ) ||
              ! empty( $store['search'] ) ||
              ! empty( $orders ) )
         {
@@ -999,7 +1021,7 @@ class RowSet extends AbstractHelper
                           ->from( array( 'search' => $select ) );
         }
 
-        if ( $store['freeWord'] )
+        if ( ! empty( $freeWords ) )
         {
             foreach ( $store['enable'] as $column => $enabled )
             {
@@ -1014,25 +1036,32 @@ class RowSet extends AbstractHelper
                          $type instanceof RowSet\Type\Text      ||
                          $type instanceof RowSet\Type\Translate )
                     {
-                        if ( $vector )
+                        if ( $freeSearch )
                         {
-                            $vector .= ' || \' \' || ';
+                            $freeSearch .= ' || \' \' || ';
                         }
 
-                        $vector .= 'COALESCE( TEXT( ' .
+                        $freeSearch .= 'COALESCE( TEXT( ' .
                             $platform->quoteIdentifier( $column ) .
                             ' ), \'\' )';
                     }
                 }
             }
 
-            if ( $vector )
+            if ( $freeSearch )
             {
+                $predicates = array();
+
+                foreach ( $freeWords as $freeWord )
+                {
+                    $predicates[] = new ILike(
+                        $freeSearch,
+                        '%' . trim( $this->escapeLike( $freeWord ), '%' ) . '%'
+                    );
+                }
+
                 $select->where( array(
-                    new Predicate\Expression(
-                        'TO_TSVECTOR( ' . $vector . ' ) @@ PLAINTO_TSQUERY( ? )',
-                        $store['freeWord']
-                    )
+                    new Predicate\PredicateSet( $predicates ),
                 ) );
             }
         }
@@ -1157,13 +1186,9 @@ class RowSet extends AbstractHelper
                     if ( ! $handled && ! empty( $search['like'] ) )
                     {
                         $select->where( array(
-                            new Predicate\Like(
+                            new ILike(
                                 $column,
-                                str_replace(
-                                    array( '_', '%', '?', '*' ),
-                                    array( '\\_', '\\%', '_', '%' ),
-                                    $search['like']
-                                )
+                                $this->escapeLike( $search['like'] )
                             ),
                         ) );
                     }
@@ -1172,17 +1197,6 @@ class RowSet extends AbstractHelper
         }
 
         $select->order( $orders );
-
-        if ( $store['freeWord'] && $vector )
-        {
-            $select->order(
-                new Expression(
-                    'TS_RANK_CD( TO_TSVECTOR(' . $vector .
-                                '), PLAINTO_TSQUERY( ? ) ) DESC',
-                    $store['freeWord']
-                )
-            );
-        }
 
         if ( $select !== $adapter->getSelect() )
         {
