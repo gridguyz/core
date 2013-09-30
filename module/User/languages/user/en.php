@@ -13,6 +13,7 @@ return array(
     'user.action.loginWith.%s' => 'with %s',
     'user.action.confirm.failed' => 'Email confirmation failed',
     'user.action.confirm.success' => 'Email confirmation success',
+    'user.action.register.email.taken' => 'This email address is already taken. Please give another email address.',
     'user.extra.resourceGroup' => 'Extra rights',
     'user.form.create.confirmed' => 'Confirmed',
     'user.form.create.email' => 'Email',

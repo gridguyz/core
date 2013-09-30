@@ -45,7 +45,7 @@ class Rpc implements CallableInterface,
                       ->isEmailExists(
                             $email,
                             empty( $fields->id ) ? null : $fields->id
-                        );
+                        ) ?: 'user.action.register.email.taken';
     }
 
     /**
