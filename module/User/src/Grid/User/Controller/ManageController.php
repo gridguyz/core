@@ -7,7 +7,6 @@ use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zork\Session\ContainerAwareTrait as SessionContainerAwareTrait;
 
-
 /**
  * ManageController
  *
@@ -57,7 +56,7 @@ class ManageController extends AbstractActionController
         $form    = $this->getServiceLocator()
                         ->get( 'Form' )
                         ->create( 'Grid\User\Register' );
-                           
+
         if ( $request->isPost() )
         {
             $form->setData( $data );
@@ -65,7 +64,7 @@ class ManageController extends AbstractActionController
             if ( $form->isValid() )
             {
                 $user = $service->register( $form->getData() );
-                
+
                 if ( ! empty( $user ) )
                 {
                     $form->setData( array() );
@@ -108,14 +107,14 @@ class ManageController extends AbstractActionController
         if ( $success === true )
         {
             $this->messenger()
-                 ->add( 'user.action.register.success',
+                 ->add( 'user.form.register.success',
                         'user', Message::LEVEL_INFO );
         }
 
         if ( $success === false )
         {
             $this->messenger()
-                 ->add( 'user.action.register.failed',
+                 ->add( 'user.form.register.failed',
                         'user', Message::LEVEL_ERROR );
         }
 

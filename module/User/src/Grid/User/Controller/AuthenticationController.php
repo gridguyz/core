@@ -3,6 +3,7 @@
 namespace Grid\User\Controller;
 
 use Zork\Stdlib\Message;
+use Zend\Authentication\Result;
 use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zork\Session\ContainerAwareTrait as SessionContainerAwareTrait;
@@ -73,6 +74,29 @@ class AuthenticationController extends AbstractActionController
     }
 
     /**
+     * Get error message key by code
+     *
+     * @param   int     $code
+     * @return  string
+     */
+    protected function getErrorMessageKey( $code )
+    {
+        switch ( $code )
+        {
+            case Result::FAILURE_IDENTITY_NOT_FOUND:
+                return 'user.form.login.failed.identity-not-found';
+
+            case Result::FAILURE_IDENTITY_AMBIGUOUS:
+                return 'user.form.login.failed.identity-amiguous';
+
+            case Result::FAILURE_CREDENTIAL_INVALID:
+                return 'user.form.login.failed.credential-invalid';
+        }
+
+        return 'user.form.login.failed';
+    }
+
+    /**
      * Authentication: login
      */
     public function loginAction()
@@ -103,16 +127,17 @@ class AuthenticationController extends AbstractActionController
         {
             if ( $form->isValid() )
             {
+                /* @var $logger \Zork\Log\LoggerManager */
                 $data   = $form->getData();
+                $logger = $this->getServiceLocator()
+                               ->get( 'Zork\Log\LoggerManager' );
                 $result = $this->getServiceLocator()
                                ->get( 'Grid\User\Authentication\Service' )
                                ->login( $data,
                                         $this->getSessionManager(),
                                         $auth );
 
-                /* @var $logger \Zork\Log\LoggerManager */
-                $logger = $this->getServiceLocator()
-                               ->get( 'Zork\Log\LoggerManager' );
+                $messages = $result->getMessages();
 
                 if ( $result->isValid() )
                 {
@@ -130,8 +155,17 @@ class AuthenticationController extends AbstractActionController
                 }
                 else
                 {
+                    foreach ( $messages as $index => $message )
+                    {
+                        if ( is_int( $index ) && is_string( $message ) )
+                        {
+                            $this->messenger()
+                                 ->add( $message, false, Message::LEVEL_WARN );
+                        }
+                    }
+
                     $this->messenger()
-                         ->add( 'user.form.login.failed',
+                         ->add( $this->getErrorMessageKey( $result->getCode() ),
                                 'user', Message::LEVEL_ERROR );
 
                     if ( $logger->hasLogger( 'application' ) )
@@ -143,9 +177,7 @@ class AuthenticationController extends AbstractActionController
                     }
                 }
 
-                $msgs = $result->getMessages();
-
-                if ( empty( $msgs['returnUri'] ) )
+                if ( empty( $messages['returnUri'] ) )
                 {
                     if ( empty( $data['returnUri'] ) )
                     {
@@ -158,16 +190,7 @@ class AuthenticationController extends AbstractActionController
                 }
                 else
                 {
-                    $returnUri = $msgs['returnUri'];
-                }
-
-                foreach ( $msgs as $index => $message )
-                {
-                    if ( is_int( $index ) && is_string( $message ) )
-                    {
-                        $this->messenger()
-                             ->add( $message, false, Message::LEVEL_WARN );
-                    }
+                    $returnUri = $messages['returnUri'];
                 }
 
                 return $this->redirect()
@@ -213,17 +236,19 @@ class AuthenticationController extends AbstractActionController
                                                 ->toArray() );
         }
 
+        /* @var $logger \Zork\Log\LoggerManager */
+        $logger = $this->getServiceLocator()
+                       ->get( 'Zork\Log\LoggerManager' );
         $result = $this->getServiceLocator()
                        ->get( 'Grid\User\Authentication\Service' )
                        ->login( $data,
                                 $this->getSessionManager(),
                                 $auth );
 
-        $msgs   = $result->getMessages();
-        $with   = empty( $msgs['loginWith'] ) ? 'other' : $msgs['loginWith'];
-        /* @var $logger \Zork\Log\LoggerManager */
-        $logger = $this->getServiceLocator()
-                       ->get( 'Zork\Log\LoggerManager' );
+        $messages   = $result->getMessages();
+        $with       = empty( $messages['loginWith'] )
+                    ? 'other'
+                    : $messages['loginWith'];
 
         if ( $result->isValid() )
         {
@@ -242,8 +267,17 @@ class AuthenticationController extends AbstractActionController
         }
         else
         {
+            foreach ( $messages as $index => $message )
+            {
+                if ( is_int( $index ) && is_string( $message ) )
+                {
+                    $this->messenger()
+                         ->add( $message, false, Message::LEVEL_WARN );
+                }
+            }
+
             $this->messenger()
-                 ->add( 'user.form.login.failed',
+                 ->add( $this->getErrorMessageKey( $result->getCode() ),
                         'user', Message::LEVEL_ERROR );
 
             if ( $logger->hasLogger( 'application' ) )
@@ -256,7 +290,7 @@ class AuthenticationController extends AbstractActionController
             }
         }
 
-        if ( ! empty( $msgs['registered'] ) )
+        if ( ! empty( $messages['registered'] ) )
         {
             $user = $result->getIdentity();
 
@@ -275,7 +309,7 @@ class AuthenticationController extends AbstractActionController
                  ) );
         }
 
-        if ( empty( $msgs['returnUri'] ) )
+        if ( empty( $messages['returnUri'] ) )
         {
             if ( empty( $data['returnUri'] ) )
             {
@@ -288,16 +322,7 @@ class AuthenticationController extends AbstractActionController
         }
         else
         {
-            $returnUri = $msgs['returnUri'];
-        }
-
-        foreach ( $msgs as $index => $message )
-        {
-            if ( is_int( $index ) && is_string( $message ) )
-            {
-                $this->messenger()
-                     ->add( $message, false, Message::LEVEL_WARN );
-            }
+            $returnUri = $messages['returnUri'];
         }
 
         return $this->redirect()
