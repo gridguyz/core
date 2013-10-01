@@ -23,7 +23,7 @@ class Rpc implements CallableInterface,
     /**
      * Construct rpc
      *
-     * @param \User\Model\User\Mapper $userMapper
+     * @param   \Grid\User\Model\User\Mapper $userMapper
      */
     public function __construct( Mapper $userMapper )
     {
@@ -33,27 +33,29 @@ class Rpc implements CallableInterface,
     /**
      * Get user by display name
      *
-     * @param string $email
-     * @param array|object $fields [optional]
-     * @return bool
+     * @param   string          $email
+     * @param   array|object    $fields [optional]
+     * @return  bool
      */
     public function isEmailAvailable( $email, $fields = array() )
     {
         $fields = (object) $fields;
 
-        return ! $this->getMapper()
-                      ->isEmailExists(
-                            $email,
-                            empty( $fields->id ) ? null : $fields->id
-                        ) ?: 'user.action.register.email.taken';
+        return $this->getMapper()
+                    ->isEmailExists(
+                          $email,
+                          empty( $fields->id ) ? null : $fields->id
+                      )
+               ? 'user.action.register.email.taken'
+               : true;
     }
 
     /**
      * Get user by display name
      *
-     * @param string $displayName
-     * @param array|object $fields [optional]
-     * @return bool
+     * @param   string          $displayName
+     * @param   array|object    $fields [optional]
+     * @return  bool
      */
     public function isDisplayNameAvailable( $displayName, $fields = array() )
     {
@@ -62,20 +64,22 @@ class Rpc implements CallableInterface,
 
         if ( 3 > mb_strlen( $displayName ) )
         {
-            return false;
+            return 'user.action.register.displayName.tooShort';
         }
 
-        return ! $this->getMapper()
-                      ->isDisplayNameExists(
-                            $displayName,
-                            empty( $fields->id ) ? null : $fields->id
-                        );
+        return $this->getMapper()
+                    ->isDisplayNameExists(
+                          $displayName,
+                          empty( $fields->id ) ? null : $fields->id
+                      )
+               ? 'user.action.register.displayName.taken'
+               : true;
     }
 
     /**
      * Get user status
      *
-     * @return object
+     * @return  object
      */
     public function status()
     {

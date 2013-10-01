@@ -14,6 +14,8 @@ return array(
     'user.action.confirm.failed' => 'Email confirmation failed',
     'user.action.confirm.success' => 'Email confirmation success',
     'user.action.register.email.taken' => 'This email address is already taken. Please give another email address.',
+    'user.action.register.displayName.taken' => 'This display name is already taken. Please give another name.',
+    'user.action.register.displayName.tooShort' => 'This display name is too short. Please give at least 3 characters.',
     'user.extra.resourceGroup' => 'Extra rights',
     'user.form.create.confirmed' => 'Confirmed',
     'user.form.create.email' => 'Email',
