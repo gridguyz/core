@@ -65,6 +65,7 @@ class DefaultAdapter extends StructureAbstract
      */
     public function authenticate()
     {
+        /* @var $user \Grid\User\Model\User\Structure */
         $user = $this->getModel()
                      ->findByEmail( $this->email );
 
@@ -73,7 +74,8 @@ class DefaultAdapter extends StructureAbstract
             return new Result( Result::FAILURE_IDENTITY_NOT_FOUND, null );
         }
 
-        if ( ! $user->verifyPassword( $this->password, true ) )
+        if ( ! $user->isActive() ||
+             ! $user->verifyPassword( $this->password, true ) )
         {
             return new Result( Result::FAILURE_CREDENTIAL_INVALID, null );
         }
