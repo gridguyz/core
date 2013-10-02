@@ -134,7 +134,7 @@ class Module extends ModuleAbstract
                         array( $this, 'onDispatchError' )
                     );
 
-        if ( $serviceManager->has( 'RedirectToDomain' ) )
+        if ( $serviceManager->has( 'RedirectToDomain' ) && !($event->getRequest() instanceof \Zend\Console\Request))
         {
             $redirect   = $serviceManager->get( 'RedirectToDomain' );
             $url        = 'http://' . $redirect->getDomain();
@@ -240,22 +240,24 @@ class Module extends ModuleAbstract
 
         if ( ! $locale )
         {
-            $header = $event->getRequest()
-                            ->getHeader( 'Accept-Language' );
-
-            if ( $header )
-            {
-                $availables = null;
-                $controller = $event->getController();
-
-                if ( $controller instanceof LocaleSelectorInterface )
+            if (!($event->getRequest() instanceof \Zend\Console\Request)) {
+                $header = $event->getRequest()
+                                ->getHeader( 'Accept-Language' );
+    
+                if ( $header )
                 {
-                    $availables = $controller->getAvailableLocales();
+                    $availables = null;
+                    $controller = $event->getController();
+    
+                    if ( $controller instanceof LocaleSelectorInterface )
+                    {
+                        $availables = $controller->getAvailableLocales();
+                    }
+    
+                    $locale = $sm->get( 'Locale' )
+                                 ->acceptFromHttp( $header->getFieldValue(),
+                                                   $availables );
                 }
-
-                $locale = $sm->get( 'Locale' )
-                             ->acceptFromHttp( $header->getFieldValue(),
-                                               $availables );
             }
         }
 
