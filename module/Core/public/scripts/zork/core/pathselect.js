@@ -57,6 +57,11 @@
 
             return path;
         },
+        pathIsLocal     = function ( path ) {
+            var uploads = uploadsUrl.replace( /^\/+/, "" ).replace( /\/+$/, "" );
+            path        = path.replace( /^\/+/, "" );
+            return path.substr( 0, uploads.length ) == uploads;
+        },
         mimeMain        = function ( mime ) {
             return mime
                 ? String( mime )
@@ -997,18 +1002,38 @@
 
             if ( params.file )
             {
-                start   = dirname( params.file );
-                currEnt = localize( params.file );
+                if ( pathIsLocal( params.file ) )
+                {
+                    start   = dirname( params.file );
+                    currEnt = localize( params.file );
+                }
+                else
+                {
+                    start   = "";
+                    currEnt = params.file;
+                }
             }
         }
 
         if ( start )
         {
-            currDir = localize( start );
-
-            if ( ! selectFile )
+            if ( pathIsLocal( start ) )
             {
-                currEnt = currDir;
+                currDir = localize( start );
+
+                if ( ! selectFile )
+                {
+                    currEnt = currDir;
+                }
+            }
+            else
+            {
+                currDir = "";
+
+                if ( ! selectFile )
+                {
+                    currEnt = start;
+                }
             }
         }
 
