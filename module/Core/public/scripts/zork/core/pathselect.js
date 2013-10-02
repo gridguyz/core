@@ -777,7 +777,7 @@
                     {
                         if ( currDir )
                         {
-                            dialogInput.val( uploadsUrl + currDir );
+                            dialogInput.val( ( pathIsLocal( currDir ) ? uploadsUrl : "" ) + currDir );
                         }
                         else
                         {
@@ -794,7 +794,7 @@
                     {
                         if ( currEnt )
                         {
-                            dialogInput.val( uploadsUrl + currEnt );
+                            dialogInput.val( ( pathIsLocal( currEnt ) ? uploadsUrl : "" ) + currEnt );
 
                             if ( ! nowDir )
                             {
