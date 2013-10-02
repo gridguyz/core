@@ -60,14 +60,10 @@
         pathIsLocal     = function ( path ) {
             path = String( path );
 
-            if ( path == "" || path[0] == "/" )
-            {
-                return true;
-            }
+            var uploads = uploadsUrl.replace( /^\/+/, "" ).replace( /\/+$/, "" ),
+                lpath   = path.replace( /^\/+/, "" );
 
-            var uploads = uploadsUrl.replace( /^\/+/, "" ).replace( /\/+$/, "" );
-            path        = path.replace( /^\/+/, "" );
-            return path.substr( 0, uploads.length ) == uploads;
+            return lpath.substr( 0, uploads.length ) == uploads || path[0] != "/";
         },
         mimeMain        = function ( mime ) {
             return mime
