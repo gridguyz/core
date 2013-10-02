@@ -93,7 +93,15 @@
             spinner.spinner( {
                 "min"   : negativ ? undefined : 0,
                 "step"  : ~ intUnits.indexOf( postfix ) ? 1 : 0.01,
-                "value" : value
+                "value" : value,
+                "stop"  : function ( event ) {
+                    var change = $.Event( "change", {
+                        "originalEvent": event
+                    } );
+
+                    spinner.trigger( change );
+                    element.trigger( change );
+                }
             } );
         }
 
