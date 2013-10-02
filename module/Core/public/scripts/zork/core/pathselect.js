@@ -58,6 +58,13 @@
             return path;
         },
         pathIsLocal     = function ( path ) {
+            path = String( path );
+
+            if ( path == "" || path[0] == "/" )
+            {
+                return true;
+            }
+
             var uploads = uploadsUrl.replace( /^\/+/, "" ).replace( /\/+$/, "" );
             path        = path.replace( /^\/+/, "" );
             return path.substr( 0, uploads.length ) == uploads;
