@@ -32,7 +32,12 @@
             "value" : value || 0,
             "min"   : min,
             "max"   : max,
-            "step"  : step
+            "step"  : step,
+            "stop"  : function ( event ) {
+                element.trigger( $.Event( "change", {
+                    "originalEvent": event
+                } ) );
+            }
         } );
     };
 
