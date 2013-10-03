@@ -78,19 +78,23 @@
                         clearTimeout( changeTimeout );
                     }
 
-                    if ( elements.method.val() == "fit" )
+                    if ( parseInt( elements.width.val(), 10 ) &&
+                         parseInt( elements.height.val(), 10 ) )
                     {
-                        img.css( {
-                            "max-width"  : parseInt( elements.width.val(), 10 ),
-                            "max-height" : parseInt( elements.height.val(), 10 )
-                        } );
-                    }
-                    else
-                    {
-                        img.css( {
-                            "width"  : parseInt( elements.width.val(), 10 ),
-                            "height" : parseInt( elements.height.val(), 10 )
-                        } );
+                        if ( elements.method.val() == "fit" )
+                        {
+                            img.css( {
+                                "max-width"  : parseInt( elements.width.val(), 10 ),
+                                "max-height" : parseInt( elements.height.val(), 10 )
+                            } );
+                        }
+                        else
+                        {
+                            img.css( {
+                                "width"  : parseInt( elements.width.val(), 10 ),
+                                "height" : parseInt( elements.height.val(), 10 )
+                            } );
+                        }
                     }
 
                     changeTimeout = setTimeout( changeImage, changeTtl );
