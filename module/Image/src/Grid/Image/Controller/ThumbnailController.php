@@ -465,7 +465,8 @@ class ThumbnailController extends AbstractActionController
              ->resize(
                  $this->width,
                  $this->height,
-                 $this->method
+                 $this->method,
+                 $this->bgColor
              );
 
         foreach ( $this->filters as $filter )
