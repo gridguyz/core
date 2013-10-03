@@ -22,7 +22,7 @@
         <img alt="<?= $alt ?>"
              title="<?= $alt ?>"
              itemprop="thumbnail thumbnailUrl image"
-             src="<?= $this->paragraph->width && $this->paragraph->height
+             src="<?= $this->paragraph->width || $this->paragraph->height
                     ? $this->thumbnail( $this->paragraph->url, array(
                         'method'    => $this->paragraph->method,
                         'width'     => $this->paragraph->width,
