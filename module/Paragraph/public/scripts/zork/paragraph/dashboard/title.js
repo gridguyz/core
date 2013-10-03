@@ -24,18 +24,16 @@
 
         var titleTag    = $( "head title" ),
             title       = form.find( ":input[name='paragraph-title[rootTitle]']" ),
-            cacheTag    = titleTag.text().replace( /^\s+/, "" ).replace( /\s+$/, "" ) || "",
-            cache       = ( title.val() || "" ),
-            cacheTrim   = cache.replace( /^\s+/, "" ).replace( /\s+$/, "" ),
-            index       = cacheTrim ? cacheTag.indexOf( cacheTrim ) : -1,
-            before      = ~index ? cacheTag.substr( 0, index ) : cacheTag + " ",
-            after       = ~index ? cacheTag.substr( index + cacheTrim.length ) : "",
+            before      = {
+                "title": titleTag.text().replace( /^\s+/, "" ).replace( /\s+$/, "" ) || "",
+            },
+            base        = before.title.substr( 0, before.title.length - ( title.val() || "" ).length ),
             titles      = $( ".paragraph.paragraph-title" );
 
         title.on( "keyup change", function () {
             var val = title.val();
-            titleTag.text( before + val + after );
-            titles.find( "h1" ).text( ( val || before ) + after );
+            titleTag.text( base + val );
+            titles.find( "h1" ).text( val || base );
         } );
 
         titles.each( function () {
@@ -45,7 +43,7 @@
 
         return {
             "update": function () {
-                cacheTag = before + ( cache = title.val() ) + after;
+                before.title = base + title.val();
 
                 titles.each( function () {
                     var self = $( this );
@@ -53,7 +51,7 @@
                 } );
             },
             "restore": function () {
-                titleTag.text( cacheTag );
+                titleTag.text( before.title );
 
                 titles.each( function () {
                     var self = $( this );
