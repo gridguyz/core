@@ -31,7 +31,7 @@
                 "width"     : form.find( ":input[name='paragraph-image[width]']" ),
                 "height"    : form.find( ":input[name='paragraph-image[height]']" ),
                 "method"    : form.find( ":input[name='paragraph-image[method]']" ),
-                "bgColor"   : form.find( ":input[name='paragraph-image[bgColor]']" ),
+                "bgColor"   : form.find( ":input[name='paragraph-image[bgColor]']:not([type='hidden'])" ),
                 "caption"   : form.find( ":input[name='paragraph-image[caption]']" ),
                 "alternate" : form.find( ":input[name='paragraph-image[alternate]']" ),
                 "linkTo"    : form.find( ":input[name='paragraph-image[linkTo]']" ),
