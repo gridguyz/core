@@ -2,6 +2,7 @@
 
 namespace Grid\Paragraph\Model\Paragraph\Structure;
 
+use ArrayIterator;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 
 /**
