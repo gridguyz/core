@@ -49,7 +49,7 @@
             changeTtl = 2000,
             changeTimeout = null,
             reloadImage = function () {
-                var src = parseInt( elements.width.val(), 10 ) &&
+                var src = parseInt( elements.width.val(), 10 ) ||
                           parseInt( elements.height.val(), 10 )
                             ? js.core.thumbnail( {
                                   "url"     : elements.url.val(),
@@ -73,28 +73,27 @@
             changeImage = function ( evt ) {
                 if ( evt )
                 {
+                    var prefix = elements.method.val() == "fit" ? "max-" : "";
+
                     if ( changeTimeout )
                     {
                         clearTimeout( changeTimeout );
                     }
 
-                    if ( parseInt( elements.width.val(), 10 ) &&
-                         parseInt( elements.height.val(), 10 ) )
+                    if ( parseInt( elements.width.val(), 10 ) )
                     {
-                        if ( elements.method.val() == "fit" )
-                        {
-                            img.css( {
-                                "max-width"  : parseInt( elements.width.val(), 10 ),
-                                "max-height" : parseInt( elements.height.val(), 10 )
-                            } );
-                        }
-                        else
-                        {
-                            img.css( {
-                                "width"  : parseInt( elements.width.val(), 10 ),
-                                "height" : parseInt( elements.height.val(), 10 )
-                            } );
-                        }
+                        img.css(
+                            prefix + "width",
+                            parseInt( elements.width.val(), 10 )
+                        );
+                    }
+
+                    if ( parseInt( elements.height.val(), 10 ) )
+                    {
+                        img.css(
+                            prefix + "height",
+                            parseInt( elements.height.val(), 10 )
+                        );
                     }
 
                     changeTimeout = setTimeout( changeImage, changeTtl );
