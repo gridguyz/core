@@ -335,6 +335,34 @@ class ThumbnailController extends AbstractActionController
         $inputPath      = Thumbnail::THUMBNAIL_BASEPATH
                         . '/' . $this->filePath();
 
+        if ( 0 == $this->width &&
+             self::MIN_HEIGHT <= $this->height &&
+             is_file( $inputPath ) &&
+             filesize( $inputPath ) > 0 )
+        {
+            $inputSizes = getimagesize( $inputPath );
+
+            if ( ! empty( $inputSizes[0] ) && ! empty( $inputSizes[1] ) )
+            {
+                $this->width = (int) ( $inputSizes[0] * $this->height / $inputSizes[1] );
+                $redir = true;
+            }
+        }
+
+        if ( 0 == $this->height &&
+             self::MIN_WIDTH <= $this->width &&
+             is_file( $inputPath ) &&
+             filesize( $inputPath ) > 0 )
+        {
+            $inputSizes = getimagesize( $inputPath );
+
+            if ( ! empty( $inputSizes[0] ) && ! empty( $inputSizes[1] ) )
+            {
+                $this->height = (int) ( $inputSizes[1] * $this->width / $inputSizes[0] );
+                $redir = true;
+            }
+        }
+
         if ( self::MIN_WIDTH > $this->width )
         {
             $this->width = self::DEFAULT_WIDTH;

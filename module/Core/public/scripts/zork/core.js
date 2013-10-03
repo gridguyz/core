@@ -2689,11 +2689,24 @@
     global.Zork.Core.prototype.thumbnail = function ( url, params )
     {
         var p = $.extend( {}, js.core.thumbnail.defaults ),
-            server = global.location.protocol + "//" + global.location.host;
+            server = global.location.protocol + "//" + global.location.host,
+            extp = function ( add )
+            {
+                add.width  = parseInt( add.width  || 0, 10 );
+                add.height = parseInt( add.height || 0, 10 );
+
+                if ( ! add.width && ! add.height )
+                {
+                    add.width  = p.width;
+                    add.height = p.height;
+                }
+
+                p = $.extend( p, add );
+            };
 
         if ( Object.isObject( url ) )
         {
-            p = $.extend( p, url );
+            extp( url );
         }
         else
         {
@@ -2701,7 +2714,7 @@
 
             if ( Object.isObject( params ) )
             {
-                p = $.extend( p, params );
+                extp( params );
             }
         }
 
@@ -2753,21 +2766,21 @@
         }
 
         $.each( js.core.thumbnail.defaults, function ( key, value ) {
-            p[key] = p[key] || value;
+            if ( key !== "width" && key !== "height" )
+            {
+                p[key] = p[key] || value;
+            }
         } );
 
-        return server + "/thumbnails/" +
-            p.url.replace( /\/[^\/]*\/?$/, "" ).replace( /^\//, "" ) +
-            "/" + p.method +
-            "/" + p.width +
-            "x" + p.height +
-            "/" + p.bgcolor +
-            "/" + ( p.filters.length < 1
-                      ? "none"
-                      : p.filters.join( "-" )
-                  ) +
-            "/" + parseInt( p.mtime || 1, 10 ) +
-            "/" + p.url.replace( /^.*\//g, "" );
+        return server + "/thumbnails/"
+            + p.url.replace( /\/[^\/]*\/?$/, "" ).replace( /^\//, "" )
+            + "/" + p.method
+            + "/" + p.width
+            + "x" + p.height
+            + "/" + p.bgcolor
+            + "/" + ( p.filters.length < 1 ? "none" : p.filters.join( "-" ) )
+            + "/" + parseInt( p.mtime || 1, 10 )
+            + "/" + p.url.replace( /^.*\//g, "" );
     };
 
     /**

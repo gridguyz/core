@@ -102,7 +102,7 @@ return array(
                                     'name'      => 'url',
                                     'options'   => array(
                                         'label'     => 'paragraph.form.image.url',
-                                        'required'  => true,
+                                        'required'  => false,
                                     ),
                                 ),
                             ),
@@ -133,12 +133,9 @@ return array(
                                     'name'      => 'width',
                                     'options'   => array(
                                         'label'     => 'paragraph.form.image.width',
-                                        'required'  => true,
+                                        'required'  => false,
                                         'min'       => 25,
                                         'max'       => 800,
-                                    ),
-                                    'attributes'    => array(
-                                        'value'     => 100,
                                     ),
                                 ),
                             ),
@@ -148,12 +145,9 @@ return array(
                                     'name'      => 'height',
                                     'options'   => array(
                                         'label'     => 'paragraph.form.image.height',
-                                        'required'  => true,
+                                        'required'  => false,
                                         'min'       => 25,
                                         'max'       => 600,
-                                    ),
-                                    'attributes'    => array(
-                                        'value'     => 100,
                                     ),
                                 ),
                             ),
@@ -163,7 +157,7 @@ return array(
                                     'name'      => 'method',
                                     'options'   => array(
                                         'label'         => 'paragraph.form.image.method',
-                                        'required'      => true,
+                                        'required'      => false,
                                         'text_domain'   => 'image',
                                         'options'       => array(
                                             'fit'       => 'image.method.fit',

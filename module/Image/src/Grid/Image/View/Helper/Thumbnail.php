@@ -130,14 +130,48 @@ class Thumbnail extends AbstractHelper
             $params['method'] = self::DEFAULT_METHOD;
         }
 
-        if ( empty( $params['width'] ) || $params['width'] < self::MIN_WIDTH )
+        if ( ! empty( $params['width'] ) && $params['width'] < self::MIN_WIDTH )
         {
             $params['width'] = self::DEFAULT_WIDTH;
         }
 
-        if ( empty( $params['height'] ) || $params['height'] < self::MIN_HEIGHT )
+        if ( ! empty( $params['height'] ) && $params['height'] < self::MIN_HEIGHT )
         {
             $params['height'] = self::DEFAULT_HEIGHT;
+        }
+
+        if ( empty( $params['width'] ) && empty( $params['height'] ) )
+        {
+            $params['width']    = self::DEFAULT_WIDTH;
+            $params['height']   = self::DEFAULT_HEIGHT;
+        }
+
+        if ( empty( $params['width'] ) )
+        {
+            $sizes = getimagesize( $filepath );
+
+            if ( empty( $sizes[0] ) || empty( $sizes[1] ) )
+            {
+                $params['width'] = self::DEFAULT_WIDTH;
+            }
+            else
+            {
+                $params['width'] = (int) ( $sizes[0] * $params['height'] / $sizes[1] );
+            }
+        }
+
+        if ( empty( $params['height'] ) )
+        {
+            $sizes = getimagesize( $filepath );
+
+            if ( empty( $sizes[0] ) || empty( $sizes[1] ) )
+            {
+                $params['height'] = self::DEFAULT_HEIGHT;
+            }
+            else
+            {
+                $params['height'] = (int) ( $sizes[1] * $params['width'] / $sizes[0] );
+            }
         }
 
         if ( empty( $params['bgColor'] )  )

@@ -96,7 +96,7 @@
             : element.find('span.lightbox-viewer-button');
 
         var bg = $('body').css('backgroundColor');
-        element.data('jsColor',bg=='transparent'||/^rgba\(.*, ?0\)$/.test(bg)?'#fff':bg);
+        element.data('jsColor', bg=='transparent'||/^rgba\(.*, ?0\)$/.test(bg)?'#fff':bg);
 
         activeItem.click( function( event ) {
             if(loaded)
@@ -106,21 +106,18 @@
             event.stopPropagation();
             event.preventDefault();
             return false;
-        });
+        } );
 
-        js.require('js.ui.lightbox', function()
-        {
+        js.require('js.ui.lightbox', function() {
             loaded = true;
-        })
+        } );
         // Creating dom elements
     };
 
-    global.Zork.Paragraph.prototype.removeImageLightboxEvent = function ( element )
+    global.Zork.Paragraph.prototype.image.removeLightboxEvent = function ( element )
     {
         element = $( element );
-
         element.off('click');
-
         element.find('span.lightbox-viewer-button').remove();
     };
 

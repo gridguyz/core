@@ -22,12 +22,14 @@
         <img alt="<?= $alt ?>"
              title="<?= $alt ?>"
              itemprop="thumbnail thumbnailUrl image"
-             src="<?= $this->thumbnail( $this->paragraph->url, array(
+             src="<?= $this->paragraph->width && $this->paragraph->height
+                    ? $this->thumbnail( $this->paragraph->url, array(
                         'method'    => $this->paragraph->method,
                         'width'     => $this->paragraph->width,
                         'height'    => $this->paragraph->height,
                         'bgColor'   => ltrim( $this->paragraph->bgColor, '#' ),
-                    ) ) ?>" />
+                    ) )
+                    : $this->paragraph->url ?>" />
     </a>
     <meta itemprop="contentUrl" content="<?= $url ?>" />
     <figcaption itemprop="caption description"<?php

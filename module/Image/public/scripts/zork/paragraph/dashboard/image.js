@@ -13,6 +13,8 @@
         return;
     }
 
+    js.require( "js.paragraph.image" );
+
     /**
      * @class Image dashborad
      * @memberOf global.Zork.Paragraph.prototype.dashboard
@@ -23,6 +25,7 @@
         element = $( element );
         var img = element.find( "img:first" ),
             link = element.find( "a.image-paragraph-link:first" ),
+            caption = element.find( "figcaption:first" ),
             elements = {
                 "url"       : form.find( ":input[name='paragraph-image[url]']" ),
                 "width"     : form.find( ":input[name='paragraph-image[width]']" ),
@@ -39,14 +42,24 @@
                 "url"       : img.attr( "src" ),
                 "caption"   : element.find( "figcaption" ).html(),
                 "alternate" : img.attr( "alt" ),
-                "linkTo"    : form.find( ":input[name='paragraph-image[linkTo]']" ).val(),
-                "linkTarget": form.find( ":input[name='paragraph-image[linkTo]']" ).val(),
-                "lightBox"  : form.find( ":input[name='paragraph-image[lightBox]']" )[1].checked
+                "linkTo"    : elements.linkTo.val(),
+                "linkTarget": elements.linkTarget.val(),
+                "lightBox"  : elements.lightBox.attr( "checked" )
             },
             changeTtl = 2000,
             changeTimeout = null,
-
             reloadImage = function () {
+                var src = parseInt( elements.width.val(), 10 ) &&
+                          parseInt( elements.height.val(), 10 )
+                            ? js.core.thumbnail( {
+                                  "url"     : elements.url.val(),
+                                  "width"   : elements.width.val(),
+                                  "height"  : elements.height.val(),
+                                  "method"  : elements.method.val(),
+                                  "bgcolor" : elements.bgColor.val()
+                              } )
+                            : elements.url.val();
+
                 img.one( "load", function () {
                         $( this ).css( {
                             "width"          : "",
@@ -55,16 +68,7 @@
                             "max-height"     : ""
                         } );
                     } )
-                   .attr( {
-                        "src" : js.core.thumbnail(
-                            elements.url.val(), {
-                                "width"     : elements.width.val(),
-                                "height"    : elements.height.val(),
-                                "method"    : elements.method.val(),
-                                "bgcolor"   : elements.bgColor.val()
-                            }
-                        )
-                    } );
+                   .attr( "src", src );
             },
             changeImage = function ( evt ) {
                 if ( evt )
@@ -105,19 +109,10 @@
         elements.bgColor.on( "keyup change", changeImage );
 
         elements.caption.on( "keyup change", function () {
-            var val = $( this ).val(),
-                cap = element.find( "figcaption" );
+            var val = $( this ).val();
 
-            cap.html( val );
-
-            if ( val )
-            {
-                cap.removeClass( "empty" );
-            }
-            else
-            {
-                cap.addClass( "empty" );
-            }
+            caption.html( val )
+                   .toggleClass( "empty", !! val );
         } );
 
         elements.alternate.on( "keyup change", function () {
@@ -132,66 +127,35 @@
         return {
             "update": function () {
                 before = {
-                    "url": img.attr( "src" ),
-                    "caption": elements.caption.val(),
-                    "alternate": elements.alternate.val(),
-                    "linkTo"    : form.find( ":input[name='paragraph-image[linkTo]']" ).val(),
-                    "linkTarget": form.find( ":input[name='paragraph-image[linkTarget]']" ).val(),
-                    "lightBox"  : form.find( ":input[name='paragraph-image[lightBox]']" )[1].checked
+                    "url"       : img.attr( "src" ),
+                    "caption"   : elements.caption.val(),
+                    "alternate" : elements.alternate.val(),
+                    "linkTo"    : elements.linkTo.val(),
+                    "linkTarget": elements.linkTarget.val(),
+                    "lightBox"  : elements.lightBox.attr( "checked" )
                 };
 
-                if ( before.linkTo )
-                {
-                    link.attr( "href", before.linkTo );
+                link.attr( {
+                    "href": before.linkTo ? before.linkTo : null,
+                    "target": before.linkTo && before.linkTarget ? before.linkTarget : null
+                } );
 
-                    if ( before.linkTarget )
-                    {
-                        link.attr( "target", before.linkTarget );
-                    }
-                    else
-                    {
-                        link.attr( 'target', null );
-                    }
-                }
-                else
-                {
-                    link.attr( {
-                        "href": null,
-                        "target": null
-                    } );
-                }
-
-                js.paragraph.removeImageLightboxEvent( link );
-
-                if ( before["lightBox"] )
+                if ( before.lightBox )
                 {
                     js.paragraph.image( link );
                 }
-            },
-            "restore": function () {
-                element.find( "figcaption" )
-                       .html( before.caption );
-
-                if ( before.linkTo )
-                {
-                    link.attr( "href", before.linkTo );
-
-                    if ( before.linkTarget )
-                    {
-                        link.attr( "target", before.linkTarget );
-                    }
-                    else
-                    {
-                        link.attr( "target", null );
-                    }
-                }
                 else
                 {
-                    link.attr( {
-                        "href": null,
-                        "target": null
-                    } );
+                    js.paragraph.image.removeLightboxEvent( link );
                 }
+            },
+            "restore": function () {
+                caption.html( before.caption );
+
+                link.attr( {
+                    "href": before.linkTo ? before.linkTo : null,
+                    "target": before.linkTo && before.linkTarget ? before.linkTarget : null
+                } );
 
                 img.attr( {
                     "src": before.url,
@@ -199,7 +163,7 @@
                     "title": before.alternate
                 } );
             }
-        }
+        };
     };
 
 } ( window, jQuery, zork ) );
