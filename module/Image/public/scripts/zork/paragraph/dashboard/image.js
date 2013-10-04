@@ -128,10 +128,6 @@
             } );
         } );
 
-        elements.linkTo.on( "keyup change", function () {
-            elements.lightBox.prop( "disabled", !! $( this ).val() );
-        } );
-
         return {
             "update": function () {
                 before = {
@@ -148,7 +144,7 @@
                     "target": before.linkTo && before.linkTarget ? before.linkTarget : null
                 } );
 
-                if ( ! before.linkTo && before.lightBox )
+                if ( before.lightBox )
                 {
                     js.paragraph.image( link );
                 }
@@ -171,7 +167,7 @@
                     "title": before.alternate
                 } );
 
-                if ( ! before.linkTo && before.lightBox )
+                if ( before.lightBox )
                 {
                     js.paragraph.image( link );
                 }

@@ -16,109 +16,97 @@
 
     /**
      * Create dom elements of lightbox window and return it's content as a jQuery object
-     *
      */
-    var createButton = function (className, width, height)
-        {
-            return $('<span></span>')
-                .attr('class',className + '-button')
+    var createButton = function ( className, width, height ) {
+        return $( "<span />" ).addClass( className + "-button" )
                 .css( {
-                    display: 'block',
-                    position: 'absolute',
-                    cursor: 'pointer',
-                    background: 'url("/images/scripts/lightbox/' + className + '-passive.png")'
+                    "display": "block",
+                    "cursor": "pointer",
+                    "position": "absolute",
+                    "background": 'url("/images/scripts/lightbox/' + className + '-passive.png")'
                 } )
-                .width(width)
-                .height(height)
-                .hover(
-                    function()
-                    {
-                        $(this).children().stop().animate({opacity: 1.0},500);
-                    },
-                    function()
-                    {
-                        $(this).children().stop().animate({opacity: 0.0},500);
-                    }
-                )
+                .width( width )
+                .height( height )
+                .hover( function() {
+                    $( this ).children()
+                             .stop()
+                             .animate( { "opacity": 1.0 }, 500 );
+                }, function() {
+                    $( this ).children()
+                             .stop()
+                             .animate( { "opacity": 0.0 }, 500 );
+                } )
                 .append(
-                    $('<span></span>')
-                        .css( {
-                            display: 'block',
-                            position: 'absolute',
-                            width: '100%',
-                            height: '100%',
-                            background: 'url("/images/scripts/lightbox/' + className + '-active.png")',
-                            opacity: 0.0
-                        } )
+                    $( "<span />" ).css( {
+                        "opacity": 0.0,
+                        "width": "100%",
+                        "height": "100%",
+                        "display": "block",
+                        "position": "absolute",
+                        "background": 'url("/images/scripts/lightbox/' + className + '-active.png")'
+                    } )
                 );
-
-        },
-
-        createLightboxContentOfImage = function ( )
-        {
-            return createButton( "lightbox-viewer", 24, 24 )
-                               .css( {
-                                   right: "5px",
-                                   bottom: "5px",
-                                   opacity: 0.0
-                               } );
-        };
+    },
+    createLightboxContentOfImage = function ( ) {
+        return createButton( "lightbox-viewer", 24, 24 ).css( {
+            "opacity": 0.0,
+            "right": "5px",
+            "bottom": "5px"
+        } );
+    };
 
     global.Zork.Paragraph.prototype.image = function ( element )
     {
         var loaded = false;
 
-        element = $( element );
+        element = $( element ).css( {
+            "cursor": "pointer",
+            "position":"relative"
+        } );
 
-        element
-            .css( {
-                position:'relative',
-                cursor: 'pointer'
-            } )
-            .append(
-                createLightboxContentOfImage()
-            )
-            // Create hover animation
-            .hover(
-                function()
-                {
-                    $(this).find('span.lightbox-viewer-button').stop().animate({opacity: 1.0},500);
-                },
-                function()
-                {
-                    $(this).find('span.lightbox-viewer-button').stop().animate({opacity: 0.0},500);
-                }
-            );
+        if ( ! element.find( ".lightbox-viewer-button" ).length )
+        {
+            element.append( createLightboxContentOfImage() )
+                   .hover( function() {
+                        $( this ).find( ".lightbox-viewer-button" )
+                                 .stop()
+                                 .animate( { "opacity": 1.0 }, 500 );
+                    }, function() {
+                        $( this ).find( ".lightbox-viewer-button" )
+                                 .stop()
+                                 .animate( { "opacity": 0.0 }, 500 );
+                    } );
+        }
 
         // click event
-        var activeItem = typeof(element.attr('href')) == 'undefined' || element.attr('href') == ''
-            ? element
-            : element.find('span.lightbox-viewer-button');
+        var activeItem      = element.attr( "href" )
+                            ? element
+                            : element.find( ".lightbox-viewer-button" ),
+            bgColor         = $( "body" ).css( "backgroundColor" ),
+            bgTransparent   = /^(transparent|(rgba|hsla)\(.*, ?0\))$/.test( bgColor );
 
-        var bg = $('body').css('backgroundColor');
-        element.data('jsColor', bg=='transparent'||/^rgba\(.*, ?0\)$/.test(bg)?'#fff':bg);
+        element.data( "jsColor", bgTransparent ? "#ffffff" : bgColor );
 
-        activeItem.click( function( event ) {
-            if(loaded)
-            {
+        activeItem.on( "click.lighbox", function ( event ) {
+            js.require( "js.ui.lightbox", function () {
                 js.ui.lightboxOpen( element );
-            }
+            } );
+
             event.stopPropagation();
             event.preventDefault();
             return false;
         } );
 
-        js.require('js.ui.lightbox', function() {
-            loaded = true;
-        } );
         // Creating dom elements
     };
 
     global.Zork.Paragraph.prototype.image.removeLightboxEvent = function ( element )
     {
         element = $( element );
-        element.off('click');
-        element.find('span.lightbox-viewer-button').remove();
+
+        element.off( "click.lighbox" )
+               .find( ".lightbox-viewer-button" )
+               .remove();
     };
 
     global.Zork.Paragraph.prototype.image.isElementConstructor = true;
