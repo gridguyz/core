@@ -163,15 +163,6 @@
                     "href": before.linkTo ? before.linkTo : null,
                     "target": before.linkTo && before.linkTarget ? before.linkTarget : null
                 } );
-
-                if ( before.lightBox )
-                {
-                    js.paragraph.image( link );
-                }
-                else
-                {
-                    js.paragraph.image.removeLightboxEvent( link );
-                }
             },
             "restore": function () {
                 caption.html( before.caption );
@@ -186,15 +177,6 @@
                     "alt": before.alternate,
                     "title": before.alternate
                 } );
-
-                if ( before.lightBox )
-                {
-                    js.paragraph.image( link );
-                }
-                else
-                {
-                    js.paragraph.image.removeLightboxEvent( link );
-                }
             }
         };
     };
