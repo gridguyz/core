@@ -181,7 +181,7 @@ return array(
     'paragraph.form.image.linkTarget' => 'Link target',
     'paragraph.form.image.linkTo' => 'Link to',
     'paragraph.form.image.method' => 'Method',
-    'paragraph.form.image.url' => 'Url',
+    'paragraph.form.image.url' => 'Image file',
     'paragraph.form.image.width' => 'Width',
     'paragraph.form.infobar.skin' => 'Skin',
     'paragraph.form.infobar.skin.left' => 'Left aligned',
