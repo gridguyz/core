@@ -17,6 +17,6 @@ return array(
     'tag.link.resourceGroup' => 'Tagged contents',
     'tag.link.resource.%s' => 'Tag %s',
     'tag.link.privilege.%s.edit' => 'Edit contents tagged with %s',
-    'tag.paragraph.tagCloud.empty' => 'There are no tags yet (in this language).',
+    'tag.paragraph.tagCloud.empty' => 'There are no tags in use yet (in this language).',
     'tag.paragraph.tags.empty' => 'This content has not got any tags yet (in this language).',
 );
