@@ -56,7 +56,8 @@
                                   "width"   : elements.width.val(),
                                   "height"  : elements.height.val(),
                                   "method"  : elements.method.val(),
-                                  "bgcolor" : elements.bgColor.val()
+                                  "bgcolor" : elements.bgColor.prop( "disabled" )
+                                            ? null : elements.bgColor.val()
                               } )
                             : elements.url.val();
 
