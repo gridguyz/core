@@ -521,7 +521,8 @@
         container = $( container );
 
         var id      = container.data( "paragraphId" ),
-            child   = container.data( "paragraphOnlyParentOf" );
+            child   = container.data( "paragraphOnlyParentOf" ),
+            url     = $( "meta[name='zork:paragraph:update_url']" ).attr( "content" ) || "";
 
         if ( id && child )
         {
@@ -569,6 +570,7 @@
 
                     $.ajax( {
                      // "cache": false,
+                        "url": url,
                         "dataType": "text",
                         "error": function ( xhr, status ) {
                             layer();

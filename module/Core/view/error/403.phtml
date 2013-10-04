@@ -1,1 +1,10 @@
-<?= $this->metaContent( 'error.403' ) ?>
+<?php
+
+echo $this->metaContent( 'error.403' );
+
+$this->headMeta()
+     ->appendName(
+            'zork:paragraph:update_url',
+            '/app/' . $this->locale() . '/paragraph/render/' .
+                $this->appService( 'RenderedContent' )->id
+        );
