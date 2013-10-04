@@ -867,15 +867,18 @@
 
         save.click( function () {
             saveAction( true );
+            $( this ).blur();
         } );
 
         savenexit.click( function () {
             saveAction( false );
             exitAction( false );
+            $( this ).blur();
         } );
 
         cancel.click( function () {
             exitAction( true );
+            $( this ).blur();
         } );
 
         element.resizable( {
