@@ -116,7 +116,7 @@
                         .andSelf()
                         .removeClass( "outline" );
 
-                    header.stop( true ).hide( "fast", function () {
+                    header.stop().hide( "fast", function () {
                         header.detach();
                     } );
                 }
@@ -145,9 +145,14 @@
                         .andSelf()
                         .removeClass( "outline" );
 
-                    header.stop( true )
+                    header.stop()
                           .appendTo( para )
-                          .show( "fast" );
+                          .show( "fast", function () {
+                              header.css( {
+                                  "width": "",
+                                  "height": ""
+                              } );
+                          } );
 
                     para.addClass( "outline" );
 
@@ -427,7 +432,7 @@
 
         if ( header && header.length )
         {
-            header.stop( true )
+            header.stop()
                   .hide( "fast" );
         }
 
