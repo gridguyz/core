@@ -128,6 +128,28 @@
             } );
         } );
 
+        $( [ elements.linkTo[0], elements.linkTarget[0] ] )
+            .on( "keyup change", function () {
+                var to      = elements.linkTo.val(),
+                    target  = elements.linkTarget.val();
+
+                link.attr( {
+                    "href": to ? to : null,
+                    "target": to && target ? target : null
+                } );
+            } );
+
+        elements.lightBox.on( "click change", function () {
+            if ( $( this ).prop( "checked" ) )
+            {
+                js.paragraph.image( link );
+            }
+            else
+            {
+                js.paragraph.image.removeLightboxEvent( link );
+            }
+        } );
+
         return {
             "update": function () {
                 before = {
@@ -136,7 +158,7 @@
                     "alternate" : elements.alternate.val(),
                     "linkTo"    : elements.linkTo.val(),
                     "linkTarget": elements.linkTarget.val(),
-                    "lightBox"  : elements.lightBox.attr( "checked" )
+                    "lightBox"  : elements.lightBox.prop( "checked" )
                 };
 
                 link.attr( {
