@@ -2762,7 +2762,12 @@
 
         if ( "bgcolor" in p )
         {
-            p.bgcolor = String( p.bgcolor ).replace( /^#/, "" );
+            p.bgcolor = String( p.bgcolor || "" ).replace( /^#/, "" );
+
+            if ( "" === p.bgcolor )
+            {
+                p.bgcolor = js.core.thumbnail.defaults.bgcolor;
+            }
         }
 
         $.each( js.core.thumbnail.defaults, function ( key, value ) {

@@ -111,9 +111,9 @@ return array(
                                     'type'      => 'Zork\Form\Element\Html',
                                     'name'      => 'caption',
                                     'options'   => array(
-                                        'label'     => 'paragraph.form.image.caption',
-                                        'required'  => false,
-                                        'html_buttonset' => 'simple',
+                                        'label'             => 'paragraph.form.image.caption',
+                                        'required'          => false,
+                                        'html_buttonset'    => 'simple',
                                     ),
                                 ),
                             ),
@@ -134,6 +134,8 @@ return array(
                                     'options'   => array(
                                         'label'     => 'paragraph.form.image.width',
                                         'required'  => false,
+                                    ),
+                                    'attributes'    => array(
                                         'min'       => 25,
                                         'max'       => 800,
                                     ),
@@ -146,6 +148,8 @@ return array(
                                     'options'   => array(
                                         'label'     => 'paragraph.form.image.height',
                                         'required'  => false,
+                                    ),
+                                    'attributes'    => array(
                                         'min'       => 25,
                                         'max'       => 600,
                                     ),
