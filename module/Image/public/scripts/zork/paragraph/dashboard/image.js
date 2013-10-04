@@ -140,13 +140,11 @@
             } );
 
         elements.lightBox.on( "click change", function () {
+            js.paragraph.image.removeLightboxEvent( link );
+
             if ( $( this ).prop( "checked" ) )
             {
                 js.paragraph.image( link );
-            }
-            else
-            {
-                js.paragraph.image.removeLightboxEvent( link );
             }
         } );
 
