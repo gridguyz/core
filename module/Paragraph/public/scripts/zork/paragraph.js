@@ -116,8 +116,7 @@
                         .andSelf()
                         .removeClass( "outline" );
 
-                    header.hide( "fast", function ()
-                    {
+                    header.stop( true ).hide( "fast", function () {
                         header.detach();
                     } );
                 }
@@ -146,7 +145,8 @@
                         .andSelf()
                         .removeClass( "outline" );
 
-                    header.appendTo( para )
+                    header.stop( true )
+                          .appendTo( para )
                           .show( "fast" );
 
                     para.addClass( "outline" );
@@ -427,7 +427,8 @@
 
         if ( header && header.length )
         {
-            header.hide( "fast" );
+            header.stop( true )
+                  .hide( "fast" );
         }
 
         if ( root.data( "paragraphEditMode" ) === "on" )
