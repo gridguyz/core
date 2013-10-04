@@ -36,7 +36,7 @@
                 "alternate" : form.find( ":input[name='paragraph-image[alternate]']" ),
                 "linkTo"    : form.find( ":input[name='paragraph-image[linkTo]']" ),
                 "linkTarget": form.find( ":input[name='paragraph-image[linkTarget]']" ),
-                "lightBox"  : form.find( ":input[name='paragraph-image[lightBox]']" )
+                "lightBox"  : form.find( ":input[name='paragraph-image[lightBox]']:not([type='hidden'])" )
             },
             before = {
                 "url"       : img.attr( "src" ),
@@ -128,6 +128,10 @@
             } );
         } );
 
+        elements.linkTo.on( "keyup change", function () {
+            elements.lightBox.prop( "disabled", !! $( this ).val() );
+        } );
+
         return {
             "update": function () {
                 before = {
@@ -144,7 +148,7 @@
                     "target": before.linkTo && before.linkTarget ? before.linkTarget : null
                 } );
 
-                if ( before.lightBox )
+                if ( ! before.linkTo && before.lightBox )
                 {
                     js.paragraph.image( link );
                 }
@@ -166,6 +170,15 @@
                     "alt": before.alternate,
                     "title": before.alternate
                 } );
+
+                if ( ! before.linkTo && before.lightBox )
+                {
+                    js.paragraph.image( link );
+                }
+                else
+                {
+                    js.paragraph.image.removeLightboxEvent( link );
+                }
             }
         };
     };
