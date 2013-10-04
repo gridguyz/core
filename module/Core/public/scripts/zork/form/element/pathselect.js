@@ -47,6 +47,23 @@
                 return false;
             };
 
+        if ( ! element.attr( "required" ) )
+        {
+            element.addClass( "ui-controls-after" )
+                   .after(
+                       $( '<input class="ui-fileselect-clear" type="button" value="&empty;" />' )
+                           .click( function () {
+                               element.val( "" )
+                                      .trigger( "change" );
+                           } )
+                           .each( function () {
+                               var $this = $( this );
+                               width += $this.outerWidth();
+                               width += $this.css( "margin-left" );
+                           } )
+                   );
+        }
+
         if ( click )
         {
             element.click( selector )
@@ -62,23 +79,6 @@
                        $( '<input class="ui-fileselect-trigger" type="button" />' )
                            .val( buttext )
                            .click( selector )
-                           .each( function () {
-                               var $this = $( this );
-                               width += $this.outerWidth();
-                               width += $this.css( "margin-left" );
-                           } )
-                   );
-        }
-
-        if ( ! element.attr( "required" ) )
-        {
-            element.addClass( "ui-controls-after" )
-                   .after(
-                       $( '<input class="ui-fileselect-clear" type="button" value="&empty;" />' )
-                           .click( function () {
-                               element.val( "" )
-                                      .trigger( "change" );
-                           } )
                            .each( function () {
                                var $this = $( this );
                                width += $this.outerWidth();
