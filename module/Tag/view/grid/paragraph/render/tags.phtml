@@ -1,8 +1,19 @@
+<?php $tags = (array) $this->paragraph->renderedLocaleTags; ?>
+<?php if ( empty( $tags ) ): ?>
+<?php if ( $this->paragraph->isEditable() ): ?>
+
+<p class="tags warn">
+    <?= $this->translate( 'tag.paragraph.tags.empty', 'tag' ) ?>
+
+</p>
+<?php endif ?>
+<?php else: ?>
+
 <p class="tags">
     <!-- span class="label"><?= $this->translate( 'paragraph.tags.label',
                                                   'paragraph' ) ?>:</span -->
 <?php $first = true;
-foreach ( (array) $this->paragraph->renderedLocaleTags as $tag ):
+foreach ( $tags as $tag ):
 if ( $first ):
     $first = false;
 else:
@@ -13,3 +24,4 @@ else:
        rel="tag" class="tag"><?= $this->escapeHtml( $tag ) ?></a><?php endforeach ?>
 
 </p>
+<?php endif ?>
