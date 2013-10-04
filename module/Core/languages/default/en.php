@@ -5,6 +5,7 @@ return array(
     'default.areYouSure' => 'Are you sure?',
     'default.autoCompletePlaceholder' => 'Please, start typing',
     'default.back' => 'Back',
+    'default.browse' => 'Browse',
     'default.calculate' => 'Calculate',
     'default.cancel' => 'Cancel',
     'default.checkAll' => 'Check all',
