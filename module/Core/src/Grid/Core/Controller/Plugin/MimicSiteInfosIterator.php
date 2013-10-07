@@ -178,10 +178,9 @@ class MimicSiteInfosIterator implements Iterator,
     /**
      * Create current SiteInfo
      *
-     * @param   array   $data
      * @return  SiteInfo
      */
-    protected function createCurrentSiteInfo( $data )
+    protected function createCurrentSiteInfo()
     {
         while ( $this->queryResult->valid() )
         {
