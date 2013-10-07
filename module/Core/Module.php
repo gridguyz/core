@@ -165,9 +165,10 @@ class Module extends ModuleAbstract
      * Exception handler
      *
      * @param   Exception   $exception
+     * @param   bool        $display
      * @return  void
      */
-    public function exceptionHandler( Exception $exception )
+    public function exceptionHandler( Exception $exception, $display = true )
     {
         if ( $this->serviceLocator &&
              $this->serviceLocator instanceof ServiceLocatorInterface &&
@@ -189,6 +190,37 @@ class Module extends ModuleAbstract
                 // do nothing
             }
         }
+
+        if ( $display )
+        {
+            if ( PHP_SAPI == 'cli' )
+            {
+                $write  = (string) $exception;
+                $stderr = @ fopen( 'php://stderr', 'a' );
+
+                if ( is_resource( $stderr ) )
+                {
+                    fwrite( $stderr, $write );
+                    fclose( $stderr );
+                }
+                else
+                {
+                    echo $write;
+                }
+            }
+            else
+            {
+                $status = '500 Internal server error';
+                @ header( $_SERVER['SERVER_PROTOCOL'] . ' ' . $status );
+                @ header( 'Status: ' . $status );
+                @ header( 'Expires: -1' );
+                @ header( 'Pragma: no-cache' );
+                @ header( 'Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0' );
+                @ header( 'Connection: close' );
+                @ header( 'Content-type: text/html; charset=utf-8' );
+                include __DIR__ . '/view/error/500.phtml';
+            }
+        }
     }
 
     /**
@@ -203,7 +235,7 @@ class Module extends ModuleAbstract
 
         if ( $exception && $exception instanceof Exception )
         {
-            $this->exceptionHandler( $exception );
+            $this->exceptionHandler( $exception, false );
         }
 
         if ( $this->response )
@@ -243,17 +275,17 @@ class Module extends ModuleAbstract
             if (!($event->getRequest() instanceof \Zend\Console\Request)) {
                 $header = $event->getRequest()
                                 ->getHeader( 'Accept-Language' );
-    
+
                 if ( $header )
                 {
                     $availables = null;
                     $controller = $event->getController();
-    
+
                     if ( $controller instanceof LocaleSelectorInterface )
                     {
                         $availables = $controller->getAvailableLocales();
                     }
-    
+
                     $locale = $sm->get( 'Locale' )
                                  ->acceptFromHttp( $header->getFieldValue(),
                                                    $availables );
