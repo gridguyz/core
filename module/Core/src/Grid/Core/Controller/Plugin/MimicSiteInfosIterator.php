@@ -4,8 +4,8 @@ namespace Grid\Core\Controller\Plugin;
 
 use Iterator;
 use Zork\Db\SiteInfo;
+use Zend\ServiceManager\ServiceManager;
 use Zend\ServiceManager\ServiceManagerAwareInterface;
-use Zend\ServiceManager\Exception\ServiceNotFoundException;
 
 /**
  * MimicSiteInfos controller plugin

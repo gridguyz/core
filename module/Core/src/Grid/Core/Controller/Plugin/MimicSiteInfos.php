@@ -3,6 +3,7 @@
 namespace Grid\Core\Controller\Plugin;
 
 use IteratorAggregate;
+use Zend\ServiceManager\ServiceManager;
 use Zend\ServiceManager\ServiceManagerAwareInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
