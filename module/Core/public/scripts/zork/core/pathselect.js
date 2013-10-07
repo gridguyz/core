@@ -529,13 +529,13 @@
                 {
                     dialogPreview
                         .find( "img" )
-                        .css( "background-image", "url(" + js.core.thumbnail( {
+                        .css( "background-image", 'url("' + String( js.core.thumbnail( {
                             "url"    : info.uri,
                             "width"  : 100,
                             "height" : 100,
                             "method" : "fit",
                             "mtime"  : info.time
-                        } ) + ")" );
+                        } ) ).replace( /"/g, '%22' ) + '")' );
                 }
 
                 dialogPreview.append(
