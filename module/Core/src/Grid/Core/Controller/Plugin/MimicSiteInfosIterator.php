@@ -12,8 +12,8 @@ use Zend\ServiceManager\ServiceManagerAwareInterface;
  *
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
-class MimicSiteInfosIterator extends Iterator
-                          implements ServiceManagerAwareInterface
+class MimicSiteInfosIterator implements Iterator,
+                                        ServiceManagerAwareInterface
 {
 
     use MimicSiteInfosTrait;
