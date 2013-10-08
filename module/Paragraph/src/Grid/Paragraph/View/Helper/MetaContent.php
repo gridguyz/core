@@ -94,7 +94,8 @@ class MetaContent extends AbstractHelper
             return $content;
         }
 
-        $serviceManager = $view->plugin( 'appService' );
+        $appService     = $view->plugin( 'appService' );
+        $serviceManager = $appService();
         $allowOverride  = $serviceManager->getAllowOverride();
 
         if ( ! $allowOverride )
