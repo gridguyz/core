@@ -6,7 +6,6 @@ use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\AbstractListenerAggregate;
-use Zork\Mvc\Controller\Plugin\MiddleLayout;
 use Grid\Paragraph\View\Model\MetaContent;
 use Grid\Paragraph\Model\Paragraph\MiddleLayoutModel;
 use Grid\Paragraph\Model\Paragraph\Structure\LayoutAwareInterface;
