@@ -204,18 +204,26 @@ body,
 .paragraph-container.paragraph-language-container .paragraph.paragraph-language ul li
 {
     float: left;
-    margin-left: 1ex;
-    padding-left: 1ex;
-    display: inline-block;
-    border-left: 1px solid #000;
-    border-color: currentColor;
+    display: none;
 }
 
-.paragraph-container.paragraph-language-container .paragraph.paragraph-language ul li:first-child
+.paragraph-container.paragraph-language-container .paragraph.paragraph-language ul li.active
 {
-    margin-left: 0px;
-    padding-left: 0px;
-    border-left: 0px none;
+    font-weight: bold;
+}
+
+.paragraph-container.paragraph-language-container .paragraph.paragraph-language ul li.selected
+{
+    display: inline;
+    display: inline-block;
+}
+
+.paragraph-container.paragraph-language-container .paragraph.paragraph-language ul li.selected ~ li.selected
+{
+    margin-left: 1ex;
+    padding-left: 1ex;
+    border-left: 1px solid #000;
+    border-color: currentColor;
 }
 
 .paragraph-container.paragraph-gmap-container .paragraph.paragraph-gmap .js-gmap-container

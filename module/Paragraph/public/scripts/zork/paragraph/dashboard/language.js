@@ -19,45 +19,61 @@
      */
     global.Zork.Paragraph.prototype.dashboard.language = function ( form, element )
     {
-        element = $(element);
+        element = $( element );
+        form    = $( form );
 
-        form = $(form);
+        var locales = element.find( ".language-variants .language-variant" ),
+            inputs  = form.find( ":input[name='paragraph-language[locales][]']" ),
+            before  = {};
 
-        var before = element.html();
+        locales.each( function () {
+            var $this   = $( this ),
+                locale  = String( locale.data( "jsLocale" ) || "en" );
 
-        form.find('input[type=checkbox]').on( 'change' , function() {
-            var htmlContent     = '',
-                uri             = element.find('div.language-container').data('jsUri').split('|'),
-                translation     = element.find('div.language-container').data('jsTranslation').split('|'),
-                locale          = element.find('div.language-container').data('jsLocale').split('|'),
-                activeLocale    = element.find('div.language-container').data('jsActiveLocale').split('|'),
-                checkbox        = form.find(':input[type=checkbox]'),
-                i;
+            before[locale] = $this.hasClass( "selected" );
+        } );
 
-            for ( i in uri )
+        inputs.on( "click", function () {
+            $( this ).blur();
+        } );
+
+        inputs.on( "change" , function () {
+            if ( inputs.find( ":checked" ).length )
             {
-                if ( checkbox[i].checked )
-                {
-                    htmlContent += '<li class="list-item list-item-' + locale[i] + '"><a href="' + uri[i];
+                locales.each( function () {
+                    var $this   = $( this ),
+                        locale  = String( locale.data( "jsLocale" ) || "en" );
 
-                    if ( activeLocale == locale[i] )
-                    {
-                        htmlContent += '" class="active';
-                    }
-
-                    htmlContent += '">' + translation[i] + '</a></li>';
-                }
+                    $this.toggleClass( "selected", inputs.find( "[value='" + locale + "']" ).prop( "checked" ) );
+                } );
             }
+            else
+            {
+                locales.each( function () {
+                    var $this   = $( this ),
+                        locale  = String( locale.data( "jsLocale" ) || "en" );
 
-            element.find('ul.language-list').html(htmlContent);
-        });
+                    $this.addClass( "selected" );
+                } );
+            }
+        } );
 
         return {
             "update": function () {
-                before = element.html();
+                locales.each( function () {
+                    var $this   = $( this ),
+                        locale  = String( locale.data( "jsLocale" ) || "en" );
+
+                    before[locale] = $this.hasClass( "selected" );
+                } );
             },
             "restore": function () {
-                element.html(before);
+                locales.each( function () {
+                    var $this   = $( this ),
+                        locale  = String( locale.data( "jsLocale" ) || "en" );
+
+                    $this.toggleClass( "selected", before[locale] );
+                } );
             }
         };
 
