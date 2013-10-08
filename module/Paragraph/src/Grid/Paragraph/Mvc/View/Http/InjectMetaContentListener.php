@@ -19,6 +19,11 @@ class InjectMetaContentListener extends AbstractListenerAggregate
 {
 
     /**
+     * @const string
+     */
+    const SHARED_EVENT_ID = 'Zend\Stdlib\DispatchableInterface';
+
+    /**
      * @var \Paragraph\Model\Paragraph\MiddleLayoutModel
      */
     protected $middleLayoutModel;
@@ -60,26 +65,48 @@ class InjectMetaContentListener extends AbstractListenerAggregate
      */
     public function attach( EventManagerInterface $events )
     {
-        $priority   = -95;
-        $method     = array( $this, 'injectMetaContent' );
+        $priority       = -95;
+        $method         = array( $this, 'injectMetaContent' );
+        $sharedEvents   = $events->getSharedManager();
 
-        $this->listeners[] = $events->attach(
+        $this->listeners[] = $sharedEvents->attach(
+            static::SHARED_EVENT_ID,
             MvcEvent::EVENT_DISPATCH,
             $method,
             $priority
         );
 
-        $this->listeners[] = $events->attach(
+        $this->listeners[] = $sharedEvents->attach(
+            static::SHARED_EVENT_ID,
             MvcEvent::EVENT_DISPATCH_ERROR,
             $method,
             $priority
         );
 
-        $this->listeners[] = $events->attach(
+        $this->listeners[] = $sharedEvents->attach(
+            static::SHARED_EVENT_ID,
             MvcEvent::EVENT_RENDER_ERROR,
             $method,
             $priority
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function detach( EventManagerInterface $events )
+    {
+        $sharedEvents = $events->getSharedManager();
+
+        foreach ( $this->listeners as $index => $callback )
+        {
+            if ( $sharedEvents->detach( static::SHARED_EVENT_ID, $callback ) )
+            {
+                unset( $this->listeners[$index] );
+            }
+        }
+
+        parent::detach( $events );
     }
 
     /**
