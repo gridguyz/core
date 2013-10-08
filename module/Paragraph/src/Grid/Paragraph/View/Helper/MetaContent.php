@@ -20,6 +20,16 @@ class MetaContent extends AbstractHelper
     protected $middleLayoutModel;
 
     /**
+     * Get middle-layout-model
+     *
+     * @return \Paragraph\Model\Paragraph\MiddleLayoutModel
+     */
+    public function getMiddleLayoutModel()
+    {
+        return $this->middleLayoutModel;
+    }
+
+    /**
      * Set middle-layout-model
      *
      * @param   \Paragraph\Model\Paragraph\MiddleLayoutModel $paragraphMiddleLayoutModel
@@ -29,16 +39,6 @@ class MetaContent extends AbstractHelper
     {
         $this->middleLayoutModel = $paragraphMiddleLayoutModel;
         return $this;
-    }
-
-    /**
-     * Get middle-layout-model
-     *
-     * @return \Paragraph\Model\Paragraph\MiddleLayoutModel
-     */
-    public function getMiddleLayoutModel()
-    {
-        return $this->middleLayoutModel;
     }
 
     /**

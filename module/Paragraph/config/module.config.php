@@ -3141,10 +3141,10 @@ return array(
         ),
     ),
     'view_manager' => array(
-        'strategies'            => array(
-            'Grid\Paragraph\View\Strategy\InjectMetaContentStrategy',
+        'mvc_strategies'    => array(
+            'Grid\Paragraph\Mvc\View\Http\InjectMetaContentListener',
         ),
-        'template_map' => array(
+        'template_map'      => array(
             'grid/paragraph/change-layout/import'        => __DIR__ . '/../view/grid/paragraph/change-layout/import.phtml',
             'grid/paragraph/change-layout/local'         => __DIR__ . '/../view/grid/paragraph/change-layout/local.phtml',
             'grid/paragraph/content/edit'                => __DIR__ . '/../view/grid/paragraph/content/edit.phtml',
