@@ -77,35 +77,41 @@ class MetaContent extends AbstractHelper
      */
     public function renderMetaContent( $name, $content = '' )
     {
+        $view       = $this->getView();
         $middle     = $this->getMiddleLayoutModel();
         $paragraph  = $middle->getParagraphModel();
         $renderList = $paragraph->findRenderList( $name );
-        $meta       = reset( $renderList )[1];
+
+        if ( empty( $renderList ) )
+        {
+            return $content;
+        }
+
+        $meta = reset( $renderList )[1];
 
         if ( empty( $meta ) )
         {
             return $content;
         }
 
-        $sm = $this->getView()->appService();
-        $ao = $sm->getAllowOverride();
+        $serviceManager = $view->plugin( 'appService' );
+        $allowOverride  = $serviceManager->getAllowOverride();
 
-        if ( ! $ao )
+        if ( ! $allowOverride )
         {
-            $sm->setAllowOverride( true );
+            $serviceManager->setAllowOverride( true );
         }
 
-        $sm->setService( 'RenderedContent', $meta );
+        $serviceManager->setService( 'RenderedContent', $meta );
 
-        if ( ! $ao )
+        if ( ! $allowOverride )
         {
-            $sm->setAllowOverride( false );
+            $serviceManager->setAllowOverride( false );
         }
 
         if ( $meta instanceof LayoutAwareInterface )
         {
-            $this->getView()
-                 ->plugin( 'layout' )
+            $view->plugin( 'layout' )
                  ->setMiddleLayout(
                      $middle->findMiddleParagraphLayoutById(
                          $meta->getLayoutId()
@@ -113,11 +119,10 @@ class MetaContent extends AbstractHelper
                  );
         }
 
-        return $this->getView()
-                    ->render( 'grid/paragraph/render/paragraph', array(
-                        'paragraphRenderList'  => $renderList,
-                        'content'              => $content,
-                    ) );
+        return $view->render( 'grid/paragraph/render/paragraph', array(
+            'paragraphRenderList'  => $renderList,
+            'content'              => $content,
+        ) );
     }
 
 }

@@ -3141,6 +3141,9 @@ return array(
         ),
     ),
     'view_manager' => array(
+        'strategies'            => array(
+            'Grid\Paragraph\View\Strategy\InjectMetaContentStrategy',
+        ),
         'template_map' => array(
             'grid/paragraph/change-layout/import'        => __DIR__ . '/../view/grid/paragraph/change-layout/import.phtml',
             'grid/paragraph/change-layout/local'         => __DIR__ . '/../view/grid/paragraph/change-layout/local.phtml',

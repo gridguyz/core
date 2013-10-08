@@ -113,13 +113,10 @@ $this->placeholder( 'content' )->captureStart();
     </div>
 </div>
 <?php $this->placeholder( 'content' )->captureEnd(); ?>
-<?= $this->metaContent(
-    'user.datasheet',
-    $this->viewWidget(
+<?= $this->viewWidget(
         'Grid\User\Datasheet\View',
         (string) $this->placeholder( 'content' ),
         array(
             'user' => $this->user,
         )
-    )
-) ?>
+    ) ?>

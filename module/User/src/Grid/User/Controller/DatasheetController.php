@@ -2,10 +2,11 @@
 
 namespace Grid\User\Controller;
 
-use Zork\Stdlib\Message;
 use Zend\Form\Form;
+use Zork\Stdlib\Message;
 use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
+use Grid\Paragraph\View\Model\MetaContent;
 
 /**
  * AdminController
@@ -71,7 +72,7 @@ class DatasheetController extends AbstractActionController
             return;
         }
 
-        return array(
+        return new MetaContent( 'user.datasheet', array(
             'user'      => $user,
             'edit'      => $this->getPermissionsModel()
                                 ->isAllowed( $user, 'edit' ),
@@ -79,7 +80,7 @@ class DatasheetController extends AbstractActionController
                                 ->isAllowed( $user, 'password' ),
             'delete'    => $this->getPermissionsModel()
                                 ->isAllowed( $user, 'delete' ),
-        );
+        ) );
     }
 
     /**
@@ -119,7 +120,7 @@ class DatasheetController extends AbstractActionController
         $this->fixUserForm( $form, $user->id );
 
         $datasheetService->form($form,$user);
-        
+
         /* @var $form \Zend\Form\Form */
         $form->setHydrator( $model->getMapper() )
              ->bind( $user );
@@ -156,10 +157,10 @@ class DatasheetController extends AbstractActionController
                     ) )
         );
 
-        return array(
+        return new MetaContent( 'user.datasheet', array(
             'form'  => $form,
             'user'  => $user
-        );
+        ) );
     }
 
     /**
@@ -231,10 +232,10 @@ class DatasheetController extends AbstractActionController
                     ) )
         );
 
-        return array(
+        return new MetaContent( 'user.datasheet', array(
             'form'  => $form,
             'user'  => $user,
-        );
+        ) );
     }
 
     /**
