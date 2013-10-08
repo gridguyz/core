@@ -38,22 +38,22 @@
         } );
 
         inputs.on( "change" , function () {
-            if ( inputs.find( ":checked" ).length )
+            if ( inputs.filter( ":checked" ).length )
             {
                 locales.each( function () {
                     var $this   = $( this ),
                         locale  = String( $this.data( "jsLocale" ) || "en" );
 
-                    $this.toggleClass( "selected", inputs.find( "[value='" + locale + "']" ).prop( "checked" ) );
+                    $this.toggleClass(
+                        "selected",
+                        inputs.filter( "[value='" + locale + "']" ).prop( "checked" )
+                    );
                 } );
             }
             else
             {
                 locales.each( function () {
-                    var $this   = $( this ),
-                        locale  = String( $this.data( "jsLocale" ) || "en" );
-
-                    $this.addClass( "selected" );
+                    $( this ).addClass( "selected" );
                 } );
             }
         } );
