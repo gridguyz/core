@@ -1,6 +1,6 @@
 <?php
 
-namespace Grid\Paragraph\Mvc\View\Http;
+namespace Grid\Paragraph\View\Strategy;
 
 use Zend\View\ViewEvent;
 use Zend\View\Renderer\PhpRenderer;
