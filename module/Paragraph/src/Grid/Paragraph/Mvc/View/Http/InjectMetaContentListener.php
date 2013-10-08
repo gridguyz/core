@@ -88,7 +88,7 @@ class InjectMetaContentListener extends AbstractListenerAggregate
      * @param   MvcEvent    $event
      * @return  void
      */
-    public function injectViewModel( MvcEvent $event )
+    public function injectMetaContent( MvcEvent $event )
     {
         $result = $event->getResult();
 
