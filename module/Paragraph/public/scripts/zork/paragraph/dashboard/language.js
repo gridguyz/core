@@ -28,7 +28,7 @@
 
         locales.each( function () {
             var $this   = $( this ),
-                locale  = String( locale.data( "jsLocale" ) || "en" );
+                locale  = String( $this.data( "jsLocale" ) || "en" );
 
             before[locale] = $this.hasClass( "selected" );
         } );
@@ -42,7 +42,7 @@
             {
                 locales.each( function () {
                     var $this   = $( this ),
-                        locale  = String( locale.data( "jsLocale" ) || "en" );
+                        locale  = String( $this.data( "jsLocale" ) || "en" );
 
                     $this.toggleClass( "selected", inputs.find( "[value='" + locale + "']" ).prop( "checked" ) );
                 } );
@@ -51,7 +51,7 @@
             {
                 locales.each( function () {
                     var $this   = $( this ),
-                        locale  = String( locale.data( "jsLocale" ) || "en" );
+                        locale  = String( $this.data( "jsLocale" ) || "en" );
 
                     $this.addClass( "selected" );
                 } );
@@ -62,7 +62,7 @@
             "update": function () {
                 locales.each( function () {
                     var $this   = $( this ),
-                        locale  = String( locale.data( "jsLocale" ) || "en" );
+                        locale  = String( $this.data( "jsLocale" ) || "en" );
 
                     before[locale] = $this.hasClass( "selected" );
                 } );
@@ -70,7 +70,7 @@
             "restore": function () {
                 locales.each( function () {
                     var $this   = $( this ),
-                        locale  = String( locale.data( "jsLocale" ) || "en" );
+                        locale  = String( $this.data( "jsLocale" ) || "en" );
 
                     $this.toggleClass( "selected", before[locale] );
                 } );
