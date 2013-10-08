@@ -3143,6 +3143,7 @@ return array(
     'view_manager' => array(
         'mvc_strategies'    => array(
             'Grid\Paragraph\Mvc\View\Http\InjectMetaContentListener',
+            'Grid\Paragraph\Mvc\View\Http\MiddleLayoutExceptionStrategy',
         ),
         'template_map'      => array(
             'grid/paragraph/change-layout/import'        => __DIR__ . '/../view/grid/paragraph/change-layout/import.phtml',
@@ -3173,9 +3174,6 @@ return array(
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
-        ),
-        'mvc_strategies' => array(
-            'Grid\Paragraph\Mvc\View\Http\MiddleLayoutExceptionStrategy',
         ),
     ),
 );
