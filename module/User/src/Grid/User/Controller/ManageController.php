@@ -6,6 +6,7 @@ use Zork\Stdlib\Message;
 use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zork\Session\ContainerAwareTrait as SessionContainerAwareTrait;
+use Grid\Paragraph\View\Model\MetaContent;
 
 /**
  * ManageController
@@ -118,10 +119,10 @@ class ManageController extends AbstractActionController
                         'user', Message::LEVEL_ERROR );
         }
 
-        return array(
+        return new MetaContent( 'user.register', array(
             'success'   => $success,
             'form'      => $form,
-        );
+        ) );
     }
 
     /**
