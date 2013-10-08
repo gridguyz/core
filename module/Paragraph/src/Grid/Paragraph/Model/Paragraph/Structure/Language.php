@@ -117,10 +117,10 @@ class Language extends AbstractLeaf
 
         try
         {
-            /* @var $rendered \Paragraph\Model\Paragraph\Structure\ProxyAbstract */
+            /* @var $rendered \Paragraph\Model\Paragraph\Structure\Content */
             $rendered = $service->get( 'RenderedContent' );
 
-            if ( ! $rendered instanceof ProxyAbstract )
+            if ( ! $rendered instanceof Content )
             {
                 throw new ServiceNotFoundException;
             }
@@ -144,7 +144,14 @@ class Language extends AbstractLeaf
 
         if ( ! empty( $defaultUri ) )
         {
-            foreach ( $this->locales as $locale )
+            $locales = $this->locales;
+
+            if ( empty( $locales ) )
+            {
+                $locales = array_keys( $available );
+            }
+
+            foreach ( $locales as $locale )
             {
                 if ( ! empty( $available[$locale] ) )
                 {

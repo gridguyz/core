@@ -2538,7 +2538,7 @@ return array(
                                     'name'      => 'locales',
                                     'options'   => array(
                                         'label'     => 'paragraph.form.language.locales',
-                                        'required'  => true,
+                                        'required'  => false,
                                     ),
                                 ),
                             ),
