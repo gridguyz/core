@@ -23,8 +23,10 @@
         element = $( element );
 
         var width    = 0,
-            button   = element.data( "jsPathselectButton" ),
-            file     = element.data( "jsPathselectFile" ),
+            file     = element.data( "jsPathselectFile" ) !== false,
+            click    = element.data( "jsPathselectClick" ) !== false,
+            button   = element.data( "jsPathselectButton" ) !== false,
+            buttext  = String( element.data( "jsPathselectButtonText" ) || "default.browse" ),
             startDir = String( element.data( "jsPathselectStartDir" ) || "" )
                 .replace( /^\/+/, "" )
                 .replace( /\/+$/, "" ),
@@ -45,11 +47,6 @@
                 return false;
             };
 
-        if ( Object.isUndefined( file ) )
-        {
-            file = true;
-        }
-
         if ( ! element.attr( "required" ) )
         {
             element.addClass( "ui-controls-after" )
@@ -67,14 +64,20 @@
                    );
         }
 
+        if ( click )
+        {
+            element.click( selector )
+                   .keydown( selector );
+        }
+
         if ( button )
         {
-            button = js.core.translate( button );
+            buttext = js.core.translate( buttext );
 
             element.addClass( "ui-controls-after" )
                    .after(
                        $( '<input class="ui-fileselect-trigger" type="button" />' )
-                           .val( button )
+                           .val( buttext )
                            .click( selector )
                            .each( function () {
                                var $this = $( this );
@@ -82,12 +85,6 @@
                                width += $this.css( "margin-left" );
                            } )
                    );
-        }
-        else
-        {
-            element
-                .click( selector )
-                .keydown( selector );
         }
 
         if ( width > 0 )

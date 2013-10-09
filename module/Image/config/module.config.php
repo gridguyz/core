@@ -102,7 +102,7 @@ return array(
                                     'name'      => 'url',
                                     'options'   => array(
                                         'label'     => 'paragraph.form.image.url',
-                                        'required'  => true,
+                                        'required'  => false,
                                     ),
                                 ),
                             ),
@@ -111,9 +111,9 @@ return array(
                                     'type'      => 'Zork\Form\Element\Html',
                                     'name'      => 'caption',
                                     'options'   => array(
-                                        'label'     => 'paragraph.form.image.caption',
-                                        'required'  => false,
-                                        'html_buttonset' => 'simple',
+                                        'label'             => 'paragraph.form.image.caption',
+                                        'required'          => false,
+                                        'html_buttonset'    => 'simple',
                                     ),
                                 ),
                             ),
@@ -133,12 +133,11 @@ return array(
                                     'name'      => 'width',
                                     'options'   => array(
                                         'label'     => 'paragraph.form.image.width',
-                                        'required'  => true,
-                                        'min'       => 25,
-                                        'max'       => 800,
+                                        'required'  => false,
                                     ),
                                     'attributes'    => array(
-                                        'value'     => 100,
+                                        'min'       => 25,
+                                        'max'       => 800,
                                     ),
                                 ),
                             ),
@@ -148,12 +147,11 @@ return array(
                                     'name'      => 'height',
                                     'options'   => array(
                                         'label'     => 'paragraph.form.image.height',
-                                        'required'  => true,
-                                        'min'       => 25,
-                                        'max'       => 600,
+                                        'required'  => false,
                                     ),
                                     'attributes'    => array(
-                                        'value'     => 100,
+                                        'min'       => 25,
+                                        'max'       => 600,
                                     ),
                                 ),
                             ),
@@ -163,7 +161,7 @@ return array(
                                     'name'      => 'method',
                                     'options'   => array(
                                         'label'         => 'paragraph.form.image.method',
-                                        'required'      => true,
+                                        'required'      => false,
                                         'text_domain'   => 'image',
                                         'options'       => array(
                                             'fit'       => 'image.method.fit',

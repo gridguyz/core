@@ -911,7 +911,16 @@ class RowSet extends AbstractHelper
      */
     public function column( $type )
     {
-        if ( is_callable( $type ) )
+        $classPrefix = __CLASS__ . '\\Type\\';
+
+        if ( is_string( $type ) &&
+             class_exists( $classPrefix . ucfirst( $type ) ) )
+        {
+            $type = ucfirst( $type );
+            $args = func_get_args();
+            array_shift( $args );
+        }
+        else if ( is_callable( $type ) )
         {
             $args = func_get_args();
             $type = static::CALLBACK;
@@ -923,7 +932,7 @@ class RowSet extends AbstractHelper
             array_shift( $args );
         }
 
-        $class = __CLASS__ . '\\Type\\' . $type;
+        $class = $classPrefix . $type;
 
         if ( ! class_exists( $class ) )
         {

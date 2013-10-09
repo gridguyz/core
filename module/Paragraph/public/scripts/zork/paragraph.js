@@ -116,10 +116,10 @@
                         .andSelf()
                         .removeClass( "outline" );
 
-                    header.hide( "fast", function ()
-                    {
-                        header.detach();
-                    } );
+                    header.stop( true, true )
+                          .hide( "fast", function () {
+                              header.detach();
+                          } );
                 }
             },
             mmove = function ( event )
@@ -146,8 +146,14 @@
                         .andSelf()
                         .removeClass( "outline" );
 
-                    header.appendTo( para )
-                          .show( "fast" );
+                    header.stop( true, true )
+                          .appendTo( para )
+                          .show( "fast", function () {
+                              header.css( {
+                                  "width": "",
+                                  "height": ""
+                              } );
+                          } );
 
                     para.addClass( "outline" );
 
@@ -427,7 +433,8 @@
 
         if ( header && header.length )
         {
-            header.hide( "fast" );
+            header.stop( true, true )
+                  .hide( "fast" );
         }
 
         if ( root.data( "paragraphEditMode" ) === "on" )
@@ -514,7 +521,8 @@
         container = $( container );
 
         var id      = container.data( "paragraphId" ),
-            child   = container.data( "paragraphOnlyParentOf" );
+            child   = container.data( "paragraphOnlyParentOf" ),
+            url     = $( "meta[name='zork:paragraph:update_url']" ).attr( "content" ) || "";
 
         if ( id && child )
         {
@@ -562,6 +570,7 @@
 
                     $.ajax( {
                      // "cache": false,
+                        "url": url,
                         "dataType": "text",
                         "error": function ( xhr, status ) {
                             layer();
@@ -858,15 +867,18 @@
 
         save.click( function () {
             saveAction( true );
+            $( this ).blur();
         } );
 
         savenexit.click( function () {
             saveAction( false );
             exitAction( false );
+            $( this ).blur();
         } );
 
         cancel.click( function () {
             exitAction( true );
+            $( this ).blur();
         } );
 
         element.resizable( {

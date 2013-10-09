@@ -6,6 +6,8 @@ use Exception;
 use Zend\Mvc\MvcEvent;
 use Zork\Stdlib\ModuleAbstract;
 use Zend\EventManager\EventInterface;
+use Zend\Http\Request as HttpRequest;
+use Zend\Http\Response as HttpResponse;
 use Zend\ModuleManager\ModuleManagerInterface;
 use Zork\Mvc\View\Http\InjectTemplateListener;
 use Zork\Mvc\Controller\LocaleSelectorInterface;
@@ -14,6 +16,7 @@ use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
+use Zend\ModuleManager\Feature\ControllerPluginProviderInterface;
 
 /**
  * Grid\Core\Module
@@ -24,7 +27,8 @@ class Module extends ModuleAbstract
           implements InitProviderInterface,
                      ServiceProviderInterface,
                      BootstrapListenerInterface,
-                     ViewHelperProviderInterface
+                     ViewHelperProviderInterface,
+                     ControllerPluginProviderInterface
 {
 
     /**
@@ -134,17 +138,18 @@ class Module extends ModuleAbstract
                         array( $this, 'onDispatchError' )
                     );
 
-        if ( $serviceManager->has( 'RedirectToDomain' ) && !($event->getRequest() instanceof \Zend\Console\Request))
+        $response = $event->getResponse();
+
+        if ( $response instanceof HttpResponse &&
+             $serviceManager->has( 'RedirectToDomain' ) )
         {
             $redirect   = $serviceManager->get( 'RedirectToDomain' );
             $url        = 'http://' . $redirect->getDomain();
-            $response   = $event->getResponse();
-            /* @var $response \Zend\Http\PhpEnvironment\Response */
+            $request    = $event->getRequest();
 
-            if ( $redirect->getUsePath() )
+            if ( $request instanceof HttpRequest && $redirect->getUsePath() )
             {
-                $request = $event->getRequest();
-                $url    .= $request->getRequestUri();
+                $url .= $request->getRequestUri();
             }
 
             $response->setStatusCode( 302 )
@@ -165,9 +170,10 @@ class Module extends ModuleAbstract
      * Exception handler
      *
      * @param   Exception   $exception
+     * @param   bool        $display
      * @return  void
      */
-    public function exceptionHandler( Exception $exception )
+    public function exceptionHandler( Exception $exception, $display = true )
     {
         if ( $this->serviceLocator &&
              $this->serviceLocator instanceof ServiceLocatorInterface &&
@@ -189,6 +195,37 @@ class Module extends ModuleAbstract
                 // do nothing
             }
         }
+
+        if ( $display )
+        {
+            if ( PHP_SAPI == 'cli' )
+            {
+                $write  = (string) $exception;
+                $stderr = @ fopen( 'php://stderr', 'a' );
+
+                if ( is_resource( $stderr ) )
+                {
+                    fwrite( $stderr, $write );
+                    fclose( $stderr );
+                }
+                else
+                {
+                    echo $write;
+                }
+            }
+            else
+            {
+                $status = '500 Internal server error';
+                @ header( $_SERVER['SERVER_PROTOCOL'] . ' ' . $status );
+                @ header( 'Status: ' . $status );
+                @ header( 'Expires: -1' );
+                @ header( 'Pragma: no-cache' );
+                @ header( 'Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0' );
+                @ header( 'Connection: close' );
+                @ header( 'Content-type: text/html; charset=utf-8' );
+                include __DIR__ . '/view/error/500.phtml';
+            }
+        }
     }
 
     /**
@@ -203,7 +240,7 @@ class Module extends ModuleAbstract
 
         if ( $exception && $exception instanceof Exception )
         {
-            $this->exceptionHandler( $exception );
+            $this->exceptionHandler( $exception, false );
         }
 
         if ( $this->response )
@@ -240,20 +277,22 @@ class Module extends ModuleAbstract
 
         if ( ! $locale )
         {
-            if (!($event->getRequest() instanceof \Zend\Console\Request)) {
-                $header = $event->getRequest()
-                                ->getHeader( 'Accept-Language' );
-    
+            $request = $event->getRequest();
+
+            if ( $request instanceof HttpRequest )
+            {
+                $header = $request->getHeader( 'Accept-Language' );
+
                 if ( $header )
                 {
                     $availables = null;
                     $controller = $event->getController();
-    
+
                     if ( $controller instanceof LocaleSelectorInterface )
                     {
                         $availables = $controller->getAvailableLocales();
                     }
-    
+
                     $locale = $sm->get( 'Locale' )
                                  ->acceptFromHttp( $header->getFieldValue(),
                                                    $availables );
@@ -282,6 +321,27 @@ class Module extends ModuleAbstract
             ),
             'aliases' => array(
                 'Zend\ModuleManager\ModuleManagerInterface' => 'moduleManager',
+            ),
+        );
+    }
+
+    /**
+     * Expected to return \Zend\ServiceManager\Config object or array to
+     * seed such an object.
+     *
+     * @return array|\Zend\ServiceManager\Config
+     */
+    public function getControllerPluginConfig()
+    {
+        $serviceLocator = $this->serviceLocator;
+
+        return array(
+            'factories' => array(
+                'mimicSiteInfos' => function ( $sm ) use ( $serviceLocator ) {
+                    return new Controller\Plugin\MimicSiteInfos(
+                        $serviceLocator
+                    );
+                },
             ),
         );
     }

@@ -20,6 +20,16 @@ class MetaContent extends AbstractHelper
     protected $middleLayoutModel;
 
     /**
+     * Get middle-layout-model
+     *
+     * @return \Paragraph\Model\Paragraph\MiddleLayoutModel
+     */
+    public function getMiddleLayoutModel()
+    {
+        return $this->middleLayoutModel;
+    }
+
+    /**
      * Set middle-layout-model
      *
      * @param   \Paragraph\Model\Paragraph\MiddleLayoutModel $paragraphMiddleLayoutModel
@@ -29,16 +39,6 @@ class MetaContent extends AbstractHelper
     {
         $this->middleLayoutModel = $paragraphMiddleLayoutModel;
         return $this;
-    }
-
-    /**
-     * Get middle-layout-model
-     *
-     * @return \Paragraph\Model\Paragraph\MiddleLayoutModel
-     */
-    public function getMiddleLayoutModel()
-    {
-        return $this->middleLayoutModel;
     }
 
     /**
@@ -77,35 +77,42 @@ class MetaContent extends AbstractHelper
      */
     public function renderMetaContent( $name, $content = '' )
     {
+        $view       = $this->getView();
         $middle     = $this->getMiddleLayoutModel();
         $paragraph  = $middle->getParagraphModel();
         $renderList = $paragraph->findRenderList( $name );
-        $meta       = reset( $renderList )[1];
+
+        if ( empty( $renderList ) )
+        {
+            return $content;
+        }
+
+        $meta = reset( $renderList )[1];
 
         if ( empty( $meta ) )
         {
             return $content;
         }
 
-        $sm = $this->getView()->appService();
-        $ao = $sm->getAllowOverride();
+        $appService     = $view->plugin( 'appService' );
+        $serviceManager = $appService();
+        $allowOverride  = $serviceManager->getAllowOverride();
 
-        if ( ! $ao )
+        if ( ! $allowOverride )
         {
-            $sm->setAllowOverride( true );
+            $serviceManager->setAllowOverride( true );
         }
 
-        $sm->setService( 'RenderedContent', $meta );
+        $serviceManager->setService( 'RenderedContent', $meta );
 
-        if ( ! $ao )
+        if ( ! $allowOverride )
         {
-            $sm->setAllowOverride( false );
+            $serviceManager->setAllowOverride( false );
         }
 
         if ( $meta instanceof LayoutAwareInterface )
         {
-            $this->getView()
-                 ->plugin( 'layout' )
+            $view->plugin( 'layout' )
                  ->setMiddleLayout(
                      $middle->findMiddleParagraphLayoutById(
                          $meta->getLayoutId()
@@ -113,11 +120,10 @@ class MetaContent extends AbstractHelper
                  );
         }
 
-        return $this->getView()
-                    ->render( 'grid/paragraph/render/paragraph', array(
-                        'paragraphRenderList'  => $renderList,
-                        'content'              => $content,
-                    ) );
+        return $view->render( 'grid/paragraph/render/paragraph', array(
+            'paragraphRenderList'  => $renderList,
+            'content'              => $content,
+        ) );
     }
 
 }

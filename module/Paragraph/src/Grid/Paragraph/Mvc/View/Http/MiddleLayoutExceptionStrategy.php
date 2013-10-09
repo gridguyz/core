@@ -8,6 +8,7 @@ use Zend\EventManager\ListenerAggregateInterface;
 
 class MiddleLayoutExceptionStrategy implements ListenerAggregateInterface
 {
+
     /**
      * @var \Zend\Stdlib\CallbackHandler[]
      */

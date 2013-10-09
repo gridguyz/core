@@ -2051,6 +2051,39 @@ return array(
                         ),
                     ),
                 ),
+                'title'     => array(
+                    'spec'  => array(
+                        'name'      => 'title',
+                        'options'   => array(
+                            'label'     => 'paragraph.type.title',
+                            'required'  => false,
+                        ),
+                        'elements'  => array(
+                            'name'  => array(
+                                'spec'  => array(
+                                    'type'      => 'Zork\Form\Element\Text',
+                                    'name'      => 'name',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.abstract.name',
+                                        'required'  => false,
+                                    ),
+                                ),
+                            ),
+                            'separator' => array(
+                                'spec'  => array(
+                                    'type'      => 'Zork\Form\Element\Select',
+                                    'name'      => 'separator',
+                                    'options'   => array(
+                                        'label'         => 'paragraph.form.title.separator',
+                                        'required'      => false,
+                                        'empty_option'  => '',
+                                        'options'       => include 'config/separators.php',
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
             ),
         ),
         'Grid\Paragraph\Meta\Edit' => array(
@@ -2505,7 +2538,7 @@ return array(
                                     'name'      => 'locales',
                                     'options'   => array(
                                         'label'     => 'paragraph.form.language.locales',
-                                        'required'  => true,
+                                        'required'  => false,
                                     ),
                                 ),
                             ),
@@ -2717,6 +2750,16 @@ return array(
                                     'name'      => 'name',
                                     'options'   => array(
                                         'label'     => 'paragraph.form.abstract.name',
+                                        'required'  => false,
+                                    ),
+                                ),
+                            ),
+                            'rootTitle' => array(
+                                'spec'  => array(
+                                    'type'      => 'Zork\Form\Element\Text',
+                                    'name'      => 'rootTitle',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.content.title',
                                         'required'  => false,
                                     ),
                                 ),
@@ -3098,7 +3141,11 @@ return array(
         ),
     ),
     'view_manager' => array(
-        'template_map' => array(
+        'mvc_strategies'    => array(
+            'Grid\Paragraph\Mvc\View\Http\InjectMetaContentListener',
+            'Grid\Paragraph\Mvc\View\Http\MiddleLayoutExceptionStrategy',
+        ),
+        'template_map'      => array(
             'grid/paragraph/change-layout/import'        => __DIR__ . '/../view/grid/paragraph/change-layout/import.phtml',
             'grid/paragraph/change-layout/local'         => __DIR__ . '/../view/grid/paragraph/change-layout/local.phtml',
             'grid/paragraph/content/edit'                => __DIR__ . '/../view/grid/paragraph/content/edit.phtml',
@@ -3127,9 +3174,6 @@ return array(
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
-        ),
-        'mvc_strategies' => array(
-            'Grid\Paragraph\Mvc\View\Http\MiddleLayoutExceptionStrategy',
         ),
     ),
 );

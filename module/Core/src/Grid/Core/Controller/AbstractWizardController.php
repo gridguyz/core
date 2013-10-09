@@ -52,7 +52,7 @@ abstract class AbstractWizardController extends AbstractActionController
         ),
         'attributes'    => array(
             'value'             => 'default.cancel',
-            'formnovalidate'    => true,
+            'formnovalidate'    => 'formnovalidate',
         ),
     );
 
@@ -69,7 +69,7 @@ abstract class AbstractWizardController extends AbstractActionController
         ),
         'attributes'    => array(
             'value'             => 'default.previous',
-            'formnovalidate'    => true,
+            'formnovalidate'    => 'formnovalidate',
         ),
     );
 

@@ -20,7 +20,15 @@ foreach ( $this->paragraph
     }
 }
 
-?>
+if ( empty( $tags ) ): ?>
+<?php if ( $this->paragraph->isEditable() ): ?>
+
+<p class="tags warn">
+    <?= $this->translate( 'tag.paragraph.tagCloud.empty', 'tag' ) ?>
+
+</p>
+<?php endif ?>
+<?php else: ?>
 
 <ul class="tags">
 <?php foreach ( $tags as $name => $usage ): ?>
@@ -35,3 +43,4 @@ foreach ( $this->paragraph
 <?php endforeach ?>
 
 </ul>
+<?php endif ?>

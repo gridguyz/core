@@ -109,7 +109,7 @@ class Language extends AbstractLeaf
         $result     = array();
         $service    = $this->getServiceLocator();
         $rendered   = null;
-        $activeLoc  = null;
+        $active     = null;
         $defaultUri = null;
         $siteInfo   = null;
         $available  = $service->get( 'Locale' )
@@ -117,16 +117,16 @@ class Language extends AbstractLeaf
 
         try
         {
-            /* @var $rendered \Paragraph\Model\Paragraph\Structure\ProxyAbstract */
+            /* @var $rendered \Paragraph\Model\Paragraph\Structure\Content */
             $rendered = $service->get( 'RenderedContent' );
 
-            if ( ! $rendered instanceof ProxyAbstract )
+            if ( ! $rendered instanceof Content )
             {
                 throw new ServiceNotFoundException;
             }
 
             $defaultUri = '/app/%locale%/paragraph/render/' . $rendered->id;
-            $activeLoc  = $rendered->getMapper()->getLocale();
+            $active     = $rendered->getMapper()->getLocale();
         }
         catch ( ServiceNotFoundException $ex )
         {
@@ -138,47 +138,53 @@ class Language extends AbstractLeaf
             if ( preg_match( '#^/?app/([^/]+)/(.*)$#', $requestUri, $matches ) )
             {
                 $defaultUri = '/app/%locale%/' . $matches[2];
-                $activeLoc  = $matches[1];
+                $active     = $matches[1];
             }
         }
 
         if ( ! empty( $defaultUri ) )
         {
-            foreach ( $this->locales as $locale )
+            $selected   = $this->locales;
+            $all        = array_keys( array_filter( $available ) );
+
+            if ( empty( $selected ) )
             {
-                if ( ! empty( $available[$locale] ) )
+                $selected = $all;
+            }
+
+            foreach ( $all as $locale )
+            {
+                $link = array(
+                    'selected'  => in_array( $locale, $selected ),
+                    'active'    => $active == $locale,
+                    'uri'       => str_replace(
+                        '%locale%',
+                        $locale,
+                        $defaultUri
+                    ),
+                );
+
+                if ( $rendered instanceof Content )
                 {
-                    $link = array(
-                        'active'    => $activeLoc == $locale,
-                        'uri'       => str_replace(
-                            '%locale%',
-                            $locale,
-                            $defaultUri
-                        ),
-                    );
-
-                    if ( $rendered instanceof Content )
+                    if ( null === $siteInfo )
                     {
-                        if ( null === $siteInfo )
-                        {
-                            $siteInfo = $service->get( 'Zork\Db\SiteInfo' );
-                        }
-
-                        $uri = $this->getUriModel()
-                                    ->findDefaultByContentSubdomain(
-                                        $rendered->id,
-                                        $siteInfo->getSubdomainId(),
-                                        $locale
-                                    );
-
-                        if ( ! empty( $uri ) )
-                        {
-                            $link['uri'] = '/' . $uri->safeUri;
-                        }
+                        $siteInfo = $service->get( 'Zork\Db\SiteInfo' );
                     }
 
-                    $result[$locale] = $link;
+                    $uri = $this->getUriModel()
+                                ->findDefaultByContentSubdomain(
+                                    $rendered->id,
+                                    $siteInfo->getSubdomainId(),
+                                    $locale
+                                );
+
+                    if ( ! empty( $uri ) )
+                    {
+                        $link['uri'] = '/' . $uri->safeUri;
+                    }
                 }
+
+                $result[$locale] = $link;
             }
         }
 

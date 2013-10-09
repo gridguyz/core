@@ -5,6 +5,7 @@ namespace Grid\User\Controller;
 use Zork\Stdlib\Message;
 use Zend\Mvc\Controller\AbstractActionController;
 use Grid\User\Model\User\Structure as UserStructure;
+use Grid\Paragraph\View\Model\MetaContent;
 
 /**
  * ManageController
@@ -91,10 +92,10 @@ class PasswordChangeRequestController extends AbstractActionController
                         'user', Message::LEVEL_ERROR );
         }
 
-        return array(
+        return new MetaContent( 'user.passwordChangeRequest', array(
             'success'   => $success,
             'form'      => $form,
-        );
+        ) );
     }
 
     /**
@@ -191,10 +192,10 @@ class PasswordChangeRequestController extends AbstractActionController
 
         $this->paragraphLayout();
 
-        return array(
+        return new MetaContent( 'user.passwordChangeRequest', array(
             'success'   => $success,
             'form'      => $form,
-        );
+        ) );
     }
 
 }

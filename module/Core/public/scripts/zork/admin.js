@@ -209,12 +209,15 @@
         } );
 
         menu.find( "> li > .file-manager" )
-            .click( function () {
+            .click( function ( event ) {
                 js.require( "js.core.pathselect", function ( pathselect ) {
                     pathselect( {
                         "return": false
                     } );
                 } );
+
+                event.preventDefault();
+                return false;
             } );
 
         var editContNode = menu.find( "> li > .edit-content" ),
@@ -262,13 +265,13 @@
                     }
                 } );
 
-        contSlideWrapper.parent("li")
-            .addClass( "ui-menu-item-collapsible")
-            .addClass( "ui-state-collapsed" );
+        contSlideWrapper.parent( "li" )
+                        .addClass( "ui-menu-item-collapsible")
+                        .addClass( "ui-state-collapsed" );
 
-        laySlideWrapper.parent("li")
-            .addClass( "ui-menu-item-collapsible")
-            .addClass( "ui-state-collapsed" );
+        laySlideWrapper.parent( "li" )
+                       .addClass( "ui-menu-item-collapsible")
+                       .addClass( "ui-state-collapsed" );
 
         var editContOn = function () {
                 editCont = true;

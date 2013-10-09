@@ -115,7 +115,7 @@ return array(
     'paragraph.form.image.linkTarget' => 'Hivatkozás célja',
     'paragraph.form.image.linkTo' => 'Hivatkozás címe',
     'paragraph.form.image.method' => 'Metódus',
-    'paragraph.form.image.url' => 'Url',
+    'paragraph.form.image.url' => 'Kép fájl',
     'paragraph.form.image.width' => 'Szélesség',
     'paragraph.form.language.locales' => 'Nyelvek',
     'paragraph.form.layout.failed' => 'Mentés sikertelen',
