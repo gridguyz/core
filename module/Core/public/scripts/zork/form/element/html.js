@@ -188,6 +188,7 @@
 
     global.Zork.Form.Element.prototype.html.buttonSets = {
         "simple": {
+            "width"                             : 700,
             "theme_advanced_buttons1"           : [
                 "bold", "italic", "underline", "strikethrough", "|",
                 "justifyleft", "justifycenter", "justifyright", "justifyfull", "|",
