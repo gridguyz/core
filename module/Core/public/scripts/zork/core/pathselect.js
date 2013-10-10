@@ -500,6 +500,9 @@
                     }
                 };
             },
+            clearPreview = function () {
+                dialogPreview.empty();
+            },
             preview     = function ( info ) {
                 dialogPreview
                     .empty()
@@ -838,6 +841,7 @@
                         else
                         {
                             dialogInput.val( "" );
+                            clearPreview();
                         }
                     }
                 }
