@@ -443,14 +443,14 @@ abstract class AbstractWizardController extends AbstractActionController
 
                 if ( $form )
                 {
-                    if ( $stepModel->hasNextStep() )
-                    {
-                        $form->add( $this->nextStepSpec );
-                    }
-
                     if ( $stepModel->canFinishWizard() )
                     {
                         $form->add( $this->finishWizardSpec );
+                    }
+
+                    if ( $stepModel->hasNextStep() )
+                    {
+                        $form->add( $this->nextStepSpec );
                     }
 
                     if ( $stepModel->hasPreviousStep() )
