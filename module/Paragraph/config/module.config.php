@@ -2759,7 +2759,7 @@ return array(
                                     'type'      => 'Zork\Form\Element\Text',
                                     'name'      => 'rootTitle',
                                     'options'   => array(
-                                        'label'     => 'paragraph.form.content.title',
+                                        'label'     => 'paragraph.form.content.contentTitle',
                                         'required'  => false,
                                     ),
                                 ),
