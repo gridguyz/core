@@ -616,7 +616,7 @@
                                     catch ( e )
                                     { }
 
-                                    $( this ).one( "change", function () {
+                                    $( this ).one( "change keyup", function () {
                                         try
                                         {
                                             this.setCustomValidity( "" );
