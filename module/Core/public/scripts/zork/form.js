@@ -616,7 +616,7 @@
                                     catch ( e )
                                     { }
 
-                                    $( this ).one( "change keyup", function () {
+                                    self.one( "change keyup", function () {
                                         try
                                         {
                                             this.setCustomValidity( "" );
@@ -630,6 +630,13 @@
                                     self.tooltip( {
                                         "items": "*",
                                         "content": emsg
+                                    } );
+
+                                    self.one( "change keyup", function () {
+                                        self.tooltip( {
+                                            "items": "*",
+                                            "content": ""
+                                        } );
                                     } );
                                 }
                             }
