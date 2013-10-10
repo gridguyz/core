@@ -441,6 +441,12 @@ form dl dd.input-checkbox.required label:after
     filter: alpha(opacity=80);
 }
 
+form dl dd .mceEditor .mceLayout
+{
+    margin-left: auto;
+    margin-right: auto;
+}
+
 select
 {
     border: 1px solid #d5d5d5;
