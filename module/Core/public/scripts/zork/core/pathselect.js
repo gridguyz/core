@@ -794,9 +794,12 @@
 
                     if ( ! selectFile )
                     {
-                        dialog.nextAll( ".ui-dialog-buttonpane" )
-                              .find( "button:last" )
-                              .button( currDir ? "enable" : "disable" );
+                        if ( returnIt )
+                        {
+                            dialog.nextAll( ".ui-dialog-buttonpane" )
+                                  .find( "button:last" )
+                                  .button( currDir ? "enable" : "disable" );
+                        }
 
                         if ( currDir )
                         {
@@ -815,9 +818,12 @@
 
                     if ( selectFile )
                     {
-                        dialog.nextAll( ".ui-dialog-buttonpane" )
-                              .find( "button:last" )
-                              .button( currEnt ? "enable" : "disable" );
+                        if ( returnIt )
+                        {
+                            dialog.nextAll( ".ui-dialog-buttonpane" )
+                                  .find( "button:last" )
+                                  .button( currEnt ? "enable" : "disable" );
+                        }
 
                         if ( currEnt )
                         {
