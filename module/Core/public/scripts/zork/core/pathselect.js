@@ -581,7 +581,18 @@
                         )
                 );
             },
-            refresh     = function ( force ) {
+            selectFirstSelected = function () {
+                if ( ! selectFile )
+                {
+                    return;
+                }
+
+                currEnt = dialogEntries.find( ".js-pathselect-entries-entry" +
+                                              ".ui-selected.type-file:first" )
+                                       .data( "jsPathselectPath" ) || "";
+                refresh();
+            },
+            refresh = function ( force ) {
                 var tmp = [],
                     nowDir = false,
                     nowEnt = false,
@@ -694,6 +705,7 @@
                                                     .prop( "checked", true );
                                             }
 
+                                            selectFirstSelected();
                                             evt.stopPropagation();
                                         } )
                                         .dblclick(
@@ -736,11 +748,15 @@
                                 $( ui.selected )
                                     .find( "input" )
                                     .prop( "checked", true );
+
+                                selectFirstSelected();
                             },
                             "unselected" : function ( _, ui ) {
                                 $( ui.unselected )
                                     .find( "input" )
                                     .prop( "checked", false );
+
+                                selectFirstSelected();
                             }
                         } );
 
@@ -754,21 +770,18 @@
                             .removeClass( "ui-corner-top ui-corner-bottom" )
                             .addClass( "ui-corner-all" );
 
-                        dialogActions
-                            .find( ".js-pathselect-action-create-dir" )
-                            .button( infos && infos.rights && infos.rights.write
-                                     ? "enable" : "disable" );
+                        dialogActions.find( ".js-pathselect-action-create-dir" )
+                                     .button( infos && infos.rights && infos.rights.write
+                                              ? "enable" : "disable" );
 
-                        dialogActions
-                            .find( ".js-pathselect-action-paste" )
-                            .button( infos && infos.rights && infos.rights.write
-                                     ? "enable" : "disable" );
+                        dialogActions.find( ".js-pathselect-action-paste" )
+                                     .button( infos && infos.rights && infos.rights.write
+                                              ? "enable" : "disable" );
 
-                        dialog
-                            .nextAll( ".ui-dialog-buttonpane" )
-                            .find( "button:first" )
-                            .button( infos && infos.rights && infos.rights.write
-                                     ? "enable" : "disable" );
+                        dialog.nextAll( ".ui-dialog-buttonpane" )
+                              .find( "button:first" )
+                              .button( infos && infos.rights && infos.rights.write
+                                       ? "enable" : "disable" );
 
                         if ( ! selectFile && currDir )
                         {
@@ -778,6 +791,10 @@
 
                     if ( ! selectFile )
                     {
+                        dialog.nextAll( ".ui-dialog-buttonpane" )
+                              .find( "button:last" )
+                              .button( currDir ? "enable" : "disable" );
+
                         if ( currDir )
                         {
                             dialogInput.val( ( pathIsLocal( currDir ) ? uploadsUrl : "" ) + currDir );
@@ -795,6 +812,10 @@
 
                     if ( selectFile )
                     {
+                        dialog.nextAll( ".ui-dialog-buttonpane" )
+                              .find( "button:last" )
+                              .button( currEnt ? "enable" : "disable" );
+
                         if ( currEnt )
                         {
                             dialogInput.val( ( pathIsLocal( currEnt ) ? uploadsUrl : "" ) + currEnt );
