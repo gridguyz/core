@@ -35,7 +35,7 @@
 {
     padding: 0em;
     display: block;
-    margin: 0em -1em 0.5em -1em;
+    margin: 0em -0.5em 0.5em -0.5em;
     border-radius: 3px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -219,6 +219,7 @@
     position: relative;
     text-decoration: none;
     border: 1px solid transparent;
+    text-shadow: 1px 1px 0px #fff;
 }
 
 .js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.ui-selecting
@@ -232,6 +233,7 @@
     color: #fed;
     background: #f91;
     border: 1px solid #e91;
+    text-shadow: 1px 1px 0px #000;
 }
 
 .js-pathselect .js-pathselect-entries .js-pathselect-entries-entry.ui-selecting + .js-pathselect-entries-entry.ui-selecting
