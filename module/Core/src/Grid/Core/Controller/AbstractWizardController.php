@@ -40,23 +40,6 @@ abstract class AbstractWizardController extends AbstractActionController
     protected $startStep        = self::STEP_DEFAULT_START;
 
     /**
-     * Cancel-wizard submit spec
-     *
-     * @var array
-     */
-    protected $cancelWizardSpec = array(
-        'type'  => 'Zork\Form\Element\Submit',
-        'name'  => 'cancel',
-        'options'   => array(
-            'text_domain'   => 'default',
-        ),
-        'attributes'    => array(
-            'value'             => 'default.cancel',
-            'formnovalidate'    => 'formnovalidate',
-        ),
-    );
-
-    /**
      * Previous-step submit spec
      *
      * @var array
@@ -102,6 +85,23 @@ abstract class AbstractWizardController extends AbstractActionController
         ),
         'attributes'    => array(
             'value'     => 'default.finish',
+        ),
+    );
+
+    /**
+     * Cancel-wizard submit spec
+     *
+     * @var array
+     */
+    protected $cancelWizardSpec = array(
+        'type'  => 'Zork\Form\Element\Submit',
+        'name'  => 'cancel',
+        'options'   => array(
+            'text_domain'   => 'default',
+        ),
+        'attributes'    => array(
+            'value'             => 'default.cancel',
+            'formnovalidate'    => 'formnovalidate',
         ),
     );
 
@@ -443,9 +443,9 @@ abstract class AbstractWizardController extends AbstractActionController
 
                 if ( $form )
                 {
-                    if ( $stepModel->canCancelWizard() )
+                    if ( $stepModel->hasNextStep() )
                     {
-                        $form->add( $this->cancelWizardSpec );
+                        $form->add( $this->nextStepSpec );
                     }
 
                     if ( $stepModel->canFinishWizard() )
@@ -453,14 +453,14 @@ abstract class AbstractWizardController extends AbstractActionController
                         $form->add( $this->finishWizardSpec );
                     }
 
-                    if ( $stepModel->hasNextStep() )
-                    {
-                        $form->add( $this->nextStepSpec );
-                    }
-
                     if ( $stepModel->hasPreviousStep() )
                     {
                         $form->add( $this->previousStepSpec );
+                    }
+
+                    if ( $stepModel->canCancelWizard() )
+                    {
+                        $form->add( $this->cancelWizardSpec );
                     }
                 }
             }
