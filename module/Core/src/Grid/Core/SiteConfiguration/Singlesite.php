@@ -30,7 +30,12 @@ class Singlesite extends AbstractDomainAware
         $matches    = array();
         $fulldomain = $this->getDomain();
 
-        if ( preg_match( '/^(.*)\.([a-z0-9-]+\.[a-z0-9-]+)$/', $fulldomain, $matches ) )
+        if (isset($_SERVER['GRIDGUYZ_DOMAIN'])) 
+        {
+        	$domain = $_SERVER['GRIDGUYZ_DOMAIN'];
+        	$subdomain = isset($_SERVER['GRIDGUYZ_SUBDOMAIN']) ? $_SERVER['GRIDGUYZ_SUBDOMAIN'] : '' ;
+        } 
+        elseif ( preg_match( '/^(.*)\.([a-z0-9-]+\.[a-z0-9-]+)$/', $fulldomain, $matches ) )
         {
             $subdomain  = $matches[1];
             $domain     = $matches[2];
