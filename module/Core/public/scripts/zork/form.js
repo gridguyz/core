@@ -669,7 +669,7 @@
                      js.core.browser.chrome <= 31 &&
                      $( this ).is( "input" ) )
                 {
-                    form.attr( "novalidate", "noValidate" )
+                    form.attr( "novalidate", "novalidate" )
                         .prop( "noValidate", true );
                 }
             } )
