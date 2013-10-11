@@ -666,7 +666,8 @@
 
                 if ( js.core.browser.chrome &&
                      js.core.browser.chrome >= 30 &&
-                     js.core.browser.chrome <= 31 )
+                     js.core.browser.chrome <= 31 &&
+                     $( this ).is( "input" ) )
                 {
                     form.prop( "noValidate", true );
                 }
