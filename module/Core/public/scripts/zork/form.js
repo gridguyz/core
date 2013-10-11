@@ -669,7 +669,8 @@
                      js.core.browser.chrome <= 31 &&
                      $( this ).is( "input" ) )
                 {
-                    form.prop( "noValidate", true );
+                    form.attr( "novalidate", "noValidate" )
+                        .prop( "noValidate", true );
                 }
             } )
             .on( "click", ":submit:not([formnovalidate])", function ( evt ) {
