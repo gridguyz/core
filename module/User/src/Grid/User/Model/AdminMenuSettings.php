@@ -36,6 +36,21 @@ class AdminMenuSettings implements CallableInterface,
     const POSITION_RIGHT    = 'right';
 
     /**
+     * @var string
+     */
+    const EDITMODE_NONE     = 'none';
+
+    /**
+     * @var string
+     */
+    const EDITMODE_CONTENT  = 'content';
+
+    /**
+     * @var string
+     */
+    const EDITMODE_LAYOUT   = 'layout';
+
+    /**
      * Constructor
      *
      * @param \User\Model\User\Settings\Model $userSettingsModel
@@ -48,15 +63,14 @@ class AdminMenuSettings implements CallableInterface,
     /**
      * Get/set a setting by name
      *
-     * @param string $name
-     * @param mixed|null $set
-     * @return mixed|null
+     * @param   string      $name
+     * @param   mixed|null  $set
+     * @return  mixed|null
      */
     public function setting( $name, $set = null )
     {
-        $model = $this->getModel();
-
-        $auth = new AuthenticationService();
+        $model  = $this->getModel();
+        $auth   = new AuthenticationService();
 
         if ( ! $auth->hasIdentity() )
         {
@@ -86,15 +100,53 @@ class AdminMenuSettings implements CallableInterface,
     }
 
     /**
+     * Get/set all settings
+     *
+     * @param   mixed|null  $set
+     * @return  mixed|null
+     */
+    public function settings( $set = null )
+    {
+        $model  = $this->getModel();
+        $auth   = new AuthenticationService();
+
+        if ( ! $auth->hasIdentity() )
+        {
+            return null;
+        }
+
+        $userId = $auth->getIdentity()->id;
+
+        if ( null === $set )
+        {
+            return $model->find( $userId, static::SETTINGS_SECTION )
+                         ->settings;
+        }
+        else
+        {
+            $structure = $model->find( $userId, static::SETTINGS_SECTION );
+            $structure->settings = $set;
+            $save = $structure->save();
+
+            if ( $save )
+            {
+                return $save;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Get/set open state
      *
-     * @param bool|null $set
-     * @return bool|null
+     * @param   bool|null   $set
+     * @return  bool|null
      */
     public function open( $set = null )
     {
         return $this->setting(
-            'open',
+            __FUNCTION__,
             null === $set ? null : (bool) $set
         );
     }
@@ -102,15 +154,54 @@ class AdminMenuSettings implements CallableInterface,
     /**
      * Get/set position state
      *
-     * @param string|null $set
-     * @return string|null
+     * @param   string|null $set
+     * @return  string|null
      */
     public function position( $set = null )
     {
-        return $this->setting(
-            'position',
-            null === $set ? null : (string) $set
+        static $validPositions = array(
+            static::POSITION_LEFT,
+            static::POSITION_RIGHT
         );
+
+        if ( null !== $set )
+        {
+            $set = strtolower( $set );
+
+            if ( ! in_array( $set, $validPositions ) )
+            {
+                $set = static::POSITION_LEFT;
+            }
+        }
+
+        return $this->setting( __FUNCTION__, $set );
+    }
+
+    /**
+     * Get/set edit-mode state
+     *
+     * @param   string|null $set
+     * @return  string|null
+     */
+    public function editMode( $set = null )
+    {
+        $validModes = array(
+            static::EDITMODE_NONE,
+            static::EDITMODE_CONTENT,
+            static::EDITMODE_LAYOUT
+        );
+
+        if ( null !== $set )
+        {
+            $set = strtolower( $set );
+
+            if ( empty( $set ) || ! in_array( $set, $validModes ) )
+            {
+                $set = static::EDITMODE_NONE;
+            }
+        }
+
+        return $this->setting( __FUNCTION__, $set );
     }
 
 }

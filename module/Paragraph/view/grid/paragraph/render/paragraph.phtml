@@ -52,6 +52,7 @@ $list->runin( function ( $paragraph ) use ( $view ) { ?>
 <div data-js-type="js.admin.menu"
      data-js-adminmenu-state="<?= $view->adminMenuSettings->getSetting( 'open' ) ? 'open' : 'closed' ?>"
      data-js-adminmenu-position="<?= $view->adminMenuSettings->getSetting( 'position' ) ?>"
+     data-js-adminmenu-editmode="<?= $view->adminMenuSettings->getSetting( 'editMode' ) ?>"
      title="<?= $this->translate( 'admin.menu.title',
                                   'admin', $view->userLocale() ) ?>">
     <ul class="ui-helper-hidden">

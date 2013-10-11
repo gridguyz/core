@@ -77,8 +77,9 @@
 
         var display     = element.data( "jsAdminmenuState" ) == "open",
             position    = element.data( "jsAdminmenuPosition" ) || "left",
-            editCont    = false,
-            editLay     = false,
+            editMode    = element.data( "jsAdminmenuEditmode" ) || "none",
+            editCont    = "content" == editMode,
+            editLay     = "layout"  == editMode,
             contSlide   = $( "<div />" ),
             contSlideWrapper = $( "<div />" ).hide(),
             laySlide    = $( "<div />" ),
@@ -87,10 +88,9 @@
             no          = "&#x2718;",
             menu        = element.children( "ul" ),
             header      = $( "<div />" ),
-            text        = $( "<span />" ).
-                            addClass( "text" ).
-                            html( element.attr( "title" ) ).
-                            hide(),
+            text        = $( "<span />" ).addClass( "text" )
+                                         .html( element.attr( "title" ) )
+                                         .hide(),
             icon        = function () {
                 switch ( position )
                 {
@@ -128,6 +128,10 @@
                           } ),
             posRpc      = js.core.rpc( {
                               "method": "Grid\\User\\Model\\AdminMenuSettings::position",
+                              "callback": function () {}
+                          } ),
+            editRpc     = js.core.rpc( {
+                              "method": "Grid\\User\\Model\\AdminMenuSettings::editMode",
                               "callback": function () {}
                           } ),
             toggle      = $( "<button></button>" )
@@ -232,10 +236,10 @@
 
         js.admin.menu.refresh();
 
-        contSlideWrapper
-                .addClass( "ui-collapsible-content" )
-                .appendTo( editContNode.parent( "li" ) );
-        contSlide.appendTo(contSlideWrapper)
+        contSlideWrapper.addClass( "ui-collapsible-content" )
+                        .appendTo( editContNode.parent( "li" ) );
+
+        contSlide.appendTo( contSlideWrapper )
                  .slider( {
                         "min": 0,
                         "max": 20,
@@ -248,9 +252,8 @@
                         }
                     } );
 
-        laySlideWrapper
-                .addClass( "ui-collapsible-content" )
-                .appendTo( editLayNode.parent( "li" ) );
+        laySlideWrapper.addClass( "ui-collapsible-content" )
+                       .appendTo( editLayNode.parent( "li" ) );
 
         laySlide.appendTo( laySlideWrapper )
                 .slider( {
@@ -278,7 +281,8 @@
 
                 contSlide.slider( "value", 0 );
                 contSlideWrapper.show( "fast" )
-                                .parent("li").removeClass("ui-state-collapsed");
+                                .parent( "li" )
+                                .removeClass( "ui-state-collapsed" );
 
                 editContNode.removeClass( "ui-state-disabled" )
                             .find( ".status" )
@@ -289,7 +293,8 @@
 
                 laySlide.slider( "value", 0 );
                 laySlideWrapper.show( "fast" )
-                               .parent("li").removeClass("ui-state-collapsed");
+                               .parent( "li" )
+                               .removeClass( "ui-state-collapsed" );
 
                 editLayNode.removeClass( "ui-state-disabled" )
                            .find( ".status" )
@@ -366,17 +371,27 @@
 
             if ( editCont )
             {
+                editRpc( "none" );
                 editContOff();
                 switchContReset();
             }
             else
             {
+                editRpc( "content" );
                 editContOn();
                 switchContEdit();
             }
 
             return false;
         } );
+
+        if ( editCont )
+        {
+            setTimeout( function () {
+                editContOn();
+                switchContEdit();
+            }, 1 );
+        }
 
         editLayNode.click( function () {
             if ( editCont )
@@ -387,17 +402,27 @@
 
             if ( editLay )
             {
+                editRpc( "none" );
                 editLayOff();
                 switchLayReset();
             }
             else
             {
+                editRpc( "layout" );
                 editLayOn();
                 switchLayEdit();
             }
 
             return false;
         } );
+
+        if ( editLay )
+        {
+            setTimeout( function () {
+                editLayOn();
+                switchLayEdit();
+            }, 1 );
+        }
 
         editContPara.click( function ( event ) {
             if ( content.length )
