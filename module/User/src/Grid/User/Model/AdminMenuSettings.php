@@ -146,7 +146,7 @@ class AdminMenuSettings implements CallableInterface,
     public function open( $set = null )
     {
         return $this->setting(
-            __FUNCTION__,
+            'open',
             null === $set ? null : (bool) $set
         );
     }
@@ -174,7 +174,7 @@ class AdminMenuSettings implements CallableInterface,
             }
         }
 
-        return $this->setting( __FUNCTION__, $set );
+        return $this->setting( 'position', $set );
     }
 
     /**
@@ -201,7 +201,7 @@ class AdminMenuSettings implements CallableInterface,
             }
         }
 
-        return $this->setting( __FUNCTION__, $set );
+        return $this->setting( 'editMode', $set );
     }
 
 }
