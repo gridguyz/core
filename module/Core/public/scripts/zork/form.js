@@ -663,6 +663,13 @@
         form.on( "submit", validate )
             .on( "click", ":submit[formnovalidate]", function () {
                 novalidate = true;
+
+                if ( js.core.browser.chrome &&
+                     js.core.browser.chrome >= 30 &&
+                     js.core.browser.chrome <= 31 )
+                {
+                    form.prop( "noValidate", true );
+                }
             } )
             .on( "click", ":submit:not([formnovalidate])", function ( evt ) {
                 novalidate = false;
