@@ -160,8 +160,8 @@ class AdminMenuSettings implements CallableInterface,
     public function position( $set = null )
     {
         static $validPositions = array(
-            static::POSITION_LEFT,
-            static::POSITION_RIGHT
+            self::POSITION_LEFT,
+            self::POSITION_RIGHT
         );
 
         if ( null !== $set )
@@ -186,9 +186,9 @@ class AdminMenuSettings implements CallableInterface,
     public function editMode( $set = null )
     {
         $validModes = array(
-            static::EDITMODE_NONE,
-            static::EDITMODE_CONTENT,
-            static::EDITMODE_LAYOUT
+            self::EDITMODE_NONE,
+            self::EDITMODE_CONTENT,
+            self::EDITMODE_LAYOUT
         );
 
         if ( null !== $set )
