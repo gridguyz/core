@@ -191,10 +191,10 @@ class Mapper implements HydratorInterface,
      *
      * @return  array
      */
-    public function getEnabledPatternCount()
+    public function getEnabledPackageCount()
     {
         return $this->getEnabledList()
-                    ->getPatternCount();
+                    ->getPackageCount();
     }
 
     /**
@@ -380,9 +380,9 @@ class Mapper implements HydratorInterface,
                         $data['displayDescription'] = $package['extra']['display-description'];
                     }
 
-                    if ( ! empty( $package['extra']['modules'] ) )
+                    if ( ! empty( $package['extra']['module'] ) )
                     {
-                        $data['modules'] = (array) $package['extra']['modules'];
+                        $data['module'] = (string) $package['extra']['module'];
                     }
 
                     break;
@@ -549,10 +549,10 @@ class Mapper implements HydratorInterface,
                         $data['displayDescription'] = $versionData['extra']['display-description'];
                     }
 
-                    if ( empty( $data['modules'] ) &&
-                         ! empty( $versionData['extra']['modules'] ) )
+                    if ( empty( $data['module'] ) &&
+                         ! empty( $versionData['extra']['module'] ) )
                     {
-                        $data['modules'] = $versionData['extra']['modules'];
+                        $data['module'] = (string) $versionData['extra']['module'];
                     }
                 }
             }
@@ -617,9 +617,9 @@ class Mapper implements HydratorInterface,
      */
     protected function queryNames( $where = null )
     {
-        $result = array();
-        $lock   = static::getLockData();
-        $enable = $this->getEnabledList();
+        $result     = array();
+        $lock       = static::getLockData();
+        $enabled    = $this->getEnabledList();
 
         if ( $where )
         {
@@ -671,7 +671,8 @@ class Mapper implements HydratorInterface,
             $where['author'] = (string) $where['author'];
         }
 
-        if ( null === $where['author'] && ( ! isset( $where['installed'] ) || ! $where['installed'] ) )
+        if ( null === $where['author'] &&
+             ( ! isset( $where['installed'] ) || ! $where['installed'] ) )
         {
             $total    = 0;
             $packages = $this->queryJson( sprintf(
@@ -683,7 +684,8 @@ class Mapper implements HydratorInterface,
             {
                 foreach ( $packages['results'] as $package )
                 {
-                    if ( $enable->isEnabled( $package['name'], $where['category'] ) )
+                    if ( $enabled->isEnabled( $package['name'],
+                                              $where['category'] ) )
                     {
                         $result[$package['name']] = $package['name'];
                     }
@@ -691,7 +693,8 @@ class Mapper implements HydratorInterface,
                     $total++;
                 }
 
-                if ( isset( $packages['total'] ) && $total >= $packages['total'] )
+                if ( isset( $packages['total'] ) &&
+                     $total >= $packages['total'] )
                 {
                     break;
                 }
@@ -714,7 +717,7 @@ class Mapper implements HydratorInterface,
                 if ( isset( $package['name'] ) &&
                      isset( $package['type'] ) &&
                      preg_match( Structure::VALID_TYPES, $package['type'] ) &&
-                     $enable->isEnabled( $package['name'], $where['category'] ) && (
+                     $enabled->isEnabled( $package['name'], $where['category'] ) && (
                          ! $where['contains'] || $this->contains(
                              $where['contains'],
                              $package['name'],
@@ -787,7 +790,7 @@ class Mapper implements HydratorInterface,
     /**
      * Find iterator
      *
-     * @param   array|string|null   $where category, installed, contains
+     * @param   array|string|null   $where category, installed, contains, author
      * @param   bool|null           $order
      * @return  \Iterator
      */
@@ -811,7 +814,7 @@ class Mapper implements HydratorInterface,
     /**
      * Find multiple structures
      *
-     * @param   mixed|null  $where category, installed, contains
+     * @param   mixed|null  $where category, installed, contains, author
      * @param   mixed|null  $order
      * @param   int|null    $limit
      * @param   int|null    $offset
@@ -839,7 +842,7 @@ class Mapper implements HydratorInterface,
     /**
      * Find one structure
      *
-     * @param   mixed|null  $where category, installed, contains
+     * @param   mixed|null  $where category, installed, contains, author
      * @param   mixed|null  $order
      * @return  \Grid\Core\Model\Package\Structure
      */
@@ -859,7 +862,7 @@ class Mapper implements HydratorInterface,
     /**
      * Get paginator
      *
-     * @param   mixed|null  $where category, installed, contains
+     * @param   mixed|null  $where category, installed, contains, author
      * @param   mixed|null  $order
      * @return  \Zend\Paginator\Paginator
      */

@@ -120,62 +120,7 @@ class PackageController extends AbstractAdminController
             'filter'        => (array) $filter,
             'order'         => $order,
             'canModify'     => $canModify,
-         // 'categories'    => $model->getCategories(),
             'paginator'     => $model->getPaginator( $filter, $order )
-        );
-    }
-
-    /**
-     * View a package
-     */
-    public function viewAction()
-    {
-        $params  = $this->params();
-        $vendor  = $params->fromRoute( 'vendor' );
-        $subname = $params->fromRoute( 'subname' );
-        $name    = $vendor . '/' . $subname;
-        $service = $this->getServiceLocator();
-        $model   = $service->get( 'Grid\Core\Model\Package\Model' );
-        $package = $model->find( $name );
-
-        if ( ! $model->getEnabledPatternCount() || empty( $package ) )
-        {
-            $this->getResponse()
-                 ->setStatusCode( 404 );
-
-            return;
-        }
-
-        $modules = (array) $params->fromPost(
-            'modules',
-            $params->fromQuery(
-                'modules',
-                array()
-            )
-        );
-
-        if ( ! empty( $modules ) )
-        {
-            if ( $this->saveModules( $modules ) )
-            {
-                $this->messenger()
-                     ->add( 'admin.packages.modules.success',
-                            'admin', Message::LEVEL_INFO );
-
-                return $this->redirect()
-                            ->toUrl( '?refresh' );
-            }
-            else
-            {
-                $this->messenger()
-                     ->add( 'admin.packages.modules.failed',
-                            'admin', Message::LEVEL_WARN );
-            }
-        }
-
-        return array(
-            'name'      => $name,
-            'package'   => $package,
         );
     }
 

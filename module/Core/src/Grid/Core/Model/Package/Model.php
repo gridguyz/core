@@ -73,7 +73,7 @@ class Model implements MapperAwareInterface
     }
 
     /**
-     * Get categories
+     * Get enabled package count
      *
      * @return  array
      */
@@ -88,10 +88,10 @@ class Model implements MapperAwareInterface
      *
      * @return  int
      */
-    public function getEnabledPatternCount()
+    public function getEnabledPackageCount()
     {
         return $this->getMapper()
-                    ->getEnabledPatternCount();
+                    ->getEnabledPackageCount();
     }
 
     /**

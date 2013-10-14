@@ -134,7 +134,6 @@ return array(
     'admin.packages.contains' => 'Contains',
     'admin.packages.libraryName' => 'Library name',
     'admin.packages.libraryDescription' => 'Library description',
-    'admin.packages.modules.activation' => 'Modules activation',
     'admin.packages.modules.success' => 'Module settings saved',
     'admin.packages.modules.failed' => 'Module settings save failed',
     'admin.packages.homepage' => 'Homepage',

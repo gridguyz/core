@@ -13,43 +13,12 @@ class EnabledList extends ArrayIterator
 {
 
     /**
-     * @const string
-     */
-    const DELIMITER = '#';
-
-    /**
      * Constructor
      *
      * @param   array   $packages
-     * @param   array   $order
      */
-    public function __construct( array $packages    = array(),
-                                 array $order       = array() )
+    public function __construct( array $packages = array() )
     {
-        if ( ! empty( $order ) )
-        {
-            $packagesOrdered = array();
-            asort( $order );
-
-            foreach ( $order as $key => $_ )
-            {
-                if ( isset( $packages[$key] ) )
-                {
-                    $packagesOrdered[$key] = $packages[$key];
-                }
-            }
-
-            foreach ( $packages as $key => $data )
-            {
-                if ( ! isset( $packagesOrdered[$key] ) )
-                {
-                    $packagesOrdered[$key] = $data;
-                }
-            }
-
-            $packages = $packagesOrdered;
-        }
-
         parent::__construct( $packages );
     }
 
@@ -65,22 +34,22 @@ class EnabledList extends ArrayIterator
     }
 
     /**
-     * Get all/key-matching pattern
+     * Get all/key-matching packages
      *
      * @param   null|string|array   $key
      * @return  string
      */
-    public function getPattern( $keys = null )
+    public function getPackages( $keys = null )
     {
-        $patterns = array();
+        $packages = array();
 
         if ( empty( $keys ) )
         {
-            foreach ( $this as $subPatterns )
+            foreach ( $this as $subPackages )
             {
-                $patterns = array_merge(
-                    $patterns,
-                    array_values( $subPatterns )
+                $packages = array_merge(
+                    $packages,
+                    array_values( $subPackages )
                 );
             }
         }
@@ -90,25 +59,21 @@ class EnabledList extends ArrayIterator
             {
                 $key = (string) $key;
 
-                if ( ! empty( $this[(string) $key] ) )
+                if ( ! empty( $this[$key] ) )
                 {
-                    $patterns = array_merge(
-                        $patterns,
-                        array_values( $this[(string) $key] )
+                    $packages = array_merge(
+                        $packages,
+                        array_values( $this[$key] )
                     );
                 }
             }
         }
         else
         {
-            $patterns = $this[(string) $keys];
+            $packages = $this[(string) $keys];
         }
 
-        return static::DELIMITER
-             . '^'
-             . implode( '|', array_filter( $patterns ) )
-             . '$'
-             . static::DELIMITER;
+        return array_unique( array_map( 'strtolower', $packages ) );
     }
 
     /**
@@ -120,11 +85,14 @@ class EnabledList extends ArrayIterator
      */
     public function isEnabled( $packageName, $keys = null )
     {
-        return (bool) preg_match( $this->getPattern( $keys ), $packageName );
+        return in_array(
+            strtolower( $packageName ),
+            $this->getPackages( $keys )
+        );
     }
 
     /**
-     * Get all keys
+     * Get all packages
      *
      * @return  array
      */
@@ -134,17 +102,17 @@ class EnabledList extends ArrayIterator
     }
 
     /**
-     * Get pattern count
+     * Get package count
      *
      * @return  int
      */
-    public function getPatternCount()
+    public function getPackageCount()
     {
         $count = 0;
 
-        foreach ( $this as $patterns )
+        foreach ( $this as $packages )
         {
-            $count += count( $patterns );
+            $count += count( $packages );
         }
 
         return $count;

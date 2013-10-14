@@ -108,16 +108,6 @@ return array(
                     ),
                 ),
             ),
-            'Grid\Core\Admin\Package\View' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route'    => '/app/:locale/admin/package/view/:vendor/:subname',
-                    'defaults' => array(
-                        'controller' => 'Grid\Core\Controller\Package',
-                        'action'     => 'view',
-                    ),
-                ),
-            ),
             'Grid\Core\Admin\Package\Install' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -1030,7 +1020,7 @@ return array(
                             'dependencies'  => array(
                                 'Grid\Core\Model\Package\Model::getEnabledPatternCount' => array(
                                     'service'   => 'Grid\Core\Model\Package\Model',
-                                    'method'    => 'getEnabledPatternCount'
+                                    'method'    => 'getEnabledPackageCount'
                                 ),
                             ),
                         ),

@@ -26,10 +26,7 @@ class EnabledListServiceFactory implements FactoryInterface
         $packages   = isset( $config['modules']['Grid\Core']['enabledPackages'] )
                     ? (array) $config['modules']['Grid\Core']['enabledPackages']
                     : array();
-        $order      = isset( $config['modules']['Grid\Core']['enabledPackagesOrder'] )
-                    ? (array) $config['modules']['Grid\Core']['enabledPackagesOrder']
-                    : array();
-        return new EnabledList( $packages, $order );
+        return new EnabledList( $packages );
     }
 
 }

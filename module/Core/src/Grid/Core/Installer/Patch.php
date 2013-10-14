@@ -510,7 +510,38 @@ class Patch extends AbstractPatch
         $this->getInstaller()
              ->mergeConfigData(
                  'packages.local',
-                 include __DIR__ . '/../../../../config/default.packages.php'
+                 include __DIR__ . '/../../../../config/default.packages.php',
+                 function ( & $config )
+                 {
+                     if ( ! empty( $config['modules']['Grid\Core']['enabledPackages'] ) )
+                     {
+                         foreach ( $config['modules']['Grid\Core']['enabledPackages'] as & $packages )
+                         {
+                             if ( ! is_array( $packages ) )
+                             {
+                                 $packages = array(
+                                     $packages => (string) $packages
+                                 );
+                             }
+
+                             $packages = array_unique( array_map(
+                                 'strtolower',
+                                 array_filter(
+                                     $packages,
+                                     function ( $package )
+                                     {
+                                         return (bool) preg_match(
+                                             '#^[a-z0-9_-]+/[a-z0-9_-]+$#i',
+                                             $package
+                                         );
+                                     }
+                                 )
+                             ) );
+                         }
+                     }
+
+                     return $config;
+                 }
              );
     }
 
