@@ -1,7 +1,6 @@
 @charset "utf-8";
 
-.package-list .warn,
-.package-details .warn
+.package-list .warn
 {
     color: #800000;
     font-weight: bold;
@@ -30,21 +29,22 @@
 
 .package-list .package-entry
 {
-    padding: 1em;
+    width: 33%;
+    width: 33.3%;
+    float: left;
+    margin: -1px;
+    padding: 0px;
+    height: 300px;
     display: block;
-    margin: 1em 0em;
     background: #fff;
     position: relative;
-    border: 1px solid #ccc;
-    box-shadow: 0px 0px 4px #ccc;
-    border-radius: 3px;
-    -ms-border-radius: 3px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
+    border: 1px solid #999;
+    box-shadow: inset 0px 0px 2px #ccc;
 }
 
 .package-list .package-entry:hover
 {
+    z-index: 1;
     background: #def;
     border-color: #47e;
 }
@@ -87,13 +87,11 @@
 
 /* end clearfix */
 
-.package-details .action,
 .package-list .package-entry .action
 {
     float: right;
 }
 
-.package-details .action,
 .package-list-actions .update-all,
 .package-list .package-entry .action
 {
@@ -102,7 +100,6 @@
     padding: 0.3em 1.5em;
 }
 
-.package-details .action.install,
 .package-list-actions .update-all,
 .package-list .package-entry .action.install
 {
@@ -117,7 +114,6 @@
     background-image: linear-gradient(to bottom, #4fe64b 0%, #39a42e 100%);
 }
 
-.package-details .action.remove,
 .package-list .package-entry .action.remove
 {
     color: #fff;
@@ -131,7 +127,6 @@
     background-image: linear-gradient(to bottom, #e64747 0%, #a42e2e 100%);
 }
 
-.package-details .action:hover,
 .package-list-actions .update-all:hover,
 .package-list .package-entry .action:hover
 {
@@ -146,76 +141,33 @@
     background-image: linear-gradient(to bottom, #b1c5f4 0%, #8faffe 100%);
 }
 
-.package-details .icon,
 .package-list .package-entry .icon
 {
     float: left;
-    width: 100px;
-    height: 100px;
-    margin-right: 1em;
+    width: 64px;
+    height: 64px;
+    margin-right: 2px;
     background-repeat: no-repeat;
     background-position: 50% 50%;
     background-image: url("/images/common/admin/packages/default-icon.png");
 }
 
-.package-details .name,
 .package-list .package-entry .name
 {
     display: block;
+    margin-top: 12px;
     font-size: larger;
     font-weight: bold;
 }
 
-.package-details .modules,
-.package-list .package-entry .modules
-{
-    width: 30%;
-    float: right;
-    margin-left: 1em;
-}
-
-.package-details .modules .modules-header,
-.package-list .package-entry .modules .modules-header
-{
-    color: #fff;
-    padding: 10px;
-    font-weight: bold;
-    position: relative;
-    background: #4a78eb;
-    margin: 0px 0px 10px 0px;
-    border-radius: 2px;
-    -ms-border-radius: 2px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-}
-
-.package-details .modules .modules-header:before,
-.package-list .package-entry .modules .modules-header:before
-{
-    top: 50%;
-    left: 0px;
-    margin-top: -8px;
-    margin-left: -14px;
-    position: absolute;
-    content: url("/images/common/admin/packages/modules-arrow-left.png");
-}
-
-.package-details .modules .module,
-.package-list .package-entry .modules .module
-{
-    display: block;
-    padding-left: 10px;
-}
-
-.package-details .short-infos,
 .package-list .package-entry .short-infos
 {
+    clear: both;
     display: block;
     margin-top: 1em;
     margin-bottom: 1em;
 }
 
-.package-details .short-infos .number,
 .package-list .package-entry .short-infos .number
 {
     color: #000;
@@ -238,49 +190,27 @@
     box-shadow: 1px 1px 0px #123;
 }
 
-.package-details .short-infos .number:before,
-.package-list .package-entry .short-infos .number:before
-{
-    top: 23px;
-    left: 6px;
-    position: absolute;
-    content: url("/images/common/admin/packages/info-arrow-down.png");
-}
-
-.package-details .short-infos .number.favourites,
 .package-list .package-entry .short-infos .number.favourites
 {
     background-image: url("/images/common/admin/packages/favourites.png");
 }
 
-.package-details .short-infos .number.downloads,
 .package-list .package-entry .short-infos .number.downloads
 {
     background-image: url("/images/common/admin/packages/downloads.png");
 }
 
-.package-list .package-entry .name,
-.package-list .package-entry .short-infos,
-.package-list .package-entry .description,
-.package-list .package-entry .description ~ .button-appearance
-{
-    margin-left: 115px;
-}
-
-.package-details .description,
 .package-list .package-entry .description
 {
+    margin: 1em;
     text-align: justify;
-    margin-right: 320px;
 }
 
-.package-details dl.package-data,
 .package-list .package-entry dl.package-data
 {
     margin: 1em 0em 0em 0em;
 }
 
-.package-details dl.package-data dt,
 .package-list .package-entry dl.package-data dt
 {
     float: left;
@@ -290,14 +220,12 @@
     padding-right: 1ex;
 }
 
-.package-details dl.package-data dd,
 .package-list .package-entry dl.package-data dd
 {
     margin-left: 2em;
     margin-right: 2em;
 }
 
-.package-details dl.package-data .version .reference,
 .package-list .package-entry dl.package-data .version .reference
 {
     opacity: 0.5;
@@ -323,15 +251,6 @@
 .package-list .package-entry .additional-info a:hover
 {
     color: #000;
-}
-
-.package-list .package-entry .additional-info:before
-{
-    top: 0px;
-    left: 20px;
-    margin-top: -14px;
-    position: absolute;
-    content: url("/images/common/admin/packages/info-arrow-up.png");
 }
 
 .package-list .package-entry .additional-info .additional-info-header
@@ -371,9 +290,4 @@
     margin-right: 0px;
     padding-left: 0px;
     padding-right: 0px;
-}
-
-.package-list-paragraph .package-list .package-entry .description
-{
-    margin-right: 0px;
 }

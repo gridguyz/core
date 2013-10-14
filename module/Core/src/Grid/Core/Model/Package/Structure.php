@@ -184,6 +184,20 @@ class Structure extends MapperAwareAbstract
     }
 
     /**
+     * Get id-safe name
+     *
+     * @return  string
+     */
+    public function getIdSafeName()
+    {
+        static $safeId = array(
+            '/' => '-',
+        );
+
+        return strtr( $this->name, $safeId );
+    }
+
+    /**
      * Set license
      *
      * @param   array   $license

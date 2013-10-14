@@ -124,7 +124,6 @@ return array(
     'admin.packages.action.install.options' => 'Install options',
     'admin.packages.action.remove' => 'Remove',
     'admin.packages.action.updateAll' => 'Update APPz',
-    'admin.packages.action.view' => 'View app details',
     'admin.packages.additionalInfo' => 'Additional info',
     'admin.packages.authors' => 'Author(s)',
  /* 'admin.packages.category.all' => 'All packages',
