@@ -103,7 +103,7 @@ $locale = (string) $this->locale();
 
         <div id="package-<?= $package->idSafeName ?>" class="package-entry<?php
                 if ( $package->isInstalled() ): ?> installed<?php
-                if ( ! empty( $package->module ) && $this->isModuleLoaded( $package->module ) ): ?> enabled<?php endif ?><?php endif ?>">
+                if ( empty( $package->module ) || $this->isModuleLoaded( $package->module ) ): ?> enabled<?php endif ?><?php endif ?>">
             <a href="#package-<?= $package->idSafeName ?>"
                onclick="$(this).closest('.package-entry').find('.additional-info').toggle(); return false;"
                class="icon-link"><img class="icon"
@@ -241,6 +241,7 @@ $locale = (string) $this->locale();
 <?php if ( ! empty( $package->installedVersion ) && ! empty( $package->module ) ): ?>
 
             <form class="module" method="post" action="?">
+                <input name="page" type="hidden" value="<?= $this->escapeHtmlAttr( $this->page ) ?>" />
                 <input name="filter[contains]" type="hidden" value="<?= $this->escapeHtmlAttr( $filter['contains'] ) ?>" />
 <?php if ( $this->canModify ): ?>
 

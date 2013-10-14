@@ -31,65 +31,46 @@
 {
     width: 33%;
     width: 33.3%;
+    color: #fff;
     float: left;
     margin: 0px;
     padding: 0px;
     height: 300px;
     display: block;
-    background: #fff;
     position: relative;
     font-size: smaller;
-    box-shadow: inset 0px 0px 2px #999;
+    background: #424242;
+    box-shadow: inset 0px 0px 1px #000;
 }
 
 .package-list .package-entry:hover
 {
     z-index: 1;
-    background: #def;
-    border-color: #47e;
+    background: #000;
 }
 
-.package-list .package-entry.installed
+.package-list .package-entry.enabled
+{
+    color: #000;
+    background: #fff;
+    box-shadow: inset 0px 0px 1px #999;
+}
+
+.package-list .package-entry.enabled:hover
+{
+    background: #ececec;
+    box-shadow: inset 0px 0px 4px #999;
+}
+
+.package-list .package-entry a:hover
 {
     color: #fff;
-    background: #424242;
-    border-color: #242424;
+    text-decoration: underline;
 }
 
-.package-list .package-entry.installed a:hover
+.package-list .package-entry.enabled a:hover
 {
-    color: #fff;
-}
-
-.package-list .package-entry:after,
-.package-list .package-entry .additional-info:after
-{
-    height: 0;
-    clear: both;
-    content: ".";
-    display: block;
-    visibility: hidden;
-}
-
-/* required comment for clearfix to work in Opera \*/
-
-* html .package-list .package-entry,
-* html .package-list .package-entry .additional-info
-{
-    height: 1%;
-}
-
-.package-list .package-entry,
-.package-list .package-entry .additional-info
-{
-    display: block;
-}
-
-/* end clearfix */
-
-.package-list .package-entry .action
-{
-    float: right;
+    color: #000;
 }
 
 .package-list-actions .update-all,
@@ -160,7 +141,8 @@
     font-weight: bold;
 }
 
-.package-list .package-entry .short-infos
+.package-list .package-entry .short-infos,
+.package-list .package-entry .description
 {
     margin: 1em;
     clear: both;
@@ -172,26 +154,32 @@
     font-weight: bold;
 }
 
+.package-list .package-entry .numbers
+{
+    left: 1em;
+    bottom: 4em;
+    position: absolute;
+}
+
 .package-list .package-entry .numbers .number
 {
     color: #000;
     position: relative;
     display: inline-block;
-    margin: 0px 0px 0px 12px;
-    padding: 6px 12px 6px 32px;
-    background: #f1f1f1 none no-repeat 10px 50%;
-    font-size: 13px !important;
-    line-height: 15px !important;
-    box-shadow: 1px 1px 0px #d7dbe6;
-    border-radius: 2px;
-    -ms-border-radius: 2px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
+    margin: 0px 4px 0px 0px;
+    padding: 2px 8px 2px 28px;
+    font-weight: bold;
+    background: #f1f1f1 none no-repeat 8px 50%;
+    box-shadow: 1px 1px 0px #123;
+    border-radius: 12px;
+    -ms-border-radius: 12px;
+    -moz-border-radius: 12px;
+    -webkit-border-radius: 12px;
 }
 
-.package-list .package-entry.installed .numbers .number
+.package-list .package-entry.enabled .numbers .number
 {
-    box-shadow: 1px 1px 0px #123;
+    box-shadow: 1px 1px 0px #d7dbe6;
 }
 
 .package-list .package-entry .numbers .number.favourites
@@ -206,7 +194,6 @@
 
 .package-list .package-entry .description
 {
-    margin: 1em;
     text-align: justify;
 }
 
@@ -240,4 +227,18 @@
 .package-list .package-entry:hover dl.package-data
 {
     display: block;
+}
+
+.package-list .package-entry .actions
+{
+    left: 1em;
+    bottom: 1em;
+    position: absolute;
+}
+
+.package-list .package-entry .module
+{
+    right: 1em;
+    bottom: 1em;
+    position: absolute;
 }
