@@ -69,7 +69,7 @@ class PackageController extends AbstractAdminController
         $params = $this->params();
         $filter = $params->fromPost( 'filter', $params->fromQuery( 'filter', array() ) );
         $order  = $params->fromPost( 'order',  $params->fromQuery( 'order',  true    ) );
-        $page   = $params->fromPost( 'page',   $params->fromQuery( 'page',   0       ) );
+        $page   = (int) $params->fromPost( 'page', $params->fromQuery( 'page', 0 ) );
         $model  = $this->getServiceLocator()
                        ->get( 'Grid\Core\Model\Package\Model' );
 
@@ -105,7 +105,7 @@ class PackageController extends AbstractAdminController
                             'admin', Message::LEVEL_INFO );
 
                 return $this->redirect()
-                            ->toUrl( '?refresh' );
+                            ->toUrl( '?page=' . $page . '&refresh' );
             }
             else
             {
@@ -116,7 +116,7 @@ class PackageController extends AbstractAdminController
         }
 
         return array(
-            'page'          => (int)   $page,
+            'page'          => $page,
             'filter'        => (array) $filter,
             'order'         => $order,
             'canModify'     => $canModify,
