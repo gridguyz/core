@@ -240,7 +240,7 @@ $locale = (string) $this->locale();
             </dl>
 <?php if ( ! empty( $package->installedVersion ) && ! empty( $package->module ) ): ?>
 
-            <form class="module" method="post" action="?">
+            <form class="modules" method="post" action="?">
                 <input name="page" type="hidden" value="<?= $this->escapeHtmlAttr( $this->page ) ?>" />
                 <input name="filter[contains]" type="hidden" value="<?= $this->escapeHtmlAttr( $filter['contains'] ) ?>" />
 <?php if ( $this->canModify ): ?>

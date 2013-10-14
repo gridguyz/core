@@ -169,7 +169,7 @@
     margin: 0px 4px 0px 0px;
     padding: 2px 8px 2px 28px;
     font-weight: bold;
-    background: #f1f1f1 none no-repeat 8px 50%;
+    background: #eee none no-repeat 8px 50%;
     box-shadow: 1px 1px 0px #123;
     border-radius: 12px;
     -ms-border-radius: 12px;
@@ -236,7 +236,7 @@
     position: absolute;
 }
 
-.package-list .package-entry .module
+.package-list .package-entry .modules
 {
     right: 1em;
     bottom: 1em;
