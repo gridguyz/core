@@ -60,6 +60,22 @@ class RpcController extends AbstractActionController
     }
 
     /**
+     * Convert exception to raw object
+     *
+     * @param   Exception   $exception
+     * @return  object|null
+     */
+    protected static function rawException( $exception )
+    {
+        if ( error_reporting() & E_WARNING )
+        {
+            return static::rawData( $exception );
+        }
+
+        return null;
+    }
+
+    /**
      * Log a single exception
      *
      * @param \Exception $exception
@@ -133,7 +149,7 @@ class RpcController extends AbstractActionController
                 $format->errorCodes[RpcAbstract::METHOD_NOT_FOUND],
                 array(
                     'service'   => $serviceName,
-                    'exception' => self::rawData( $ex ),
+                    'exception' => self::rawException( $ex ),
                 )
             );
         }
@@ -167,7 +183,7 @@ class RpcController extends AbstractActionController
                     array(
                         'service'   => $serviceName,
                         'method'    => $method,
-                        'exception' => self::rawData( $ex ),
+                        'exception' => self::rawException( $ex ),
                     )
                 );
             }
@@ -178,7 +194,7 @@ class RpcController extends AbstractActionController
                 return $format->error(
                     $ex->getMessage(),
                     $format->errorCodes[RpcAbstract::INVALID_PARAMS],
-                    self::rawData( $ex )
+                    self::rawException( $ex )
                 );
             }
             catch ( Exception $ex )
@@ -189,7 +205,7 @@ class RpcController extends AbstractActionController
                     RpcAbstract::INTERNAL . ': #' .
                         $ex->getCode() . ' - ' . $ex->getMessage(),
                     $format->errorCodes[RpcAbstract::INTERNAL],
-                    self::rawData( $ex )
+                    self::rawException( $ex )
                 );
             }
         }
