@@ -101,10 +101,10 @@ $locale = (string) $this->locale();
 <?php foreach ( $paginator as $name => $package ): ?>
 <?php if ( $package && $package->isValid() ): ?>
 
-        <div id="<?= $package->idSafeName ?>" class="package-entry<?php
+        <div id="package-<?= $package->idSafeName ?>" class="package-entry<?php
                 if ( $package->isInstalled() ): ?> installed<?php
                 if ( ! empty( $package->module ) && $this->isModuleLoaded( $package->module ) ): ?> enabled<?php endif ?><?php endif ?>">
-            <a href="#<?= $package->idSafeName ?>"
+            <a href="#package-<?= $package->idSafeName ?>"
                onclick="$(this).closest('.package-entry').find('.additional-info').toggle(); return false;"
                class="icon-link"><img class="icon"
                src="/images/common/blank.gif"
@@ -116,7 +116,7 @@ $locale = (string) $this->locale();
                title="<?= $this->escapeHtmlAttr( $name ) ?>"
                alt="<?= $this->escapeHtmlAttr( $name ) ?>" /></a>
             <div class="name">
-                <a href="#<?= $package->idSafeName ?>"
+                <a href="#package-<?= $package->idSafeName ?>"
                    onclick="$(this).closest('.package-entry').find('.additional-info').toggle(); return false;"
                    class="name-link"><?= $this->escapeHtml( $package->getDisplayedName( $locale ) ) ?></a>
             </div>
@@ -124,11 +124,11 @@ $locale = (string) $this->locale();
 <?php if ( isset( $package->installedTime ) ): ?>
 
                 <span class="time-label"><?= $this->translate( 'admin.packages.installedTime', 'admin' ) ?>:</span>
-                <span class="time-value"><?= $this->dateTime( $package->installedTime ) ?>
+                <span class="time-value" title="<?= $this->escapeHtmlAttr( $this->dateTime( $package->installedTime ) ) ?>"><?= $this->relativeTime( $package->installedTime ) ?></span>
 <?php elseif ( isset( $package->availableTime ) ): ?>
 
                 <span class="time-label"><?= $this->translate( 'admin.packages.availableTime', 'admin' ) ?>:</span>
-                <span class="time-value"><?= $this->dateTime( $package->availableTime ) ?></span>
+                <span class="time-value" title="<?= $this->escapeHtmlAttr( $this->dateTime( $package->availableTime ) ) ?>"><?= $this->relativeTime( $package->availableTime ) ?></span>
 <?php endif ?>
             </div>
             <div class="description">
@@ -196,40 +196,36 @@ $locale = (string) $this->locale();
 <?php if ( ! empty( $package->installedVersion ) ): ?>
 
                 <dt class="installed version"><?= $this->translate( 'admin.packages.installedVersion', 'admin' ) ?></dt>
-                <dd class="installed version">
-                    <?= $this->escapeHtml( $package->installedVersion ) ?>
-<?php if ( ! empty( $package->installedReference ) ): ?>
+                <dd class="installed version"<?php if ( ! empty( $package->installedReference ) ): ?>
 
-                    <span class="installed reference">#<?= $this->escapeHtml( $package->installedReference ) ?></span>
-<?php endif ?>
+                    title="#<?= $this->escapeHtmlAttr( $package->installedReference ) ?>"<?php endif ?>>
+                    <?= $this->escapeHtml( $package->installedVersion ) ?>
 
                 </dd>
 <?php endif ?>
 <?php if ( ! empty( $package->installedTime ) ): ?>
 
                 <dt class="installed time"><?= $this->translate( 'admin.packages.installedTime', 'admin' ) ?></dt>
-                <dd class="installed time">
-                    <?= $this->dateTime( $package->installedTime ) ?>
+                <dd class="installed time" title="<?= $this->escapeHtmlAttr( $this->dateTime( $package->installedTime ) ) ?>">
+                    <?= $this->relativeTime( $package->installedTime ) ?>
 
                 </dd>
 <?php endif ?>
 <?php if ( ! empty( $package->availableVersion ) && ( $package->canModify() || empty( $package->installedVersion ) ) ): ?>
 
                 <dt class="available version"><?= $this->translate( 'admin.packages.availableVersion', 'admin' ) ?></dt>
-                <dd class="available version">
-                    <?= $this->escapeHtml( $package->availableVersion ) ?>
-<?php if ( ! empty( $package->availableReference ) ): ?>
+                <dd class="available version"<?php if ( ! empty( $package->availableReference ) ): ?>
 
-                    <span class="available reference">#<?= $this->escapeHtml( $package->availableReference ) ?></span>
-<?php endif ?>
+                    title="#<?= $this->escapeHtmlAttr( $package->availableReference ) ?>"<?php endif ?>>
+                    <?= $this->escapeHtml( $package->availableVersion ) ?>
 
                 </dd>
 <?php endif ?>
 <?php if ( ! empty( $package->availableTime ) ): ?>
 
                 <dt class="available time"><?= $this->translate( 'admin.packages.availableTime', 'admin' ) ?></dt>
-                <dd class="available time">
-                    <?= $this->dateTime( $package->availableTime ) ?>
+                <dd class="available time" title="<?= $this->escapeHtmlAttr( $this->dateTime( $package->availableTime ) ) ?>">
+                    <?= $this->relativeTime( $package->availableTime ) ?>
 
                 </dd>
 <?php endif ?>

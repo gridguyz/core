@@ -32,14 +32,14 @@
     width: 33%;
     width: 33.3%;
     float: left;
-    margin: -1px;
+    margin: 0px;
     padding: 0px;
     height: 300px;
     display: block;
     background: #fff;
     position: relative;
-    border: 1px solid #999;
-    box-shadow: inset 0px 0px 2px #ccc;
+    font-size: smaller;
+    box-shadow: inset 0px 0px 2px #999;
 }
 
 .package-list .package-entry:hover
@@ -162,13 +162,17 @@
 
 .package-list .package-entry .short-infos
 {
+    margin: 1em;
     clear: both;
     display: block;
-    margin-top: 1em;
-    margin-bottom: 1em;
 }
 
-.package-list .package-entry .short-infos .number
+.package-list .package-entry .short-infos .time-label
+{
+    font-weight: bold;
+}
+
+.package-list .package-entry .numbers .number
 {
     color: #000;
     position: relative;
@@ -185,17 +189,17 @@
     -webkit-border-radius: 2px;
 }
 
-.package-list .package-entry.installed .short-infos .number
+.package-list .package-entry.installed .numbers .number
 {
     box-shadow: 1px 1px 0px #123;
 }
 
-.package-list .package-entry .short-infos .number.favourites
+.package-list .package-entry .numbers .number.favourites
 {
     background-image: url("/images/common/admin/packages/favourites.png");
 }
 
-.package-list .package-entry .short-infos .number.downloads
+.package-list .package-entry .numbers .number.downloads
 {
     background-image: url("/images/common/admin/packages/downloads.png");
 }
@@ -208,6 +212,7 @@
 
 .package-list .package-entry dl.package-data
 {
+    display: none;
     margin: 1em 0em 0em 0em;
 }
 
@@ -215,79 +220,24 @@
 {
     float: left;
     width: auto;
-    margin-left: 2em;
+    margin-left: 1em;
     font-weight: bold;
     padding-right: 1ex;
 }
 
 .package-list .package-entry dl.package-data dd
 {
-    margin-left: 2em;
-    margin-right: 2em;
+    margin-left: 1em;
+    margin-right: 1em;
 }
 
-.package-list .package-entry dl.package-data .version .reference
+.package-list .package-entry:hover .numbers,
+.package-list .package-entry:hover .description
 {
-    opacity: 0.5;
-    font-size: smaller;
-    font-family: monospace;
-    filter: alpha(opacity=50);
+    display: none;
 }
 
-.package-list .package-entry .additional-info
+.package-list .package-entry:hover dl.package-data
 {
-    clear: both;
-    color: #000;
-    padding: 1em 0em;
-    position: relative;
-    background: #ebf1ff;
-    margin: 1em 0em 0em 0em;
-    border-radius: 2px;
-    -ms-border-radius: 2px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-}
-
-.package-list .package-entry .additional-info a:hover
-{
-    color: #000;
-}
-
-.package-list .package-entry .additional-info .additional-info-header
-{
-    margin: 0em;
     display: block;
-    padding: 0em 1em;
-    font-weight: bold;
-}
-
-.package-list .package-entry .package-data.left
-{
-    float: left;
-}
-
-.package-list .package-entry .package-data.right
-{
-    float: right;
-}
-
-.package-list .package-entry .package-data.left,
-.package-list .package-entry .package-data.right
-{
-    width: 50%;
-    margin-left: 0px;
-    margin-right: 0px;
-    padding-left: 0px;
-    padding-right: 0px;
-}
-
-.package-list .package-entry .package-data.full
-{
-    width: 100%;
-    float: none;
-    clear: both;
-    margin-left: 0px;
-    margin-right: 0px;
-    padding-left: 0px;
-    padding-right: 0px;
 }
