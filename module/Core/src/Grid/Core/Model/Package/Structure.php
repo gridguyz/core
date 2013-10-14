@@ -33,7 +33,7 @@ class Structure extends MapperAwareAbstract
     /**
      * @const int
      */
-    const DEFAULT_ICON_SIZE = 100;
+    const DEFAULT_ICON_SIZE = 64;
 
     /**
      * Field: name
@@ -370,14 +370,6 @@ class Structure extends MapperAwareAbstract
         else if ( ! is_array( $displayIcon ) )
         {
             $displayIcon = (array) $displayIcon;
-        }
-
-        if ( ! isset( $displayIcon[static::DEFAULT_ICON_SIZE] ) )
-        {
-            reset( $displayIcon );
-            $key = key( $displayIcon );
-            $displayIcon[static::DEFAULT_ICON_SIZE] = $displayIcon[$key];
-            unset( $displayIcon[$key] );
         }
 
         $this->displayIcon = $displayIcon;
@@ -753,7 +745,7 @@ class Structure extends MapperAwareAbstract
      */
     public function canUpdate()
     {
-        return $this->canModify() &&(
+        return $this->canModify() && (
             $this->canInstall() || (
                 ! empty( $this->installedVersion ) && (
                     ( ( $this->availableVersion == 'dev-master' ||
