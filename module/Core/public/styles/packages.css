@@ -194,11 +194,21 @@
 
 .package-list .package-entry .description
 {
+    height: 12em;
     text-align: justify;
+}
+
+.package-list .package-entry .description,
+.package-list .package-entry dl.package-data
+{
+    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .package-list .package-entry dl.package-data
 {
+    height: 14em;
     display: none;
     margin: 1em 0em 0em 0em;
 }
