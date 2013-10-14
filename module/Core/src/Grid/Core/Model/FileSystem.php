@@ -194,6 +194,22 @@ class FileSystem implements CallableInterface,
     }
 
     /**
+     * Get secure file
+     *
+     * @param string $path
+     * @return string
+     */
+    public function secureFile( $path )
+    {
+        if ( preg_match( '/\.php$/', $path ) )
+        {
+            return $path . 's';
+        }
+
+        return $path;
+    }
+
+    /**
      * Get mime-info
      *
      * @param string $full
@@ -556,6 +572,14 @@ class FileSystem implements CallableInterface,
         $path   = $this->realPath( $path );
         $base   = $this->baseUrl . ( empty( $path ) ? '' : '/' . $path );
         $full   = realpath( $this->baseDir . '/' . $base );
+        $isFile = is_file( $full );
+        $isDir  = is_dir( $full );
+
+        if ( $isFile )
+        {
+            $to = $this->secureFile( $to );
+        }
+
         $toBase = $this->baseUrl . '/' . $to;
         $toFull = $this->baseDir . '/' . $toBase;
 
@@ -573,9 +597,6 @@ class FileSystem implements CallableInterface,
             $toBase = $this->baseUrl . '/' . $to;
             $toFull = $this->baseDir . '/' . $toBase;
         }
-
-        $isFile = is_file( $full );
-        $isDir  = is_dir( $full );
 
         if ( ( $isFile || $isDir ) && is_dir( dirname( $toFull ) ) )
         {
@@ -646,6 +667,12 @@ class FileSystem implements CallableInterface,
         $path   = $this->realPath( $path );
         $base   = $this->baseUrl . ( empty( $path ) ? '' : '/' . $path );
         $full   = realpath( $this->baseDir . '/' . $base );
+
+        if ( is_file( $full ) )
+        {
+            $to = $this->secureFile( $to );
+        }
+
         $toBase = $this->baseUrl . '/' . $to;
         $toFull = $this->baseDir . '/' . $toBase;
 
@@ -722,7 +749,7 @@ class FileSystem implements CallableInterface,
             return $result;
         }
 
-        $to     = $this->validPath( $this->realPath( $to ) );
+        $to     = $this->secureFile( $this->validPath( $this->realPath( $to ) ) );
         $base   = $this->baseDir . self::UPLOADS_TEMP;
         $full   = realpath( $base . '/' . $temp );
         $toBase = $this->baseUrl . '/' . $to;

@@ -314,11 +314,6 @@ class UploadController extends AbstractActionController
 
                 $filePath = $fileBase . $fileName;
 
-                if ( preg_match( '/.php$/', $filePath ) )
-                {
-                    $filePath .= 's';
-                }
-
                 // Make sure the fileName is unique but only if chunking is disabled
                 if ( $chunks < 2 && file_exists( $filePath ) )
                 {
