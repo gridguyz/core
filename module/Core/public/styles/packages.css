@@ -141,9 +141,9 @@
 .package-list .package-entry .icon
 {
     float: left;
+    margin: 1em;
     width: 64px;
     height: 64px;
-    margin-right: 2px;
     background-repeat: no-repeat;
     background-position: 50% 50%;
     background-image: url("/images/common/admin/packages/default-icon.png");
@@ -152,17 +152,18 @@
 .package-list .package-entry .name
 {
     display: block;
-    margin-top: 12px;
+    margin-top: 2em;
     font-size: larger;
     font-weight: bold;
+    margin-bottom: 1em;
 }
 
 .package-list .package-entry .contents,
 .package-list .package-entry .short-infos
 {
-    margin: 1em;
     clear: both;
     display: block;
+    margin: 1em 2em;
 }
 
 .package-list .package-entry .short-infos .time-label
@@ -173,7 +174,7 @@
 .package-list .package-entry .contents
 {
     color: #ccc;
-    height: 14em;
+    height: 10em;
     overflow: hidden;
 }
 
@@ -223,7 +224,7 @@
 
 .package-list .package-entry .description
 {
-    height: 12em;
+    height: 8em;
     text-align: justify;
     transition: margin-top 0.5s;
     -o-transition: margin-top 0.5s;
@@ -234,7 +235,7 @@
 
 .package-list .package-entry:hover .description
 {
-    margin-top: -15em;
+    margin-top: -11em;
 }
 
 .package-list .package-entry .description p
@@ -252,7 +253,7 @@
 
 .package-list .package-entry dl.package-data
 {
-    height: 14em;
+    height: 10em;
     margin: 1em 0em 0em 0em;
 }
 
@@ -277,14 +278,14 @@
 
 .package-list .package-entry .actions
 {
-    left: 1em;
-    bottom: 1em;
+    left: 2em;
+    bottom: 2em;
     position: absolute;
 }
 
 .package-list .package-entry .modules
 {
-    right: 1em;
-    bottom: 1em;
+    right: 2em;
+    bottom: 2em;
     position: absolute;
 }
