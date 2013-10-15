@@ -289,3 +289,27 @@
     bottom: 2em;
     position: absolute;
 }
+
+.package-list .package-entry .amount-container
+{
+    color: #fff;
+    margin: 4px 6px;
+    background: #507ff0;
+    display: inline-block;
+    border-radius: 1em;
+    -ms-border-radius: 1em;
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+}
+
+.package-list .package-entry .modules .module,
+.package-list .package-entry .amount-container
+{
+    vertical-align: middle;
+}
+
+.package-list .package-entry .amount-container,
+.package-list .package-entry .js-form-onoff-button
+{
+    box-shadow: 1px 1px 1px #888;
+}
