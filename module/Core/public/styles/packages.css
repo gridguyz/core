@@ -175,7 +175,7 @@
 .package-list .package-entry .contents
 {
     color: #ccc;
-    height: 11em;
+    height: 12em;
     overflow: hidden;
 }
 
@@ -225,7 +225,7 @@
 
 .package-list .package-entry .description
 {
-    height: 9em;
+    height: 10em;
     text-align: justify;
     transition: margin-top 0.5s;
     -o-transition: margin-top 0.5s;
@@ -236,7 +236,7 @@
 
 .package-list .package-entry:hover .description
 {
-    margin-top: -12em;
+    margin-top: -13em;
 }
 
 .package-list .package-entry .description p
@@ -254,7 +254,7 @@
 
 .package-list .package-entry dl.package-data
 {
-    height: 11em;
+    height: 12em;
     margin: 1em 0em 0em 0em;
 }
 
