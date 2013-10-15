@@ -312,5 +312,11 @@
 .package-list .package-entry .amount-container,
 .package-list .package-entry .js-form-onoff-button
 {
+    box-shadow: 1px 1px 1px #222;
+}
+
+.package-list .package-entry.enabled .amount-container,
+.package-list .package-entry.enabled .js-form-onoff-button
+{
     box-shadow: 1px 1px 1px #bbb;
 }
