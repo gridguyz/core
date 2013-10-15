@@ -249,12 +249,26 @@ $locale = (string) $this->locale();
 <?php endif ?>
 
                 <input type="hidden" name="modules[<?= $this->escapeHtmlAttr( $package->module ) ?>]" value="" />
+<?php $this->placeholder( 'listModule' )->set( '' );
+      $this->placeholder( 'listModule' )->captureStart(); ?>
+
                 <label class="module">
                     <input type="checkbox" data-js-type="js.form.submit js.form.element.onOff"
                            name="modules[<?= $this->escapeHtmlAttr( $package->module ) ?>]"
                            value="1"<?php if ( $this->isModuleLoaded( $package->module ) ):
                         ?> checked="checked"<?php endif ?> />
                 </label>
+<?php $this->placeholder( 'listModule' )->captureEnd(); ?>
+
+                <?= $this->viewWidget(
+                    'Grid\Core\Package\List\Module',
+                    $this->placeholder( 'listModule' ),
+                    array(
+                        'package'   => $package,
+                        'module'    => $package->module,
+                    )
+                ) ?>
+
             </form>
 <?php endif ?>
 <?php if ( $package->canInstall() || $package->canRemove() ): ?>
