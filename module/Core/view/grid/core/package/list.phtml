@@ -105,7 +105,6 @@ $locale = (string) $this->locale();
                 if ( $package->isInstalled() ): ?> installed<?php
                 if ( empty( $package->module ) || $this->isModuleLoaded( $package->module ) ): ?> enabled<?php endif ?><?php endif ?>">
             <a href="#package-<?= $package->idSafeName ?>"
-               onclick="$(this).closest('.package-entry').find('.additional-info').toggle(); return false;"
                class="icon-link"><img class="icon"
                src="/images/common/blank.gif"
 <?php $icon = $package->getDisplayedIcon( 64 ); if ( ! empty( $icon ) ): ?>
@@ -115,11 +114,10 @@ $locale = (string) $this->locale();
 
                title="<?= $this->escapeHtmlAttr( $name ) ?>"
                alt="<?= $this->escapeHtmlAttr( $name ) ?>" /></a>
-            <div class="name">
-                <a href="#package-<?= $package->idSafeName ?>"
-                   onclick="$(this).closest('.package-entry').find('.additional-info').toggle(); return false;"
-                   class="name-link"><?= $this->escapeHtml( $package->getDisplayedName( $locale ) ) ?></a>
-            </div>
+            <h3 class="name">
+                <?= $this->escapeHtml( $package->getDisplayedName( $locale ) ) ?>
+
+            </h3>
             <div class="short-infos">
 <?php if ( isset( $package->installedTime ) ): ?>
 

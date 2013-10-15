@@ -67,6 +67,12 @@
     box-shadow: inset 0px 0px 4px #999;
 }
 
+.package-list .package-entry a,
+.package-list .package-entry .name
+{
+    color: #4e7def;
+}
+
 .package-list .package-entry a:hover
 {
     color: #fff;
