@@ -201,7 +201,7 @@ class FileSystem implements CallableInterface,
      */
     public function secureFile( $path )
     {
-        if ( preg_match( '/\.php$/', $path ) )
+        if ( preg_match( '/\.php$/i', $path ) )
         {
             return $path . 's';
         }

@@ -185,7 +185,7 @@ class UploadController extends AbstractActionController
                     @ mkdir( self::TEMP_PATH, static::UPLOAD_MOD, true );
                 }
 
-                if ( 'php' === $ext )
+                if ( 'php' === strtolower( $ext ) )
                 {
                     $ext = 'phps';
                 }
