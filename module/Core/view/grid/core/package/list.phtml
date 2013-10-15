@@ -95,6 +95,7 @@ $locale = (string) $this->locale();
 
         <div class="warn package-list-empty">
             <?= $this->translate( 'default.rowSet.noData' ) ?>
+
         </div>
 <?php else: ?>
 
@@ -112,10 +113,10 @@ $locale = (string) $this->locale();
 
                  title="<?= $this->escapeHtmlAttr( $name ) ?>"
                  alt="<?= $this->escapeHtmlAttr( $name ) ?>" />
-            <p class="name">
+            <div class="name">
                 <?= $this->escapeHtml( $package->getDisplayedName( $locale ) ) ?>
 
-            </p>
+            </div>
             <div class="short-infos">
 <?php if ( isset( $package->installedTime ) ): ?>
 
