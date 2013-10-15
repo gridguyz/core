@@ -114,10 +114,10 @@ $locale = (string) $this->locale();
 
                title="<?= $this->escapeHtmlAttr( $name ) ?>"
                alt="<?= $this->escapeHtmlAttr( $name ) ?>" /></a>
-            <h3 class="name">
+            <p class="name">
                 <?= $this->escapeHtml( $package->getDisplayedName( $locale ) ) ?>
 
-            </h3>
+            </p>
             <div class="short-infos">
 <?php if ( isset( $package->installedTime ) ): ?>
 
