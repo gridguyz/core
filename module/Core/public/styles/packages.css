@@ -293,7 +293,8 @@
 .package-list .package-entry .amount-container
 {
     color: #fff;
-    margin: 4px 6px;
+    padding: 2px 6px;
+    margin-right: 1ex;
     background: #507ff0;
     display: inline-block;
     border-radius: 1em;
@@ -305,11 +306,11 @@
 .package-list .package-entry .modules .module,
 .package-list .package-entry .amount-container
 {
-    vertical-align: middle;
+    vertical-align: bottom;
 }
 
 .package-list .package-entry .amount-container,
 .package-list .package-entry .js-form-onoff-button
 {
-    box-shadow: 1px 1px 1px #888;
+    box-shadow: 1px 1px 1px #bbb;
 }
