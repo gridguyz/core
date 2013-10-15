@@ -157,8 +157,8 @@
     font-weight: bold;
 }
 
-.package-list .package-entry .short-infos,
-.package-list .package-entry .description
+.package-list .package-entry .contents,
+.package-list .package-entry .short-infos
 {
     margin: 1em;
     clear: both;
@@ -170,21 +170,35 @@
     font-weight: bold;
 }
 
+.package-list .package-entry .contents
+{
+    color: #ccc;
+    height: 12em;
+    overflow: hidden;
+}
+
+.package-list .package-entry.enabled .contents
+{
+    color: #888;
+}
+
 .package-list .package-entry .numbers
 {
-    left: 1em;
-    bottom: 4em;
-    position: absolute;
+    margin: 0em;
+    height: 2em;
+    padding: 0em;
+    line-height: 2em;
+    vertical-align: middle;
 }
 
 .package-list .package-entry .numbers .number
 {
     color: #000;
+    font-weight: bold;
     position: relative;
     display: inline-block;
     margin: 0px 4px 0px 0px;
     padding: 2px 8px 2px 28px;
-    font-weight: bold;
     background: #eee none no-repeat 8px 50%;
     box-shadow: 1px 1px 0px #123;
     border-radius: 12px;
@@ -212,6 +226,16 @@
 {
     height: 12em;
     text-align: justify;
+    transition: margin-top 0.5s;
+    -o-transition: margin-top 0.5s;
+    -ms-transition: margin-top 0.5s;
+    -moz-transition: margin-top 0.5s;
+    -webkit-transition: margin-top 0.5s;
+}
+
+.package-list .package-entry:hover .description
+{
+    margin-top: -15em;
 }
 
 .package-list .package-entry .description,
@@ -231,28 +255,22 @@
 
 .package-list .package-entry dl.package-data dt
 {
+    color: #fff;
     float: left;
     width: auto;
     margin-left: 1em;
-    font-weight: bold;
     padding-right: 1ex;
+}
+
+.package-list .package-entry.enabled dl.package-data dt
+{
+    color: #000;
 }
 
 .package-list .package-entry dl.package-data dd
 {
     margin-left: 1em;
     margin-right: 1em;
-}
-
-.package-list .package-entry:hover .numbers,
-.package-list .package-entry:hover .description
-{
-    display: none;
-}
-
-.package-list .package-entry:hover dl.package-data
-{
-    display: block;
 }
 
 .package-list .package-entry .actions
