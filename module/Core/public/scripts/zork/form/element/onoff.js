@@ -25,7 +25,8 @@
         if ( element.is( "input[type=checkbox]" ) )
         {
             js.style( "/styles/scripts/onoff.css" );
-            element.addClass( "ui-helper-hidden" );
+            element.addClass( "ui-helper-hidden" )
+                   .css( "display", "none" );
 
             var checked = element.prop( "checked" ),
                 button  = $( "<button type='button' />" )

@@ -79,6 +79,11 @@
     text-decoration: underline;
 }
 
+.package-list .package-entry a.button-appearance:hover
+{
+    text-decoration: none;
+}
+
 .package-list .package-entry.enabled a:hover
 {
     color: #000;
