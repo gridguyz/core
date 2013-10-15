@@ -2,13 +2,10 @@
 
 .js-form-onoff-button
 {
-    margin: 0;
-    padding: 0;
-    width: 3em;
-    height: 1.5em;
+    width: 4em;
+    margin: 0em;
     background: #ccc;
     text-align: left;
-    line-height: 1.5em;
     border: 1px solid #888;
     vertical-align: middle;
     border-radius: 1.5em;
@@ -19,8 +16,8 @@
 
 .js-form-onoff-button .js-form-onoff-slider
 {
-    width: 0.8em;
-    height: 0.8em;
+    width: 1em;
+    height: 1em;
     display: block;
     background: #f1f1f1;
     display: inline-block;
