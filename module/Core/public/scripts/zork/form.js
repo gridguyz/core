@@ -961,4 +961,23 @@
 
     global.Zork.Form.prototype.inputset.isElementConstructor = true;
 
+    /**
+     * Submit
+     *
+     * @memberOf Zork.Form
+     */
+    global.Zork.Form.prototype.submit = function ( element )
+    {
+        element = $( element );
+
+        var form    = $( element[0].form || element.closest( "form" ) ),
+            on      = element.data( "jsFormSubmitOn" ) || "change";
+
+        element.on( on, function () {
+            form.submit();
+        } );
+    };
+
+    global.Zork.Form.prototype.submit.isElementConstructor = true;
+
 } ( window, jQuery, zork ) );
