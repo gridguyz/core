@@ -129,113 +129,115 @@ $locale = (string) $this->locale();
                 <span class="time-value" title="<?= $this->escapeHtmlAttr( $this->dateTime( $package->availableTime ) ) ?>"><?= $this->relativeTime( $package->availableTime ) ?></span>
 <?php endif ?>
             </div>
-            <div class="description">
-                <?= $this->markdown( $package->getDisplayedDescription( $locale ) ) ?>
+            <div class="contents">
+                <div class="description">
+                    <?= $this->markdown( $package->getDisplayedDescription( $locale ) ) ?>
 
-            </div>
+                </div>
 <?php if ( isset( $package->favourites ) || isset( $package->downloads ) ): ?>
 
-            <div class="numbers">
+                <div class="numbers">
 <?php if ( isset( $package->favourites ) ): ?>
 
-                <span class="number favourites" title="<?= $this->translate( 'admin.packages.favourites', 'admin' )
-                    ?>"><?= (int) $package->favourites ?></span>
+                    <span class="number favourites" title="<?= $this->translate( 'admin.packages.favourites', 'admin' )
+                        ?>"><?= (int) $package->favourites ?></span>
 <?php endif ?>
 <?php if ( isset( $package->downloads ) ): ?>
 
-                <span class="number downloads" title="<?= $this->translate( 'admin.packages.downloads', 'admin' )
-                    ?>"><?= (int) $package->downloads ?></span>
+                    <span class="number downloads" title="<?= $this->translate( 'admin.packages.downloads', 'admin' )
+                        ?>"><?= (int) $package->downloads ?></span>
 <?php endif ?>
 
-            </div>
+                </div>
 <?php endif ?>
 
-            <dl class="package-data">
+                <dl class="package-data">
 <?php if ( ! empty( $package->homepage ) ): ?>
 
-                <dt class="homepage"><?= $this->translate( 'admin.packages.homepage', 'admin' ) ?></dt>
-                <dd class="homepage"><a href="<?= $this->escapeHtmlAttr( $package->homepage ) ?>"
-                                        target="_blank"><?= $this->escapeHtml( $package->homepage ) ?></a></dd>
+                    <dt class="homepage"><?= $this->translate( 'admin.packages.homepage', 'admin' ) ?></dt>
+                    <dd class="homepage"><a href="<?= $this->escapeHtmlAttr( $package->homepage ) ?>"
+                                            target="_blank"><?= $this->escapeHtml( $package->homepage ) ?></a></dd>
 <?php endif ?>
 <?php if ( ! empty( $package->license ) ): ?>
 
-                <dt class="license"><?= $this->translate( 'admin.packages.license', 'admin' ) ?></dt>
-                <dd class="license">
+                    <dt class="license"><?= $this->translate( 'admin.packages.license', 'admin' ) ?></dt>
+                    <dd class="license">
 <?php foreach ( $package->licenseUris as $license => $uri ): ?>
 <?php if ( $uri ): ?>
 
-                    <a href="<?= $this->escapeHtmlAttr( $uri ) ?>"
-                       target="_blank"><?= $this->escapeHtml( $license ) ?></a>
+                        <a href="<?= $this->escapeHtmlAttr( $uri ) ?>"
+                           target="_blank"><?= $this->escapeHtml( $license ) ?></a>
 <?php else: ?>
 
-                    <span><?= $this->escapeHtml( $license ) ?></span>
+                        <span><?= $this->escapeHtml( $license ) ?></span>
 <?php endif ?>
 <?php endforeach ?>
 
-                </dd>
+                    </dd>
 <?php endif ?>
 <?php if ( ! empty( $package->keywords ) ): ?>
 
-                <dt class="keywords"><?= $this->translate( 'admin.packages.keywords', 'admin' ) ?></dt>
-                <dd class="keywords"><?= $this->escapeHtml( implode( ', ', $package->keywords ) ) ?></dd>
+                    <dt class="keywords"><?= $this->translate( 'admin.packages.keywords', 'admin' ) ?></dt>
+                    <dd class="keywords"><?= $this->escapeHtml( implode( ', ', $package->keywords ) ) ?></dd>
 <?php endif ?>
 <?php $authors = $package->getDisplayedAuthors( $locale ); if ( ! empty( $authors ) ): ?>
 
-                <dt class="authors"><?= $this->translate( 'admin.packages.authors', 'admin' ) ?></dt>
-                <dd class="authors">
+                    <dt class="authors"><?= $this->translate( 'admin.packages.authors', 'admin' ) ?></dt>
+                    <dd class="authors">
 <?php foreach ( $authors as $author ): ?>
 
-                    <a href="<?= empty( $author['url'] ) ? '#' : $author['url'] ?>" target="_blank"
-                       class="author"><?= $this->escapeHtml( $author['name'] ) ?></a>
+                        <a href="<?= empty( $author['url'] ) ? '#' : $author['url'] ?>" target="_blank"
+                           class="author"><?= $this->escapeHtml( $author['name'] ) ?></a>
 <?php endforeach ?>
 
-                </dd>
+                    </dd>
 <?php endif ?>
 <?php if ( ! empty( $package->installedVersion ) ): ?>
 
-                <dt class="installed version"><?= $this->translate( 'admin.packages.installedVersion', 'admin' ) ?></dt>
-                <dd class="installed version"<?php if ( ! empty( $package->installedReference ) ): ?>
+                    <dt class="installed version"><?= $this->translate( 'admin.packages.installedVersion', 'admin' ) ?></dt>
+                    <dd class="installed version"<?php if ( ! empty( $package->installedReference ) ): ?>
 
-                    title="#<?= $this->escapeHtmlAttr( $package->installedReference ) ?>"<?php endif ?>>
-                    <?= $this->escapeHtml( $package->installedVersion ) ?>
+                        title="#<?= $this->escapeHtmlAttr( $package->installedReference ) ?>"<?php endif ?>>
+                        <?= $this->escapeHtml( $package->installedVersion ) ?>
 
-                </dd>
+                    </dd>
 <?php endif ?>
 <?php if ( ! empty( $package->installedTime ) ): ?>
 
-                <dt class="installed time"><?= $this->translate( 'admin.packages.installedTime', 'admin' ) ?></dt>
-                <dd class="installed time" title="<?= $this->escapeHtmlAttr( $this->dateTime( $package->installedTime ) ) ?>">
-                    <?= $this->relativeTime( $package->installedTime ) ?>
+                    <dt class="installed time"><?= $this->translate( 'admin.packages.installedTime', 'admin' ) ?></dt>
+                    <dd class="installed time" title="<?= $this->escapeHtmlAttr( $this->dateTime( $package->installedTime ) ) ?>">
+                        <?= $this->relativeTime( $package->installedTime ) ?>
 
-                </dd>
+                    </dd>
 <?php endif ?>
 <?php if ( ! empty( $package->availableVersion ) && ( $package->canModify() || empty( $package->installedVersion ) ) ): ?>
 
-                <dt class="available version"><?= $this->translate( 'admin.packages.availableVersion', 'admin' ) ?></dt>
-                <dd class="available version"<?php if ( ! empty( $package->availableReference ) ): ?>
+                    <dt class="available version"><?= $this->translate( 'admin.packages.availableVersion', 'admin' ) ?></dt>
+                    <dd class="available version"<?php if ( ! empty( $package->availableReference ) ): ?>
 
-                    title="#<?= $this->escapeHtmlAttr( $package->availableReference ) ?>"<?php endif ?>>
-                    <?= $this->escapeHtml( $package->availableVersion ) ?>
+                        title="#<?= $this->escapeHtmlAttr( $package->availableReference ) ?>"<?php endif ?>>
+                        <?= $this->escapeHtml( $package->availableVersion ) ?>
 
-                </dd>
+                    </dd>
 <?php endif ?>
 <?php if ( ! empty( $package->availableTime ) ): ?>
 
-                <dt class="available time"><?= $this->translate( 'admin.packages.availableTime', 'admin' ) ?></dt>
-                <dd class="available time" title="<?= $this->escapeHtmlAttr( $this->dateTime( $package->availableTime ) ) ?>">
-                    <?= $this->relativeTime( $package->availableTime ) ?>
+                    <dt class="available time"><?= $this->translate( 'admin.packages.availableTime', 'admin' ) ?></dt>
+                    <dd class="available time" title="<?= $this->escapeHtmlAttr( $this->dateTime( $package->availableTime ) ) ?>">
+                        <?= $this->relativeTime( $package->availableTime ) ?>
 
-                </dd>
+                    </dd>
 <?php endif ?>
 <?php if ( $package->canModify() ): ?>
 
-                <dt class="library-name"><?= $this->translate( 'admin.packages.libraryName', 'admin' ) ?></dt>
-                <dd class="library-name"><?= $this->escapeHtml( $package->name ) ?></dd>
-                <dt class="library-description"><?= $this->translate( 'admin.packages.libraryDescription', 'admin' ) ?></dt>
-                <dd class="library-description"><?= $this->escapeHtml( $package->description ) ?></dd>
+                    <dt class="library-name"><?= $this->translate( 'admin.packages.libraryName', 'admin' ) ?></dt>
+                    <dd class="library-name"><?= $this->escapeHtml( $package->name ) ?></dd>
+                    <dt class="library-description"><?= $this->translate( 'admin.packages.libraryDescription', 'admin' ) ?></dt>
+                    <dd class="library-description"><?= $this->escapeHtml( $package->description ) ?></dd>
 <?php endif ?>
 
-            </dl>
+                </dl>
+            </div>
 <?php if ( ! empty( $package->installedVersion ) && ! empty( $package->module ) ): ?>
 
             <form class="modules" method="post" action="?">

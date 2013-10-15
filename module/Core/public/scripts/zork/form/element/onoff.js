@@ -55,6 +55,6 @@
         }
     };
 
-    global.Zork.Form.Element.prototype.number.isElementConstructor = true;
+    global.Zork.Form.Element.prototype.onOff.isElementConstructor = true;
 
 } ( window, jQuery, zork ) );
