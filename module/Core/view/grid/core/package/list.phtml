@@ -104,16 +104,14 @@ $locale = (string) $this->locale();
         <div id="package-<?= $package->idSafeName ?>" class="package-entry<?php
                 if ( $package->isInstalled() ): ?> installed<?php
                 if ( empty( $package->module ) || $this->isModuleLoaded( $package->module ) ): ?> enabled<?php endif ?><?php endif ?>">
-            <a href="#package-<?= $package->idSafeName ?>"
-               class="icon-link"><img class="icon"
-               src="/images/common/blank.gif"
+            <img class="icon" src="/images/common/blank.gif"
 <?php $icon = $package->getDisplayedIcon( 64 ); if ( ! empty( $icon ) ): ?>
 
-               style="background-image: url(<?= $this->escapeHtmlAttr( $icon ) ?>);"
+                 style="background-image: url(<?= $this->escapeHtmlAttr( $icon ) ?>);"
 <?php endif ?>
 
-               title="<?= $this->escapeHtmlAttr( $name ) ?>"
-               alt="<?= $this->escapeHtmlAttr( $name ) ?>" /></a>
+                 title="<?= $this->escapeHtmlAttr( $name ) ?>"
+                 alt="<?= $this->escapeHtmlAttr( $name ) ?>" />
             <p class="name">
                 <?= $this->escapeHtml( $package->getDisplayedName( $locale ) ) ?>
 
