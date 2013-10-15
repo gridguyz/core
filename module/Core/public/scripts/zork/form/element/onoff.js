@@ -39,9 +39,10 @@
                 button.addClass( "js-form-onoff-checked" );
             }
 
-            button.on( "click dblclick", function () {
+            button.on( "click dblclick", function ( event ) {
                 checked = ! element.prop( "checked" );
                 button.toggleClass( "js-form-onoff-checked", checked );
+                event.preventDefault();
                 element.prop( "checked", checked )
                        .trigger( "change" );
             } );
