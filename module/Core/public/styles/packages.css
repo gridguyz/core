@@ -237,6 +237,11 @@
     margin-top: -15em;
 }
 
+.package-list .package-entry .description p
+{
+    margin-top: 0em;
+}
+
 .package-list .package-entry .description,
 .package-list .package-entry dl.package-data
 {
