@@ -79,7 +79,7 @@
         }
 
         // click event
-        var activeItem      = ! element.attr( "href" )
+        var activeItem      = ! element.prop( "href" )
                               ? element
                               : element.find( ".lightbox-viewer-button" ),
             bgColor         = $( "body" ).css( "backgroundColor" ),
