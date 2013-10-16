@@ -426,6 +426,9 @@ return array(
                             'label'     => 'user.form.login.password',
                             'required'  => true,
                         ),
+                        'attributes'    => array(
+                            'autocomplete'  => 'off',
+                        ),
                     ),
                 ),
              /* 'csrf' => array(
@@ -495,6 +498,9 @@ return array(
                             'required'  => true,
                             'minlength' => 6,
                         ),
+                        'attributes'    => array(
+                            'autocomplete'  => 'off',
+                        ),
                     ),
                 ),
                 'passwordVerify'    => array(
@@ -505,6 +511,9 @@ return array(
                             'label'     => 'user.form.register.passwordVerify',
                             'required'  => true,
                             'identical' => 'password',
+                        ),
+                        'attributes'    => array(
+                            'autocomplete'  => 'off',
                         ),
                     ),
                 ),
@@ -594,6 +603,9 @@ return array(
                             'required'      => true,
                             'minlength'     => 6,
                         ),
+                        'attributes'    => array(
+                            'autocomplete'  => 'off',
+                        ),
                     ),
                 ),
                 'passwordVerify' => array(
@@ -605,6 +617,9 @@ return array(
                             'description'   => 'user.form.passwordChange.check.description',
                             'required'      => true,
                             'identical'     => 'password',
+                        ),
+                        'attributes'    => array(
+                            'autocomplete'  => 'off',
                         ),
                     ),
                 ),
@@ -653,6 +668,9 @@ return array(
                             'required'  => true,
                             'minlength' => 6,
                         ),
+                        'attributes'    => array(
+                            'autocomplete'  => 'off',
+                        ),
                     ),
                 ),
                 'passwordVerify' => array(
@@ -663,6 +681,9 @@ return array(
                             'label'     => 'user.form.create.passwordVerify',
                             'required'  => true,
                             'identical' => 'password',
+                        ),
+                        'attributes'    => array(
+                            'autocomplete'  => 'off',
                         ),
                     ),
                 ),
@@ -817,6 +838,9 @@ return array(
                             'required'      => true,
                             'minlength'     => 6,
                         ),
+                        'attributes'    => array(
+                            'autocomplete'  => 'off',
+                        ),
                     ),
                 ),
                 'passwordVerify' => array(
@@ -828,6 +852,9 @@ return array(
                             'description'   => 'user.form.passwordChange.check.description',
                             'required'      => true,
                             'identical'     => 'password',
+                        ),
+                        'attributes'    => array(
+                            'autocomplete'  => 'off',
                         ),
                     ),
                 ),
