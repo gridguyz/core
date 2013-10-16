@@ -39,12 +39,13 @@
                 "lightBox"  : form.find( ":input[name='paragraph-image[lightBox]']:not([type='hidden'])" )
             },
             before = {
-                "url"       : img.attr( "src" ),
-                "caption"   : element.find( "figcaption" ).html(),
-                "alternate" : img.attr( "alt" ),
-                "linkTo"    : elements.linkTo.val(),
-                "linkTarget": elements.linkTarget.val(),
-                "lightBox"  : elements.lightBox.attr( "checked" )
+                "url"           : img.attr( "src" ),
+                "caption"       : caption.html(),
+                "captionEmpty"  : caption.hasClass( "empty" ),
+                "alternate"     : img.attr( "alt" ),
+                "linkTo"        : elements.linkTo.val(),
+                "linkTarget"    : elements.linkTarget.val(),
+                "lightBox"      : elements.lightBox.attr( "checked" )
             },
             changeTtl = 2000,
             changeTimeout = null,
@@ -116,7 +117,7 @@
             var val = $( this ).val();
 
             caption.html( val )
-                   .toggleClass( "empty", !! val );
+                   .toggleClass( "empty", ! val );
         } );
 
         elements.alternate.on( "keyup change", function () {
@@ -150,13 +151,16 @@
 
         return {
             "update": function () {
+                var captionVal = elements.caption.val();
+
                 before = {
-                    "url"       : img.attr( "src" ),
-                    "caption"   : elements.caption.val(),
-                    "alternate" : elements.alternate.val(),
-                    "linkTo"    : elements.linkTo.val(),
-                    "linkTarget": elements.linkTarget.val(),
-                    "lightBox"  : elements.lightBox.prop( "checked" )
+                    "url"           : img.attr( "src" ),
+                    "caption"       : captionVal,
+                    "captionEmpty"  : ! captionVal,
+                    "alternate"     : elements.alternate.val(),
+                    "linkTo"        : elements.linkTo.val(),
+                    "linkTarget"    : elements.linkTarget.val(),
+                    "lightBox"      : elements.lightBox.prop( "checked" )
                 };
 
                 link.attr( {
@@ -165,7 +169,8 @@
                 } );
             },
             "restore": function () {
-                caption.html( before.caption );
+                caption.html( before.caption )
+                       .toggleClass( "empty", before.captionEmpty );
 
                 link.attr( {
                     "href": before.linkTo ? before.linkTo : null,
