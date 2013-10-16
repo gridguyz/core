@@ -114,14 +114,22 @@ class IndexController extends AbstractActionController
             return;
         }
 
-        $uri = $this->getUriModel()
-                    ->findBySubdomainUri(
-                        $actual->id,
-                        $this->params()
-                             ->fromRoute( 'uri' )
-                    );
+        $uri = $this->params()
+                    ->fromRoute( 'uri' );
 
-        if ( empty( $uri ) )
+        // prevent "Invalid Encoding Attack"
+        if ( ! mb_check_encoding( $uri, 'UTF-8' ) )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 404 );
+
+            return;
+        }
+
+        $structure = $this->getUriModel()
+                          ->findBySubdomainUri( $actual->id, $uri );
+
+        if ( empty( $structure ) )
         {
             $this->paragraphLayout();
 
@@ -131,16 +139,16 @@ class IndexController extends AbstractActionController
             return;
         }
 
-        if ( ! $uri->default )
+        if ( ! $structure->default )
         {
             $default = $this->getUriModel()
                             ->findDefaultByContentSubdomain(
-                                $uri->contentId,
+                                $structure->contentId,
                                 $actual->id,
-                                $uri->locale
+                                $structure->locale
                             );
 
-            if ( $default->uri != $uri->uri ) // Avoid infinite redirect circles
+            if ( $default->uri != $structure->uri ) // Avoid infinite redirect circles
             {
                 $response = $this->getResponse();
 
@@ -153,11 +161,11 @@ class IndexController extends AbstractActionController
             }
         }
 
-        if ( ! empty( $uri->locale ) )
+        if ( ! empty( $structure->locale ) )
         {
             $this->getServiceLocator()
                  ->get( 'Locale' )
-                 ->setCurrent( $uri->locale );
+                 ->setCurrent( $structure->locale );
         }
 
         return $this->forward()
@@ -165,7 +173,7 @@ class IndexController extends AbstractActionController
                         'controller'    => 'Grid\Paragraph\Controller\Render',
                         'action'        => 'paragraph',
                         'locale'        => (string) $this->locale(),
-                        'paragraphId'   => $uri->contentId
+                        'paragraphId'   => $structure->contentId
                     ) );
     }
 

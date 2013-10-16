@@ -59,6 +59,16 @@ class DatasheetController extends AbstractActionController
         $params     = $this->params();
         $service    = $this->getServiceLocator();
         $displayn   = $params->fromRoute( 'displayName' );
+
+        // prevent "Invalid Encoding Attack"
+        if ( ! mb_check_encoding( $displayn, 'UTF-8' ) )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 404 );
+
+            return;
+        }
+
         $model      = $service->get( 'Grid\User\Model\User\Model' );
         $user       = $model->findByDisplayName( $displayn );
 
@@ -92,6 +102,16 @@ class DatasheetController extends AbstractActionController
         $request          = $this->getRequest();
         $locator          = $this->getServiceLocator();
         $displayn         = $params->fromRoute( 'displayName' );
+
+        // prevent "Invalid Encoding Attack"
+        if ( ! mb_check_encoding( $displayn, 'UTF-8' ) )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 404 );
+
+            return;
+        }
+
         $model            = $locator->get( 'Grid\User\Model\User\Model' );
         $form             = $locator->get( 'Form' )
                                    ->create( 'Grid\User\Edit' );
@@ -172,6 +192,16 @@ class DatasheetController extends AbstractActionController
         $request    = $this->getRequest();
         $locator    = $this->getServiceLocator();
         $displayn   = $params->fromRoute( 'displayName' );
+
+        // prevent "Invalid Encoding Attack"
+        if ( ! mb_check_encoding( $displayn, 'UTF-8' ) )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 404 );
+
+            return;
+        }
+
         $model      = $locator->get( 'Grid\User\Model\User\Model' );
         $form       = $locator->get( 'Form' )
                               ->create( 'Grid\User\Password' );
@@ -246,6 +276,16 @@ class DatasheetController extends AbstractActionController
         $params           = $this->params();
         $locator          = $this->getServiceLocator();
         $displayn         = $params->fromRoute( 'displayName' );
+
+        // prevent "Invalid Encoding Attack"
+        if ( ! mb_check_encoding( $displayn, 'UTF-8' ) )
+        {
+            $this->getResponse()
+                 ->setStatusCode( 404 );
+
+            return;
+        }
+
         $model            = $locator->get( 'Grid\User\Model\User\Model' );
         $user             = $model->findByDisplayName( $displayn );
         $datasheetService = $locator->get( 'Grid\User\Datasheet\Service' );
