@@ -39,7 +39,7 @@ return array(
             'Grid\Core\Rpc\Call' => array(
                 'type' => 'Zend\Mvc\Router\Http\Regex',
                 'options' => array(
-                    'regex'     => '/app/(?P<locale>[^/]+)/rpc\.(?P<format>.+)',
+                    'regex'     => '/app/(?P<locale>\w+)/rpc\.(?P<format>\w+)',
                     'spec'      => '/app/%locale%/rpc.%format%',
                     'defaults'  => array(
                         'controller' => 'Grid\Core\Controller\Rpc',
@@ -52,6 +52,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Core\Controller\Admin',
                         'action'     => 'index',
@@ -62,6 +65,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/not-allowed',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Core\Controller\Admin',
                         'action'     => 'not-allowed',
@@ -72,6 +78,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/dashboard',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Core\Controller\Admin',
                         'action'     => 'dashboard',
@@ -82,6 +91,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/package/list',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Core\Controller\Package',
                         'action'     => 'list',
@@ -92,6 +104,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/package/update',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Core\Controller\Package',
                         'action'     => 'update',
@@ -102,6 +117,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/package/update/run',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Core\Controller\Package',
                         'action'     => 'run-update',
@@ -112,6 +130,11 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/package/install/:vendor/:subname',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                        'vendor'    => '[\w\.-]+',
+                        'subname'   => '[\w\.-]+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Core\Controller\Package',
                         'action'     => 'install',
@@ -122,6 +145,11 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/package/remove/:vendor/:subname',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                        'vendor'    => '[\w\.-]+',
+                        'subname'   => '[\w\.-]+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Core\Controller\Package',
                         'action'     => 'remove',
@@ -132,6 +160,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'     => '/app/:locale/upload',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults'  => array(
                         'controller' => 'Grid\Core\Controller\Upload',
                         'action'     => 'index',
@@ -142,6 +173,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'     => '/app/:locale/upload-parts',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults'  => array(
                         'controller' => 'Grid\Core\Controller\Upload',
                         'action'     => 'parts',
@@ -152,6 +186,10 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'     => '/app/:locale/admin/settings/:section',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                        'section'   => '[\w\.-]+',
+                    ),
                     'defaults'  => array(
                         'controller' => 'Grid\Core\Controller\Settings',
                         'action'     => 'index',
@@ -162,6 +200,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/uri/create',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Core\Controller\Uri',
                         'action'     => 'edit',
@@ -173,6 +214,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/uri/edit/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -185,6 +227,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/uri/list',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Core\Controller\Uri',
                         'action'     => 'list',
@@ -196,6 +241,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/uri/delete/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -209,6 +255,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/uri/set-default/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -221,6 +268,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/sub-domain/create',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Core\Controller\SubDomain',
                         'action'     => 'edit',
@@ -232,6 +282,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/sub-domain/edit/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -244,6 +295,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/sub-domain/list',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Core\Controller\SubDomain',
                         'action'     => 'list',
@@ -255,6 +309,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/sub-domain/delete/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(

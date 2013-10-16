@@ -7,6 +7,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/mail',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Mail\Controller\Template',
                         'action'     => 'index',
@@ -17,6 +20,10 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/mail/edit/:templateName',
+                    'constraints'   => array(
+                        'locale'        => '\w+',
+                        'templateName'  => '[\w\.-]+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Mail\Controller\Template',
                         'action'     => 'edit',
@@ -27,6 +34,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/mail/list',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Mail\Controller\Template',
                         'action'     => 'list',

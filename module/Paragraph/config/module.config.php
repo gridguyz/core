@@ -8,6 +8,7 @@ return array(
                 'options'   => array(
                     'route'         => '/app/:locale/paragraph/render/:paragraphId',
                     'constraints'   => array(
+                        'locale'        => '\w+',
                         'paragraphId'   => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -21,6 +22,7 @@ return array(
                 'options'   => array(
                     'route'         => '/app/:locale/paragraph/edit/:paragraphId',
                     'constraints'   => array(
+                        'locale'        => '\w+',
                         'paragraphId'   => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -33,6 +35,9 @@ return array(
                 'type'      => 'Zend\Mvc\Router\Http\Segment',
                 'options'   => array(
                     'route'     => '/app/:locale/admin/content/create',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults'  => array(
                         'controller'    => 'Grid\Paragraph\Controller\Content',
                         'action'        => 'edit',
@@ -44,6 +49,7 @@ return array(
                 'options'   => array(
                     'route'         => '/app/:locale/admin/content/edit/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -56,6 +62,9 @@ return array(
                 'type'      => 'Zend\Mvc\Router\Http\Segment',
                 'options'   => array(
                     'route'     => '/app/:locale/admin/content/list',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults'  => array(
                         'controller'    => 'Grid\Paragraph\Controller\Content',
                         'action'        => 'list',
@@ -67,6 +76,7 @@ return array(
                 'options'   => array(
                     'route'         => '/app/:locale/admin/content/clone/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -80,6 +90,7 @@ return array(
                 'options'   => array(
                     'route'         => '/app/:locale/admin/content/delete/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -93,6 +104,7 @@ return array(
                 'options'   => array(
                     'route'         => '/app/:locale/admin/meta-content/edit/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -105,6 +117,9 @@ return array(
                 'type'      => 'Zend\Mvc\Router\Http\Segment',
                 'options'   => array(
                     'route'     => '/app/:locale/admin/meta-content/list',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults'  => array(
                         'controller'    => 'Grid\Paragraph\Controller\MetaContent',
                         'action'        => 'list',
@@ -115,6 +130,9 @@ return array(
                 'type'      => 'Zend\Mvc\Router\Http\Segment',
                 'options'   => array(
                     'route'     => '/app/:locale/admin/layout/create',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults'  => array(
                         'controller'    => 'Grid\Paragraph\Controller\Layout',
                         'action'        => 'edit',
@@ -126,6 +144,7 @@ return array(
                 'options'   => array(
                     'route'         => '/app/:locale/admin/layout/edit/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -138,6 +157,9 @@ return array(
                 'type'      => 'Zend\Mvc\Router\Http\Segment',
                 'options'   => array(
                     'route'     => '/app/:locale/admin/layout/list',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults'  => array(
                         'controller'    => 'Grid\Paragraph\Controller\Layout',
                         'action'        => 'list',
@@ -149,6 +171,7 @@ return array(
                 'options'   => array(
                     'route'     => '/app/:locale/admin/layout/clone/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -162,6 +185,7 @@ return array(
                 'options'   => array(
                     'route'         => '/app/:locale/admin/layout/delete/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -174,6 +198,10 @@ return array(
                 'type'      => 'Zend\Mvc\Router\Http\Segment',
                 'options'   => array(
                     'route'     => '/app/:locale/paragraph/create[/[:step]]',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                        'step'      => '[\w\.-]+',
+                    ),
                     'defaults'  => array(
                         'controller'    => 'Grid\Paragraph\Controller\CreateWizard',
                         'action'        => 'step',
@@ -186,6 +214,7 @@ return array(
                 'options'   => array(
                     'route'         => '/app/:locale/paragraph/change-layout[/:paragraphId]',
                     'constraints'   => array(
+                        'locale'        => '\w+',
                         'paragraphId'   => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -199,6 +228,7 @@ return array(
                 'options'   => array(
                     'route'         => '/app/:locale/paragraph/import-layout[/:paragraphId]',
                     'constraints'   => array(
+                        'locale'        => '\w+',
                         'paragraphId'   => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -211,6 +241,9 @@ return array(
                 'type'      => 'Zend\Mvc\Router\Http\Segment',
                 'options'   => array(
                     'route'     => '/app/:locale/paragraph/import-content',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults'  => array(
                         'controller'    => 'Grid\Paragraph\Controller\ImportContent',
                         'action'        => 'import',
@@ -221,6 +254,9 @@ return array(
                 'type'      => 'Zend\Mvc\Router\Http\Segment',
                 'options'   => array(
                     'route'     => '/app/:locale/admin/snippet/create',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults'  => array(
                         'controller'    => 'Grid\Paragraph\Controller\Snippet',
                         'action'        => 'create',
@@ -231,6 +267,9 @@ return array(
                 'type'      => 'Zend\Mvc\Router\Http\Segment',
                 'options'   => array(
                     'route'     => '/app/:locale/admin/snippet/upload',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults'  => array(
                         'controller'    => 'Grid\Paragraph\Controller\Snippet',
                         'action'        => 'upload',
@@ -241,6 +280,9 @@ return array(
                 'type'      => 'Zend\Mvc\Router\Http\Segment',
                 'options'   => array(
                     'route'     => '/app/:locale/admin/snippet/list',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults'  => array(
                         'controller'    => 'Grid\Paragraph\Controller\Snippet',
                         'action'        => 'list',
@@ -251,6 +293,10 @@ return array(
                 'type'      => 'Zend\Mvc\Router\Http\Segment',
                 'options'   => array(
                     'route'     => '/app/:locale/admin/snippet/edit/:name',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                        'name'      => '[\w\.\-]+',
+                    ),
                     'defaults'  => array(
                         'controller'    => 'Grid\Paragraph\Controller\Snippet',
                         'action'        => 'edit',
@@ -261,6 +307,10 @@ return array(
                 'type'      => 'Zend\Mvc\Router\Http\Segment',
                 'options'   => array(
                     'route'     => '/app/:locale/admin/snippet/delete/:name',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                        'name'      => '[\w\.\-]+',
+                    ),
                     'defaults'  => array(
                         'controller'    => 'Grid\Paragraph\Controller\Snippet',
                         'action'        => 'delete',
@@ -271,6 +321,9 @@ return array(
                 'type'      => 'Zend\Mvc\Router\Http\Segment',
                 'options'   => array(
                     'route'     => '/app/:locale/admin/widget/list',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults'  => array(
                         'controller'    => 'Grid\Paragraph\Controller\Widget',
                         'action'        => 'list',
@@ -282,6 +335,7 @@ return array(
                 'options'   => array(
                     'route'         => '/app/:locale/admin/widget/edit/:id',
                     'constraints'   => array(
+                        'locale'        => '\w+',
                         'paragraphId'   => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -2999,7 +3053,7 @@ return array(
                         'options'   => array(
                             'label'             => 'paragraph.form.snippet.name',
                             'required'          => true,
-                            'pattern'           => '[a-zA-Z0-9_\.-]{3,20}',
+                            'pattern'           => '[\w\.-]{3,20}',
                             'rpc_validators'    => array(
                                 'Grid\Paragraph\Model\Snippet\Rpc::isNameAvailable',
                             ),

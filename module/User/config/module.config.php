@@ -7,6 +7,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/login',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\Authentication',
                         'action'     => 'login',
@@ -17,6 +20,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/login-with',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\Authentication',
                         'action'     => 'login-with',
@@ -27,6 +33,10 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/logout[/[:immediate]]',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                        'immediate' => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\Authentication',
                         'action'     => 'logout',
@@ -37,6 +47,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/user/view/:displayName',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\Datasheet',
                         'action'     => 'view',
@@ -47,6 +60,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/user/edit/:displayName',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\Datasheet',
                         'action'     => 'edit',
@@ -57,6 +73,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/user/password/:displayName',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\Datasheet',
                         'action'     => 'password',
@@ -67,6 +86,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/user/delete/:displayName',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\Datasheet',
                         'action'     => 'delete',
@@ -77,6 +99,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/register',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\Manage',
                         'action'     => 'register',
@@ -87,6 +112,10 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/confirm/:hash',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                        'hash'      => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\Manage',
                         'action'     => 'confirm',
@@ -97,6 +126,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/password-change-request',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\PasswordChangeRequest',
                         'action'     => 'create',
@@ -107,6 +139,10 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/password-change-request/:hash',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                        'hash'      => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\PasswordChangeRequest',
                         'action'     => 'resolve',
@@ -117,6 +153,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/user',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\Admin',
                         'action'     => 'index',
@@ -127,6 +166,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/user/create',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\Admin',
                         'action'     => 'create',
@@ -138,6 +180,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/user/edit/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -151,6 +194,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/user/grant/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -163,6 +207,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/user/list',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\Admin',
                         'action'     => 'list',
@@ -173,6 +220,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/user/export',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\Admin',
                         'action'     => 'export',
@@ -184,6 +234,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/user/password/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -197,6 +248,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/user/activate/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -210,6 +262,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/user/delete/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -223,6 +276,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/user/ban/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -235,6 +289,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/user-group/create',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\GroupAdmin',
                         'action'     => 'create',
@@ -246,6 +303,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/user-group/edit/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -259,6 +317,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/user-group/set-default/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -272,6 +331,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/user-group/grant/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -284,6 +344,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/user-group/list',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\User\Controller\GroupAdmin',
                         'action'     => 'list',
@@ -295,6 +358,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/user-group/delete/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(

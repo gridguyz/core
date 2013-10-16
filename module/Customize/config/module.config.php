@@ -18,6 +18,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'     => '/app/:locale/admin/customize/file-to-sql',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults'  => array(
                         'controller' => 'Grid\Customize\Controller\Render',
                         'action'     => 'file-to-sql',
@@ -28,6 +31,10 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'     => '/app/:locale/admin/customize/db-to-sql/:id',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                        'id'        => '[1-9][0-9]*',
+                    ),
                     'defaults'  => array(
                         'controller' => 'Grid\Customize\Controller\Render',
                         'action'     => 'db-to-sql',
@@ -38,6 +45,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'     => '/app/:locale/admin/customize/create',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults'  => array(
                         'controller' => 'Grid\Customize\Controller\Admin',
                         'action'     => 'edit',
@@ -49,6 +59,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/customize/edit/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -61,6 +72,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'         => '/app/:locale/admin/customize/edit-extra',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults'      => array(
                         'controller'    => 'Grid\Customize\Controller\Admin',
                         'action'        => 'edit-extra',
@@ -71,6 +85,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'     => '/app/:locale/admin/customize/list',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults'  => array(
                         'controller' => 'Grid\Customize\Controller\Admin',
                         'action'     => 'list',
@@ -82,6 +99,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/customize/delete/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -95,6 +113,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/customize/import/:layoutId[/[:contentId]]',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'layoutId'  => '[1-9][0-9]*',
                         'contentId' => '[1-9][0-9]*',
                     ),
@@ -109,6 +128,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/customize/export/:layoutId[/[:contentId]]',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'layoutId'  => '[1-9][0-9]*',
                         'contentId' => '[1-9][0-9]*',
                     ),

@@ -7,6 +7,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/tag/list',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Tag\Controller\Admin',
                         'action'     => 'list',
@@ -17,6 +20,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/tag/create',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Tag\Controller\Admin',
                         'action'     => 'edit',
@@ -28,6 +34,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/tag/edit/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -41,6 +48,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/tag/delete/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -53,6 +61,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/tag/search',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Tag\Controller\Search',
                         'action'     => 'search',
@@ -62,7 +73,7 @@ return array(
             'Grid\Tag\List\List' => array(
                 'type' => 'Zend\Mvc\Router\Http\Regex',
                 'options' => array(
-                    'regex'     => '/app/(?P<locale>[^/]+)/tag/list/(?P<mode>all|some)(/(?P<page>[1-9][0-9]*))?/(?P<tags>.+)',
+                    'regex'     => '/app/(?P<locale>\w+)/tag/list/(?P<mode>all|some)(/(?P<page>[1-9][0-9]*))?/(?P<tags>.+)',
                     'spec'      => '/app/%locale%/tag/list/%mode%/%page%/%tags%',
                     'defaults'  => array(
                         'controller' => 'Grid\Tag\Controller\List',

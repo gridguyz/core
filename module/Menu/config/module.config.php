@@ -18,6 +18,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/sitemap/:id',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -30,6 +31,9 @@ return array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'    => '/app/:locale/admin/menu',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Grid\Menu\Controller\Admin',
                         'action'     => 'editor',
@@ -41,6 +45,8 @@ return array(
                 'options' => array(
                     'route'    => '/app/:locale/admin/menu/create/:type[/:parentId]',
                     'constraints'   => array(
+                        'locale'    => '\w+',
+                        'type'      => '[\w\.-]+',
                         'parentId'  => '[1-9][0-9]*',
                     ),
                     'defaults' => array(
@@ -54,6 +60,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/admin/menu/edit/:menuId',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'menuId'    => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
@@ -67,6 +74,7 @@ return array(
                 'options' => array(
                     'route'         => '/app/:locale/menu/render/:id[/[:class]]',
                     'constraints'   => array(
+                        'locale'    => '\w+',
                         'id'        => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
