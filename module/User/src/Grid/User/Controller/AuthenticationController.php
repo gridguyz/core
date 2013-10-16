@@ -74,6 +74,28 @@ class AuthenticationController extends AbstractActionController
     }
 
     /**
+     * Gte valid return-uri
+     *
+     * @param   string  $returnUri
+     * @return  string
+     */
+    protected function getValidReturnUri( $returnUri )
+    {
+        $match      = array();
+        $returnUri  = str_replace( '\\', '/', $returnUri );
+
+        if ( preg_match( '#^(https?:)?/{2,}(?P<domain>[^/]+)(?P<path>.*)#',
+                         $returnUri, $match ) )
+        {
+            $returnUri = empty( $match['path'] )
+                    ? static::DEFAULT_RETURN_URI
+                    : $match['path'];
+        }
+
+        return $returnUri;
+    }
+
+    /**
      * Get error message key by code
      *
      * @param   int     $code
@@ -194,7 +216,7 @@ class AuthenticationController extends AbstractActionController
                 }
 
                 return $this->redirect()
-                            ->toUrl( $returnUri );
+                            ->toUrl( $this->getValidReturnUri( $returnUri ) );
             }
         }
 
@@ -326,7 +348,7 @@ class AuthenticationController extends AbstractActionController
         }
 
         return $this->redirect()
-                    ->toUrl( $returnUri );
+                    ->toUrl( $this->getValidReturnUri( $returnUri ) );
     }
 
     /**
@@ -387,7 +409,7 @@ class AuthenticationController extends AbstractActionController
             }
 
             return $this->redirect()
-                        ->toUrl( $returnUri );
+                        ->toUrl( $this->getValidReturnUri( $returnUri ) );
         }
 
         $this->plugin( 'layout' )
