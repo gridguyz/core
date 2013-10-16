@@ -153,10 +153,9 @@
 .package-list .package-entry .name
 {
     display: block;
-    margin-top: 2em;
     font-size: larger;
     font-weight: bold;
-    margin-bottom: 1em;
+    margin: 2em 1em 1em 1em;
 }
 
 .package-list .package-entry .contents,
@@ -175,7 +174,7 @@
 .package-list .package-entry .contents
 {
     color: #ccc;
-    height: 12em;
+    height: 13em;
     overflow: hidden;
 }
 
@@ -225,7 +224,7 @@
 
 .package-list .package-entry .description
 {
-    height: 10em;
+    height: 11em;
     text-align: justify;
     transition: margin-top 0.5s;
     -o-transition: margin-top 0.5s;
@@ -236,7 +235,7 @@
 
 .package-list .package-entry:hover .description
 {
-    margin-top: -13em;
+    margin-top: -14em;
 }
 
 .package-list .package-entry .description p
@@ -254,7 +253,7 @@
 
 .package-list .package-entry dl.package-data
 {
-    height: 12em;
+    height: 13em;
     margin: 1em 0em 0em 0em;
 }
 
