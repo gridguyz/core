@@ -217,8 +217,8 @@ class Model implements MapperAwareInterface
         return $this->getMapper()
                     ->hasAssociatedIdentity( $userId, $identity );
     }
-    
-   /**
+
+    /**
      * Find users by group
      *
      * @param   int  $groupId
