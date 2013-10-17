@@ -6,7 +6,6 @@ use Zork\Stdlib\Message;
 use Zend\Form\Form;
 use Zork\Data\Table;
 use Zork\Data\Transform\Translate;
-use Zend\Authentication\AuthenticationService;
 use Grid\Core\Controller\AbstractListExportController;
 
 /**
@@ -70,7 +69,7 @@ class AdminController extends AbstractListExportController
      */
     protected function fixUserForm( Form & $form, $userId = null )
     {
-        $auth       = new AuthenticationService;
+        $auth       = $this->getAuthenticationService();
         $groupId    = $form->get( 'groupId' );
         $groups     = $groupId->getValueOptions();
 
@@ -101,7 +100,7 @@ class AdminController extends AbstractListExportController
         $request          = $this->getRequest();
         $locator          = $this->getServiceLocator();
         $model            = $locator->get( 'Grid\User\Model\User\Model' );
-        $form             = $locator->get( 'Form' )          
+        $form             = $locator->get( 'Form' )
                                     ->create( 'Grid\User\Create' );
         $user             = $model->create( array() );
         $datasheetService = $locator->get( 'Grid\User\Datasheet\Service' );
@@ -114,13 +113,13 @@ class AdminController extends AbstractListExportController
 
             return;
         }
-        
+
         $this->fixUserForm( $form );
 
         /* @var $form \Zend\Form\Form */
         $form->setHydrator( $model->getMapper() )
              ->bind( $user );
-     
+
         if ( $request->isPost() )
         {
             $form->setData( $request->getPost() );
@@ -192,7 +191,7 @@ class AdminController extends AbstractListExportController
                                     ->create( 'Grid\User\Edit' );
         $user             = $model->find( $params->fromRoute( 'id' ) );
         $datasheetService = $locator->get( 'Grid\User\Datasheet\Service' );
-        
+
         if ( empty( $user ) )
         {
             $this->getResponse()
@@ -213,7 +212,7 @@ class AdminController extends AbstractListExportController
         $this->fixUserForm( $form, $user->id );
 
         $datasheetService->form($form,$user);
-        
+
         /* @var $form \Zend\Form\Form */
         $form->setHydrator( $model->getMapper() )
              ->bind( $user );
@@ -479,7 +478,7 @@ class AdminController extends AbstractListExportController
         $model           = $locator->get( 'Grid\User\Model\User\Model' );
         $user            = $model->find( $params->fromRoute( 'id' ) );
         $datasheetService = $locator->get( 'Grid\User\Datasheet\Service' );
-        
+
         if ( empty( $user ) )
         {
             $this->getResponse()

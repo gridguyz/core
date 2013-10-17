@@ -11,6 +11,7 @@ use Zend\EventManager\EventManagerInterface;
 use Zork\EventManager\EventProviderAbstract;
 use Zend\Authentication\AuthenticationService;
 use Grid\User\Model\Authentication\AdapterFactory;
+use Zork\Authentication\AuthenticationServiceAwareTrait;
 
 /**
  * Manager
@@ -19,6 +20,8 @@ use Grid\User\Model\Authentication\AdapterFactory;
  */
 class Service extends EventProviderAbstract
 {
+
+    use AuthenticationServiceAwareTrait;
 
     /**
      * @var string
@@ -63,13 +66,16 @@ class Service extends EventProviderAbstract
     }
 
     /**
-     * @param \User\Model\Authentication\AdapterFactory $authenticationAdapterFactory
-     * @param \Zend\EventManager\EventManager $eventManager
+     * @param   AdapterFactory          $authenticationAdapterFactory
+     * @param   AuthenticationService   $authenticationService
+     * @param   EventManager            $eventManager
      */
-    public function __construct( AdapterFactory $authenticationAdapterFactory,
-                                 EventManager $eventManager = null )
+    public function __construct( AdapterFactory         $authenticationAdapterFactory,
+                                 AuthenticationService  $authenticationService,
+                                 EventManager           $eventManager = null )
     {
-        $this->setAuthenticationAdapterFactory( $authenticationAdapterFactory );
+        $this->setAuthenticationAdapterFactory( $authenticationAdapterFactory )
+             ->setAuthenticationService( $authenticationService );
 
         if ( null !== $eventManager )
         {
@@ -107,7 +113,7 @@ class Service extends EventProviderAbstract
     {
         if ( null === $auth )
         {
-            $auth = new AuthenticationService;
+            $auth = $this->getAuthenticationService();
         }
 
         if ( $params instanceof Traversable )
@@ -161,7 +167,7 @@ class Service extends EventProviderAbstract
     {
         if ( null === $auth )
         {
-            $auth = new AuthenticationService;
+            $auth = $this->getAuthenticationService();
         }
 
         if ( $params instanceof Traversable )

@@ -618,7 +618,8 @@ abstract class ProxyAbstract
      */
     private function getAuthenticatedUser()
     {
-        $auth = new AuthenticationService();
+        $auth = $this->getMapper()
+                     ->getAuthenticationService();
 
         if ( $auth->hasIdentity() )
         {

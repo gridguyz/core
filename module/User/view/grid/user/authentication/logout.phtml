@@ -3,7 +3,7 @@
 $this->headLink()
      ->appendStylesheet( '/styles/modules/User/login.css', 'all' );
 
-$auth       = new \Zend\Authentication\AuthenticationService();
+$auth       = $this->authentication();
 $identity   = $auth->getIdentity();
 
 ?>

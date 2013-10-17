@@ -5,7 +5,6 @@ namespace Grid\Core\Controller;
 use Zork\Stdlib\String;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Http\Header\HeaderInterface;
-use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 
 /**
@@ -153,7 +152,8 @@ class UploadController extends AbstractActionController
      */
     public function indexAction()
     {
-        $auth = new AuthenticationService();
+        $auth = $this->getServiceLocator()
+                     ->get( 'Zend\Authentication\AuthenticationService' );
 
         if ( ! $auth->hasIdentity() )
         {
@@ -257,7 +257,9 @@ class UploadController extends AbstractActionController
             'Pragma'        => 'no-cache',
         ) );
 
-        $auth = new AuthenticationService();
+        $auth = $this->getServiceLocator()
+                     ->get( 'Zend\Authentication\AuthenticationService' );
+
         $view = array(
             'jsonrpc' => '2.0',
         );

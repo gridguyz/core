@@ -7,6 +7,7 @@ use Zork\Rpc\CallableInterface;
 use Zork\Model\MapperAwareTrait;
 use Zork\Model\MapperAwareInterface;
 use Zend\Authentication\AuthenticationService;
+use Zork\Authentication\AuthenticationServiceAwareTrait;
 
 /**
  * Rpc
@@ -18,16 +19,20 @@ class Rpc implements CallableInterface,
 {
 
     use CallableTrait,
-        MapperAwareTrait;
+        MapperAwareTrait,
+        AuthenticationServiceAwareTrait;
 
     /**
      * Construct rpc
      *
-     * @param   \Grid\User\Model\User\Mapper $userMapper
+     * @param   Mapper                  $userMapper
+     * @param   AuthenticationService   $authenticationService
      */
-    public function __construct( Mapper $userMapper )
+    public function __construct( Mapper                 $userMapper,
+                                 AuthenticationService  $authenticationService )
     {
-        $this->setMapper( $userMapper );
+        $this->setMapper( $userMapper )
+             ->setAuthenticationService( $authenticationService );
     }
 
     /**
@@ -83,9 +88,9 @@ class Rpc implements CallableInterface,
      */
     public function status()
     {
-        $auth = new AuthenticationService();
-        $loggedIn = $auth->hasIdentity();
-        $identity = $loggedIn ? $auth->getIdentity() : null;
+        $auth       = $this->getAuthenticationService();
+        $loggedIn   = $auth->hasIdentity();
+        $identity   = $loggedIn ? $auth->getIdentity() : null;
 
         return (object) array(
             'loggedIn'      => $loggedIn,

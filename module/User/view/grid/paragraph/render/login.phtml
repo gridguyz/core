@@ -1,6 +1,6 @@
 <?php
 
-$auth   = new \Zend\Authentication\AuthenticationService();
+$auth   = $this->authentication();
 $which  = $auth->hasIdentity() ? 'logout' : 'login';
 
 ?>

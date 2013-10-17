@@ -8,6 +8,7 @@ use Zork\Model\MapperAwareTrait;
 use Zork\Model\MapperAwareInterface;
 use Zork\Permissions\Acl\AclAwareTrait;
 use Zork\Permissions\Acl\AclAwareInterface;
+use Zork\Authentication\AuthenticationServiceAwareTrait;
 
 /**
  * Model
@@ -19,7 +20,8 @@ class Model implements AclAwareInterface,
 {
 
     use AclAwareTrait,
-        MapperAwareTrait;
+        MapperAwareTrait,
+        AuthenticationServiceAwareTrait;
 
     /**
      * @var string
@@ -46,13 +48,17 @@ class Model implements AclAwareInterface,
     /**
      * Construct model
      *
-     * @param \User\Model\Permissions\Mapper $userPermissionsMapper
-     * @param \Zend\Permissions\Acl\Acl $acl
+     * @param   Mapper                  $userPermissionsMapper
+     * @param   Acl\Acl                 $acl
+     * @param   AuthenticationService   $auth
      */
-    public function __construct( Mapper $userPermissionsMapper, Acl\Acl $acl )
+    public function __construct( Mapper                 $userPermissionsMapper,
+                                 Acl\Acl                $acl,
+                                 AuthenticationService  $auth )
     {
         $this->setMapper( $userPermissionsMapper )
-             ->setAcl( $acl );
+             ->setAcl( $acl )
+             ->setAuthenticationService( $auth );
     }
 
     /**
@@ -64,7 +70,7 @@ class Model implements AclAwareInterface,
     {
         if ( null === $this->role )
         {
-            $auth = new AuthenticationService();
+            $auth = $this->getAuthenticationService();
 
             if ( $auth->hasIdentity() )
             {
@@ -243,7 +249,7 @@ class Model implements AclAwareInterface,
      */
     public function allowedUsers( $privilege = self::PRIVILEGE_DEFAULT )
     {
-        $auth = new AuthenticationService();
+        $auth = $this->getAuthenticationService();
 
         if ( $auth->hasIdentity() )
         {

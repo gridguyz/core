@@ -4,7 +4,6 @@ namespace Grid\User\Controller;
 
 use Zend\Form\Form;
 use Zork\Stdlib\Message;
-use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Grid\Paragraph\View\Model\MetaContent;
 
@@ -40,9 +39,10 @@ class DatasheetController extends AbstractActionController
      */
     protected function fixUserForm( Form & $form, $userId )
     {
-        $auth       = new AuthenticationService;
         $groupId    = $form->get( 'groupId' );
         $groups     = $groupId->getValueOptions();
+        $auth       = $this->getServiceLocator()
+                           ->get( 'Zend\Authentication\AuthenticationService' );
 
         if ( empty( $groups ) ||
              $auth->getIdentity()->id == $userId )
@@ -326,7 +326,8 @@ class DatasheetController extends AbstractActionController
                         'user', Message::LEVEL_ERROR );
         }
 
-        $auth = new AuthenticationService;
+        $auth = $this->getServiceLocator()
+                     ->get( 'Zend\Authentication\AuthenticationService' );
 
         if ( $auth->hasIdentity() &&
              $auth->getIdentity()->id == $id )

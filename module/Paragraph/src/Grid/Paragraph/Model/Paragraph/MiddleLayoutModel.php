@@ -7,9 +7,12 @@ use Grid\Core\Model\SubDomain\Model as SubDomainModel;
 use Grid\Paragraph\Model\Paragraph\Model as ParagraphModel;
 use Grid\User\Model\User\Settings\Model as UserSettingsModel;
 use Zork\Mvc\Controller\Plugin\MiddleLayout as MiddleLayout;
+use Zork\Authentication\AuthenticationServiceAwareTrait;
 
 class MiddleLayoutModel
 {
+
+    use AuthenticationServiceAwareTrait;
 
     /**
      * @var \Paragraph\Model\Paragraph\Model
@@ -53,17 +56,20 @@ class MiddleLayoutModel
     /**
      * Constructor
      *
-     * @param   \Paragraph\Model\Paragraph\Model    $paragraphModel
-     * @param   \Core\Model\SubDomain\Model         $subDomainModel
-     * @param   \User\Model\User\Settings\Model     $userSettingsModel
+     * @param   ParagraphModel          $paragraphModel
+     * @param   SubDomainModel          $subDomainModel
+     * @param   UserSettingsModel       $userSettingsModel
+     * @param   AuthenticationService   $authenticationService
      */
-    public function __construct( ParagraphModel     $paragraphModel,
-                                 SubDomainModel     $subDomainModel,
-                                 UserSettingsModel  $userSettingsModel )
+    public function __construct( ParagraphModel         $paragraphModel,
+                                 SubDomainModel         $subDomainModel,
+                                 UserSettingsModel      $userSettingsModel,
+                                 AuthenticationService  $authenticationService )
     {
         $this->paragraphModel       = $paragraphModel;
         $this->subDomainModel       = $subDomainModel;
         $this->userSettingsModel    = $userSettingsModel;
+        $this->setAuthenticationService( $authenticationService );
     }
 
     /**
@@ -74,14 +80,16 @@ class MiddleLayoutModel
     {
         if ( empty( $layoutParagraphId ) )
         {
-            $layoutParagraphId = $this->subDomainModel->findActual()->defaultLayoutId;
+            $layoutParagraphId = $this->subDomainModel
+                                      ->findActual()
+                                      ->defaultLayoutId;
         }
 
         $layoutRenderList = $this->paragraphModel->findRenderList( $layoutParagraphId );
 
         if ( ! empty( $layoutRenderList ) )
         {
-            $auth = new AuthenticationService();
+            $auth = $this->getAuthenticationService();
 
             if ( $auth->hasIdentity() )
             {

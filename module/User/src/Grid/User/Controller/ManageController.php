@@ -3,7 +3,6 @@
 namespace Grid\User\Controller;
 
 use Zork\Stdlib\Message;
-use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zork\Session\ContainerAwareTrait as SessionContainerAwareTrait;
 use Grid\Paragraph\View\Model\MetaContent;
@@ -23,7 +22,8 @@ class ManageController extends AbstractActionController
      */
     public function registerAction()
     {
-        $auth = new AuthenticationService();
+        $auth = $this->getServiceLocator()
+                     ->get( 'Zend\Authentication\AuthenticationService' );
 
         if ( $auth->hasIdentity() )
         {
@@ -130,7 +130,8 @@ class ManageController extends AbstractActionController
      */
     public function confirmAction()
     {
-        $auth = new AuthenticationService;
+        $auth = $this->getServiceLocator()
+                     ->get( 'Zend\Authentication\AuthenticationService' );
 
         if ( $auth->hasIdentity() )
         {

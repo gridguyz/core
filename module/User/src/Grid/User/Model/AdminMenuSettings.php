@@ -7,6 +7,7 @@ use Zork\Rpc\CallableInterface;
 use Zork\Model\ModelAwareTrait;
 use Zork\Model\ModelAwareInterface;
 use Zend\Authentication\AuthenticationService;
+use Zork\Authentication\AuthenticationServiceAwareTrait;
 
 /**
  * AdminMenuSettings
@@ -18,7 +19,8 @@ class AdminMenuSettings implements CallableInterface,
 {
 
     use CallableTrait,
-        ModelAwareTrait;
+        ModelAwareTrait,
+        AuthenticationServiceAwareTrait;
 
     /**
      * @var string
@@ -53,11 +55,14 @@ class AdminMenuSettings implements CallableInterface,
     /**
      * Constructor
      *
-     * @param \User\Model\User\Settings\Model $userSettingsModel
+     * @param   User\Settings\Model     $userSettingsModel
+     * @param   AuthenticationService   $authenticationService
      */
-    public function __construct( User\Settings\Model $userSettingsModel )
+    public function __construct( User\Settings\Model    $userSettingsModel,
+                                 AuthenticationService  $authenticationService )
     {
-        $this->setModel( $userSettingsModel );
+        $this->setModel( $userSettingsModel )
+             ->setAuthenticationService( $authenticationService );
     }
 
     /**
@@ -70,7 +75,7 @@ class AdminMenuSettings implements CallableInterface,
     public function setting( $name, $set = null )
     {
         $model  = $this->getModel();
-        $auth   = new AuthenticationService();
+        $auth   = $this->getAuthenticationService();
 
         if ( ! $auth->hasIdentity() )
         {
@@ -108,7 +113,7 @@ class AdminMenuSettings implements CallableInterface,
     public function settings( $set = null )
     {
         $model  = $this->getModel();
-        $auth   = new AuthenticationService();
+        $auth   = $this->getAuthenticationService();
 
         if ( ! $auth->hasIdentity() )
         {

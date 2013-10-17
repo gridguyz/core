@@ -3,9 +3,9 @@
 namespace Grid\User\Authentication;
 
 use Zend\Authentication\Result;
-use Zend\Authentication\AuthenticationService;
 use Zend\Session\ManagerInterface;
 use Zend\EventManager\Event as ZendEvent;
+use Zork\Authentication\AuthenticationServiceAwareTrait;
 
 /**
  * Event
@@ -15,6 +15,8 @@ use Zend\EventManager\Event as ZendEvent;
  */
 class Event extends ZendEvent
 {
+
+    use AuthenticationServiceAwareTrait;
 
     /**
      * @const string
@@ -42,11 +44,6 @@ class Event extends ZendEvent
     protected $sessionManager;
 
     /**
-     * @var \Zend\Authentication\AuthenticationService
-     */
-    protected $authenticationService;
-
-    /**
      * @return \Zend\Authentication\Result
      */
     public function getResult()
@@ -66,29 +63,6 @@ class Event extends ZendEvent
     public function setResult( Result $result )
     {
         $this->result = $result;
-        return $this;
-    }
-
-    /**
-     * @return \Zend\Authentication\AuthenticationService
-     */
-    public function getAuthenticationService()
-    {
-        if ( null === $this->authenticationService )
-        {
-            $this->authenticationService = new AuthenticationService;
-        }
-
-        return $this->authenticationService;
-    }
-
-    /**
-     * @param \Zend\Authentication\AuthenticationService $service
-     * @return \User\Authentication\Event
-     */
-    public function setAuthenticationService( AuthenticationService $service )
-    {
-        $this->authenticationService = $service;
         return $this;
     }
 

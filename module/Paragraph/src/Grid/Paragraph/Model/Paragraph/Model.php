@@ -15,6 +15,7 @@ use Zork\Model\MapperAwareInterface;
 use Zork\Db\Sql\Predicate\TypedParameters;
 use Zend\Authentication\AuthenticationService;
 use Grid\User\Model\Permissions\Model as PermissionsModel;
+use Zork\Authentication\AuthenticationServiceAwareTrait;
 
 /**
  * \Paragraph\Model\Paragraph\Model
@@ -26,7 +27,8 @@ class Model implements MapperAwareInterface,
 {
 
     use MapperAwareTrait,
-        LocaleAwareTrait;
+        LocaleAwareTrait,
+        AuthenticationServiceAwareTrait;
 
     /**
      * Permissions model
@@ -62,14 +64,17 @@ class Model implements MapperAwareInterface,
      *
      * @param   \User\Model\Permissions\Model       $permissionsModel
      * @param   \Paragraph\Model\Paragraph\Mapper   $paragraphMapper
+     * @param   AuthenticationService               $authenticationService
      * @param   string                              $locale
      */
-    public function __construct( PermissionsModel $permissionsModel,
-                                 Mapper           $paragraphMapper,
+    public function __construct( PermissionsModel       $permissionsModel,
+                                 Mapper                 $paragraphMapper,
+                                 AuthenticationService  $authenticationService,
                                  $locale = null )
     {
         $this->setPermissionsModel( $permissionsModel )
              ->setMapper( $paragraphMapper )
+             ->setAuthenticationService( $authenticationService )
              ->setLocale( $locale );
     }
 
@@ -496,7 +501,7 @@ class Model implements MapperAwareInterface,
 
         if ( ! $permissions->isAllowed( 'paragraph.content', 'view' ) )
         {
-            $auth = new AuthenticationService();
+            $auth = $this->getAuthenticationService();
             $user = $auth->hasIdentity() ? $auth->getIdentity() : null;
             $pub  = array();
 

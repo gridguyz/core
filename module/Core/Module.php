@@ -336,7 +336,13 @@ class Module extends ModuleAbstract
         $serviceLocator = $this->serviceLocator;
 
         return array(
+            'aliases'   => array(
+                'Zend\Session\ManagerInterface' => 'sessionManager',
+            ),
             'factories' => array(
+                'sessionManager' => function ( $sm ) use ( $serviceLocator ) {
+                    return $serviceLocator->get( 'Zend\Session\ManagerInterface' );
+                },
                 'mimicSiteInfos' => function ( $sm ) use ( $serviceLocator ) {
                     return new Controller\Plugin\MimicSiteInfos(
                         $serviceLocator
@@ -358,7 +364,7 @@ class Module extends ModuleAbstract
         $serviceLocator = $this->serviceLocator;
 
         return array(
-            'invokables'    => array(
+            'invokables'            => array(
                 'layout'                    => 'Zork\View\Helper\Layout',
                 'messenger'                 => 'Zork\View\Helper\Messenger',
                 'htmlTag'                   => 'Zork\View\Helper\HtmlTag',
@@ -379,7 +385,13 @@ class Module extends ModuleAbstract
                 'captcha/regeneratable'     => 'Zork\Form\View\Helper\Captcha\Regeneratable',
                 'markdown'                  => 'Grid\Core\View\Helper\Markdown',
             ),
-            'factories'         => array(
+            'aliases'               => array(
+                'Zend\Session\ManagerInterface' => 'sessionManager',
+            ),
+            'factories'             => array(
+                'sessionManager'    => function ( $sm ) use ( $serviceLocator ) {
+                    return $serviceLocator->get( 'Zend\Session\ManagerInterface' );
+                },
                 'config'            => function () use ( $serviceLocator ) {
                     return new \Zork\View\Helper\Config(
                         $serviceLocator->get( 'Config' )
@@ -400,6 +412,9 @@ class Module extends ModuleAbstract
                 },
                 'appService'        => function () use ( $serviceLocator ) {
                     return new View\Helper\AppService( $serviceLocator );
+                },
+                'authentication'    => function () use ( $serviceLocator ) {
+                    return $serviceLocator->get( 'Zend\Authentication\AuthenticationService' );
                 },
                 'viewWidget'        => function () use ( $serviceLocator ) {
                     $config = $serviceLocator->get( 'Config' );

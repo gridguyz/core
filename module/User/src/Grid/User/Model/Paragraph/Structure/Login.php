@@ -111,7 +111,7 @@ class Login extends AbstractLeaf
 
         $form->setAttribute( 'action', $router->assemble(
             array( 'locale' => $locale->getCurrent() ),
-            array( 'name'   => 'Grid\User\\Authentication\\' . $which )
+            array( 'name'   => 'Grid\\User\\Authentication\\' . $which )
         ) );
 
         return $form;

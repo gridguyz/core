@@ -10,7 +10,7 @@ use Zork\Db\Sql\Predicate\ILike;
 use Zend\Paginator\Paginator;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\HelperInterface;
-use Zend\Session\Container as SessionContainer;
+use Zork\Session\ContainerAwareTrait as SessionContainerAwareTrait;
 
 /**
  * RowSet view-helper
@@ -19,6 +19,8 @@ use Zend\Session\Container as SessionContainer;
  */
 class RowSet extends AbstractHelper
 {
+
+    use SessionContainerAwareTrait;
 
     /**
      * @var int
@@ -795,8 +797,8 @@ class RowSet extends AbstractHelper
     {
         if ( null === $this->store )
         {
-            $this->store = new SessionContainer(
-                __CLASS__ . '_' . str_replace( '.', '_', $this->getId() )
+            $this->store = $this->getSessionContainer(
+                get_called_class() . '_' . str_replace( '.', '_', $this->getId() )
             );
 
             if ( ! isset( $this->store['freeWord'] ) )

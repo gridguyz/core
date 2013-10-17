@@ -103,11 +103,13 @@ class FileSystem implements CallableInterface,
     /**
      * Constructor
      *
-     * @param \Zork\Db\SiteInfo $siteInfo
-     * @param \User\Model\Permissions\Model $permissionsModel
+     * @param   SiteInfo                $siteInfo
+     * @param   AuthenticationService   $auth
+     * @param   PermissionsModel        $permissionsModel
      */
-    public function __construct( SiteInfo            $siteInfo,
-                                 PermissionsModel    $permissionsModel )
+    public function __construct( SiteInfo               $siteInfo,
+                                 AuthenticationService  $auth,
+                                 PermissionsModel       $permissionsModel )
     {
         $this->setSiteInfo( $siteInfo )
              ->setPermissions( $permissionsModel );
@@ -116,8 +118,6 @@ class FileSystem implements CallableInterface,
 
         $this->baseUrl      = self::UPLOADS_URL . $schema . self::UPLOADS_ROOT;
         $this->baseDir      = realpath( self::UPLOADS_PATH );
-
-        $auth = new AuthenticationService();
 
         if ( $auth->hasIdentity() )
         {
