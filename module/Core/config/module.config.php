@@ -367,9 +367,6 @@ return array(
             'Zork\Mvc\AdminLocale'                          => 'adminLocale',
             'Zork\Log\LoggerManager'                        => 'logger',
         ),
-        'instances' => array(
-            'Zend\Session\SaveHandler\SaveHandlerInterface' => null,
-        ),
         'shared' => array(
             'Zend\Http\Client'                              => false,
         ),
