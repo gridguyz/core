@@ -337,6 +337,7 @@ class Module extends ModuleAbstract
 
         return array(
             'aliases'   => array(
+                'Zend\Session\SessionManager'   => 'sessionManager',
                 'Zend\Session\ManagerInterface' => 'sessionManager',
             ),
             'factories' => array(
@@ -386,6 +387,7 @@ class Module extends ModuleAbstract
                 'markdown'                  => 'Grid\Core\View\Helper\Markdown',
             ),
             'aliases'               => array(
+                'Zend\Session\SessionManager'   => 'sessionManager',
                 'Zend\Session\ManagerInterface' => 'sessionManager',
             ),
             'factories'             => array(
