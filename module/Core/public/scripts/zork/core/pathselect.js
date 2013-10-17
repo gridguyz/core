@@ -857,31 +857,18 @@
                     buttons,
                     i, set;
 
-                if ( null === dialog )
+                if ( null !== dialog )
                 {
-                    dialog = $( '<div id="js-pathselect" />' )
-                        .addClass( "js-pathselect" )
-                        .append( dialogActions = $( '<div class="js-pathselect-actions" />' ) )
-                        .append( dialogCurPath = $( '<div class="js-pathselect-path" />'    ) )
-                        .append( dialogPreview = $( '<div class="js-pathselect-preview" />' ) )
-                        .append( dialogEntries = $( '<div class="js-pathselect-entries" />' ) )
-                        .append( dialogInput   = $( '<input class="js-pathselect-input" />' ) );
+                    dialog.remove();
                 }
-                else
-                {
-                    var realDialog = dialog.filter( ":ui-dialog" );
 
-                    if ( realDialog.dialog( "isOpen" ) )
-                    {
-                        realDialog.dialog( "close" );
-                    }
-
-                    dialogPreview.empty();
-
-                    var widget = dialog.parent( ".ui-dialog" );
-                    widget.find( "~ .ui-front:last" )
-                          .after( widget );
-                }
+                dialog = $( '<div id="js-pathselect" />' )
+                    .addClass( "js-pathselect" )
+                    .append( dialogActions = $( '<div class="js-pathselect-actions" />' ) )
+                    .append( dialogCurPath = $( '<div class="js-pathselect-path" />'    ) )
+                    .append( dialogPreview = $( '<div class="js-pathselect-preview" />' ) )
+                    .append( dialogEntries = $( '<div class="js-pathselect-entries" />' ) )
+                    .append( dialogInput   = $( '<input class="js-pathselect-input" />' ) );
 
                 dialogInput.show().on( "mouseup", function () {
                     this.select();
