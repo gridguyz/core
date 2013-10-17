@@ -4,8 +4,6 @@ namespace Grid\User\View\Helper;
 
 use Locale;
 use Zend\View\Helper\AbstractHelper;
-use Zend\Authentication\AuthenticationService;
-use Zork\Authentication\AuthenticationServiceAwareTrait;
 
 /**
  * UserLocale
@@ -15,8 +13,6 @@ use Zork\Authentication\AuthenticationServiceAwareTrait;
 class UserLocale extends AbstractHelper
 {
 
-    use AuthenticationServiceAwareTrait;
-
     /**
      * Get user-locale
      *
@@ -24,7 +20,8 @@ class UserLocale extends AbstractHelper
      */
     public function getLocale()
     {
-        $auth = $this->getAuthenticationService();
+        $auth = $this->getView()
+                     ->authentication();
 
         if ( $auth->hasIdentity()  )
         {
