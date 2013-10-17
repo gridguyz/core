@@ -618,8 +618,8 @@ abstract class ProxyAbstract
      */
     private function getAuthenticatedUser()
     {
-        $auth = $this->getMapper()
-                     ->getAuthenticationService();
+        $auth = $this->getServiceLocator()
+                     ->get( 'Zend\Authentication\AuthenticationService' );
 
         if ( $auth->hasIdentity() )
         {
