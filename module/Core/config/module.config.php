@@ -355,10 +355,12 @@ return array(
             'Grid\Core\Model\Package\EnabledList'           => 'Grid\Core\Model\Package\EnabledListServiceFactory',
             'Grid\Core\Model\Settings\Definitions'          => 'Grid\Core\Model\Settings\DefinitionServiceFactory',
         ),
+        'invokables' => array(
+            'Zend\Session\SaveHandler\SaveHandlerInterface' => 'Zork\Session\SaveHandler\PhpSessionHandler',
+        ),
         'aliases' => array(
             'Zend\Http\Client\Adapter'                      => 'Zend\Http\Client\Adapter\AdapterInterface',
             'Zend\Session\SessionManager'                   => 'Zend\Session\ManagerInterface',
-            'Zend\Session\SaveHandler\SaveHandlerInterface' => 'Zork\Session\SaveHandler\PhpSessionHandler',
             'Zork\Cache\CacheManager'                       => 'cacheManager',
             'Zork\Factory\Builder'                          => 'factoryBuilder',
             'Zork\I18n\Locale\Locale'                       => 'locale',
