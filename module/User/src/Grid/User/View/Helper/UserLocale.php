@@ -23,7 +23,7 @@ class UserLocale extends AbstractHelper
         $auth = $this->getView()
                      ->authentication();
 
-        if ( $auth->hasIdentity()  )
+        if ( $auth->hasIdentity() )
         {
             $locale = $auth->getIdentity()->locale;
         }
