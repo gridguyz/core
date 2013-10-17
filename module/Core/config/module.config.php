@@ -375,7 +375,7 @@ return array(
         ),
     ),
     'session_config'    => array(
-        'config_class'  => 'Zork\Session\Config\StandardConfig',
+        'config_class'  => 'Zork\Session\Config\SessionConfig',
     ),
     'session_storage'   => array(
         'type'          => 'SessionArrayStorage',
