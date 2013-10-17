@@ -416,7 +416,9 @@ class Module extends ModuleAbstract
                     return new View\Helper\AppService( $serviceLocator );
                 },
                 'authentication'    => function () use ( $serviceLocator ) {
-                    return $serviceLocator->get( 'Zend\Authentication\AuthenticationService' );
+                    return new View\Helper\Authentication(
+                        $serviceLocator->get( 'Zend\Authentication\AuthenticationService' )
+                    );
                 },
                 'viewWidget'        => function () use ( $serviceLocator ) {
                     $config = $serviceLocator->get( 'Config' );
