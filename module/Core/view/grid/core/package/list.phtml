@@ -130,8 +130,6 @@ $locale = (string) $this->locale();
                     <?= $this->markdown( $package->getDisplayedDescription( $locale ) ) ?>
 
                 </div>
-<?php if ( isset( $package->favourites ) || isset( $package->downloads ) ): ?>
-
                 <div class="numbers">
 <?php if ( isset( $package->favourites ) ): ?>
 
@@ -145,8 +143,6 @@ $locale = (string) $this->locale();
 <?php endif ?>
 
                 </div>
-<?php endif ?>
-
                 <dl class="package-data">
 <?php if ( ! empty( $package->homepage ) ): ?>
 
