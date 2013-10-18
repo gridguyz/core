@@ -94,8 +94,6 @@ return array(
     'factory' => array(
         'Grid\Paragraph\Model\Paragraph\StructureFactory' => array(
             'adapter' => array(
-                'contentList'   => 'Grid\Tag\Model\Paragraph\Structure\ContentList',
-                'tagCloud'      => 'Grid\Tag\Model\Paragraph\Structure\TagCloud',
                 'tags'          => 'Grid\Tag\Model\Paragraph\Structure\Tags',
             ),
         ),
@@ -112,7 +110,7 @@ return array(
                             'route'         => 'Grid\Tag\Admin\List',
                             'parentOnly'    => true,
                             'pages'         => array(
-                                'list'      =>array(
+                                'list'      => array(
                                     'label'         => 'admin.navTop.tagList',
                                     'textDomain'    => 'admin',
                                     'order'         => 1,
@@ -139,14 +137,6 @@ return array(
                 'tag'   => '#paragraph-%id%.paragraph.paragraph-%type% .tag',
             ),
             'customizeMapForms' => array(
-                'contentList'   => array(
-                    'element'   => 'general',
-                    'leadImage' => 'image',
-                ),
-                'tagCloud' => array(
-                    'element'   => 'general',
-                    'tag'       => 'general',
-                ),
                 'tags' => array(
                     'element'   => 'general',
                     'tag'       => 'general',
@@ -163,8 +153,6 @@ return array(
                             'options'   => array(
                                 'basic' => array(
                                     'options'   => array(
-                                        'contentList'   => 'paragraph.type.contentList',
-                                        'tagCloud'      => 'paragraph.type.tagCloud',
                                         'tags'          => 'paragraph.type.tags',
                                     ),
                                 ),
@@ -176,165 +164,6 @@ return array(
         ),
         'Grid\Paragraph\Meta\Edit' => array(
             'fieldsets' => array(
-                'contentList' => array(
-                    'spec'    => array(
-                        'name'      => 'contentList',
-                        'options'   => array(
-                            'label'     => 'paragraph.type.contentList',
-                            'required'  => false,
-                        ),
-                        'elements'  => array(
-                            'name'  => array(
-                                'spec'  => array(
-                                    'type'      => 'Zork\Form\Element\Text',
-                                    'name'      => 'name',
-                                    'options'   => array(
-                                        'label'     => 'paragraph.form.abstract.name',
-                                        'required'  => false,
-                                    ),
-                                ),
-                            ),
-                            'mode'  => array(
-                                'spec'  => array(
-                                    'type'      => 'Zork\Form\Element\Select',
-                                    'name'      => 'mode',
-                                    'options'   => array(
-                                        'label'     => 'paragraph.form.contentList.mode',
-                                        'required'  => false,
-                                        'options'   => array(
-                                            'some'  => 'paragraph.form.contentList.mode.some',
-                                            'all'   => 'paragraph.form.contentList.mode.all',
-                                        ),
-                                    ),
-                                ),
-                            ),
-                            'itemCount' => array(
-                                'spec'  => array(
-                                    'type'      => 'Zork\Form\Element\Number',
-                                    'name'      => 'itemCount',
-                                    'options'   => array(
-                                        'label'     => 'paragraph.form.contentList.itemCount',
-                                        'required'  => false,
-                                    ),
-                                    'attributes'    => array(
-                                        'value'     => 10,
-                                        'min'       => 1,
-                                    ),
-                                ),
-                            ),
-                            'displayUser' => array(
-                                'spec' => array(
-                                    'type'      => 'Zork\Form\Element\Checkbox',
-                                    'name'      => 'displayUser',
-                                    'options'   => array(
-                                        'label'     => 'paragraph.form.contentList.displayUser',
-                                        'required'  => false,
-                                    ),
-                                    'attributes'    => array(
-                                        'checked'   => true,
-                                    ),
-                                ),
-                            ),
-                            'displayCreated' => array(
-                                'spec' => array(
-                                    'type'      => 'Zork\Form\Element\Checkbox',
-                                    'name'      => 'displayCreated',
-                                    'options'   => array(
-                                        'label'     => 'paragraph.form.contentList.displayCreated',
-                                        'required'  => false,
-                                    ),
-                                    'attributes'    => array(
-                                        'checked'   => true,
-                                    ),
-                                ),
-                            ),
-                            'displayLeadImage' => array(
-                                'spec' => array(
-                                    'type'      => 'Zork\Form\Element\Checkbox',
-                                    'name'      => 'displayLeadImage',
-                                    'options'   => array(
-                                        'label'     => 'paragraph.form.contentList.displayLeadImage',
-                                        'required'  => false,
-                                    ),
-                                    'attributes'    => array(
-                                        'checked'   => true,
-                                    ),
-                                ),
-                            ),
-                            'displayLeadText' => array(
-                                'spec' => array(
-                                    'type'      => 'Zork\Form\Element\Checkbox',
-                                    'name'      => 'displayLeadText',
-                                    'options'   => array(
-                                        'label'     => 'paragraph.form.contentList.displayLeadText',
-                                        'required'  => false,
-                                    ),
-                                    'attributes'    => array(
-                                        'checked'   => true,
-                                    ),
-                                ),
-                            ),
-                            'displayReadMore' => array(
-                                'spec' => array(
-                                    'type'      => 'Zork\Form\Element\Checkbox',
-                                    'name'      => 'displayReadMore',
-                                    'options'   => array(
-                                        'label'     => 'paragraph.form.contentList.displayReadMore',
-                                        'required'  => false,
-                                    ),
-                                    'attributes'    => array(
-                                        'checked'   => true,
-                                    ),
-                                ),
-                            ),
-                            'tags' => array(
-                                'spec' => array(
-                                    'type'      => 'Grid\Tag\Form\Element\TagList',
-                                    'name'      => 'tags',
-                                    'options'   => array(
-                                        'label'     => 'paragraph.form.contentList.tags',
-                                        'required'  => false,
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-                'tagCloud' => array(
-                    'spec' => array(
-                        'name'      => 'tagCloud',
-                        'options'   => array(
-                            'label'     => 'paragraph.type.tagCloud',
-                            'required'  => false,
-                        ),
-                        'elements'  => array(
-                            'name'  => array(
-                                'spec'  => array(
-                                    'type'      => 'Zork\Form\Element\Text',
-                                    'name'      => 'name',
-                                    'options'   => array(
-                                        'label'     => 'paragraph.form.abstract.name',
-                                        'required'  => false,
-                                    ),
-                                ),
-                            ),
-                            'mode'  => array(
-                                'spec'  => array(
-                                    'type'      => 'Zork\Form\Element\Select',
-                                    'name'      => 'mode',
-                                    'options'   => array(
-                                        'label'     => 'paragraph.form.tagCloud.mode',
-                                        'required'  => true,
-                                        'options'   => array(
-                                            'primary'   => 'paragraph.form.tagCloud.mode.primary',
-                                            'strict'    => 'paragraph.form.tagCloud.mode.strict',
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
                 'tags' => array(
                     'spec' => array(
                         'name'      => 'tags',
@@ -420,12 +249,11 @@ return array(
     ),
     'view_manager' => array(
         'template_map' => array(
-            'grid/tag/contentList'               => __DIR__ . '/../view/grid/tag/contentList.phtml',
-            'grid/tag/admin/list'                => __DIR__ . '/../view/grid/tag/admin/list.phtml',
-            'grid/tag/admin/edit'                => __DIR__ . '/../view/grid/tag/admin/edit.phtml',
-            'grid/tag/list/list'                 => __DIR__ . '/../view/grid/tag/list/list.phtml',
-            'grid/paragraph/render/contentList'  => __DIR__ . '/../view/grid/paragraph/render/contentList.phtml',
-            'grid/paragraph/render/tagCloud'     => __DIR__ . '/../view/grid/paragraph/render/tagCloud.phtml',
+            'grid/tag/contentList'          => __DIR__ . '/../view/grid/tag/contentList.phtml',
+            'grid/tag/admin/list'           => __DIR__ . '/../view/grid/tag/admin/list.phtml',
+            'grid/tag/admin/edit'           => __DIR__ . '/../view/grid/tag/admin/edit.phtml',
+            'grid/tag/list/list'            => __DIR__ . '/../view/grid/tag/list/list.phtml',
+            'grid/paragraph/render/tags'    => __DIR__ . '/../view/grid/paragraph/render/tags.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
