@@ -429,29 +429,29 @@ return array(
             'paragraph.content'         => 'paragraph',
         ),
         'allow' => array(
-            array(
+            'developers to do everything' => array(
                 'role'      => '1',
                 'resource'  => null,
                 'privilege' => null,
             ),
-            array(
+            'site-owners to do everything' => array(
                 'role'      => '2',
                 'resource'  => null,
                 'privilege' => null,
             ),
         ),
         'deny' => array(
-            array(
+            'site-owners to do anything with developers' => array(
                 'role'      => '2',
                 'resource'  => 'user.group.1',
                 'privilege' => null,
             ),
-            array(
+            'site-owners to do anything with site-owners' => array(
                 'role'      => '2',
                 'resource'  => 'user.group.2',
                 'privilege' => null,
             ),
-            array(
+            'site-owners to do anything with sysadmin' => array(
                 'role'      => '2',
                 'resource'  => 'sysadmin',
                 'privilege' => null,
