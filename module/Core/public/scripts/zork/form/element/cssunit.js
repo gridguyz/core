@@ -81,12 +81,14 @@
             update();
         } );
 
+        spinner.val( value );
+
         if ( spinner.prop( "type" ) == "number" )
         {
             spinner.attr( {
                 "min"   : negativ ? null : "0",
                 "step"  : ~ intUnits.indexOf( postfix ) ? 1 : 0.01
-            } ).val( value );
+            } );
         }
         else
         {
