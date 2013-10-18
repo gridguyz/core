@@ -1288,13 +1288,13 @@ return array(
             ),
             'headScript'        => array(
                 'jquery'        => array(
-                    /// TODO: use jquery-ui version 1.10 & 2.0, when available from google
-                    'src'       => '//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery' . ( ! $debug ? '.min' : '' ) . '.js',
+                    /// TODO: use jquery version 1.10 & 2.0, when available from google
+                    'src'       => '//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery' . ( $debug ? '' : '.min' ) . '.js',
                     'type'      => 'text/javascript',
                 ),
                 'jqueryUi'      => array(
                     /// TODO: use jquery-ui version 1.10, when available from google
-                    'src'       => '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui' . ( ! $debug ? '.min' : '' ) . '.js',
+                    'src'       => '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui' . ( $debug ? '' : '.min' ) . '.js',
                     'type'      => 'text/javascript',
                 ),
                 'coreJs'        => array(

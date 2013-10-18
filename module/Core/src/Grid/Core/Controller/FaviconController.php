@@ -32,7 +32,7 @@ class FaviconController extends AbstractActionController
         }
 
         return $this->redirect()
-                    ->toUrl( $options['headLink']['favicon']['href'] );
+                    ->toUrl( $redirect );
     }
 
 }
