@@ -129,7 +129,7 @@ class ManageController extends AbstractActionController
     /**
      * Registration success
      */
-    public function registerSuccess()
+    public function registerSuccessAction()
     {
         return new MetaContent( 'user.registerSuccess' );
     }
