@@ -84,7 +84,7 @@ return array(
     'user.form.register.password' => 'Password',
     'user.form.register.passwordVerify' => 'Repeat password',
     'user.form.register.submit' => 'Register',
-    'user.form.register.success' => 'Register success',
+    'user.form.register.success' => 'Registration successful.<br />Please check your inbox to confirm your email address.',
     'user.form.register.title' => 'Register',
     'user.group.resourceGroup' => 'User group management',
     'user.group.resource' => 'User groups',

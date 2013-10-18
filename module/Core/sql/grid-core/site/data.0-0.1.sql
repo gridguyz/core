@@ -160,7 +160,7 @@ UPDATE "user_group"
  WHERE "name" IN ( 'Admin', 'Registered' );
 
 -- insert basic meta-contents: error.404, error.403,
---  user.datasheet, user.manage, user.passwordChangeRequest
+--  user.register, user.datasheet, user.manage, user.passwordChangeRequest
 
 DO LANGUAGE plpgsql $$
 DECLARE

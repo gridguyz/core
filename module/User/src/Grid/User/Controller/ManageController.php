@@ -107,9 +107,10 @@ class ManageController extends AbstractActionController
 
         if ( $success === true )
         {
-            $this->messenger()
-                 ->add( 'user.form.register.success',
-                        'user', Message::LEVEL_INFO );
+            return $this->redirect()
+                        ->toRoute( 'Grid\User\Manage\RegisterSuccess', array(
+                            'locale' => (string) $this->locale(),
+                        ) );
         }
 
         if ( $success === false )
@@ -123,6 +124,14 @@ class ManageController extends AbstractActionController
             'success'   => $success,
             'form'      => $form,
         ) );
+    }
+
+    /**
+     * Registration success
+     */
+    public function registerSuccess()
+    {
+        return new MetaContent( 'user.registerSuccess' );
     }
 
     /**

@@ -57,7 +57,7 @@ return array(
     'user.form.register.password' => 'Jelszó',
     'user.form.register.passwordVerify' => 'Jelszó megerősítése',
     'user.form.register.submit' => 'Regisztrálok',
-    'user.form.register.success' => 'Regisztráció sikeres',
+    'user.form.register.success' => 'Regisztráció sikeres.<br />Kérem ellenőrizze bejövő leveleit, hogy visszaigazolhassa az email-címét.',
     'user.form.register.title' => 'Regisztráció',
     'user.group.admin' => 'Admin',
     'user.group.developer' => 'Fejlesztő',

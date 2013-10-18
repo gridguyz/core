@@ -108,6 +108,19 @@ return array(
                     ),
                 ),
             ),
+            'Grid\User\Manage\RegisterSuccess' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route'    => '/app/:locale/register/success',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Grid\User\Controller\Manage',
+                        'action'     => 'register-success',
+                    ),
+                ),
+            ),
             'Grid\User\Manage\Confirm' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(

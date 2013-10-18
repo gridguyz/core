@@ -247,6 +247,7 @@ return array(
     'paragraph.metaContent.search.results' => 'Search results',
     'paragraph.metaContent.user.datasheet' => 'User: datasheet',
     'paragraph.metaContent.user.register' => 'User: register',
+    'paragraph.metaContent.user.registerSuccess' => 'User: register success',
     'paragraph.metaContent.user.passwordChangeRequest' => 'User: password-change request',
     'paragraph.metaContent.form.title' => 'Edit meta page',
     'paragraph.metaContent.list.title' => 'Meta pages',
