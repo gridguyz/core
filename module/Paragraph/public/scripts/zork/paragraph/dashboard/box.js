@@ -22,19 +22,20 @@
         form    = $( form );
         element = $( element );
 
-        var before = element.find( ".paragraph > h1" ).text();
+        var titleNode   = element.find( ".paragraph > .paragraph-content-open > .box-title" ),
+            titleInput  = form.find( ":input[name='paragraph-box[title]']" ),
+            before      = titleNode.text();
 
-        form.find( ":input[name='paragraph-box[title]']" )
-            .on( "keyup change", function () {
-                element.find( ".paragraph > h1" ).text( $( this ).val() );
-            } );
+        titleInput.on( "keyup change", function () {
+            titleNode.text( titleInput.val() );
+        } );
 
         return {
             "update": function () {
-                before = form.find( ":input[name='paragraph-box[title]']" ).val();
+                before = titleInput.val();
             },
             "restore": function () {
-                element.find( ".paragraph > h1" ).text( before );
+                titleNode.text( before );
             }
         };
     };
