@@ -32,7 +32,7 @@ return array(
     'paragraph.editableHeader.append' => 'Append new paragraph',
     'paragraph.editableHeader.delete' => 'Delete',
     'paragraph.editableHeader.edit' => 'Edit',
-    'paragraph.form.abstract.name' => 'Inner name',
+    'paragraph.form.abstract.name' => 'Internal name',
     'paragraph.form.anonymous' => 'Anonymous',
     'paragraph.form.box.title' => 'Title',
     'paragraph.form.breadcrumb.separator' => 'Separator',
