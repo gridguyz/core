@@ -78,23 +78,16 @@ class PasswordChangeRequestController extends AbstractActionController
             }
         }
 
-        if ( $success === true )
+        /* Says success even if email does not exists */
+        if ( $success === true || $success === false )
         {
             $this->messenger()
                  ->add( 'user.form.passwordRequest.success',
                         'user', Message::LEVEL_INFO );
         }
 
-        if ( $success === false )
-        {
-            $this->messenger()
-                 ->add( 'user.form.passwordRequest.failed',
-                        'user', Message::LEVEL_ERROR );
-        }
-
         return new MetaContent( 'user.passwordChangeRequest', array(
-            'success'   => $success,
-            'form'      => $form,
+            'form' => $form,
         ) );
     }
 
