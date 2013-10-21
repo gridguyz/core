@@ -83,12 +83,12 @@ class AuthenticationController extends AbstractActionController
         $match      = array();
         $returnUri  = str_replace( '\\', '/', $returnUri );
 
-        if ( preg_match( '#^(https?:)?/{2,}(?P<domain>[^/]+)(?P<path>.*)#',
+        $returnUri = ltrim($returnUri, "\n\r\t\v\e\f");
+        
+        if ( !preg_match( '#^/([^/].*)?$#',
                          $returnUri, $match ) )
         {
-            $returnUri = empty( $match['path'] )
-                    ? static::DEFAULT_RETURN_URI
-                    : $match['path'];
+            $returnUri = static::DEFAULT_RETURN_URI;
         }
 
         return $returnUri;
