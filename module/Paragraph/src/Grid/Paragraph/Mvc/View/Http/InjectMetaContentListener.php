@@ -6,6 +6,9 @@ use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\AbstractListenerAggregate;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Grid\Paragraph\View\Model\MetaContent;
 use Grid\Paragraph\Model\Paragraph\MiddleLayoutModel;
 use Grid\Paragraph\Model\Paragraph\Structure\LayoutAwareInterface;
@@ -16,7 +19,10 @@ use Grid\Paragraph\Model\Paragraph\Structure\LayoutAwareInterface;
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
 class InjectMetaContentListener extends AbstractListenerAggregate
+                             implements ServiceLocatorAwareInterface
 {
+
+    use ServiceLocatorAwareTrait;
 
     /**
      * @const string
@@ -31,20 +37,26 @@ class InjectMetaContentListener extends AbstractListenerAggregate
     /**
      * Get middle-layout-model
      *
-     * @return \Paragraph\Model\Paragraph\MiddleLayoutModel
+     * @return  \Grid\Paragraph\Model\Paragraph\MiddleLayoutModel
      */
     public function getMiddleLayoutModel()
     {
+        if ( null === $this->middleLayoutModel )
+        {
+            $this->middleLayoutModel = $this->getServiceLocator()
+                                            ->get( 'Grid\Paragraph\Model\Paragraph\MiddleLayoutModel' );
+        }
+
         return $this->middleLayoutModel;
     }
 
     /**
      * Set middle-layout-model
      *
-     * @param   \Paragraph\Model\Paragraph\MiddleLayoutModel $paragraphMiddleLayoutModel
-     * @return  \Paragraph\View\Helper\MetaContent
+     * @param   \Grid\Paragraph\Model\Paragraph\MiddleLayoutModel $paragraphMiddleLayoutModel
+     * @return  \Grid\Paragraph\View\Helper\MetaContent
      */
-    public function setMiddleLayoutModel( MiddleLayoutModel $paragraphMiddleLayoutModel )
+    public function setMiddleLayoutModel( MiddleLayoutModel $paragraphMiddleLayoutModel = null )
     {
         $this->middleLayoutModel = $paragraphMiddleLayoutModel;
         return $this;
@@ -53,11 +65,11 @@ class InjectMetaContentListener extends AbstractListenerAggregate
     /**
      * Constructor
      *
-     * @param \Paragraph\Model\Paragraph\MiddleLayoutModel $paragraphMiddleLayoutModel
+     * @param   ServiceLocatorInterface $serviceLocator
      */
-    public function __construct( MiddleLayoutModel $paragraphMiddleLayoutModel )
+    public function __construct( ServiceLocatorInterface $serviceLocator )
     {
-        $this->setMiddleLayoutModel( $paragraphMiddleLayoutModel );
+        $this->setServiceLocator( $serviceLocator );
     }
 
     /**
