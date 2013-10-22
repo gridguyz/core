@@ -3,6 +3,7 @@
 namespace Grid\Core\Controller;
 
 use Exception;
+use Zend\Log\Logger;
 use Grid\Core\Model\RpcAbstract;
 use Zork\Rpc\CallableInterface;
 use Zend\Stdlib\ErrorHandler;
@@ -29,8 +30,8 @@ class RpcController extends AbstractActionController
     /**
      * Convert data to raw object
      *
-     * @param array|object $object
-     * @return object
+     * @param   array|object    $object
+     * @return  object
      */
     protected static function rawData( $object )
     {
@@ -78,9 +79,11 @@ class RpcController extends AbstractActionController
     /**
      * Log a single exception
      *
-     * @param \Exception $exception
+     * @param   \Exception  $exception
+     * @param   int         $priority
      */
-    public function logException( Exception $exception )
+    public function logException( Exception $exception,
+                                  $priority = Logger::CRIT )
     {
         /* @var $logger \Zork\Log\LoggerManager */
         $logger = $this->getServiceLocator()
@@ -89,14 +92,15 @@ class RpcController extends AbstractActionController
         if ( $logger->hasLogger( 'exception' ) )
         {
             $logger->getLogger( 'exception' )
-                   ->crit( '<pre>' . $exception . PHP_EOL . '</pre>' . PHP_EOL );
+                   ->log( $priority,
+                          '<pre>' . $exception . PHP_EOL . '</pre>' . PHP_EOL );
         }
     }
 
     /**
      * Call an rpc
      *
-     * @return array
+     * @return  array
      */
     public function callAction()
     {
@@ -104,7 +108,7 @@ class RpcController extends AbstractActionController
                            ->fromRoute( 'format', 'json' );
 
         $format = $this->getServiceLocator()
-                       ->get( 'Grid\Core\\Model\\Rpc\\' . ucfirst( $formatName ) );
+                       ->get( 'Grid\\Core\\Model\\Rpc\\' . ucfirst( $formatName ) );
 
         if ( ! $format || ! $format instanceof RpcAbstract )
         {
@@ -120,6 +124,18 @@ class RpcController extends AbstractActionController
 
         if ( $error )
         {
+            try
+            {
+                throw new RpcException\BadMethodCallException(
+                    'Parse error',
+                    $error
+                );
+            }
+            catch ( RpcException\BadMethodCallException $ex )
+            {
+                $this->logException( $ex, Logger::WARN );
+            }
+
             return $format->error(
                 $error,
                 $format->errorCodes[ $error ],
@@ -128,7 +144,7 @@ class RpcController extends AbstractActionController
         }
 
         @ list( $serviceName,
-                $method ) = explode( '::', $format->getMethod() );
+                $method ) = explode( '::', $format->getMethod(), 2 );
 
         if ( empty( $method ) )
         {
@@ -142,7 +158,7 @@ class RpcController extends AbstractActionController
         }
         catch ( ServiceNotFoundException $ex )
         {
-            $this->logException( $ex );
+            $this->logException( $ex, Logger::WARN );
 
             return $format->error(
                 RpcAbstract::METHOD_NOT_FOUND . ': ' . $format->getMethod(),
@@ -156,6 +172,8 @@ class RpcController extends AbstractActionController
 
         if ( empty( $service ) || ! $service instanceof CallableInterface )
         {
+            $this->logException( $ex, Logger::WARN );
+
             return $format->error(
                 RpcAbstract::METHOD_NOT_FOUND . ': ' . $format->getMethod(),
                 $format->errorCodes[RpcAbstract::METHOD_NOT_FOUND],
@@ -175,7 +193,7 @@ class RpcController extends AbstractActionController
             }
             catch ( RpcException\BadMethodCallException $ex )
             {
-                $this->logException( $ex );
+                $this->logException( $ex, Logger::WARN );
 
                 return $format->error(
                     RpcAbstract::METHOD_NOT_FOUND . ': ' . $format->getMethod(),
@@ -189,7 +207,7 @@ class RpcController extends AbstractActionController
             }
             catch ( RpcException\InvalidArgumentException $ex )
             {
-                $this->logException( $ex );
+                $this->logException( $ex, Logger::WARN );
 
                 return $format->error(
                     $ex->getMessage(),
