@@ -188,11 +188,12 @@ class RpcController extends AbstractActionController
             {
                 ErrorHandler::start( E_ALL );
                 $result = $service->call( $method, $format->getParams() );
-                ErrorHandler::stop();
+                ErrorHandler::stop( true );
                 return $format->response( $result );
             }
             catch ( RpcException\BadMethodCallException $ex )
             {
+                ErrorHandler::stop( false );
                 $this->logException( $ex, Logger::WARN );
 
                 return $format->error(
@@ -207,6 +208,7 @@ class RpcController extends AbstractActionController
             }
             catch ( RpcException\InvalidArgumentException $ex )
             {
+                ErrorHandler::stop( false );
                 $this->logException( $ex, Logger::WARN );
 
                 return $format->error(
@@ -217,6 +219,7 @@ class RpcController extends AbstractActionController
             }
             catch ( Exception $ex )
             {
+                ErrorHandler::stop( false );
                 $this->logException( $ex );
 
                 return $format->error(
