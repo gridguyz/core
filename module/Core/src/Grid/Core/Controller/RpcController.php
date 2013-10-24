@@ -4,9 +4,10 @@ namespace Grid\Core\Controller;
 
 use Exception;
 use Zend\Log\Logger;
-use Grid\Core\Model\RpcAbstract;
-use Zork\Rpc\CallableInterface;
 use Zend\Stdlib\ErrorHandler;
+use Zork\Rpc\CallableInterface;
+use Grid\Core\Model\RpcAbstract;
+use Zend\Http\Response as HttpResponse;
 use Zork\Rpc\Exception as RpcException;
 use Zend\Mvc\Exception\DomainException;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -104,6 +105,8 @@ class RpcController extends AbstractActionController
      */
     public function callAction()
     {
+        $request    = $this->getRequest();
+        $response   = $this->getResponse();
         $formatName = $this->params()
                            ->fromRoute( 'format', 'json' );
 
@@ -132,21 +135,26 @@ class RpcController extends AbstractActionController
         catch ( DomainException $ex )
         {
             $this->logException( $ex, Logger::WARN );
-
-            $response = $this->getResponse();
             $response->setStatusCode( 500 );
 
             if ( error_reporting() & E_WARNING )
             {
+                if ( $response instanceof HttpResponse )
+                {
+                    $response->getHeaders()
+                             ->addHeaderLine(
+                                    'Content-Type',
+                                    'text/plain; charset=utf-8'
+                                );
+                }
+
                 $response->setContent( (string) $ex );
             }
 
             return $response;
         }
 
-        $request    = $this->getRequest();
-        $response   = $this->getResponse();
-        $error      = $format->parse( $request, $response );
+        $error = $format->parse( $request, $response );
 
         if ( $error )
         {
