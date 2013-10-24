@@ -4,9 +4,10 @@ namespace Grid\Core\Controller;
 
 use Exception;
 use Zend\Log\Logger;
-use Grid\Core\Model\RpcAbstract;
-use Zork\Rpc\CallableInterface;
 use Zend\Stdlib\ErrorHandler;
+use Zork\Rpc\CallableInterface;
+use Grid\Core\Model\RpcAbstract;
+use Zend\Http\Response as HttpResponse;
 use Zork\Rpc\Exception as RpcException;
 use Zend\Mvc\Exception\DomainException;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -104,23 +105,56 @@ class RpcController extends AbstractActionController
      */
     public function callAction()
     {
+        $request    = $this->getRequest();
+        $response   = $this->getResponse();
         $formatName = $this->params()
                            ->fromRoute( 'format', 'json' );
 
-        $format = $this->getServiceLocator()
-                       ->get( 'Grid\\Core\\Model\\Rpc\\' . ucfirst( $formatName ) );
-
-        if ( ! $format || ! $format instanceof RpcAbstract )
+        try
         {
-            throw new DomainException(
-                'The rpc-format (' . $formatName . ') not understood',
-                500
-            );
+            try
+            {
+                $format = $this->getServiceLocator()
+                               ->get( 'Grid\\Core\\Model\\Rpc\\' .
+                                      ucfirst( $formatName ) );
+            }
+            catch ( ServiceNotFoundException $ex )
+            {
+                throw new DomainException(
+                    'The rpc-format (' . $formatName . ') not understood', 0, $ex
+                );
+            }
+
+            if ( ! $format || ! $format instanceof RpcAbstract )
+            {
+                throw new DomainException(
+                    'The rpc-format (' . $formatName . ') not understood'
+                );
+            }
+        }
+        catch ( DomainException $ex )
+        {
+            $this->logException( $ex, Logger::WARN );
+            $response->setStatusCode( 500 );
+
+            if ( error_reporting() & E_WARNING )
+            {
+                if ( $response instanceof HttpResponse )
+                {
+                    $response->getHeaders()
+                             ->addHeaderLine(
+                                    'Content-Type',
+                                    'text/plain; charset=utf-8'
+                                );
+                }
+
+                $response->setContent( (string) $ex );
+            }
+
+            return $response;
         }
 
-        $request    = $this->getRequest();
-        $response   = $this->getResponse();
-        $error      = $format->parse( $request, $response );
+        $error = $format->parse( $request, $response );
 
         if ( $error )
         {
@@ -128,7 +162,7 @@ class RpcController extends AbstractActionController
             {
                 throw new RpcException\BadMethodCallException(
                     'Parse error',
-                    $error
+                    $format->errorCodes[ $error ]
                 );
             }
             catch ( RpcException\BadMethodCallException $ex )
@@ -188,11 +222,12 @@ class RpcController extends AbstractActionController
             {
                 ErrorHandler::start( E_ALL );
                 $result = $service->call( $method, $format->getParams() );
-                ErrorHandler::stop();
+                ErrorHandler::stop( true );
                 return $format->response( $result );
             }
             catch ( RpcException\BadMethodCallException $ex )
             {
+                ErrorHandler::stop( false );
                 $this->logException( $ex, Logger::WARN );
 
                 return $format->error(
@@ -207,6 +242,7 @@ class RpcController extends AbstractActionController
             }
             catch ( RpcException\InvalidArgumentException $ex )
             {
+                ErrorHandler::stop( false );
                 $this->logException( $ex, Logger::WARN );
 
                 return $format->error(
@@ -217,6 +253,7 @@ class RpcController extends AbstractActionController
             }
             catch ( Exception $ex )
             {
+                ErrorHandler::stop( false );
                 $this->logException( $ex );
 
                 return $format->error(
