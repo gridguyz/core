@@ -107,15 +107,42 @@ class RpcController extends AbstractActionController
         $formatName = $this->params()
                            ->fromRoute( 'format', 'json' );
 
-        $format = $this->getServiceLocator()
-                       ->get( 'Grid\\Core\\Model\\Rpc\\' . ucfirst( $formatName ) );
-
-        if ( ! $format || ! $format instanceof RpcAbstract )
+        try
         {
-            throw new DomainException(
-                'The rpc-format (' . $formatName . ') not understood',
-                500
-            );
+            try
+            {
+                $format = $this->getServiceLocator()
+                               ->get( 'Grid\\Core\\Model\\Rpc\\' .
+                                      ucfirst( $formatName ) );
+            }
+            catch ( ServiceNotFoundException $ex )
+            {
+                throw new DomainException(
+                    'The rpc-format (' . $formatName . ') not understood', 0, $ex
+                );
+            }
+
+            if ( ! $format || ! $format instanceof RpcAbstract )
+            {
+                throw new DomainException(
+                    'The rpc-format (' . $formatName . ') not understood'
+                );
+            }
+        }
+        catch ( DomainException $ex )
+        {
+            $this->logException( $ex, Logger::WARN );
+
+            $this->getResponse()
+                 ->setStatusCode( 500 );
+
+            if ( error_reporting() & E_WARNING )
+            {
+                $this->getResponse()
+                     ->setContent( (string) $ex );
+            }
+
+            return;
         }
 
         $request    = $this->getRequest();
