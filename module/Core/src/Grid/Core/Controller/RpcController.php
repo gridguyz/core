@@ -155,7 +155,7 @@ class RpcController extends AbstractActionController
             {
                 throw new RpcException\BadMethodCallException(
                     'Parse error',
-                    $error
+                    $format->errorCodes[ $error ]
                 );
             }
             catch ( RpcException\BadMethodCallException $ex )
