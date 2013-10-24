@@ -133,16 +133,15 @@ class RpcController extends AbstractActionController
         {
             $this->logException( $ex, Logger::WARN );
 
-            $this->getResponse()
-                 ->setStatusCode( 500 );
+            $response = $this->getResponse();
+            $response->setStatusCode( 500 );
 
             if ( error_reporting() & E_WARNING )
             {
-                $this->getResponse()
-                     ->setContent( (string) $ex );
+                $response->setContent( (string) $ex );
             }
 
-            return;
+            return $response;
         }
 
         $request    = $this->getRequest();
