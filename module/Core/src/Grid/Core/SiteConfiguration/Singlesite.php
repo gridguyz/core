@@ -59,6 +59,12 @@ class Singlesite extends AbstractDomainAware
                 $validDomains = (array) $config['validDomains'];
             }
 
+            if ( ! empty( $config['defaultDomain'] ) &&
+                 ! in_array( $config['defaultDomain'], $validDomains ) )
+            {
+                $validDomains[] = $config['defaultDomain'];
+            }
+
             foreach ( $validDomains as $validDomain )
             {
                 if ( $fulldomain == $validDomain )
