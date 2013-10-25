@@ -19,6 +19,60 @@ class CronController extends AbstractActionController
      */
     const PHP_SELF = './public/index.php';
 
+    protected function callDomain( $phpSelf, $domain, $type, $post = false )
+    {
+        $result = '';
+        $args   = array(
+            $phpSelf,
+            'cron',
+            $domain,
+            $type,
+        );
+
+        if ( $post )
+        {
+            $args[] = '--post';
+        }
+
+        $process = new Process( array(
+            'command'   => 'php',
+            'arguments' => $args,
+            'environmentVariables'  => array(
+                'GRIDGUYZ_HOST'     => $domain,
+                'HTTP_HOST'         => $domain,
+            ),
+        ) );
+
+        $result .= 'Calling process ...' . PHP_EOL .
+                   $process->getRunCommand() . PHP_EOL;
+
+        $output = tempnam( './data/', $domain );
+        $descr  = array( Process::TYPE_FILE, $output, Process::MODE_APPEND );
+        file_put_contents( $output, '' );
+
+        $process->open( array(
+            Process::STREAM_STDOUT => $descr,
+            Process::STREAM_STDERR => $descr,
+        ) );
+
+        $return     = $process->close();
+        $messages   = rtrim( file_get_contents( $output ), PHP_EOL );
+        unlink( $output );
+
+        if ( $messages )
+        {
+            $result .= $messages . PHP_EOL;
+        }
+
+        $result .= sprintf(
+            'Process returned with #%d: %s' . PHP_EOL . PHP_EOL,
+            $return,
+            $return ? 'error!' : 'success.'
+        );
+
+        return $result;
+    }
+
     /**
      * Run cron(s) in multiple domains
      */
@@ -47,51 +101,20 @@ class CronController extends AbstractActionController
             ) );
         }
 
-        $result = 'Running ' . $type . ' crons ...' . PHP_EOL . PHP_EOL;
+        $result = 'Running ' . $type . ' cron(s) ...' . PHP_EOL . PHP_EOL;
 
         foreach ( $this->mimicSiteInfos() as $siteInfo )
         {
             $domain  = $siteInfo->getDomain();
-            $process = new Process( array(
-                'command'   => 'php',
-                'arguments' => array(
-                    $phpSelf,
-                    'cron',
-                    $domain,
-                    $type,
-                ),
-                'environmentVariables'  => array(
-                    'GRIDGUYZ_HOST'     => $domain,
-                    'HTTP_HOST'         => $domain,
-                ),
-            ) );
+            $result .= $this->callDomain( $phpSelf, $domain, $type, false );
+        }
 
-            $result .= 'Calling process ...' . PHP_EOL .
-                       $process->getRunCommand() . PHP_EOL;
+        $result .= 'Running post ' . $type . ' cron(s) ...' . PHP_EOL . PHP_EOL;
 
-            $output = tempnam( './data/', $domain );
-            $descr  = array( Process::TYPE_FILE, $output, Process::MODE_APPEND );
-            file_put_contents( $output, '' );
-
-            $process->open( array(
-                Process::STREAM_STDOUT => $descr,
-                Process::STREAM_STDERR => $descr,
-            ) );
-
-            $return     = $process->close();
-            $messages   = rtrim( file_get_contents( $output ), PHP_EOL );
-            unlink( $output );
-
-            if ( $messages )
-            {
-                $result .= $messages . PHP_EOL;
-            }
-
-            $result .= sprintf(
-                'Process returned with #%d: %s' . PHP_EOL . PHP_EOL,
-                $return,
-                $return ? 'error!' : 'success.'
-            );
+        foreach ( $this->mimicSiteInfos() as $siteInfo )
+        {
+            $domain  = $siteInfo->getDomain();
+            $result .= $this->callDomain( $phpSelf, $domain, $type, true );
         }
 
         $result .= 'Done.' . PHP_EOL;
@@ -106,6 +129,7 @@ class CronController extends AbstractActionController
         $request = $this->getRequest();
         $type    = $request->getParam( 'type' );
         $domain  = $request->getParam( 'domain' );
+        $post    = $request->getParam( 'post' );
 
         if ( ! $request instanceof ConsoleRequest )
         {
@@ -128,12 +152,13 @@ class CronController extends AbstractActionController
             ) );
         }
 
+        $key = $post ? 'cronPost' : 'cron';
         $config = $this->getServiceLocator()
                        ->get( 'Configuration' );
 
-        if ( ! empty( $config['modules']['Grid\Core']['cronServices'][$type] ) )
+        if ( ! empty( $config['modules']['Grid\Core'][$key][$type] ) )
         {
-            $services = $config['modules']['Grid\Core']['cronServices'][$type];
+            $services = $config['modules']['Grid\Core'][$key][$type];
 
             foreach ( $services as $service )
             {
