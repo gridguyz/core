@@ -69,9 +69,24 @@ class CronController extends AbstractActionController
             $result .= 'Calling process ...' . PHP_EOL .
                        $process->getRunCommand() . PHP_EOL;
 
-            ob_start();
-            $return  = $process->run();
-            $result .= rtrim( ob_get_clean(), PHP_EOL ) . PHP_EOL;
+            $output = tempnam( './data/', $domain );
+            $descr  = array( Process::TYPE_FILE, $output, Process::MODE_APPEND );
+            file_put_contents( $output, '' );
+
+            $process->open( array(
+                Process::STREAM_STDOUT => $descr,
+                Process::STREAM_STDERR => $descr,
+            ) );
+
+            $return     = $process->close();
+            $messages   = rtrim( file_get_contents( $output ), PHP_EOL );
+            unlink( $output );
+
+            if ( $messages )
+            {
+                $result .= $messages . PHP_EOL;
+            }
+
             $result .= sprintf(
                 'Process returned with #%d: %s' . PHP_EOL . PHP_EOL,
                 $return,
