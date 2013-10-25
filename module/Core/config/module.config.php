@@ -320,6 +320,30 @@ return array(
             ),
         ),
     ),
+    'console' => array(
+        'router' => array(
+            'routes' => array(
+                'Grid\Core\Cron\Index' => array(
+                    'options' => array(
+                        'route'    => 'cron (frequent|hourly|daily|weekly|monthly):type',
+                        'defaults' => array(
+                            'controller' => 'Grid\Core\Controller\Cron',
+                            'action'     => 'index',
+                        ),
+                    ),
+                ),
+                'Grid\Core\Cron\Domain' => array(
+                    'options' => array(
+                        'route'    => 'cron <domain> (frequent|hourly|daily|weekly|monthly):type',
+                        'defaults' => array(
+                            'controller' => 'Grid\Core\Controller\Cron',
+                            'action'     => 'domain',
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    ),
     'controllers' => array(
         'invokables' => array(
             'Grid\Core\Controller\Index'                    => 'Grid\Core\Controller\IndexController',
@@ -331,6 +355,7 @@ return array(
             'Grid\Core\Controller\Uri'                      => 'Grid\Core\Controller\UriController',
             'Grid\Core\Controller\SubDomain'                => 'Grid\Core\Controller\SubDomainController',
             'Grid\Core\Controller\Package'                  => 'Grid\Core\Controller\PackageController',
+            'Grid\Core\Controller\Cron'                     => 'Grid\Core\Controller\CronController',
         ),
     ),
     'service_manager' => array(
@@ -1163,6 +1188,13 @@ return array(
                             'key'   => 'locale.available',
                             'type'  => 'ini',
                         ),
+                    ),
+                ),
+            ),
+            'cronServices'  => array(
+                'daily'     => array(
+                    'Grid\Core\Model\ClearTmp' => array(
+                        'service' => 'Grid\Core\Model\ClearTmp',
                     ),
                 ),
             ),
