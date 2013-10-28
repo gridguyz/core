@@ -208,7 +208,6 @@ class CronController extends AbstractActionController
                         }
 
                         $result .= Debug::dump( $return, 'returned', false );
-                        $result .= PHP_EOL;
                     }
                 }
             }
