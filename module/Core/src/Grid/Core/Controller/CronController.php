@@ -2,6 +2,7 @@
 
 namespace Grid\Core\Controller;
 
+use Zend\Debug\Debug;
 use Zork\Process\Process;
 use Zend\Console\Request as ConsoleRequest;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -18,60 +19,6 @@ class CronController extends AbstractActionController
      * @const string
      */
     const PHP_SELF = './public/index.php';
-
-    protected function callDomain( $phpSelf, $domain, $type, $post = false )
-    {
-        $result = '';
-        $args   = array(
-            $phpSelf,
-            'cron',
-            $domain,
-            $type,
-        );
-
-        if ( $post )
-        {
-            $args[] = '--post';
-        }
-
-        $process = new Process( array(
-            'command'   => 'php',
-            'arguments' => $args,
-            'environmentVariables'  => array(
-                'GRIDGUYZ_HOST'     => $domain,
-                'HTTP_HOST'         => $domain,
-            ),
-        ) );
-
-        $result .= 'Calling process ...' . PHP_EOL .
-                   $process->getRunCommand() . PHP_EOL;
-
-        $output = tempnam( './data/', $domain );
-        $descr  = array( Process::TYPE_FILE, $output, Process::MODE_APPEND );
-        file_put_contents( $output, '' );
-
-        $process->open( array(
-            Process::STREAM_STDOUT => $descr,
-            Process::STREAM_STDERR => $descr,
-        ) );
-
-        $return     = $process->close();
-        $messages   = rtrim( file_get_contents( $output ), PHP_EOL );
-        unlink( $output );
-
-        if ( $messages )
-        {
-            $result .= $messages . PHP_EOL;
-        }
-
-        $result .= sprintf(
-            'Process returned with #%d: %s' . PHP_EOL . PHP_EOL,
-            $return,
-            $return ? 'error!' : 'success.'
-        );
-
-        return $result;
-    }
 
     /**
      * Run cron(s) in multiple domains
@@ -106,15 +53,46 @@ class CronController extends AbstractActionController
         foreach ( $this->mimicSiteInfos() as $siteInfo )
         {
             $domain  = $siteInfo->getDomain();
-            $result .= $this->callDomain( $phpSelf, $domain, $type, false );
-        }
+            $process = new Process( array(
+                'command'   => 'php',
+                'arguments' => array(
+                    $phpSelf,
+                    'cron',
+                    $domain,
+                    $type,
+                ),
+                'environmentVariables'  => array(
+                    'GRIDGUYZ_HOST'     => $domain,
+                    'HTTP_HOST'         => $domain,
+                ),
+            ) );
 
-        $result .= 'Running post ' . $type . ' cron(s) ...' . PHP_EOL . PHP_EOL;
+            $result .= 'Calling process ...' . PHP_EOL .
+                       $process->getRunCommand() . PHP_EOL;
 
-        foreach ( $this->mimicSiteInfos() as $siteInfo )
-        {
-            $domain  = $siteInfo->getDomain();
-            $result .= $this->callDomain( $phpSelf, $domain, $type, true );
+            $output = tempnam( './data/', $domain );
+            $descr  = array( Process::TYPE_FILE, $output, Process::MODE_APPEND );
+            file_put_contents( $output, '' );
+
+            $process->open( array(
+                Process::STREAM_STDOUT => $descr,
+                Process::STREAM_STDERR => $descr,
+            ) );
+
+            $return     = $process->close();
+            $messages   = rtrim( file_get_contents( $output ), PHP_EOL );
+            unlink( $output );
+
+            if ( $messages )
+            {
+                $result .= $messages . PHP_EOL;
+            }
+
+            $result .= sprintf(
+                'Process returned with #%d: %s' . PHP_EOL . PHP_EOL,
+                $return,
+                $return ? 'error!' : 'success.'
+            );
         }
 
         $result .= 'Done.' . PHP_EOL;
@@ -129,7 +107,6 @@ class CronController extends AbstractActionController
         $request = $this->getRequest();
         $type    = $request->getParam( 'type' );
         $domain  = $request->getParam( 'domain' );
-        $post    = $request->getParam( 'post' );
 
         if ( ! $request instanceof ConsoleRequest )
         {
@@ -152,40 +129,83 @@ class CronController extends AbstractActionController
             ) );
         }
 
-        $key = $post ? 'cronPost' : 'cron';
-        $config = $this->getServiceLocator()
-                       ->get( 'Configuration' );
+        $locator    = $this->getServiceLocator();
+        $config     = $locator->get( 'Configuration' );
 
-        if ( ! empty( $config['modules']['Grid\Core'][$key][$type] ) )
+        if ( empty( $config['modules']['Grid\Core']['cron'] ) )
         {
-            $services = $config['modules']['Grid\Core'][$key][$type];
+            return '';
+        }
 
-            foreach ( $services as $service )
+        $result     = '';
+        $keys       = array( 'site' );
+        $cronConfig = $config['modules']['Grid\Core']['cron'];
+        $modules    = $locator->get( 'Zend\ModuleManager\ModuleManagerInterface' )
+                              ->getModules();
+
+        if ( ! in_array( 'Grid\MultisitePlatform', $modules ) ||
+               in_array( 'Grid\MultisiteCentral',  $modules ) )
+        {
+            $keys[] = 'once';
+        }
+
+        foreach ( $keys as $key )
+        {
+            if ( ! empty( $cronConfig[$key][$type] ) )
             {
-                if ( is_scalar( $service ) )
+                foreach ( $cronConfig[$key][$type] as $service )
                 {
-                    $service = array(
-                        'service' => $service,
-                    );
-                }
+                    if ( is_scalar( $service ) )
+                    {
+                        $service = array(
+                            'service' => $service,
+                        );
+                    }
 
-                if ( ! empty( $service['service'] ) )
-                {
-                    call_user_func_array(
-                        array(
-                            $this->getServiceLocator()
-                                 ->get( $service['service'] ),
-                            empty( $service['method'] )
-                                ? '__invoke'
-                                : (string) $service['method']
-                        ),
-                        empty( $service['arguments'] )
-                            ? array()
-                            : (array) $service['arguments']
-                    );
+                    if ( ! empty( $service['service'] ) )
+                    {
+                        $return = call_user_func_array(
+                            array(
+                                $this->getServiceLocator()
+                                     ->get( $service['service'] ),
+                                empty( $service['method'] )
+                                    ? '__invoke'
+                                    : (string) $service['method']
+                            ),
+                            empty( $service['arguments'] )
+                                ? array()
+                                : (array) $service['arguments']
+                        );
+
+                        $result .= sprintf(
+                            'Service "%s" / %s / %s ',
+                            $service['service'],
+                            $key,
+                            $type
+                        );
+
+                        if ( ! empty( $service['method'] ) )
+                        {
+                            $result .= sprintf( 'called "%s" ', $service['method'] );
+                        }
+
+                        if ( ! empty( $service['arguments'] ) )
+                        {
+                            $result .= Debug::dump(
+                                $service['arguments'],
+                                'with',
+                                false
+                            );
+                        }
+
+                        $result .= Debug::dump( $return, 'returned', false );
+                        $result .= PHP_EOL;
+                    }
                 }
             }
         }
+
+        return $result;
     }
 
 }

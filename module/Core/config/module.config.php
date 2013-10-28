@@ -334,7 +334,7 @@ return array(
                 ),
                 'Grid\Core\Cron\Domain' => array(
                     'options' => array(
-                        'route'    => 'cron <domain> (frequent|hourly|daily|weekly|monthly):type [--post|-p]:post',
+                        'route'    => 'cron <domain> (frequent|hourly|daily|weekly|monthly):type',
                         'defaults' => array(
                             'controller' => 'Grid\Core\Controller\Cron',
                             'action'     => 'domain',
@@ -1192,9 +1192,11 @@ return array(
                 ),
             ),
             'cron' => array(
-                'daily' => array(
-                    'Grid\Core\Model\ClearTmp' => array(
-                        'service' => 'Grid\Core\Model\ClearTmp',
+                'once' => array(
+                    'daily' => array(
+                        'Grid\Core\Model\ClearTmp' => array(
+                            'service' => 'Grid\Core\Model\ClearTmp',
+                        ),
                     ),
                 ),
             ),
