@@ -91,8 +91,8 @@ class CronController extends AbstractActionController
             if ( $messages )
             {
                 $result .= static::PADDING . preg_replace(
-                    '/[\\n\\r]+/',
-                    static::PADDING . '$0',
+                    '/[' . PHP_EOL . ']+/',
+                    '$0' . static::PADDING,
                     $messages
                 ) . PHP_EOL;
             }
