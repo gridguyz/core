@@ -18,6 +18,11 @@ class CronController extends AbstractActionController
     /**
      * @const string
      */
+    const PADDING = '  ';
+
+    /**
+     * @const string
+     */
     const PHP_SELF = './public/index.php';
 
     /**
@@ -85,7 +90,11 @@ class CronController extends AbstractActionController
 
             if ( $messages )
             {
-                $result .= $messages . PHP_EOL;
+                $result .= static::PADDING . preg_replace(
+                    '/[\\n\\r]+/',
+                    static::PADDING . '$0',
+                    $messages
+                ) . PHP_EOL;
             }
 
             $result .= sprintf(
