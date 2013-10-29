@@ -242,13 +242,14 @@ $locale = (string) $this->locale();
 <?php endif ?>
 
                 <input type="hidden" name="modules[<?= $this->escapeHtmlAttr( $package->module ) ?>]" value="" />
-<?php $this->placeholder( 'listModule' )->set( '' );
+<?php $enabled = $this->isModuleLoaded( $package->module );
+      $this->placeholder( 'listModule' )->set( '' );
       $this->placeholder( 'listModule' )->captureStart(); ?>
 
                 <label class="module">
                     <input type="checkbox" data-js-type="js.form.submit js.form.element.onOff"
                            name="modules[<?= $this->escapeHtmlAttr( $package->module ) ?>]"
-                           value="1"<?php if ( $this->isModuleLoaded( $package->module ) ):
+                           value="1"<?php if ( $enabled ):
                         ?> checked="checked"<?php endif ?> />
                 </label>
 <?php $this->placeholder( 'listModule' )->captureEnd(); ?>
@@ -259,6 +260,7 @@ $locale = (string) $this->locale();
                     array(
                         'package'   => $package,
                         'module'    => $package->module,
+                        'enabled'   => $enabled,
                     )
                 ) ?>
 
