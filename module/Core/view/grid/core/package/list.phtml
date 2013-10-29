@@ -7,8 +7,9 @@ $this->headTitle( $title = $this->translate(
     'admin'
 ) );
 
-$paginator = $this->paginator;
-$auth      = $this->authentication();
+$paginator  = $this->paginator;
+$auth       = $this->authentication();
+$user       = $auth->getIdentity();
 
 $paginator->setPageRange( 7 )
           ->setItemCountPerPage( 6 )
@@ -43,7 +44,7 @@ $locale = (string) $this->locale();
 <?php endif ?>
 
     <?= $this->viewWidget( 'Grid\Core\Package\List', '', array(
-        'user' => $auth->getIdentity(),
+        'user' => $user,
     ) ) ?>
 
     <form class="package-list-form" method="post" action="?">
@@ -302,4 +303,8 @@ $locale = (string) $this->locale();
         <?= $paginationControl ?>
 
     </form>
+    <?= $this->viewWidget( 'Grid\Core\Package\List\Summary', '', array(
+        'user' => $user,
+    ) ) ?>
+
 </div>
