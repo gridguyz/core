@@ -22,46 +22,6 @@ class PackageController extends AbstractAdminController
     );
 
     /**
-     * Save modules
-     *
-     * @param   array   $modules
-     * @return  int
-     */
-    protected function saveModules( array $modules )
-    {
-        $saved = 0;
-        $model = $this->getServiceLocator()
-                      ->get( 'Grid\Core\Model\Module\Model' );
-
-        foreach ( $modules as $name => $enabled )
-        {
-            if ( empty( $name ) )
-            {
-                continue;
-            }
-
-            $name   = (string) $name;
-            $module = $model->findByName( $name );
-
-            if ( empty( $module ) )
-            {
-                $module = $model->create( array(
-                    'module'    => $name,
-                    'enabled'   => $enabled,
-                ) );
-            }
-            else
-            {
-                $module->enabled = $enabled;
-            }
-
-            $saved += $module->save();
-        }
-
-        return $saved;
-    }
-
-    /**
      * List packages
      */
     public function listAction()
@@ -98,7 +58,9 @@ class PackageController extends AbstractAdminController
 
         if ( ! empty( $modules ) )
         {
-            if ( $this->saveModules( $modules ) )
+            if ( $this->getServiceLocator()
+                      ->get( 'Grid\Core\Model\Module\Model' )
+                      ->setModules( $modules ) )
             {
                 $this->messenger()
                      ->add( 'admin.packages.modules.success',
