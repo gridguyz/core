@@ -1302,6 +1302,13 @@ a.global-credit-amount:hover
     color: #fff !important;
 }
 
+::-webkit-details-marker,
+details::-webkit-details-marker,
+details summary::-webkit-details-marker
+{
+    display: none;
+}
+
 ::selection
 {
     color: #fff;
