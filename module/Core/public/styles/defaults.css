@@ -1302,6 +1302,11 @@ a.global-credit-amount:hover
     color: #fff !important;
 }
 
+details summary
+{
+    cursor: pointer;
+}
+
 ::-webkit-details-marker,
 details::-webkit-details-marker,
 details summary::-webkit-details-marker
