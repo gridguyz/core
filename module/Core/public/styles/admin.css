@@ -478,13 +478,8 @@ body .admin section.innerPanel section h1
 
 body .admin section.innerPanel section h1 a
 {
-    color: #fff !important;
-    line-height: 12px;
-}
-
-body .admin section.innerPanel section h1 a:hover
-{
-    text-decoration: underline;
+    color: #fff;
+    line-height: 1.2em;
 }
 
 body .admin .icons
