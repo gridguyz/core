@@ -1305,6 +1305,25 @@ a.global-credit-amount:hover
 details summary
 {
     cursor: pointer;
+    padding-left: 40px;
+    background-repeat: no-repeat;
+    background-position: 0px 50%;
+    background-image: url("/images/common/details/closed.png");
+}
+
+details summary:hover
+{
+    background-image: url("/images/common/details/closed-hover.png");
+}
+
+details[open]:not([open=""]) summary
+{
+    background-image: url("/images/common/details/open.png");
+}
+
+details[open]:not([open=""]) summary:hover
+{
+    background-image: url("/images/common/details/open-hover.png");
 }
 
 ::-webkit-details-marker,
