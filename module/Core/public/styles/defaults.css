@@ -1316,11 +1316,13 @@ details summary:hover
     background-image: url("/images/common/details/closed-hover.png");
 }
 
+details[open="open"] summary,
 details[open]:not([open=""]) summary
 {
     background-image: url("/images/common/details/open.png");
 }
 
+details[open="open"] summary:hover,
 details[open]:not([open=""]) summary:hover
 {
     background-image: url("/images/common/details/open-hover.png");
