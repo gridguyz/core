@@ -286,13 +286,19 @@ class Mapper implements DbAdapterAwareInterface,
             $savedKeys[] = $key;
         }
 
+        $deleteWhere = array(
+            'userId'    => $userId,
+            'section'   => $section,
+        );
+
+        if ( ! empty( $savedKeys ) )
+        {
+            $deleteWhere[] = new NotIn( 'key', $savedKeys );
+        }
+
         $delete = $this->sql()
                        ->delete()
-                       ->where( array(
-                           'userId'     => $userId,
-                           'section'    => $section,
-                           new NotIn( 'key', $savedKeys ),
-                       ) );
+                       ->where( $deleteWhere );
 
         $rows += $this->sql()
                       ->prepareStatementForSqlObject( $delete )
