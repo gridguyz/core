@@ -374,7 +374,6 @@ return array(
             'Zend\Session\ManagerInterface'                 => 'Zend\Session\Service\SessionManagerFactory',
             'Zend\Session\Config\ConfigInterface'           => 'Zork\Session\Service\SessionConfigFactory',
             'Zend\Session\Storage\StorageInterface'         => 'Zend\Session\Service\StorageFactory',
-            'Zend\Authentication\AuthenticationService'     => 'Zork\Authentication\AuthenticationServiceFactory',
             'Zork\Mvc\View\Http\ForbiddenStrategy'          => 'Zork\Mvc\View\Http\ForbiddenStrategyServiceFactory',
             'Zork\Mvc\View\Http\InjectHeadDefaults'         => 'Zork\Mvc\View\Http\InjectHeadDefaultsServiceFactory',
             'Grid\Core\Model\Package\EnabledList'           => 'Grid\Core\Model\Package\EnabledListServiceFactory',

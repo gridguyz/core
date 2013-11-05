@@ -399,12 +399,15 @@ return array(
     ),
     'service_manager'   => array(
         'factories'     => array(
-            'acl'       => 'Zork\Permissions\Acl\AclServiceFactory',
+            'acl'               => 'Zork\Permissions\Acl\AclServiceFactory',
+            'authentication'    => 'Grid\User\Authentication\AuthenticationServiceFactory',
         ),
         'aliases'       => array(
-            'Zend\Permissions\Acl\Acl'  => 'acl',
-            'Zork\Permissions\Acl\Acl'  => 'acl',
-            'permissions'               => 'Grid\User\Model\Premissions\Model',
+            'Zend\Permissions\Acl\Acl'                          => 'acl',
+            'Zork\Permissions\Acl\Acl'                          => 'acl',
+            'Zend\Authentication\AuthenticationService'         => 'authentication',
+            'Grid\User\Authentication\AuthenticationService'    => 'authentication',
+            'permissions'                                       => 'Grid\User\Model\Premissions\Model',
         ),
     ),
     'acl' => array(
