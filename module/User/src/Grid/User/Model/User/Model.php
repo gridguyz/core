@@ -3,6 +3,7 @@
 namespace Grid\User\Model\User;
 
 use Zend\Db\Sql\Predicate\In;
+use Zend\Db\Sql\Predicate\NotIn;
 use Zork\Model\MapperAwareTrait;
 use Zork\Model\MapperAwareInterface;
 use Zend\Db\Sql\Predicate\PredicateSet;
@@ -154,6 +155,56 @@ class Model implements MapperAwareInterface
                                  $confirmed = true )
     {
         $where = array();
+
+        if ( ! empty( $state ) )
+        {
+            $where['state'] = $state;
+        }
+
+        if ( null !== $confirmed )
+        {
+            $where['confirmed'] = (bool) $confirmed;
+        }
+
+        return $this->getMapper()
+                    ->findOptions(
+                        array(
+                            'value'         => 'id',
+                            'label'         => 'displayName',
+                            'data-email'    => 'email',
+                            'data-avatar'   => 'avatar',
+                        ),
+                        $where,
+                        array(
+                            'displayName'   => 'ASC',
+                            'id'            => 'ASC',
+                        )
+                    );
+    }
+
+    /**
+     * Find users as "$id" => "$displayName" pairs
+     *
+     * @param   null|array          $groupIds
+     * @param   null|string|array   $state
+     * @param   null|bool           $confirmed
+     * @return  array
+     */
+    public function findOptionsExcludeGroups( array $groupIds = null,
+                                              $state          = Structure::STATE_ACTIVE,
+                                              $confirmed      = true )
+    {
+        $where = array();
+
+        if ( null === $groupIds )
+        {
+            $groupIds = array( 1 );
+        }
+
+        if ( ! empty( $groupIds ) )
+        {
+            $where[] = new NotIn( 'groupId', $groupIds );
+        }
 
         if ( ! empty( $state ) )
         {

@@ -649,7 +649,7 @@ return array(
                             'required'      => false,
                             'display_group' => 'paragraph.form.content.basics',
                             'model'         => 'Grid\User\Model\User\Model',
-                            'method'        => 'findOptions',
+                            'method'        => 'findOptionsExcludeGroups',
                             'empty_option'  => '',
                         ),
                         'attributes'    => array(
@@ -2311,7 +2311,7 @@ return array(
                                         'required'      => false,
                                         'display_group' => 'paragraph.form.content.basics',
                                         'model'         => 'Grid\User\Model\User\Model',
-                                        'method'        => 'findOptions',
+                                        'method'        => 'findOptionsExcludeGroups',
                                         'empty_option'  => '',
                                     ),
                                     'attributes'    => array(
@@ -2782,7 +2782,7 @@ return array(
                                         'label'         => 'paragraph.form.content.user',
                                         'required'      => false,
                                         'model'         => 'Grid\User\Model\User\Model',
-                                        'method'        => 'findOptions',
+                                        'method'        => 'findOptionsExcludeGroups',
                                         'empty_option'  => '',
                                     ),
                                 ),
