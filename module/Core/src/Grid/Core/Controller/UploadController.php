@@ -163,8 +163,8 @@ class UploadController extends AbstractActionController
         }
 
         $request = $this->getRequest();
-        $types   = $request->getPost( 'types', $request->getQuery( 'types' ) );
-        $pattern = $request->getPost( 'pattern', $request->getQuery( 'pattern' ) );
+        $types   = strip_tags( $request->getPost( 'types', $request->getQuery( 'types' ) ) );
+        $pattern = strip_tags( $request->getPost( 'pattern', $request->getQuery( 'pattern' ) ) );
         $form    = $this->getForm( $types, $pattern );
 
         if ( $request->isPost() )
