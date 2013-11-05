@@ -2,7 +2,9 @@
 
 namespace Grid\User\Authentication;
 
-use Grid\User\Model\User\Model as UserModel;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\Storage\StorageInterface;
 use Zend\Authentication\AuthenticationService as ZendAuthenticationService;
@@ -13,10 +15,13 @@ use Zend\Authentication\AuthenticationService as ZendAuthenticationService;
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
 class AuthenticationService extends ZendAuthenticationService
+                         implements ServiceLocatorAwareInterface
 {
 
+    use ServiceLocatorAwareTrait;
+
     /**
-     * @var UserModel
+     * @var \Grid\User\Model\User\Model
      */
     protected $userModel;
 
@@ -28,16 +33,32 @@ class AuthenticationService extends ZendAuthenticationService
     /**
      * Constructor
      *
-     * @param   UserModel           $userModel
-     * @param   StorageInterface    $storage
-     * @param   AdapterInterface    $adapter
+     * @param   ServiceLocatorInterface $serviceLocator
+     * @param   StorageInterface        $storage
+     * @param   AdapterInterface        $adapter
      */
-    public function __construct( UserModel          $userModel,
-                                 StorageInterface   $storage = null,
-                                 AdapterInterface   $adapter = null )
+    public function __construct( ServiceLocatorInterface    $serviceLocator,
+                                 StorageInterface           $storage = null,
+                                 AdapterInterface           $adapter = null )
     {
-        $this->userModel = $userModel;
+        $this->setServiceLocator( $serviceLocator );
         parent::__construct( $storage, $adapter );
+    }
+
+    /**
+     * Get user model
+     *
+     * @return  \Grid\User\Model\User\Model
+     */
+    protected function getUserModel()
+    {
+        if ( null === $this->userModel )
+        {
+            $this->userModel = $this->getServiceLocator()
+                                    ->get( 'Grid\User\Model\User\Model' );
+        }
+
+        return $this->userModel;
     }
 
     /**
@@ -51,7 +72,7 @@ class AuthenticationService extends ZendAuthenticationService
 
         if ( null !== $identity && ! $this->identityRefreshed )
         {
-            $user = $this->userModel
+            $user = $this->getUserModel()
                          ->find( $identity->id );
 
             if ( ! empty( $user ) )

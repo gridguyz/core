@@ -22,10 +22,9 @@ class AuthenticationServiceFactory implements FactoryInterface
      */
     public function createService( ServiceLocatorInterface $services )
     {
-        $userModel  = $services->get( 'Grid\User\Model\User\Model' );
-        $manager    = $services->get( 'Zend\Session\ManagerInterface' );
-        $session    = new Session( null, null, $manager );
-        return new AuthenticationService( $userModel, $session );
+        $manager = $services->get( 'Zend\Session\ManagerInterface' );
+        $storage = new Session( null, null, $manager );
+        return new AuthenticationService( $services, $storage );
     }
 
 }
