@@ -160,7 +160,7 @@ class AuthenticationController extends AbstractActionController
 
                 if ( $result->isValid() )
                 {
-                    $sessm->regenerateId();
+                    $sessm->regenerateId( false );
 
                     $this->messenger()
                          ->add( 'user.form.login.success',
@@ -274,7 +274,7 @@ class AuthenticationController extends AbstractActionController
 
         if ( $result->isValid() )
         {
-            $sessm->regenerateId();
+            $sessm->regenerateId( false );
 
             $this->messenger()
                  ->add( 'user.form.login.success',
@@ -402,7 +402,7 @@ class AuthenticationController extends AbstractActionController
                            ->get( 'Grid\User\Authentication\Service' )
                            ->logout( $data, $sessm, $auth );
 
-            $sessm->regenerateId();
+            $sessm->regenerateId( false );
 
             if ( empty( $result['returnUri'] ) )
             {
