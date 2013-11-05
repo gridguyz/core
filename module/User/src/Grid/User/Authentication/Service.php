@@ -9,9 +9,9 @@ use Zend\Session\ManagerInterface;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
 use Zork\EventManager\EventProviderAbstract;
-use Zend\Authentication\AuthenticationService;
 use Grid\User\Model\Authentication\AdapterFactory;
 use Zork\Authentication\AuthenticationServiceAwareTrait;
+use Zend\Authentication\AuthenticationService as ZendAuthenticationService;
 
 /**
  * Manager
@@ -42,8 +42,8 @@ class Service extends EventProviderAbstract
     }
 
     /**
-     * @param \User\Model\Authentication\AdapterFactory $authenticationAdapterFactory
-     * @return \Zend\Authentication\AuthenticationService
+     * @param   \User\Model\Authentication\AdapterFactory   $authenticationAdapterFactory
+     * @return  \Zend\Authentication\AuthenticationService
      */
     public function setAuthenticationAdapterFactory( AdapterFactory $authenticationAdapterFactory )
     {
@@ -54,8 +54,8 @@ class Service extends EventProviderAbstract
     /**
      * Set the event manager instance used by this context
      *
-     * @param  EventManagerInterface $events
-     * @return \User\Authentication\Service
+     * @param   EventManagerInterface   $events
+     * @return  \User\Authentication\Service
      */
     public function setEventManager( EventManagerInterface $events )
     {
@@ -66,13 +66,13 @@ class Service extends EventProviderAbstract
     }
 
     /**
-     * @param   AdapterFactory          $authenticationAdapterFactory
-     * @param   AuthenticationService   $authenticationService
-     * @param   EventManager            $eventManager
+     * @param   AdapterFactory              $authenticationAdapterFactory
+     * @param   ZendAuthenticationService   $authenticationService
+     * @param   EventManager                $eventManager
      */
-    public function __construct( AdapterFactory         $authenticationAdapterFactory,
-                                 AuthenticationService  $authenticationService,
-                                 EventManager           $eventManager = null )
+    public function __construct( AdapterFactory             $authenticationAdapterFactory,
+                                 ZendAuthenticationService  $authenticationService,
+                                 EventManager               $eventManager = null )
     {
         $this->setAuthenticationAdapterFactory( $authenticationAdapterFactory )
              ->setAuthenticationService( $authenticationService );
@@ -86,8 +86,8 @@ class Service extends EventProviderAbstract
     /**
      * Default action on login
      *
-     * @param \User\Authentication\Event $event
-     * @return \Zend\Authentication\Result
+     * @param   \User\Authentication\Event  $event
+     * @return  \Zend\Authentication\Result
      */
     public function onLogin( Event $event )
     {
@@ -102,14 +102,14 @@ class Service extends EventProviderAbstract
     /**
      * Login attempt
      *
-     * @param array|\Traversable $params
-     * @param \Zend\Session\ManagerInterface $sessionManager
-     * @param \Zend\Authentication\AuthenticationService $auth
-     * @return \Zend\Authentication\Result
+     * @param   array|\Traversable $params
+     * @param   \Zend\Session\ManagerInterface              $sessionManager
+     * @param   \Zend\Authentication\AuthenticationService  $auth
+     * @return  \Zend\Authentication\Result
      */
     public function login( $params,
-                           ManagerInterface $sessionManager,
-                           AuthenticationService $auth = null )
+                           ManagerInterface             $sessionManager,
+                           ZendAuthenticationService    $auth = null )
     {
         if ( null === $auth )
         {
@@ -156,14 +156,14 @@ class Service extends EventProviderAbstract
     /**
      * Logout attempt
      *
-     * @param array|\Traversable $params
-     * @param \Zend\Session\ManagerInterface $sessionManager
-     * @param \Zend\Authentication\AuthenticationService $auth
-     * @return array
+     * @param   array|\Traversable                          $params
+     * @param   \Zend\Session\ManagerInterface              $sessionManager
+     * @param   \Zend\Authentication\AuthenticationService  $auth
+     * @return  array
      */
     public function logout( $params,
-                            ManagerInterface $sessionManager,
-                            AuthenticationService $auth = null )
+                            ManagerInterface            $sessionManager,
+                            ZendAuthenticationService   $auth = null )
     {
         if ( null === $auth )
         {
