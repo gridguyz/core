@@ -1302,6 +1302,12 @@ a.global-credit-amount:hover
     color: #fff !important;
 }
 
+details,
+summary
+{
+    display: block;
+}
+
 details summary
 {
     cursor: pointer;
