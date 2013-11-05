@@ -402,7 +402,7 @@ class AuthenticationController extends AbstractActionController
                            ->get( 'Grid\User\Authentication\Service' )
                            ->logout( $data, $sessm, $auth );
 
-            $sessm->regenerateId( true );
+            $sessm->regenerateId( false );
 
             if ( empty( $result['returnUri'] ) )
             {
