@@ -81,12 +81,9 @@ class AuthenticationController extends AbstractActionController
     protected function getValidReturnUri( $returnUri )
     {
         $match      = array();
-        $returnUri  = str_replace( '\\', '/', $returnUri );
+        $returnUri  = ltrim( str_replace( '\\', '/', $returnUri ), "\n\r\t\v\e\f" );
 
-        $returnUri = ltrim($returnUri, "\n\r\t\v\e\f");
-        
-        if ( !preg_match( '#^/([^/].*)?$#',
-                         $returnUri, $match ) )
+        if ( ! preg_match( '#^/([^/].*)?$#', $returnUri, $match ) )
         {
             $returnUri = static::DEFAULT_RETURN_URI;
         }
@@ -149,20 +146,22 @@ class AuthenticationController extends AbstractActionController
         {
             if ( $form->isValid() )
             {
+                /* @var $sessm \Zend\Session\SessionManager */
                 /* @var $logger \Zork\Log\LoggerManager */
                 $data   = $form->getData();
+                $sessm  = $this->getSessionManager();
                 $logger = $this->getServiceLocator()
                                ->get( 'Zork\Log\LoggerManager' );
                 $result = $this->getServiceLocator()
                                ->get( 'Grid\User\Authentication\Service' )
-                               ->login( $data,
-                                        $this->getSessionManager(),
-                                        $auth );
+                               ->login( $data, $sessm, $auth );
 
                 $messages = $result->getMessages();
 
                 if ( $result->isValid() )
                 {
+                    $sessm->regenerateId();
+
                     $this->messenger()
                          ->add( 'user.form.login.success',
                                 'user', Message::LEVEL_INFO );
@@ -259,14 +258,14 @@ class AuthenticationController extends AbstractActionController
                                                 ->toArray() );
         }
 
+        /* @var $sessm \Zend\Session\SessionManager */
         /* @var $logger \Zork\Log\LoggerManager */
+        $sessm  = $this->getSessionManager();
         $logger = $this->getServiceLocator()
                        ->get( 'Zork\Log\LoggerManager' );
         $result = $this->getServiceLocator()
                        ->get( 'Grid\User\Authentication\Service' )
-                       ->login( $data,
-                                $this->getSessionManager(),
-                                $auth );
+                       ->login( $data, $sessm, $auth );
 
         $messages   = $result->getMessages();
         $with       = empty( $messages['loginWith'] )
@@ -275,6 +274,8 @@ class AuthenticationController extends AbstractActionController
 
         if ( $result->isValid() )
         {
+            $sessm->regenerateId();
+
             $this->messenger()
                  ->add( 'user.form.login.success',
                         'user', Message::LEVEL_INFO );
@@ -394,12 +395,14 @@ class AuthenticationController extends AbstractActionController
                        ->notice( 'user-logout' );
             }
 
+            /* @var $sessm \Zend\Session\SessionManager */
             $data   = $form->getData();
+            $sessm  = $this->getSessionManager();
             $result = $this->getServiceLocator()
                            ->get( 'Grid\User\Authentication\Service' )
-                           ->logout( $data,
-                                     $this->getSessionManager(),
-                                     $auth );
+                           ->logout( $data, $sessm, $auth );
+
+            $sessm->regenerateId();
 
             if ( empty( $result['returnUri'] ) )
             {
