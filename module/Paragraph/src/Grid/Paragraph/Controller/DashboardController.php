@@ -4,6 +4,8 @@ namespace Grid\Paragraph\Controller;
 
 use Zend\View\Model\ViewModel;
 use Zend\Mvc\Controller\AbstractActionController;
+use Grid\Paragraph\Model\Paragraph\Structure\AbstractRoot;
+use Grid\Paragraph\Model\Paragraph\Structure\ContentDependentAwareInterface;
 
 /**
  * DashboardController
@@ -21,6 +23,7 @@ class DashboardController extends AbstractActionController
         $params     = $this->params();
         $request    = $this->getRequest();
         $service    = $this->getServiceLocator();
+        $cid        = $params->fromQuery( 'contentId' );
         $pid        = $params->fromRoute( 'paragraphId' );
         $locale     = $service->get( 'AdminLocale' )->getCurrent();
         $model      = $service->get( 'Grid\Paragraph\Model\Dashboard\Model' );
@@ -36,13 +39,25 @@ class DashboardController extends AbstractActionController
             return;
         }
 
-        if ( ! $dashboard->paragraph
-                         ->isEditable() )
+        $paragraph = $dashboard->paragraph;
+
+        if ( ! $paragraph->isEditable() )
         {
             $this->getResponse()
                  ->setStatusCode( 403 );
 
             return;
+        }
+
+        if ( $cid && $paragraph instanceof ContentDependentAwareInterface )
+        {
+            $content = $service->get( 'Grid\Paragraph\Model\Paragraph\Model' )
+                               ->find( $cid );
+
+            if ( $content instanceof AbstractRoot )
+            {
+                $paragraph->setDependentContent( $content );
+            }
         }
 
         $form = $dashboard->getForm( $service->get( 'Form' ), $customize );

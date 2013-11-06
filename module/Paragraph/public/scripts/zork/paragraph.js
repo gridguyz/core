@@ -43,7 +43,20 @@
         reflect   = js.require( "js.paragraph.reflectCss" ),
         editable  = "[data-paragraph-id]:not(.paragraph-edit-disabled)",
         draggable = '[data-paragraph-properties~="drag"]' + editable,
-        droppable = '[data-paragraph-properties~="drop"]' + editable;
+        droppable = '[data-paragraph-properties~="drop"]' + editable,
+        gpbtypes  = function ( types ) {
+            var i, l, s = [];
+            types = Array.prototype.slice.call( arguments, 0 );
+
+            for ( i = 0, l = types.length; i < l; ++i )
+            {
+                s.push( ".paragraph-container.paragraph-" + types[i] +
+                        "-container[data-paragraph-type=" + types[i] +
+                        "][data-paragraph-id!=\"\"]" );
+            }
+
+            return $( s.join( ", " ) ).first();
+        };
 
     /**
      * Paragraph header instance
@@ -699,13 +712,16 @@
         var body    = $( "body" ),
             layer   = $( "<div />" ).appendTo( body ),
             element = $( "<div />" ).appendTo( body ),
+            content = gpbtypes( "content", "metaContent" ),
             display = true,
             id      = para.data( "paragraphId" ),
             name    = para.data( "paragraphName" ),
             type    = para.data( "paragraphType" ),
             url     = "/app/" + js.core.userLocale +
-                      "/paragraph/edit/" + id +
-                      "?adminLocale=" + js.core.defaultLocale,
+                      "/paragraph/edit/" + id + "?" +
+                      ( content.length ? "contentId=" +
+                        content.data( "paragraphId" ) + "&" : "" ) +
+                      "adminLocale=" + js.core.defaultLocale,
             title   = name ? name : js.core.translate(
                             "paragraph.type." + type,
                             js.core.userLocale

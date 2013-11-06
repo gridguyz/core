@@ -11,7 +11,10 @@ use Zend\ServiceManager\Exception\ServiceNotFoundException;
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
 class Title extends AbstractLeaf
+         implements MetaContentDependentAwareInterface
 {
+
+    use ContentDependentAwareTrait;
 
     /**
      * Paragraph type
@@ -95,11 +98,11 @@ class Title extends AbstractLeaf
      */
     public function getRootTitle()
     {
-        $root = $this->getRootParagraph();
+        $content = $this->getDependentContent();
 
-        if ( $root instanceof Content || $root instanceof MetaContent )
+        if ( $content )
         {
-            return $root->title;
+            return $content->title;
         }
 
         return null;
@@ -112,11 +115,11 @@ class Title extends AbstractLeaf
      */
     public function setRootTitle( $title )
     {
-        $root = $this->getRootParagraph();
+        $content = $this->getDependentContent();
 
-        if ( $root instanceof Content || $root instanceof MetaContent )
+        if ( $content )
         {
-            $root->title = (string) $title;
+            $content->title = $title;
         }
 
         return $this;
@@ -129,34 +132,17 @@ class Title extends AbstractLeaf
      */
     public function getIterator()
     {
-        $iterator = parent::getIterator();
+        $iterator   = parent::getIterator();
+        $content    = $this->getDependentContent();
 
-        if ( $this->rootId )
+        if ( $content )
         {
             $iterator->append( new ArrayIterator( array(
-                'rootTitle' => $this->getRootTitle(),
+                'rootTitle' => $content->title,
             ) ) );
         }
 
         return $iterator;
-    }
-
-    /**
-     * Get dependent structures
-     *
-     * @return \Zork\Model\Structure\MapperAwareAbstract[]
-     */
-    public function getDependentStructures()
-    {
-        $dependents = parent::getDependentStructures();
-        $root       = $this->getRootParagraph();
-
-        if ( $root instanceof Content || $root instanceof MetaContent )
-        {
-            $dependents[] = $root;
-        }
-
-        return $dependents;
     }
 
 }

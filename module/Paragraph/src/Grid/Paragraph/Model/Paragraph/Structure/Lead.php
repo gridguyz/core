@@ -11,7 +11,10 @@ use Zend\ServiceManager\Exception\ServiceNotFoundException;
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
 class Lead extends AbstractLeaf
+        implements ContentDependentAwareInterface
 {
+
+    use ContentDependentAwareTrait;
 
     /**
      * Paragraph type
@@ -93,8 +96,14 @@ class Lead extends AbstractLeaf
      */
     public function getRootImage()
     {
-        $root = $this->getRootParagraph();
-        return $root instanceof Content ? $root->leadImage : null;
+        $content = $this->getDependentContent();
+
+        if ( $content )
+        {
+            return $content->leadImage;
+        }
+
+        return null;
     }
 
     /**
@@ -105,11 +114,11 @@ class Lead extends AbstractLeaf
      */
     public function setRootImage( $value )
     {
-        $root = $this->getRootParagraph();
+        $content = $this->getDependentContent();
 
-        if ( $root instanceof Content )
+        if ( $content )
         {
-            $root->leadImage = $value;
+            $content->leadImage = $value;
         }
 
         return $this;
@@ -122,8 +131,14 @@ class Lead extends AbstractLeaf
      */
     public function getRootText()
     {
-        $root = $this->getRootParagraph();
-        return $root instanceof Content ? $root->leadText : null;
+        $content = $this->getDependentContent();
+
+        if ( $content )
+        {
+            return $content->leadText;
+        }
+
+        return null;
     }
 
     /**
@@ -134,11 +149,11 @@ class Lead extends AbstractLeaf
      */
     public function setRootText( $value )
     {
-        $root = $this->getRootParagraph();
+        $content = $this->getDependentContent();
 
-        if ( $root instanceof Content )
+        if ( $content )
         {
-            $root->leadText = $value;
+            $content->leadText = $value;
         }
 
         return $this;
@@ -151,35 +166,18 @@ class Lead extends AbstractLeaf
      */
     public function getIterator()
     {
-        $iterator = parent::getIterator();
+        $iterator   = parent::getIterator();
+        $content    = $this->getDependentContent();
 
-        if ( $this->rootId )
+        if ( $content )
         {
             $iterator->append( new ArrayIterator( array(
-                'rootImage' => $this->getRootImage(),
-                'rootText'  => $this->getRootText(),
+                'rootImage' => $content->leadImage,
+                'rootText'  => $content->leadText,
             ) ) );
         }
 
         return $iterator;
-    }
-
-    /**
-     * Get dependent structures
-     *
-     * @return \Zork\Model\Structure\MapperAwareAbstract[]
-     */
-    public function getDependentStructures()
-    {
-        $dependents = parent::getDependentStructures();
-        $root       = $this->getRootParagraph();
-
-        if ( $root instanceof Content )
-        {
-            $dependents[] = $root;
-        }
-
-        return $dependents;
     }
 
 }

@@ -10,7 +10,6 @@ use Grid\Tag\Model\TagsAwareInterface;
 use Zork\Model\Exception\LogicException;
 use Zend\View\Renderer\RendererInterface;
 use Zork\Model\Structure\StructureAbstract;
-use Zend\Authentication\AuthenticationService;
 use Grid\Paragraph\Model\Paragraph\StructureInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 

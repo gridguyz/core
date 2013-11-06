@@ -12,7 +12,10 @@ use Zend\ServiceManager\Exception\ServiceNotFoundException;
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
 class Infobar extends AbstractLeaf
+           implements ContentDependentAwareInterface
 {
+
+    use ContentDependentAwareTrait;
 
     /**
      * @const string
@@ -168,8 +171,14 @@ class Infobar extends AbstractLeaf
      */
     public function getRootCreated()
     {
-        $root = $this->getRootParagraph();
-        return $root instanceof Content ? $root->created : null;
+        $content = $this->getDependentContent();
+
+        if ( $content )
+        {
+            return $content->created;
+        }
+
+        return null;
     }
 
     /**
@@ -180,11 +189,11 @@ class Infobar extends AbstractLeaf
      */
     public function setRootCreated( $value )
     {
-        $root = $this->getRootParagraph();
+        $content = $this->getDependentContent();
 
-        if ( $root instanceof Content )
+        if ( $content )
         {
-            $root->created = $value;
+            $content->created = $value;
         }
 
         return $this;
@@ -197,8 +206,14 @@ class Infobar extends AbstractLeaf
      */
     public function getRootUserId()
     {
-        $root = $this->getRootParagraph();
-        return $root instanceof Content ? $root->userId : null;
+        $content = $this->getDependentContent();
+
+        if ( $content )
+        {
+            return $content->userId;
+        }
+
+        return null;
     }
 
     /**
@@ -209,11 +224,11 @@ class Infobar extends AbstractLeaf
      */
     public function setRootUserId( $value )
     {
-        $root = $this->getRootParagraph();
+        $content = $this->getDependentContent();
 
-        if ( $root instanceof Content )
+        if ( $content )
         {
-            $root->userId = $value;
+            $content->userId = $value;
         }
 
         return $this;
@@ -226,35 +241,18 @@ class Infobar extends AbstractLeaf
      */
     public function getIterator()
     {
-        $iterator = parent::getIterator();
+        $iterator   = parent::getIterator();
+        $content    = $this->getDependentContent();
 
-        if ( $this->rootId )
+        if ( $content )
         {
             $iterator->append( new ArrayIterator( array(
-                'rootCreated'   => $this->getRootCreated(),
-                'rootUserId'    => $this->getRootUserId(),
+                'rootCreated'   => $content->created,
+                'rootUserId'    => $content->userId,
             ) ) );
         }
 
         return $iterator;
-    }
-
-    /**
-     * Get dependent structures
-     *
-     * @return \Zork\Model\Structure\MapperAwareAbstract[]
-     */
-    public function getDependentStructures()
-    {
-        $dependents = parent::getDependentStructures();
-        $root       = $this->getRootParagraph();
-
-        if ( $root instanceof Content )
-        {
-            $dependents[] = $root;
-        }
-
-        return $dependents;
     }
 
 }
