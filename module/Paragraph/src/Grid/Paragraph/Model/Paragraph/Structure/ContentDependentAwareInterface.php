@@ -23,6 +23,6 @@ interface ContentDependentAwareInterface
      * @param   AbstractRoot    $content
      * @return  ContentDependentAwareInterface
      */
-    public function setDependentContent( AbstractRoot $content );
+    public function setDependentContent( AbstractRoot $content = null );
 
 }

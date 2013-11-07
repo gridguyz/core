@@ -44,7 +44,7 @@ trait ContentDependentAwareTrait
      * @param   AbstractRoot    $content
      * @return  ContentDependentAwareInterface
      */
-    public function setDependentContent( AbstractRoot $content )
+    public function setDependentContent( AbstractRoot $content = null )
     {
         $this->dependentContent = $content;
         return $this;
