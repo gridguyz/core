@@ -15,7 +15,7 @@ trait ContentDependentAwareTrait
      *
      * @var AbstractRoot
      */
-    private $dependentContent;
+    protected $_dependentContent;
 
     /**
      * Get content (like) paragraph, which depends on this paragraph
@@ -24,18 +24,18 @@ trait ContentDependentAwareTrait
      */
     public function getDependentContent()
     {
-        if ( null === $this->dependentContent )
+        if ( null === $this->_dependentContent )
         {
             $root = $this->getRootParagraph();
 
             if ( $root instanceof Content || ( $root instanceof MetaContent &&
                  $this instanceof MetaContentDependentAwareInterface ) )
             {
-                $this->dependentContent = $root;
+                $this->_dependentContent = $root;
             }
         }
 
-        return $this->dependentContent;
+        return $this->_dependentContent;
     }
 
     /**
@@ -46,7 +46,7 @@ trait ContentDependentAwareTrait
      */
     public function setDependentContent( AbstractRoot $content = null )
     {
-        $this->dependentContent = $content;
+        $this->_dependentContent = $content;
         return $this;
     }
 
