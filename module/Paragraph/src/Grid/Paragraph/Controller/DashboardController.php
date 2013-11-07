@@ -52,6 +52,7 @@ class DashboardController extends AbstractActionController
         if ( $cid && $paragraph instanceof ContentDependentAwareInterface )
         {
             $content = $service->get( 'Grid\Paragraph\Model\Paragraph\Model' )
+                               ->setLocale( $locale )
                                ->find( $cid );
 
             if ( $content instanceof AbstractRoot )
