@@ -371,7 +371,7 @@ return array(
             'adminLocale'                                   => 'Zork\Mvc\AdminLocaleServiceFactory',
             'Zend\Http\Client'                              => 'Zork\Http\Client\ServiceFactory',
             'Zend\Http\Client\Adapter\AdapterInterface'     => 'Zork\Http\Client\Adapter\ServiceFactory',
-            'Zend\Session\ManagerInterface'                 => 'Zend\Session\Service\SessionManagerFactory',
+            'Zend\Session\ManagerInterface'                 => 'Zork\Session\Service\SessionManagerFactory',
             'Zend\Session\Config\ConfigInterface'           => 'Zork\Session\Service\SessionConfigFactory',
             'Zend\Session\Storage\StorageInterface'         => 'Zend\Session\Service\StorageFactory',
             'Zork\Mvc\View\Http\ForbiddenStrategy'          => 'Zork\Mvc\View\Http\ForbiddenStrategyServiceFactory',
