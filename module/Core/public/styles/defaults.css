@@ -607,6 +607,19 @@ input[type="checkbox"]:active
     background-image: linear-gradient(to bottom, #e0e0e0 0%, #f0f0f0 100%);
 }
 
+input[type="image"],
+input[type="image"]:hover,
+input[type="image"]:active
+{
+    background: transparent;
+    border: 0px none;
+    box-shadow: none;
+    border-radius: 0px;
+    -ms-border-radius: 0px;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+}
+
 .multi_checkbox
 {
     height: 6em;
