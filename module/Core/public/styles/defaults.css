@@ -611,8 +611,9 @@ input[type="image"],
 input[type="image"]:hover,
 input[type="image"]:active
 {
-    background: transparent;
+    min-width: 0px;
     border: 0px none;
+    background: transparent;
     box-shadow: none;
     border-radius: 0px;
     -ms-border-radius: 0px;
