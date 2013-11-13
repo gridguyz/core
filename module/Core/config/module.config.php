@@ -993,6 +993,20 @@ return array(
                     'resource'      => 'subDomain',
                     'privilege'     => 'view',
                 ),
+                'packages' => array(
+                    'order'         => 999,
+                    'label'         => 'admin.navTop.packages',
+                    'textDomain'    => 'admin',
+                    'route'         => 'Grid\Core\Admin\Package\List',
+                    'resource'      => 'package',
+                    'privilege'     => 'manage',
+                    'dependencies'  => array(
+                        'Grid\Core\Model\Package\Model::getEnabledPatternCount' => array(
+                            'service'   => 'Grid\Core\Model\Package\Model',
+                            'method'    => 'getEnabledPackageCount'
+                        ),
+                    ),
+                ),
             ),
             'navigation' => array(
                 'backToPage' => array(
