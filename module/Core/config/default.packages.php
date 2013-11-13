@@ -3,7 +3,8 @@
 return array(
     'modules' => array(
         'Grid\Core' => array(
-            'enabledPackages' => array(
+            'modifyPackages'    => true,
+            'enabledPackages'   => array(
                 'system' => array(
                     'gridguyz/core'                     => 'gridguyz/core',
                     'gridguyz/multisite'                => 'gridguyz/multisite',

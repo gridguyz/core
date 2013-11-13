@@ -215,13 +215,18 @@ class Mapper implements HydratorInterface,
     }
 
     /**
-     * Is module loaded
+     * Can modify packages?
      *
-     * @param   string  $module
      * @return  bool
      */
     public function canModify()
     {
+        if ( ! $this->getEnabledList()
+                    ->canModify() )
+        {
+            return false;
+        }
+
         $modules = $this->getModuleManager()
                         ->getModules();
 

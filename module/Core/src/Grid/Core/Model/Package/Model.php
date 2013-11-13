@@ -95,7 +95,7 @@ class Model implements MapperAwareInterface
     }
 
     /**
-     * Can modify packages
+     * Can modify packages?
      *
      * @return  bool
      */

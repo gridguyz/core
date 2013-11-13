@@ -13,13 +13,33 @@ class EnabledList extends ArrayIterator
 {
 
     /**
+     * @var bool
+     */
+    protected $modify = true;
+
+    /**
      * Constructor
      *
      * @param   array   $packages
      */
-    public function __construct( array $packages = array() )
+    public function __construct( array $packages = array(), $modify = null )
     {
         parent::__construct( $packages );
+
+        if ( null !== $modify )
+        {
+            $this->modify = (bool) $modify;
+        }
+    }
+
+    /**
+     * Can modify packages?
+     *
+     * @return  bool
+     */
+    public function canModify()
+    {
+        return $this->modify;
     }
 
     /**
