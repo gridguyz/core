@@ -33,27 +33,27 @@
                 element.attr( "disabled", disabled ? "disabled" : null )
                        .prop( "disabled", disabled );
 
-                if ( element.is( ":ui-spinner" ) )
+                if ( element.is( ":data('ui-spinner')" ) )
                 {
                     method = "spinner";
                 }
-                else if ( element.is( ":ui-datepicker" ) )
+                else if ( element.is( ":data('ui-datepicker')" ) )
                 {
                     method = "datepicker";
                 }
-                else if ( element.is( ":ui-button" ) )
+                else if ( element.is( ":data('ui-button')" ) )
                 {
                     method = "button";
                 }
-                else if ( element.is( ":ui-datetimepicker" ) )
+                else if ( element.is( ":data('ui-datetimepicker')" ) )
                 {
                     method = "datetimepicker";
                 }
-                else if ( element.is( ":ui-timepicker" ) )
+                else if ( element.is( ":data('ui-timepicker')" ) )
                 {
                     method = "timepicker";
                 }
-                else if ( element.is( ":ui-input" ) )
+                else if ( element.is( ":data('ui-input')" ) )
                 {
                     method = "input";
                 }
