@@ -214,6 +214,11 @@ body .admin .page h3
     background-image: linear-gradient(to bottom, #5587f6 0%, #4673e6 100%);
 }
 
+body .admin .page .sub-page ~ .sub-page
+{
+    margin-top: 40px;
+}
+
 .js-browser-gradient-filter .admin .page h3
 {
     zoom: 1;
