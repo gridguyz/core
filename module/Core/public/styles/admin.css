@@ -37,8 +37,10 @@ div.adminContentContainer
 
 div.adminContentContainer h1
 {
+    height: 25px;
     color: #38393d;
     font-size: 20px;
+    line-height: 25px;
     padding: 13px 33px;
     border: 0px solid #ccc;
     background-color: #efeff0;
