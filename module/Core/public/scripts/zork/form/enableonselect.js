@@ -64,6 +64,8 @@
                 {
                     element[method]( "option", "disabled", disabled );
                 }
+
+                field.blur();
             };
 
         if ( form.length && name )
