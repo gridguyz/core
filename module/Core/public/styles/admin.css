@@ -55,6 +55,9 @@ div.adminContentContainer h1.prefix
 
 div.adminContentContainer h1.prefix:after
 {
+    margin-left: 10px;
+    margin-right: 5px;
+    vertical-align: middle;
     content: url("/images/common/admin/right-arrow-hover.png");
 }
 
