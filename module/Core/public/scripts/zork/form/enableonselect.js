@@ -27,8 +27,10 @@
             sel     = "[name=\"" + name.replace( /"/g, "\\\"" ) + "\"]",
             field   = null,
             change  = function () {
-                var disabled = ! field.val(),
-                    method   = null;
+                var method   = null,
+                    disabled = field.prop( "checked" ) === false
+                            || field.prop( "selected" ) === false
+                            || ! field.val();
 
                 element.attr( "disabled", disabled ? "disabled" : null )
                        .prop( "disabled", disabled );
