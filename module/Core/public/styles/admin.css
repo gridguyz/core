@@ -48,6 +48,16 @@ div.adminContentContainer h1
     background-image: url("/images/common/admin/dashboard-h1-pagetitle-bg.png");
 }
 
+div.adminContentContainer h1.prefix
+{
+    float: left;
+}
+
+div.adminContentContainer h1.prefix:after
+{
+    content: url("/images/common/admin/right-arrow-hover.png");
+}
+
 div.adminContentContainer .adminLocale
 {
     float: right;
