@@ -1,6 +1,7 @@
 <?php
 
 return array(
+    'admin.account.title' => 'Account pages',
     'admin.dashboard.accountInformation.title' => 'Account information',
     'admin.dashboard.applicationLog.title' => 'Latest activity',
     'admin.dashboard.applicationLog.more' => 'More activity',
