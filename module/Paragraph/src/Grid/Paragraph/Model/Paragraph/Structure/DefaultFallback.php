@@ -80,7 +80,6 @@ class DefaultFallback extends AbstractContainer
         $permissions    = $serviceLocator->get( 'Grid\User\Model\Permissions\Model' );
 
         return $package->getEnabledPackageCount()
-            && $package->canModify()
             && $permissions->isAllowed( 'package', 'manage' );
     }
 
