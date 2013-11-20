@@ -119,19 +119,17 @@ class AuthenticationController extends AbstractActionController
      */
     public function loginAction()
     {
-        $auth = $this->getServiceLocator()
-                     ->get( 'Zend\Authentication\AuthenticationService' );
+        $return = $this->getReturnUri();
+        $auth   = $this->getServiceLocator()
+                       ->get( 'Zend\Authentication\AuthenticationService' );
 
         if ( $auth->hasIdentity() )
         {
             return $this->redirect()
-                        ->toRoute( 'Grid\User\Authentication\Logout', array(
-                            'locale' => (string) $this->locale(),
-                        ) );
+                        ->toUrl( $this->getValidReturnUri( $return ) );
         }
 
         /* @var $form \Zend\Form\Form */
-        $return  = $this->getReturnUri();
         $request = $this->getRequest();
         $data    = $request->getPost();
         $form    = $this->getServiceLocator()
@@ -237,15 +235,14 @@ class AuthenticationController extends AbstractActionController
      */
     public function loginWithAction()
     {
-        $auth = $this->getServiceLocator()
-                     ->get( 'Zend\Authentication\AuthenticationService' );
+        $return = $this->getReturnUri();
+        $auth   = $this->getServiceLocator()
+                       ->get( 'Zend\Authentication\AuthenticationService' );
 
         if ( $auth->hasIdentity() )
         {
             return $this->redirect()
-                        ->toRoute( 'Grid\User\Authentication\Logout', array(
-                            'locale' => (string) $this->locale(),
-                        ) );
+                        ->toUrl( $this->getValidReturnUri( $return ) );
         }
 
         $request = $this->getRequest();
@@ -337,7 +334,7 @@ class AuthenticationController extends AbstractActionController
         {
             if ( empty( $data['returnUri'] ) )
             {
-                $returnUri = $this->getReturnUri();
+                $returnUri = $return;
             }
             else
             {
@@ -358,19 +355,30 @@ class AuthenticationController extends AbstractActionController
      */
     public function logoutAction()
     {
-        $auth = $this->getServiceLocator()
-                     ->get( 'Zend\Authentication\AuthenticationService' );
+        $return = $this->getReturnUri();
+        $auth   = $this->getServiceLocator()
+                       ->get( 'Zend\Authentication\AuthenticationService' );
 
         if ( ! $auth->hasIdentity() )
         {
-            return $this->redirect()
-                        ->toRoute( 'Grid\User\Authentication\Login', array(
-                            'locale' => (string) $this->locale(),
-                        ) );
+            $returnUri = $this->getValidReturnUri( $return );
+
+            if ( empty( $returnUri ) ||
+                 static::DEFAULT_RETURN_URI == $returnUri )
+            {
+                return $this->redirect()
+                            ->toRoute( 'Grid\User\Authentication\Login', array(
+                                'locale' => (string) $this->locale(),
+                            ) );
+            }
+            else
+            {
+                return $this->redirect()
+                            ->toUrl( $returnUri );
+            }
         }
 
         /* @var $form \Zend\Form\Form */
-        $return  = $this->getReturnUri();
         $request = $this->getRequest();
         $params  = $this->params();
         $data    = $request->getPost();
