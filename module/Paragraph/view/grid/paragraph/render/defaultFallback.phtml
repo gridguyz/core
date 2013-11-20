@@ -1,10 +1,20 @@
-<?php if ( $this->paragraph->displayWarning() ): ?>
+<?php /* @var $this \Zend\View\Renderer\PhpRenderer */
+if ( $this->paragraph->displayWarning() ): ?>
 <p class="warn">
     <?= sprintf(
-        $this->translate( 'paragraph.warn.defaultFallback', 'paragraph' ),
+        $this->translate( 'paragraph.warn.defaultFallback.%s', 'paragraph' ),
         '<strong>' . $this->translate( 'paragraph.type.' .
                      $this->paragraph->type, 'paragraph' ) . '</strong>'
     ) ?>
+<?php if ( $this->paragraph->canModifyPackages() ): ?>
+
+    <?= sprintf(
+        $this->translate( 'paragraph.warn.defaultFallback.link.%s', 'paragraph' ),
+        $this->escapeHtmlAttr( $this->url( 'Grid\Core\Admin\Package\List', array(
+            'locale' => (string) $this->locale(),
+        ) ) )
+    ) ?>
+<?php endif ?>
 
 </p>
 <?php endif ?>

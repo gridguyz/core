@@ -35,8 +35,8 @@ class DefaultFallback extends AbstractContainer
      * Return true if and only if $options accepted by this adapter
      * If returns float as likelyhood the max of these will be used as adapter
      *
-     * @param array $options;
-     * @return float
+     * @param   array   $options;
+     * @return  float
      */
     public static function acceptsOptions( array $options )
     {
@@ -46,7 +46,7 @@ class DefaultFallback extends AbstractContainer
     /**
      * This paragraph-type properties
      *
-     * @return array
+     * @return  array
      */
     public static function getAllowedFunctions()
     {
@@ -59,11 +59,29 @@ class DefaultFallback extends AbstractContainer
     /**
      * Is the warning message should be displayed
      *
-     * @return bool
+     * @return  bool
      */
     public function displayWarning()
     {
         return $this->isEditable();
+    }
+
+    /**
+     * Can modify packages?
+     *
+     * @return  bool
+     */
+    public function canModifyPackages()
+    {
+        /* @var $package \Grid\Core\Model\Package\Model */
+        /* @var $permissions \Grid\User\Model\Permissions\Model */
+        $serviceLocator = $this->getServiceLocator();
+        $package        = $serviceLocator->get( 'Grid\Core\Model\Package\Model' );
+        $permissions    = $serviceLocator->get( 'Grid\User\Model\Permissions\Model' );
+
+        return $package->getEnabledPackageCount()
+            && $package->canModify()
+            && $permissions->isAllowed( 'package', 'manage' );
     }
 
 }

@@ -160,6 +160,7 @@ return array(
     'paragraph.type.siteWizard' => 'Site létrehozó',
     'paragraph.type.title' => 'Cimke',
     'paragraph.type.vote' => 'Szavazás',
-    'paragraph.warn.defaultFallback' => 'Ismeretlen paragrafus típus: %s',
+    'paragraph.warn.defaultFallback.%s' => 'A %s paragrafus ki van kapcsolva.',
+    'paragraph.warn.defaultFallback.link.%s' => 'Újra aktiválhatja az <a href="%s">APPz Galériában</a>.',
     'paragraph.form.createWizard.step.gmap' => 'Google Map létrehozása',
 );
