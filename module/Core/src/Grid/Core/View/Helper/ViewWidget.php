@@ -145,6 +145,7 @@ class ViewWidget extends AbstractHelper
      *
      * @param   \Zend\ServiceManager\ServiceLocatorInterface    $serviceLocator
      * @param   \Traversable|array                              $widgets
+     * @return  ViewWidget
      */
     public static function factory( ServiceLocatorInterface $serviceLocator, $widgets = array() )
     {

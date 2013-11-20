@@ -60,20 +60,11 @@ class Module extends ModuleAbstract
     protected $response;
 
     /**
-     * Previous exception handler
-     *
-     * @var callable|null
-     */
-    protected $previousExceptionHandler;
-
-    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->previousExceptionHandler = set_exception_handler(
-            array( $this, 'exceptionHandler' )
-        );
+        set_exception_handler( array( $this, 'exceptionHandler' ) );
     }
 
     /**
@@ -81,7 +72,7 @@ class Module extends ModuleAbstract
      */
     public function __destruct()
     {
-        set_exception_handler( $this->previousExceptionHandler );
+        restore_exception_handler();
     }
 
     /**
@@ -326,6 +317,29 @@ class Module extends ModuleAbstract
     }
 
     /**
+     * Get session manager instance
+     *
+     * @return  \Zend\Session\ManagerInterface
+     */
+    public function getSessionManager()
+    {
+        return $this->serviceLocator
+                    ->get( 'Zend\Session\ManagerInterface' );
+    }
+
+    /**
+     * Get `mimicSiteInfos` controller plugin instance
+     *
+     * @return  Controller\Plugin\MimicSiteInfos
+     */
+    public function getMimicSiteInfosControllerPlugin()
+    {
+        return new Controller\Plugin\MimicSiteInfos(
+            $this->serviceLocator
+        );
+    }
+
+    /**
      * Expected to return \Zend\ServiceManager\Config object or array to
      * seed such an object.
      *
@@ -333,23 +347,154 @@ class Module extends ModuleAbstract
      */
     public function getControllerPluginConfig()
     {
-        $serviceLocator = $this->serviceLocator;
-
         return array(
             'aliases'   => array(
                 'Zend\Session\SessionManager'   => 'sessionManager',
                 'Zend\Session\ManagerInterface' => 'sessionManager',
             ),
             'factories' => array(
-                'sessionManager' => function ( $sm ) use ( $serviceLocator ) {
-                    return $serviceLocator->get( 'Zend\Session\ManagerInterface' );
-                },
-                'mimicSiteInfos' => function ( $sm ) use ( $serviceLocator ) {
-                    return new Controller\Plugin\MimicSiteInfos(
-                        $serviceLocator
-                    );
-                },
+                'sessionManager' => array( $this, 'getSessionManager' ),
+                'mimicSiteInfos' => array( $this, 'getMimicSiteInfosControllerPlugin' ),
             ),
+        );
+    }
+
+    /**
+     * Get `config` view-helper instance
+     *
+     * @return  \Zork\View\Helper\Config
+     */
+    public function getConfigViewHelper()
+    {
+        return new \Zork\View\Helper\Config(
+            $this->serviceLocator
+                 ->get( 'Config' )
+        );
+    }
+
+    /**
+     * Get `domain` view-helper instance
+     *
+     * @return  \Zork\View\Helper\Domain
+     */
+    public function getDomainViewHelper()
+    {
+        return new \Zork\View\Helper\Domain(
+            $this->serviceLocator
+                 ->get( 'Zork\Db\SiteInfo' )
+        );
+    }
+
+    /**
+     * Get `locale` view-helper instance
+     *
+     * @return  \Zork\View\Helper\Locale
+     */
+    public function getLocaleViewHelper()
+    {
+        return new \Zork\View\Helper\Locale(
+            $this->serviceLocator
+                 ->get( 'Locale' )
+        );
+    }
+
+    /**
+     * Get `adminLocale` view-helper instance
+     *
+     * @return  \Zork\Mvc\AdminLocale
+     */
+    public function getAdminLocaleViewHelper()
+    {
+        return $this->serviceLocator
+                    ->get( 'AdminLocale' );
+    }
+
+    /**
+     * Get `appService` view-helper instance
+     *
+     * @return  View\Helper\AppService
+     */
+    public function getAppServiceViewHelper()
+    {
+        return new View\Helper\AppService( $this->serviceLocator );
+    }
+
+    /**
+     * Get `authentication` view-helper instance
+     *
+     * @return  View\Helper\Authentication
+     */
+    public function getAuthenticationViewHelper()
+    {
+        return new View\Helper\Authentication(
+            $this->serviceLocator
+                 ->get( 'Zend\Authentication\AuthenticationService' )
+        );
+    }
+
+    /**
+     * Get `viewWidget` view-helper instance
+     *
+     * @return  View\Helper\ViewWidget
+     */
+    public function getViewWidgetViewHelper()
+    {
+        $config = $this->serviceLocator
+                       ->get( 'Config' );
+
+        return View\Helper\ViewWidget::factory(
+            $this->serviceLocator,
+            empty( $config['view_widgets'] ) ? array() : $config['view_widgets']
+        );
+    }
+
+    /**
+     * Get `isModuleLoaded` view-helper instance
+     *
+     * @return  View\Helper\IsModuleLoaded
+     */
+    public function getIsModuleLoadedViewHelper()
+    {
+        return new View\Helper\IsModuleLoaded( $this->moduleManager );
+    }
+
+    /**
+     * Get `siteInfo` view-helper instance
+     *
+     * @return  View\Helper\SiteInfo
+     */
+    public function getSiteInfoViewHelper()
+    {
+        return new View\Helper\SiteInfo(
+            $this->serviceLocator
+                 ->get( 'Zork\Db\SiteInfo' )
+        );
+    }
+
+    /**
+     * Get `uploads` view-helper instance
+     *
+     * @return  View\Helper\Uploads
+     */
+    public function getUploadsViewHelper()
+    {
+        return new View\Helper\Uploads(
+            $this->serviceLocator
+                 ->get( 'Zork\Db\SiteInfo' )
+                 ->getSchema()
+        );
+    }
+
+    /**
+     * Get `rowSet` view-helper instance
+     *
+     * @return  View\Helper\RowSet
+     */
+    public function getRowSetViewHelper()
+    {
+        return new View\Helper\RowSet(
+            $this->serviceLocator
+                 ->get( 'Request' )
         );
     }
 
@@ -361,9 +506,6 @@ class Module extends ModuleAbstract
      */
     public function getViewHelperConfig()
     {
-        $moduleManager  = $this->moduleManager;
-        $serviceLocator = $this->serviceLocator;
-
         return array(
             'invokables'            => array(
                 'layout'                    => 'Zork\View\Helper\Layout',
@@ -396,59 +538,18 @@ class Module extends ModuleAbstract
                 'Zend\Session\ManagerInterface' => 'sessionManager',
             ),
             'factories'             => array(
-                'sessionManager'    => function ( $sm ) use ( $serviceLocator ) {
-                    return $serviceLocator->get( 'Zend\Session\ManagerInterface' );
-                },
-                'config'            => function () use ( $serviceLocator ) {
-                    return new \Zork\View\Helper\Config(
-                        $serviceLocator->get( 'Config' )
-                    );
-                },
-                'domain'            => function () use ( $serviceLocator ) {
-                    return new \Zork\View\Helper\Domain(
-                        $serviceLocator->get( 'Zork\Db\SiteInfo' )
-                    );
-                },
-                'locale'            => function () use ( $serviceLocator ) {
-                    return new \Zork\View\Helper\Locale(
-                        $serviceLocator->get( 'Locale' )
-                    );
-                },
-                'adminLocale'       => function () use ( $serviceLocator ) {
-                    return $serviceLocator->get( 'AdminLocale' );
-                },
-                'appService'        => function () use ( $serviceLocator ) {
-                    return new View\Helper\AppService( $serviceLocator );
-                },
-                'authentication'    => function () use ( $serviceLocator ) {
-                    return new View\Helper\Authentication(
-                        $serviceLocator->get( 'Zend\Authentication\AuthenticationService' )
-                    );
-                },
-                'viewWidget'        => function () use ( $serviceLocator ) {
-                    $config = $serviceLocator->get( 'Config' );
-                    $widgetConfig = empty( $config['view_widgets'] ) ? array() : $config['view_widgets'];
-                    return View\Helper\ViewWidget::factory( $serviceLocator, $widgetConfig );
-                },
-                'isModuleLoaded'    => function () use ( $moduleManager ) {
-                    return new View\Helper\IsModuleLoaded( $moduleManager );
-                },
-                'siteInfo'          => function () use ( $serviceLocator ) {
-                    return new View\Helper\SiteInfo(
-                        $serviceLocator->get( 'Zork\Db\SiteInfo' )
-                    );
-                },
-                'uploads'           => function () use ( $serviceLocator ) {
-                    return new View\Helper\Uploads(
-                        $serviceLocator->get( 'Zork\Db\SiteInfo' )
-                                       ->getSchema()
-                    );
-                },
-                'rowSet'            => function () use ( $serviceLocator ) {
-                    return new View\Helper\RowSet(
-                        $serviceLocator->get( 'Request' )
-                    );
-                },
+                'sessionManager'    => array( $this, 'getSessionManager' ),
+                'config'            => array( $this, 'getConfigViewHelper' ),
+                'domain'            => array( $this, 'getDomainViewHelper' ),
+                'locale'            => array( $this, 'getLocaleViewHelper' ),
+                'adminLocale'       => array( $this, 'getAdminLocaleViewHelper' ),
+                'appService'        => array( $this, 'getAppServiceViewHelper' ),
+                'authentication'    => array( $this, 'getAuthenticationViewHelper' ),
+                'viewWidget'        => array( $this, 'getViewWidgetViewHelper' ),
+                'isModuleLoaded'    => array( $this, 'getIsModuleLoadedViewHelper' ),
+                'siteInfo'          => array( $this, 'getSiteInfoViewHelper' ),
+                'uploads'           => array( $this, 'getUploadsViewHelper' ),
+                'rowSet'            => array( $this, 'getRowSetViewHelper' ),
             ),
         );
     }
