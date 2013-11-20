@@ -94,8 +94,8 @@ class IndexController extends AbstractActionController
         $response->getHeaders()
                  ->addHeaderLine( 'Location', $uri );
 
-        // Temporary redirect
-        return $response->setStatusCode( 307 );
+        // Found
+        return $response->setStatusCode( 302 );
     }
 
     /**
