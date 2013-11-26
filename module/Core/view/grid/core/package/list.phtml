@@ -103,6 +103,8 @@ $locale = (string) $this->locale();
         <div id="package-<?= $package->idSafeName ?>" class="package-entry<?php
                 if ( $package->isInstalled() ): ?> installed<?php
                 if ( empty( $package->module ) || $this->isModuleLoaded( $package->module ) ): ?> enabled<?php endif ?><?php endif ?>">
+            <a href="#" onclick="$(this).parent().toggleClass('info'); return false;"
+               class="toggle-info">&nbsp;</a>
             <img class="icon" src="/images/common/blank.gif"
 <?php $icon = $package->getDisplayedIcon( 64 ); if ( ! empty( $icon ) ): ?>
 

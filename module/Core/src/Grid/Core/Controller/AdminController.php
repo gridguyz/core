@@ -48,6 +48,7 @@ class AdminController extends AbstractAdminController
      */
     protected function getActions( array $spec )
     {
+        $serviceLocator  = $this->getServiceLocator();
         $permissionModel = $this->getPermissionModel();
 
         foreach ( $spec as $index => $description )
@@ -62,6 +63,29 @@ class AdminController extends AbstractAdminController
                 if ( ! $allow )
                 {
                     unset( $spec[$index] );
+                    continue;
+                }
+            }
+
+            if ( ! empty( $description['dependencies'] ) )
+            {
+                foreach ( (array) $description['dependencies'] as $dependency )
+                {
+                    if ( empty( $dependency['service'] ) )
+                    {
+                        continue;
+                    }
+
+                    $service = $serviceLocator->get( $dependency['service'] );
+                    $method  = empty( $dependency['method'] ) ? '__invoke' : (string) $dependency['method'];
+                    $args    = empty( $dependency['arguments'] ) ? array() : (array) $dependency['arguments'];
+                    $allow   = call_user_func_array( array( $service, $method ), $args );
+
+                    if ( ! $allow )
+                    {
+                        unset( $spec[$index] );
+                        continue 2;
+                    }
                 }
             }
         }
