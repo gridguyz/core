@@ -147,6 +147,7 @@
     float: right;
     background-repeat: no-repeat;
     background-position: 50% 50%;
+    text-decoration: none !important;
     background-image: url("/images/common/admin/packages/info.png");
 }
 
