@@ -115,11 +115,11 @@ class Paragraph extends AdapterAbstract
         /* @var $model \Grid\Core\Model\Uri\Model */
         $service    = $this->getServiceLocator();
         $model      = $service->get( 'Grid\Core\Model\Uri\Model' );
+        $subdomain  = $this->getSiteInfo()->getSubdomainId();
         $uri        = $model->findDefaultByContentLocale(
             $contentId,
             $this->locale,
-            $this->getSiteInfo()
-                 ->getSubdomainId()
+            $subdomain
         );
 
         if ( empty( $uri ) )
@@ -129,7 +129,7 @@ class Paragraph extends AdapterAbstract
 
         $result = '/' . $uri->safeUri;
 
-        if ( $absolute )
+        if ( $absolute || $subdomain != $uri->subdomainId )
         {
             $result = 'http://' . $this->getDomain( $uri->subdomainId ) . $result;
         }
