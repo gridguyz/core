@@ -663,6 +663,16 @@ body .admin .icons .icon-border:hover .icon .image.dashboard-users
     background-image: url("/images/common/admin/dashboard-icon-users-hover.png");
 }
 
+body .admin .icons .icon .image.dashboard-packages
+{
+    background-image: url("/images/common/admin/dashboard-icon-packages.png");
+}
+
+body .admin .icons .icon-border:hover .icon .image.dashboard-packages
+{
+    background-image: url("/images/common/admin/dashboard-icon-packages-hover.png");
+}
+
 body .admin .icons .icon .label
 {
     color: #b4b5b8;
