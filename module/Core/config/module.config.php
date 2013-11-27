@@ -1214,6 +1214,24 @@ return array(
                 ),
             ),
         ),
+        'Grid\MultisitePlatform' => array(
+            'navigation' => array(
+                'packages'  => array(
+                    'label'         => 'admin.navTop.packages',
+                    'textDomain'    => 'admin',
+                    'route'         => 'Grid\Core\Admin\Package\List',
+                    'order'         => 999,
+                    'resource'      => 'package',
+                    'privilege'     => 'manage',
+                    'dependencies'  => array(
+                        'Grid\Core\Model\Package\Model::getEnabledPatternCount' => array(
+                            'service'   => 'Grid\Core\Model\Package\Model',
+                            'method'    => 'getEnabledPackageCount'
+                        ),
+                    ),
+                ),
+            ),
+        ),
     ),
     'timezone'  => array(
         'id'    => 'UTC',
