@@ -26,9 +26,7 @@
             name    = String( element.data( "jsDisplayonvalueField" ) || "" ),
             display = String( element.data( "jsDisplayonvalueValue" ) || "" ),
             sel     = "[name=\"" + name.replace( /"/g, "\\\"" ) + "\"]",
-            dd      = element.closest( "dd" ),
-            dt      = dd.prev( "dt" ),
-            toggle  = $( [ dt, dd ] ),
+            toggle  = element.closest( "dd" ).prev( "dt" ).addBack(),
             field   = null,
             change  = function () {
                 var current = field.length > 1
