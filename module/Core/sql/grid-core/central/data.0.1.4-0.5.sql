@@ -1,7 +1,7 @@
 -- default values for table: paragraph
 
 INSERT INTO "_central"."paragraph" ( "id", "type", "rootId", "left", "right", "name" )
-     VALUES ( 1534, 'layout',             1534, 1,  16, 'Non-formatted' ),
+     VALUES ( 1534, 'layout',             1534, 1,  16, 'Blank Canvas' ),
             ( 1535, 'contentPlaceholder', 1534, 10, 11, NULL ),
             ( 1536, 'html',               1534, 2,  3,  'Slogan' ),
             ( 1537, 'columns',            1534, 4,  13, NULL ),
