@@ -1,6 +1,6 @@
 <?php
 return array (
-  'user.action.ban' => 'Kitiltás',
+  'user.action.ban' => 'Kitiltás.',
   'user.action.ban.failed' => 'Kitiltás sikertelen',
   'user.action.ban.success' => 'Kitiltás sikeres',
   'user.action.confirm.failed' => 'Email megerősítése sikertelen',
