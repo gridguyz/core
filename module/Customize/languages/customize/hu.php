@@ -1,5 +1,7 @@
 <?php
 return array (
+  'customize.action.delete.failed' => 'Törlés sikertelen',
+  'customize.action.delete.success' => 'Törlés sikeres',
   'customize.form.addMessage' => 'Kérem, írja be az új tulajdonság nevét',
   'customize.form.addProperty' => 'Új tulajdonság',
   'customize.form.failed' => 'Mentés sikertelen',
