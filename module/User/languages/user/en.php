@@ -68,7 +68,7 @@ return array (
   'user.form.passwordChange.success' => 'Password-change success',
   'user.form.passwordChange.title' => 'Change password',
   'user.form.passwordRequest.email' => 'Email',
-  'user.form.passwordRequest.email.description' => 'Please enter your registered e-mail address.....',
+  'user.form.passwordRequest.email.description' => 'Please enter your registered e-mail address.',
   'user.form.passwordRequest.failed' => 'Request failed',
   'user.form.passwordRequest.submit' => 'Request change',
   'user.form.passwordRequest.success' => 'Request success',
