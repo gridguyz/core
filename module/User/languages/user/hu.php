@@ -1,5 +1,8 @@
 <?php
 return array (
+  'user.action.activate' => 'Aktiválás',
+  'user.action.activate.failed' => 'Aktiválás sikertelen',
+  'user.action.activate.success' => 'Aktiválás sikeres',
   'user.action.ban' => 'Kitiltás',
   'user.action.ban.failed' => 'Kitiltás sikertelen',
   'user.action.ban.success' => 'Kitiltás sikeres',
