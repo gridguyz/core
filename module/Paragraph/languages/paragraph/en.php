@@ -1,5 +1,5 @@
 <?php
-array (
+return array (
   'paragraph.action.clone.failed' => 'Cloning failed',
   'paragraph.action.clone.success' => 'Cloning success',
   'paragraph.action.delete.failed' => 'Delete failed',
