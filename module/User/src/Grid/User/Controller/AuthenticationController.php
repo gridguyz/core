@@ -379,19 +379,19 @@ class AuthenticationController extends AbstractActionController
         }
 
         /* @var $form \Zend\Form\Form */
-        $request = $this->getRequest();
-        $params  = $this->params();
-        $data    = $request->getPost();
-        $form    = $this->getServiceLocator()
-                        ->get( 'Form' )
-                        ->create( 'Grid\User\Logout', array(
-                            'returnUri' => $return,
-                        ) );
+        $request    = $this->getRequest();
+        $params     = $this->params();
+        $immediate  = $params->fromRoute( 'immediate', false );
+        $data       = $request->getPost();
+        $form       = $this->getServiceLocator()
+                           ->get( 'Form' )
+                           ->create( 'Grid\User\Logout', array(
+                               'returnUri' => $return,
+                           ) );
 
         $form->setData( $data );
 
-        if ( $params->fromRoute( 'immediate', false ) ||
-             ( $request->isPost() && $form->isValid() ) )
+        if ( $immediate || ( $request->isPost() && $form->isValid() ) )
         {
             /* @var $logger \Zork\Log\LoggerManager */
             $logger = $this->getServiceLocator()
@@ -403,8 +403,16 @@ class AuthenticationController extends AbstractActionController
                        ->notice( 'user-logout' );
             }
 
+            if ( $immediate )
+            {
+                $data = $return ? array( 'returnUri' => $return ) : array();
+            }
+            else
+            {
+                $data = $form->getData();
+            }
+
             /* @var $sessm \Zend\Session\SessionManager */
-            $data   = $form->getData();
             $sessm  = $this->getSessionManager();
             $result = $this->getServiceLocator()
                            ->get( 'Grid\User\Authentication\Service' )
