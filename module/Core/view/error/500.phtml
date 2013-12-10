@@ -33,7 +33,7 @@ ERROR;
             <h1 class="title"><?= htmlspecialchars( $title ) ?></h1>
             <p class="message"><?= nl2br( htmlspecialchars( $message ) ) ?></p>
         </div>
-<?php if ( error_reporting() & E_WARNING ): ?>
+<?php if ( ini_get('display_errors') ): ?>
         <pre class="exception"><?= $exception ?></pre>
 <?php endif ?>
     </body>
