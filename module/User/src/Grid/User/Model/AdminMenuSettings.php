@@ -28,6 +28,11 @@ class AdminMenuSettings implements CallableInterface,
     const SETTINGS_SECTION  = 'adminMenu';
 
     /**
+     * @const bool
+     */
+    const OPEN_DEFAULT      = true;
+
+    /**
      * @var string
      */
     const POSITION_LEFT     = 'left';
@@ -36,6 +41,11 @@ class AdminMenuSettings implements CallableInterface,
      * @var string
      */
     const POSITION_RIGHT    = 'right';
+
+    /**
+     * @var string
+     */
+    const POSITION_DEFAULT  = self::POSITION_LEFT;
 
     /**
      * @var string
@@ -51,6 +61,11 @@ class AdminMenuSettings implements CallableInterface,
      * @var string
      */
     const EDITMODE_LAYOUT   = 'layout';
+
+    /**
+     * @var string
+     */
+    const EDITMODE_DEFAULT  = self::EDITMODE_NONE;
 
     /**
      * Constructor
@@ -150,10 +165,22 @@ class AdminMenuSettings implements CallableInterface,
      */
     public function open( $set = null )
     {
-        return $this->setting(
+        $setting = $this->setting(
             'open',
             null === $set ? null : (bool) $set
         );
+
+        if ( null === $set )
+        {
+            if ( null === $setting )
+            {
+                return static::OPEN_DEFAULT;
+            }
+
+            return (bool) $setting;
+        }
+
+        return $setting;
     }
 
     /**
@@ -175,11 +202,23 @@ class AdminMenuSettings implements CallableInterface,
 
             if ( ! in_array( $set, $validPositions ) )
             {
-                $set = static::POSITION_LEFT;
+                $set = static::POSITION_DEFAULT;
             }
         }
 
-        return $this->setting( 'position', $set );
+        $setting = $this->setting( 'position', $set );
+
+        if ( null === $set )
+        {
+            if ( null === $setting )
+            {
+                return static::POSITION_DEFAULT;
+            }
+
+            return (string) $setting;
+        }
+
+        return $setting;
     }
 
     /**
@@ -202,11 +241,23 @@ class AdminMenuSettings implements CallableInterface,
 
             if ( empty( $set ) || ! in_array( $set, $validModes ) )
             {
-                $set = static::EDITMODE_NONE;
+                $set = static::EDITMODE_DEFAULT;
             }
         }
 
-        return $this->setting( 'editMode', $set );
+        $setting = $this->setting( 'editMode', $set );
+
+        if ( null === $set )
+        {
+            if ( null === $setting )
+            {
+                return static::EDITMODE_DEFAULT;
+            }
+
+            return (string) $setting;
+        }
+
+        return $setting;
     }
 
 }
