@@ -47,12 +47,13 @@ $list->runin( function ( $paragraph ) use ( $view ) { ?>
 <?php if ( $paragraph instanceof Layout &&
            isset( $view->adminMenuSettings ) &&
            $view->isAllowed( 'admin', 'ui' ) ):
+           $settings = $view->adminMenuSettings;
            $content = $paragraph->getRenderedContent(); ?>
 
 <div data-js-type="js.admin.menu"
-     data-js-adminmenu-state="<?= $view->adminMenuSettings->getSetting( 'open' ) ? 'open' : 'closed' ?>"
-     data-js-adminmenu-position="<?= $view->adminMenuSettings->getSetting( 'position' ) ?>"
-     data-js-adminmenu-editmode="<?= $view->adminMenuSettings->getSetting( 'editMode' ) ?>"
+     data-js-adminmenu-state="<?= $settings->getSetting( 'open', true ) ? 'open' : 'closed' ?>"
+     data-js-adminmenu-position="<?= $settings->getSetting( 'position', 'left' ) ?>"
+     data-js-adminmenu-editmode="<?= $settings->getSetting( 'editMode', 'none' ) ?>"
      title="<?= $this->translate( 'admin.menu.title',
                                   'admin', $view->userLocale() ) ?>">
     <ul class="ui-helper-hidden">
