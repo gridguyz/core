@@ -276,6 +276,8 @@ return array(
     'paragraph.type.contentList.description' => 'Content list description',
     'paragraph.type.contentPlaceholder' => 'Content-placeholder',
     'paragraph.type.contentPlaceholder.description' => 'Content-placeholder description',
+    'paragraph.type.facebookComment' => 'Facebook Comment',
+    'paragraph.type.facebookComment.description' => 'Facebook Comment description',
     'paragraph.type.gmap' => 'Google Map area',
     'paragraph.type.gmap.description' => 'Google Map area description',
     'paragraph.type.html' => 'Html',

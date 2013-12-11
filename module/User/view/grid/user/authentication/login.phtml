@@ -72,7 +72,34 @@ if ( ! empty( $this->display['loginWithLink'] ) &&
 
             case is_array( $link ):
 
-                if ( ( isset( $link['enabled'] ) && ! $link['enabled'] ) || empty( $link['route'] ) )
+                if ( isset( $link['enabled'] ) )
+                {
+                    if ( is_scalar( $link['enabled'] ) )
+                    {
+                        $enabled = (bool) $link['enabled'];
+                    }
+                    else if ( isset( $link['enabled']['service'] ) )
+                    {
+                        $service = $this->appService( $link['enabled']['service'] );
+                        $method  = isset( $link['enabled']['method'] )
+                                 ? (string) $link['enabled']['method']
+                                 : '__invoke';
+                        $args    = isset( $link['enabled']['arguments'] )
+                                 ? (array) $link['enabled']['arguments']
+                                 : array();
+                        $enabled = (bool) call_user_func_array( array( $service, $method ), $args );
+                    }
+                    else
+                    {
+                        $enabled = false;
+                    }
+                }
+                else
+                {
+                    $enabled = true;
+                }
+
+                if ( ! $enabled || empty( $link['route'] ) )
                 {
                     continue 2;
                 }
