@@ -113,9 +113,9 @@ class AdminMenuSettings implements CallableInterface,
             $setting = $model->find( $userId, static::SETTINGS_SECTION )
                              ->getSetting( $name );
 
-            if ( null === $setting && isset( static::$defaults[$setting] ) )
+            if ( null === $setting && isset( static::$defaults[$name] ) )
             {
-                return static::$defaults[$setting];
+                return static::$defaults[$name];
             }
 
             return $setting;
@@ -158,11 +158,11 @@ class AdminMenuSettings implements CallableInterface,
             $settings = $model->find( $userId, static::SETTINGS_SECTION )
                               ->settings;
 
-            foreach ( static::$defaults as $key => $value )
+            foreach ( static::$defaults as $name => $value )
             {
-                if ( ! isset( $settings[$key] ) )
+                if ( ! isset( $settings[$name] ) )
                 {
-                    $settings[$key] = $value;
+                    $settings[$name] = $value;
                 }
             }
 
