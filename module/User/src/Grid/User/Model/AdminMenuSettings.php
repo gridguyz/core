@@ -68,6 +68,15 @@ class AdminMenuSettings implements CallableInterface,
     const EDITMODE_DEFAULT  = self::EDITMODE_NONE;
 
     /**
+     * @var array
+     */
+    protected static $defaults = array(
+        'open'      => self::OPEN_DEFAULT,
+        'position'  => self::POSITION_DEFAULT,
+        'editMode'  => self::EDITMODE_DEFAULT,
+    );
+
+    /**
      * Constructor
      *
      * @param   User\Settings\Model     $userSettingsModel
@@ -101,8 +110,15 @@ class AdminMenuSettings implements CallableInterface,
 
         if ( null === $set )
         {
-            return $model->find( $userId, static::SETTINGS_SECTION )
-                         ->getSetting( $name );
+            $setting = $model->find( $userId, static::SETTINGS_SECTION )
+                             ->getSetting( $name );
+
+            if ( null === $setting && isset( static::$defaults[$setting] ) )
+            {
+                return static::$defaults[$setting];
+            }
+
+            return $setting;
         }
         else
         {
@@ -139,8 +155,18 @@ class AdminMenuSettings implements CallableInterface,
 
         if ( null === $set )
         {
-            return $model->find( $userId, static::SETTINGS_SECTION )
-                         ->settings;
+            $settings = $model->find( $userId, static::SETTINGS_SECTION )
+                              ->settings;
+
+            foreach ( static::$defaults as $key => $value )
+            {
+                if ( ! isset( $settings[$key] ) )
+                {
+                    $settings[$key] = $value;
+                }
+            }
+
+            return $settings;
         }
         else
         {
@@ -165,22 +191,10 @@ class AdminMenuSettings implements CallableInterface,
      */
     public function open( $set = null )
     {
-        $setting = $this->setting(
+        return $this->setting(
             'open',
             null === $set ? null : (bool) $set
         );
-
-        if ( null === $set )
-        {
-            if ( null === $setting )
-            {
-                return static::OPEN_DEFAULT;
-            }
-
-            return (bool) $setting;
-        }
-
-        return $setting;
     }
 
     /**
@@ -206,19 +220,7 @@ class AdminMenuSettings implements CallableInterface,
             }
         }
 
-        $setting = $this->setting( 'position', $set );
-
-        if ( null === $set )
-        {
-            if ( null === $setting )
-            {
-                return static::POSITION_DEFAULT;
-            }
-
-            return (string) $setting;
-        }
-
-        return $setting;
+        return $this->setting( 'position', $set );
     }
 
     /**
@@ -245,19 +247,7 @@ class AdminMenuSettings implements CallableInterface,
             }
         }
 
-        $setting = $this->setting( 'editMode', $set );
-
-        if ( null === $set )
-        {
-            if ( null === $setting )
-            {
-                return static::EDITMODE_DEFAULT;
-            }
-
-            return (string) $setting;
-        }
-
-        return $setting;
+        return $this->setting( 'editMode', $set );
     }
 
 }
