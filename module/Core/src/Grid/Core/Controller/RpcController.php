@@ -69,7 +69,7 @@ class RpcController extends AbstractActionController
      */
     protected static function rawException( $exception )
     {
-        if ( error_reporting() & E_WARNING )
+        if ( ini_get('display_errors') )
         {
             return static::rawData( $exception );
         }
@@ -137,7 +137,7 @@ class RpcController extends AbstractActionController
             $this->logException( $ex, Logger::WARN );
             $response->setStatusCode( 500 );
 
-            if ( error_reporting() & E_WARNING )
+            if ( ini_get('display_errors') )
             {
                 if ( $response instanceof HttpResponse )
                 {
