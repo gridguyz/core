@@ -14,6 +14,7 @@ return array(
                     'gridguyz/banner'                   => 'gridguyz/banner',
                     'gridguyz/contentlist'              => 'gridguyz/contentlist',
                     'gridguyz/openid'                   => 'gridguyz/openid',
+                    'gridguyz/facebookcomment'          => 'gridguyz/facebookcomment',
                     'gridguyz/facebooklogin'            => 'gridguyz/facebooklogin',
                     'gridguyz/googleanalytics'          => 'gridguyz/googleanalytics',
                     'gridguyz/googlesiteverification'   => 'gridguyz/googlesiteverification',
