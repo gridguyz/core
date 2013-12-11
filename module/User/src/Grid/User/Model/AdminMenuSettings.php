@@ -28,11 +28,6 @@ class AdminMenuSettings implements CallableInterface,
     const SETTINGS_SECTION  = 'adminMenu';
 
     /**
-     * @const bool
-     */
-    const OPEN_DEFAULT      = true;
-
-    /**
      * @var string
      */
     const POSITION_LEFT     = 'left';
@@ -41,11 +36,6 @@ class AdminMenuSettings implements CallableInterface,
      * @var string
      */
     const POSITION_RIGHT    = 'right';
-
-    /**
-     * @var string
-     */
-    const POSITION_DEFAULT  = self::POSITION_LEFT;
 
     /**
      * @var string
@@ -61,20 +51,6 @@ class AdminMenuSettings implements CallableInterface,
      * @var string
      */
     const EDITMODE_LAYOUT   = 'layout';
-
-    /**
-     * @var string
-     */
-    const EDITMODE_DEFAULT  = self::EDITMODE_NONE;
-
-    /**
-     * @var array
-     */
-    protected static $defaults = array(
-        'open'      => self::OPEN_DEFAULT,
-        'position'  => self::POSITION_DEFAULT,
-        'editMode'  => self::EDITMODE_DEFAULT,
-    );
 
     /**
      * Constructor
@@ -110,15 +86,8 @@ class AdminMenuSettings implements CallableInterface,
 
         if ( null === $set )
         {
-            $setting = $model->find( $userId, static::SETTINGS_SECTION )
-                             ->getSetting( $name );
-
-            if ( null === $setting && isset( static::$defaults[$name] ) )
-            {
-                return static::$defaults[$name];
-            }
-
-            return $setting;
+            return $model->find( $userId, static::SETTINGS_SECTION )
+                         ->getSetting( $name );
         }
         else
         {
@@ -155,18 +124,8 @@ class AdminMenuSettings implements CallableInterface,
 
         if ( null === $set )
         {
-            $settings = $model->find( $userId, static::SETTINGS_SECTION )
-                              ->settings;
-
-            foreach ( static::$defaults as $name => $value )
-            {
-                if ( ! isset( $settings[$name] ) )
-                {
-                    $settings[$name] = $value;
-                }
-            }
-
-            return $settings;
+            return $model->find( $userId, static::SETTINGS_SECTION )
+                         ->settings;
         }
         else
         {
@@ -216,7 +175,7 @@ class AdminMenuSettings implements CallableInterface,
 
             if ( ! in_array( $set, $validPositions ) )
             {
-                $set = static::POSITION_DEFAULT;
+                $set = static::POSITION_LEFT;
             }
         }
 
@@ -243,7 +202,7 @@ class AdminMenuSettings implements CallableInterface,
 
             if ( empty( $set ) || ! in_array( $set, $validModes ) )
             {
-                $set = static::EDITMODE_DEFAULT;
+                $set = static::EDITMODE_NONE;
             }
         }
 
