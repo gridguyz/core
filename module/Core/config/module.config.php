@@ -1,6 +1,6 @@
 <?php
 
-$debug = (bool) ( error_reporting() & E_WARNING );
+$debug = (bool) ini_get('display_errors');
 
 return array(
     'router' => array(
