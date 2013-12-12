@@ -127,7 +127,7 @@
 
         if ( opened || ! params.image )
         {
-            return false;
+            return true;
         }
 
         opened = true;
@@ -137,6 +137,9 @@
             layer   = $( "<div>" ).addClass( "ui-overlay" ),
             shadow  = $( "<div>" ).addClass( "ui-widget-shadow" ),
             overlay = $( "<div>" ).addClass( "ui-widget-overlay" ),
+            closebc = $( '<a href="#">' ).addClass( "ui-lightbox-close" ),
+            closeba = $( "<img>" ).appendTo( closebc ),
+            closebp = $( "<img>" ).appendTo( closebc ),
             content = $( "<div>" ).addClass( "ui-lightbox-container" ).append(
                 '<img src="/images/scripts/loading.gif" />'
             );
@@ -173,6 +176,42 @@
             "position"          : "absolute"
         } );
 
+        var cbntop = parseInt( -18 - params.padding, 10 );
+
+        closebc.css( {
+            "top"        : cbntop + "px",
+            "right"      : cbntop + "px",
+            "margin"     : "0px",
+            "padding"    : "0px",
+            "width"      : "36px",
+            "height"     : "36px",
+            "position"   : "absolute"
+        } );
+
+        closeba.attr( "src", "/images/scripts/lightbox/close-active.png" )
+               .css( {
+                    "opacity": 0,
+                    "top": "0px",
+                    "left": "0px",
+                    "position": "absolute"
+                } );
+
+        closebp.attr( "src", "/images/scripts/lightbox/close-passive.png" )
+               .css( {
+                    "opacity": 1,
+                    "top": "0px",
+                    "left": "0px",
+                    "position": "absolute"
+                } );
+
+        closebc.hover( function () {
+            closeba.animate( { "opacity": 1 }, "fast" );
+            closebp.animate( { "opacity": 0 }, "fast" );
+        }, function () {
+            closeba.animate( { "opacity": 0 }, "fast" );
+            closebp.animate( { "opacity": 1 }, "fast" );
+        } );
+
         layer.append( overlay )
              .append( shadow )
              .append( content );
@@ -196,6 +235,15 @@
                 imgWidth    = Math.max( imgNode.width, 1 ),
                 imgHeight   = Math.max( imgNode.height, 1 ),
                 resize      = function () {
+                    shadow.stop( true, true );
+                    content.stop( true, true );
+                    img.stop( true, true );
+
+                    if ( titleNode )
+                    {
+                        titleNode.stop( true, true );
+                    }
+
                     var padding2    = params.padding * 2,
                         availWidth  = layer.width(),
                         availHeight = layer.height(),
@@ -240,21 +288,40 @@
                     shadow.animate( {
                         "width": allWidth,
                         "height": allHeight,
-                        "margin-top": - marginTop - params.padding,
-                        "margin-left": - marginLeft - params.padding
+                        "margin-top": - marginTop,
+                        "margin-left": - marginLeft
                     }, animate );
 
                     content.animate( {
                         "width": allWidth - padding2,
                         "height": allHeight - padding2,
-                        "margin-top": - marginTop,
-                        "margin-left": - marginLeft
+                        "margin-top": - marginTop + params.padding,
+                        "margin-left": - marginLeft + params.padding
                     }, animate );
 
                     img.animate( {
                         "width": toWidth,
                         "height": toHeight
                     }, animate );
+
+                    if ( titleNode )
+                    {
+                        titleNode.css( {
+                                     "width": "1px",
+                                     "height": "1px"
+                                 } )
+                                 .animate( {
+                                     "width": toWidth,
+                                     "height": titleHeight
+                                 }, $.extend( {}, animate, {
+                                     "complete": function () {
+                                         titleNode.css( {
+                                             "width": "",
+                                             "height": ""
+                                         } );
+                                     }
+                                 } ) );
+                    }
                 };
 
             img.css( {
@@ -268,24 +335,26 @@
                        "height": "",
                        "line-height": "1.2em"
                    } )
+                   .append( closebc )
                    .append( img );
 
             if ( params.title )
             {
                 content.append(
-                    titleNode = $( "<div>" ).html( params.title )
-                                            .css( "padding-top",
-                                                  params.padding + "px" )
+                    titleNode = $( "<div>" )
+                        .html( params.title )
+                        .css( "padding-top", params.padding + "px" )
                 );
             }
 
             $( global ).on( "resize.lightbox", resize );
             overlay.on( "click.lightbox", js.ui.lightbox.close );
+            closebc.on( "click.lightbox", js.ui.lightbox.close );
             setTimeout( resize, 50 );
         } );
 
         img.prop( "src", params.image );
-        return true;
+        return false;
     };
 
     /**
@@ -298,14 +367,14 @@
     {
         if ( ! opened )
         {
-            return false;
+            return true;
         }
 
         opened = false;
         close();
         $( global ).off( "resize.lightbox" );
 
-        return true;
+        return false;
     };
 
 } ( window, jQuery, zork ) );
