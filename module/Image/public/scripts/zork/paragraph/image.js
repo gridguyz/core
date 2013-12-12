@@ -64,18 +64,18 @@
                    .hover( function() {
                         $( this ).find( ".lightbox-viewer-button" )
                                  .stop()
-                                 .animate( { "opacity": 1.0 }, 500 );
+                                 .animate( { "opacity": 1.0 }, "fast" );
                     }, function() {
                         $( this ).find( ".lightbox-viewer-button" )
                                  .stop()
-                                 .animate( { "opacity": 0.0 }, 500 );
+                                 .animate( { "opacity": 0.0 }, "fast" );
                     } );
         }
 
         // click event
         var self            = ! element.prop( "href" ),
             bgColor         = $( "body" ).css( "backgroundColor" ),
-            bgTransparent   = /^(transparent|(rgba|hsla)\(.*,\s*0(\.0+)?\s*\))$/.test( bgColor );
+            bgTransparent   = /^(transparent|(rgba|hsla)\(.*,\s*(0(\.0+)?|\.0+)\))$/.test( bgColor );
 
         js.require( "js.ui.lightbox", function () {
             js.ui.lightbox( element, {

@@ -141,7 +141,11 @@
                             "vertical-align": "middle"
                         } );
 
-        close = js.core.layer( content );
+        close = js.core.layer( {
+            "minWidth": 20,
+            "minHeight": 20,
+            "content": content
+        } );
 
         img.load( function () {
             var titleNode   = null,
