@@ -28,11 +28,11 @@
             .hover( function() {
                 $( this ).children()
                          .stop()
-                         .animate( { "opacity": 1.0 }, 500 );
+                         .animate( { "opacity": 1.0 }, "fast" );
             }, function() {
                 $( this ).children()
                          .stop()
-                         .animate( { "opacity": 0.0 }, 500 );
+                         .animate( { "opacity": 0.0 }, "fast" );
             } )
             .append(
                 $( "<span />" ).css( {
@@ -74,28 +74,13 @@
 
         // click event
         var self            = ! element.prop( "href" ),
-            activeItem      = self ? element : element.find( ".lightbox-viewer-button" ),
             bgColor         = $( "body" ).css( "backgroundColor" ),
             bgTransparent   = /^(transparent|(rgba|hsla)\(.*,\s*0(\.0+)?\s*\))$/.test( bgColor );
 
-        element.data( "jsColor", bgTransparent ? "#ffffff" : bgColor );
-
-        js.require( "jQuery.fn.fancybox", function () {
-            activeItem.fancybox( {
-                "type": "image",
-                "onStart": function () {
-                    var img = element.find( "img" ).first();
-
-                    return {
-                        "href": element.data( "jsHref" )
-                            || element.attr( "href" )
-                            || img.attr( "src" ),
-                        "title": element.data( "jsHtml" )
-                            || element.attr( "title" )
-                            || img.attr( "title" )
-                            || img.attr( "alt" )
-                    };
-                }
+        js.require( "js.ui.lightbox", function () {
+            js.ui.lightbox( element, {
+                "background": bgTransparent ? "#ffffff" : bgColor,
+                "handle": self ? null : ".lightbox-viewer-button"
             } );
         } );
     };
@@ -105,9 +90,12 @@
         element = $( element );
 
         element.css( "cursor", "" )
-               .unbind( ".fb" )
                .find( ".lightbox-viewer-button" )
                .remove();
+
+        js.require( "js.ui.lightbox", function () {
+            js.ui.lightbox.remove( element );
+        } );
     };
 
     global.Zork.Paragraph.prototype.image.isElementConstructor = true;
