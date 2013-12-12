@@ -14,6 +14,8 @@
         return;
     }
 
+    js.style( "/styles/scripts/lightbox.css" );
+
     var opened  = false,
         close   = null;
 
@@ -272,7 +274,7 @@
             {
                 content.append(
                     titleNode = $( "<div>" ).html( params.title )
-                                            .css( "padding-bottom",
+                                            .css( "padding-top",
                                                   params.padding + "px" )
                 );
             }
