@@ -5,6 +5,7 @@ return array (
   'paragraph.action.delete.failed' => 'Törlés sikertelen',
   'paragraph.action.delete.success' => 'Törlés sikeres',
   'paragraph.content.list.column.actions.title' => 'Műveletek',
+  'paragraph.content.list.column.created.title' => 'Létrehozva',
   'paragraph.content.list.column.defaultFor.title' => 'Alapértelmezett',
   'paragraph.content.list.column.id.title' => 'AZ',
   'paragraph.content.list.column.lastModified.title' => 'Utolsó módosítás',

@@ -73,13 +73,14 @@ class Structure extends MapperAwareAbstract
 
     /**
      * @param string $name
+     * @param mixed $default
      * @return mixed|null
      */
-    public function getSetting( $name )
+    public function getSetting( $name, $default = null )
     {
         return isset( $this->settings[$name] )
              ? $this->settings[$name]
-             : null;
+             : $default;
     }
 
     /**
