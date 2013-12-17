@@ -92,10 +92,12 @@
      * Default params for js.ui.lightbox()
      */
     global.Zork.Ui.prototype.lightbox.defaults = {
-        "padding": 10,
+        "padding": 0,
+        "margin": 20,
         "image": null,
         "handle": null,
         "title": null,
+        "titlePadding": 10,
         "easing": "swing",
         "duration": "fast",
         "appendTo": "body",
@@ -244,9 +246,11 @@
                         titleNode.stop( true, true );
                     }
 
-                    var padding2    = params.padding * 2,
-                        availWidth  = layer.width(),
-                        availHeight = layer.height(),
+                    var margin2     = params.margin * 2,
+                        padding2    = params.padding * 2,
+                        titlePad2   = params.titlePadding * 2,
+                        availWidth  = Math.max( 1, layer.width() - margin2 ),
+                        availHeight = Math.max( 1, layer.height() - margin2 ),
                         titleHeight = 0,
                         allWidth,
                         allHeight,
@@ -257,6 +261,42 @@
                         animate = {
                             "easing": params.easing,
                             "duration": params.duration
+                        },
+                        calcHeights = function ( width ) {
+                            if ( titleNode )
+                            {
+                                titleNode.css( {
+                                    "width": "auto",
+                                    "height": "auto"
+                                } );
+
+                                titleNode.width( width - titlePad2 );
+                                titleHeight = titleNode.height() + titlePad2;
+
+                                titleNode.css( {
+                                    "width": "1px",
+                                    "height": "1px"
+                                } );
+                            }
+
+                            toWidth     = width;
+                            allWidth    = width + padding2;
+                            toHeight    = width * imgHeight / imgWidth;
+                            allHeight   = titleHeight + padding2 + toHeight;
+
+                            if ( allHeight > availHeight )
+                            {
+                                allHeight = availHeight;
+                                toHeight  = allHeight - titleHeight - padding2;
+                                toWidth   = toHeight * imgWidth / imgHeight;
+
+                                if ( titleNode )
+                                {
+                                    calcHeights( toWidth );
+                                }
+
+                                allWidth = toWidth + padding2;
+                            }
                         };
 
                     allWidth = Math.min(
@@ -264,23 +304,7 @@
                         padding2 + imgWidth
                     );
 
-                    toWidth = allWidth - padding2;
-
-                    if ( titleNode )
-                    {
-                        titleNode.width( toWidth );
-                        titleHeight = titleNode.height() + params.padding;
-                    }
-
-                    toHeight    = toWidth * imgHeight / imgWidth;
-                    allHeight   = titleHeight + padding2 + toHeight;
-
-                    if ( allHeight > availHeight )
-                    {
-                        allHeight = availHeight;
-                        toHeight  = allHeight - titleHeight - padding2;
-                        toWidth   = toHeight * imgWidth / imgHeight;
-                    }
+                    calcHeights( allWidth - padding2 );
 
                     marginTop = allHeight / 2;
                     marginLeft = allWidth / 2;
@@ -306,13 +330,9 @@
 
                     if ( titleNode )
                     {
-                        titleNode.css( {
-                                     "width": "1px",
-                                     "height": "1px"
-                                 } )
-                                 .animate( {
-                                     "width": toWidth,
-                                     "height": titleHeight
+                        titleNode.animate( {
+                                     "width": toWidth - titlePad2,
+                                     "height": titleHeight - titlePad2
                                  }, $.extend( {}, animate, {
                                      "complete": function () {
                                          titleNode.css( {
@@ -343,7 +363,10 @@
                 content.append(
                     titleNode = $( "<div>" )
                         .html( params.title )
-                        .css( "padding-top", params.padding + "px" )
+                        .css( {
+                            "margin": "0px",
+                            "padding": params.titlePadding
+                        } )
                 );
             }
 
