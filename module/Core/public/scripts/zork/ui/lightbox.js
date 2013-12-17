@@ -137,8 +137,8 @@
 
         var img     = $( "<img>" ),
             layer   = $( "<div>" ).addClass( "ui-overlay" ),
-            shadow  = $( "<div>" ).addClass( "ui-widget-shadow" ),
-            overlay = $( "<div>" ).addClass( "ui-widget-overlay" ),
+            shadow  = $( "<div>" ).addClass( "ui-widget-shadow ui-lightbox-shadow" ),
+            overlay = $( "<div>" ).addClass( "ui-widget-overlay ui-lightbox-overlay" ),
             closebc = $( '<a href="#">' ).addClass( "ui-lightbox-close" ),
             closeba = $( "<img>" ).appendTo( closebc ),
             closebp = $( "<img>" ).appendTo( closebc ),
@@ -314,39 +314,68 @@
                         "height": allHeight,
                         "margin-top": - marginTop,
                         "margin-left": - marginLeft
-                    }, animate );
+                    }, {
+                        "easing": params.easing,
+                        "duration": params.duration
+                    } );
 
                     content.animate( {
                         "width": allWidth - padding2,
                         "height": allHeight - padding2,
                         "margin-top": - marginTop + params.padding,
                         "margin-left": - marginLeft + params.padding
-                    }, animate );
+                    }, {
+                        "easing": params.easing,
+                        "duration": params.duration
+                    } );
 
                     img.animate( {
                         "width": toWidth,
                         "height": toHeight
-                    }, animate );
+                    }, {
+                        "easing": params.easing,
+                        "duration": params.duration,
+                        "complete": function () {
+                            img.css( {
+                                "visibility": "visible"
+                            } ).animate( {
+                                "opacity": 1
+                            }, {
+                                "easing": params.easing,
+                                "duration": params.duration
+                            } );
+                        }
+                    } );
 
                     if ( titleNode )
                     {
                         titleNode.animate( {
                                      "width": toWidth - titlePad2,
                                      "height": titleHeight - titlePad2
-                                 }, $.extend( {}, animate, {
+                                 }, {
+                                     "easing": params.easing,
+                                     "duration": params.duration,
                                      "complete": function () {
                                          titleNode.css( {
                                              "width": "",
-                                             "height": ""
+                                             "height": "",
+                                             "visibility": "visible"
+                                         } ).animate( {
+                                             "opacity": 1
+                                         }, {
+                                             "easing": params.easing,
+                                             "duration": params.duration
                                          } );
                                      }
-                                 } ) );
+                                 } );
                     }
                 };
 
             img.css( {
                 "width": "1px",
-                "height": "1px"
+                "height": "1px",
+                "visibility": "hidden",
+                "opacity": 0
             } );
 
             content.empty()
@@ -365,7 +394,9 @@
                         .html( params.title )
                         .css( {
                             "margin": "0px",
-                            "padding": params.titlePadding
+                            "padding": params.titlePadding,
+                            "visibility": "hidden",
+                            "opacity": 0
                         } )
                 );
             }
