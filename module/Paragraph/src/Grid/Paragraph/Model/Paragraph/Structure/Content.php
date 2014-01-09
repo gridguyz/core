@@ -3,6 +3,7 @@
 namespace Grid\Paragraph\Model\Paragraph\Structure;
 
 use ArrayIterator;
+use Zork\Stdlib\String;
 use Zork\Stdlib\DateTime;
 use DateTime as BaseDateTime;
 use Grid\User\Model\User\Structure as UserStructure;
@@ -14,7 +15,9 @@ use Grid\User\Model\User\Structure as UserStructure;
  */
 class Content extends AbstractRoot
            implements LayoutAwareInterface,
-                      PublishRestrictedInterface
+                      PublishRestrictedInterface,
+                      RepresentsTextContentInterface,
+                      RepresentsImageContentsInterface
 {
 
     /**
@@ -764,6 +767,46 @@ class Content extends AbstractRoot
         }
 
         return $dependents;
+    }
+
+    /**
+     * @return  string
+     */
+    public function getRepresentedTextContent()
+    {
+        $parts = array();
+
+        if ( ! empty( $this->title ) )
+        {
+            $parts[] = $this->title;
+        }
+
+        if ( ! empty( $this->leadText ) )
+        {
+            $parts[] = String::stripHtml( $this->leadText );
+        }
+
+        if ( ! empty( $this->metaDescription ) )
+        {
+            $parts[] = $this->metaDescription;
+        }
+
+        return implode( "\n\n", $parts ) ?: null;
+    }
+
+    /**
+     * @return  array
+     */
+    public function getRepresentedImageContentUrls()
+    {
+        $urls = array();
+
+        if ( ! empty( $this->leadImage ) )
+        {
+            $urls[] = $this->leadImage;
+        }
+
+        return $urls;
     }
 
     /**

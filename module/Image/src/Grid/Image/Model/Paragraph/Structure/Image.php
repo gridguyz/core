@@ -2,7 +2,10 @@
 
 namespace Grid\Image\Model\Paragraph\Structure;
 
+use Zork\Stdlib\String;
 use Grid\Paragraph\Model\Paragraph\Structure\AbstractLeaf;
+use Grid\Paragraph\Model\Paragraph\Structure\RepresentsTextContentInterface;
+use Grid\Paragraph\Model\Paragraph\Structure\RepresentsImageContentsInterface;
 
 /**
  * Image paragraph
@@ -10,6 +13,8 @@ use Grid\Paragraph\Model\Paragraph\Structure\AbstractLeaf;
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
 class Image extends AbstractLeaf
+         implements RepresentsTextContentInterface,
+                    RepresentsImageContentsInterface
 {
 
     /**
@@ -171,6 +176,24 @@ class Image extends AbstractLeaf
     {
         $this->lightBox = (bool) $lightBox;
         return $this;
+    }
+
+    /**
+     * @return  string
+     */
+    public function getRepresentedTextContent()
+    {
+        return empty( $this->caption )
+            ? $this->alternate
+            : String::stripHtml( $this->caption );
+    }
+
+    /**
+     * @return  array
+     */
+    public function getRepresentedImageContentUrls()
+    {
+        return array( $this->url );
     }
 
 }

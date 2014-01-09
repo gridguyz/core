@@ -2,6 +2,7 @@
 
 namespace Grid\Paragraph\Model\Paragraph\Structure;
 
+use Zork\Stdlib\String;
 use Zend\View\Renderer\RendererInterface;
 
 /**
@@ -10,6 +11,7 @@ use Zend\View\Renderer\RendererInterface;
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
 class Html extends AbstractLeaf
+        implements RepresentsTextContentInterface
 {
 
     /**
@@ -44,6 +46,14 @@ class Html extends AbstractLeaf
     public function renderOpen( RendererInterface $renderer )
     {
         return $this->html;
+    }
+
+    /**
+     * @return  string
+     */
+    public function getRepresentedTextContent()
+    {
+        return String::stripHtml( $this->html ) ?: null;
     }
 
     /**

@@ -36,6 +36,7 @@
      * @type $
      */
     var _root     = null,
+        exts      = [],
         cssom     = js.require( "js.cssom" ),
         wizard    = js.require( "js.wizard" ),
         customize = js.require( "js.customize" ),
@@ -58,14 +59,25 @@
             return $( s.join( ", " ) ).first();
         };
 
+    $( "meta[name='zork:paragraph:editMode:extensions']" ).each( function () {
+        exts.push( js.require( $( this ).attr( "content" ) ) );
+    } );
+
     /**
      * Paragraph header instance
      * @type $
      */
     global.Zork.Paragraph.prototype.header = function ()
     {
-        return $( js.paragraph.header.template ).hide();
+        return js.paragraph.header.instance =
+            $( js.paragraph.header.template ).hide();
     };
+
+    /**
+     * Header instance
+     * @type $
+     */
+    global.Zork.Paragraph.prototype.header.instance = null;
 
     /**
      * Header template
@@ -133,6 +145,8 @@
                           .hide( "fast", function () {
                               header.detach();
                           } );
+
+                    $.each( exts, function ( _, cb ) { cb( null ); } );
                 }
             },
             mmove = function ( event )
@@ -192,6 +206,8 @@
 
                     header.find( ".append" )
                           .css( "display", para.data( "paragraphOnlyParentOf" ) ? "" : "none" );
+
+                    $.each( exts, function ( _, cb ) { cb( para ); } );
                 }
             };
 

@@ -3,6 +3,7 @@
 namespace Grid\Paragraph\Model\Paragraph\Structure;
 
 use ArrayIterator;
+use Zork\Stdlib\String;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 
 /**
@@ -11,7 +12,9 @@ use Zend\ServiceManager\Exception\ServiceNotFoundException;
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
 class Lead extends AbstractLeaf
-        implements ContentDependentAwareInterface
+        implements ContentDependentAwareInterface,
+                   RepresentsTextContentInterface,
+                   RepresentsImageContentsInterface
 {
 
     use ContentDependentAwareTrait;
@@ -157,6 +160,30 @@ class Lead extends AbstractLeaf
         }
 
         return $this;
+    }
+
+    /**
+     * @return  string
+     */
+    public function getRepresentedTextContent()
+    {
+        return String::stripHtml( $this->getRootText() ) ?: null;
+    }
+
+    /**
+     * @return  array
+     */
+    public function getRepresentedImageContentUrls()
+    {
+        $urls = array();
+        $root = $this->getRootImage();
+
+        if ( ! empty( $root ) )
+        {
+            $urls[] = $root;
+        }
+
+        return $urls;
     }
 
     /**
