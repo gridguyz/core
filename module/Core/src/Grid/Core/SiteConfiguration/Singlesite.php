@@ -110,7 +110,7 @@ class Singlesite extends AbstractDomainAware
         $query = $db->query( '
             SELECT *
               FROM ' . $platform->quoteIdentifier( 'subdomain' ) . '
-             WHERE ' . $platform->quoteIdentifier( 'subdomain' ) . '
+             WHERE LOWER( ' . $platform->quoteIdentifier( 'subdomain' ) . ' )
                  = LOWER( ' . $driver->formatParameterName( 'subdomain' ) . ' )
         ' );
 
