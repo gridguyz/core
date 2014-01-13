@@ -594,12 +594,12 @@ abstract class ProxyAbstract
 
         $class = get_called_class();
 
-        if ( is_a( $class, __NAMESPACE__ . '\RepresentsTextContentInterface' ) )
+        if ( is_a( $class, __NAMESPACE__ . '\RepresentsTextContentInterface', true ) )
         {
             $properties[] = static::PROPERTY_REPRESENTS_TEXT;
         }
 
-        if ( is_a( $class, __NAMESPACE__ . '\RepresentsImageContentsInterface' ) )
+        if ( is_a( $class, __NAMESPACE__ . '\RepresentsImageContentsInterface', true ) )
         {
             $properties[] = static::PROPERTY_REPRESENTS_IMAGES;
         }
