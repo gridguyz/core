@@ -592,12 +592,14 @@ abstract class ProxyAbstract
             static::PROPERTY_DELETE,
         );
 
-        if ( $this instanceof RepresentsTextContentInterface )
+        $class = get_called_class();
+
+        if ( is_a( $class, __NAMESPACE__ . '\RepresentsTextContentInterface' ) )
         {
             $properties[] = static::PROPERTY_REPRESENTS_TEXT;
         }
 
-        if ( $this instanceof RepresentsImageContentsInterface )
+        if ( is_a( $class, __NAMESPACE__ . '\RepresentsImageContentsInterface' ) )
         {
             $properties[] = static::PROPERTY_REPRESENTS_IMAGES;
         }
