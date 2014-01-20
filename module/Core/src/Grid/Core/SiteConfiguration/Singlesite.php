@@ -56,13 +56,20 @@ class Singlesite extends AbstractDomainAware
             }
             else
             {
-                $validDomains = (array) $config['validDomains'];
+                $validDomains = array_map(
+                    'strtolower',
+                    (array) $config['validDomains']
+                );
             }
 
-            if ( ! empty( $config['defaultDomain'] ) &&
-                 ! in_array( $config['defaultDomain'], $validDomains ) )
+            if ( ! empty( $config['defaultDomain'] ) )
             {
-                array_unshift( $validDomains, $config['defaultDomain'] );
+                $defaultDomain = strtolower( $config['defaultDomain'] );
+
+                if ( ! in_array( $defaultDomain, $validDomains ) )
+                {
+                    array_unshift( $validDomains, $defaultDomain );
+                }
             }
 
             foreach ( $validDomains as $validDomain )
@@ -103,8 +110,8 @@ class Singlesite extends AbstractDomainAware
         $query = $db->query( '
             SELECT *
               FROM ' . $platform->quoteIdentifier( 'subdomain' ) . '
-             WHERE ' . $platform->quoteIdentifier( 'subdomain' ) . '
-                 = ' . $driver->formatParameterName( 'subdomain' ) . '
+             WHERE LOWER( ' . $platform->quoteIdentifier( 'subdomain' ) . ' )
+                 = LOWER( ' . $driver->formatParameterName( 'subdomain' ) . ' )
         ' );
 
         $result = $query->execute( array(

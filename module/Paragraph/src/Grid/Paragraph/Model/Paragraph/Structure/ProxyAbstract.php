@@ -33,22 +33,32 @@ abstract class ProxyAbstract
     /**
      * @var string
      */
-    const PROPERTY_DRAG     = 'drag';
+    const PROPERTY_DRAG = 'drag';
 
     /**
      * @var string
      */
-    const PROPERTY_DROP     = 'drop';
+    const PROPERTY_DROP = 'drop';
 
     /**
      * @var string
      */
-    const PROPERTY_EDIT     = 'edit';
+    const PROPERTY_EDIT = 'edit';
 
     /**
      * @var string
      */
-    const PROPERTY_DELETE   = 'delete';
+    const PROPERTY_DELETE = 'delete';
+
+    /**
+     * @var string
+     */
+    const PROPERTY_REPRESENTS_TEXT = 'representsText';
+
+    /**
+     * @var string
+     */
+    const PROPERTY_REPRESENTS_IMAGES = 'representsImages';
 
     /**
      * This paragraph can be only child of ...
@@ -575,12 +585,26 @@ abstract class ProxyAbstract
      */
     public static function getAllowedFunctions()
     {
-        return array(
+        $properties = array(
             static::PROPERTY_DRAG,
             static::PROPERTY_DROP,
             static::PROPERTY_EDIT,
             static::PROPERTY_DELETE,
         );
+
+        $class = get_called_class();
+
+        if ( is_a( $class, __NAMESPACE__ . '\RepresentsTextContentInterface', true ) )
+        {
+            $properties[] = static::PROPERTY_REPRESENTS_TEXT;
+        }
+
+        if ( is_a( $class, __NAMESPACE__ . '\RepresentsImageContentsInterface', true ) )
+        {
+            $properties[] = static::PROPERTY_REPRESENTS_IMAGES;
+        }
+
+        return $properties;
     }
 
     /**
