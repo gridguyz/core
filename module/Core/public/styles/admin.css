@@ -673,6 +673,40 @@ body .admin .icons .icon-border:hover .icon .image.dashboard-packages
     background-image: url("/images/common/admin/dashboard-icon-packages-hover.png");
 }
 
+body .admin .icons .icon .image.dashboard-smm-center
+{
+    background-image: url("/images/common/admin/dashboard-icon-smm.png");
+}
+
+body .admin .icons .icon-border:hover .icon .image.dashboard-smm-center
+{
+    background-image: url("/images/common/admin/dashboard-icon-smm-hover.png");
+}
+
+body .admin .icons .icon .image.dashboard-smm-messages
+{
+    background-image: url("/images/common/admin/dashboard-icon-smmmessage.png");
+}
+
+body .admin .icons .icon-border:hover .icon .image.dashboard-smm-messages
+{
+    background-image: url("/images/common/admin/dashboard-icon-smmmessage-hover.png");
+}
+
+body .admin .icons .icon .image.dashboard-smm-streams
+{
+    background-image: url("/images/common/admin/dashboard-icon-smmstream.png");
+}
+
+body .admin .icons .icon-border:hover .icon .image.dashboard-smm-streams
+{
+    background-image: url("/images/common/admin/dashboard-icon-smmstream-hover.png");
+}
+
+
+
+
+
 body .admin .icons .icon .label
 {
     color: #b4b5b8;
