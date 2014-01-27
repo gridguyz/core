@@ -258,7 +258,7 @@ return array (
   'paragraph.snippet.resource' => 'Snippets',
   'paragraph.snippet.type.css' => 'CSS - stylesheet',
   'paragraph.snippet.type.js' => 'JavaScript',
-  'paragraph.type-group.basic' => 'Basic',
+  'paragraph.type-group.basic' => 'Core Functions',
   'paragraph.type-group.central' => 'Central-related',
   'paragraph.type-group.code' => 'Code',
   'paragraph.type-group.container' => 'Container',
