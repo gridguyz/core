@@ -105,6 +105,7 @@ $list->runin( function ( $paragraph ) use ( $view ) { ?>
         </a></li>
 <?php endif ?>
 <?php if ( $content instanceof StructureInterface &&
+           $view->isAllowed( 'paragraph.layout', 'create' ) &&
            ( $content->isEditable() ||
              $view->isAllowed( 'paragraph.content', 'changeLayout' ) ) ): ?>
 

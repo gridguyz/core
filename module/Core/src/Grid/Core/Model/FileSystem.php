@@ -273,6 +273,15 @@ class FileSystem implements CallableInterface,
             );
         }
 
+        if ( $this->permissions->isAllowed( 'uploads', 'manage' ) )
+        {
+            return $this->rightsCache[$path] = (object) array(
+                'read'   => true,
+                'write'  => true,
+                'delete' => true,
+            );
+        }
+
         if ( empty( $path ) )
         {
             $res = 'uploads.*';
