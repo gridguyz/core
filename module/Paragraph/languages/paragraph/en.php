@@ -115,7 +115,7 @@ return array (
   'paragraph.form.customize.css.borderTopRightRadius' => 'Border top-right radius',
   'paragraph.form.customize.css.borderTopStyle' => 'Border-top style',
   'paragraph.form.customize.css.borderTopWidth' => 'Border-top width',
-  'paragraph.form.customize.css.color' => 'Color',
+  'paragraph.form.customize.css.color' => 'Font color',
   'paragraph.form.customize.css.float' => 'Floating',
   'paragraph.form.customize.css.fontFamily' => 'Font-family',
   'paragraph.form.customize.css.fontSize' => 'Font-size',
