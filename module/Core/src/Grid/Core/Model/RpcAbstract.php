@@ -146,9 +146,14 @@ abstract class RpcAbstract
             return self::INVALID_REQUEST;
         }
 
+        $requestMimes = implode( '|', array(
+            static::$requestMime,
+            preg_quote( '*/*', '#' ),
+        ) );
+
         foreach ( explode( ',', $accept->getFieldValue() ) as $acceptType )
         {
-            if ( preg_match( '#^' . static::$requestMime . '(;.*)?$#',
+            if ( preg_match( '#^(' . $requestMimes . ')(;.*)?$#',
                  trim( $acceptType ) ) )
             {
                 return null;

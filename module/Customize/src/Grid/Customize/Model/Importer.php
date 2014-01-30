@@ -278,10 +278,10 @@ class Importer implements SiteInfoAwareInterface
      * Import paragraph's customize from a zip file
      *
      * @param string $file
-     * @param int $paragraphId
+     * @param int $rootParagraphId
      * @return string
      */
-    public function import( $file, $paragraphId )
+    public function import( $file, $rootParagraphId )
     {
         if ( ! is_file( $file ) )
         {
@@ -326,7 +326,7 @@ class Importer implements SiteInfoAwareInterface
             ) );
         }
 
-        $this->addCssByRoot( $dir, 'layout.css', $paragraphId );
+        $this->addCssByRoot( $dir, 'layout.css', $rootParagraphId );
         $this->addCssByRoot( $dir, 'general.css', null );
         $this->moveContents( $dir, 'extra.css', false );
         $this->moveContents( $dir, 'resources', true );

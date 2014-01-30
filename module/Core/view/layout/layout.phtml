@@ -3,9 +3,6 @@
 use Zork\Stdlib\Message;
 use Zork\Mvc\Controller\Plugin\MiddleLayoutInterface;
 
-$siteInfo = $this->siteInfo();
-$uploads  = '/uploads/' . $siteInfo->getSchema();
-
 if ( ! empty( $this->middleLayout ) &&
      $this->middleLayout instanceof MiddleLayoutInterface )
 {
@@ -34,41 +31,50 @@ $this->openGraph()
                                 ->slice( 0, 1 ),
      ) );
 
+$siteInfo   = $this->siteInfo();
+$indent     = '        ';
+
 ?>
 <?= $this->doctype() ?>
 
 <html lang="<?= $this->escapeHtmlAttr( $this->locale()->toIso() ) ?>">
     <head prefix="<?= $this->escapeHtmlAttr( $this->openGraph()->getPrefixAttribute() ) ?>">
         <meta charset="utf-8" />
-        <?= $this->headTitle() ?>
+<?= $this->headTitle()
+         ->toString( $indent ) ?>
 
-        <?= $this->headMeta()
-                 ->appendName( 'zork:locale',     (string) $this->locale()     )
-                 ->appendName( 'zork:userlocale', (string) $this->userLocale() )
-                 ->appendName( 'zork:uploads',    $uploads                     )
-                 ->appendName( 'zork:domain',     $siteInfo->getDomain()       )
-        ?>
+<?= $this->headMeta()
+         ->appendName( 'zork:locale', (string) $this->locale() )
+         ->appendName( 'zork:userlocale', (string) $this->userLocale() )
+         ->appendName( 'zork:uploads', '/uploads/' . $siteInfo->getSchema() )
+         ->appendName( 'zork:domain', $siteInfo->getDomain() )
+         ->toString( $indent )
+?>
 
-        <?= $this->headLink() ?>
+<?= $this->headLink()
+         ->toString( $indent ) ?>
 
-        <?= $this->headScript() ?>
+<?= $this->headScript()
+         ->toString( $indent ) ?>
 
     </head>
     <body>
         <?= $content ?>
 
-        <?= $this->inlineScript() ?>
+<?= $this->inlineScript()
+         ->toString( $indent )?>
 
-        <?php foreach ( $this->messenger() as $message ): ?>
-            <div class="ui-helper-hidden" data-js-type="<?=
-                    Message::LEVEL_INFO === $message->getLevel()
-                    ? 'zork.ui.message' : 'zork.ui.dialog'; ?>">
-                <?php if ( $message->hasTranslations() ): ?>
-                    <?= $this->translate( $message->getMessage(), $message->getTextDomain() ) ?>
-                <?php else: ?>
-                    <?= $message->getMessage() ?>
-                <?php endif ?>
-            </div>
-        <?php endforeach ?>
+<?php foreach ( $this->messenger() as $message ): ?>
+        <div class="ui-helper-hidden" data-js-type="<?=
+                Message::LEVEL_INFO === $message->getLevel()
+                ? 'zork.ui.message' : 'zork.ui.dialog'; ?>">
+<?php if ( $message->hasTranslations() ): ?>
+                <?= $this->translate( $message->getMessage(), $message->getTextDomain() ) ?>
+<?php else: ?>
+                <?= $message->getMessage() ?>
+<?php endif ?>
+
+        </div>
+<?php endforeach ?>
     </body>
 </html>

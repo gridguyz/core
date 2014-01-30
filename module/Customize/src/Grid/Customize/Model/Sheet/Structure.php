@@ -370,8 +370,8 @@ class Structure extends MapperAwareAbstract
 
         foreach ( $this->rules as $rule )
         {
-            $sql .= 'INSERT INTO "' . strtr( $schema, array( '"' => '""' ) ) . '"."customize_rule" ("paragraphId", "selector", "media")' . self::RENDER_EOL;
-            $sql .= '     VALUES (' . ( empty( $rule->paragraphId ) ? 'NULL' : (int) $rule->paragraphId ) . ', \'' . strtr( $rule->selector, array( '\'' => '\'\'' ) ) . '\', \'' . strtr( $rule->media, array( '\'' => '\'\'' ) ) . '\');' . self::RENDER_EOL . self::RENDER_EOL;
+            $sql .= 'INSERT INTO "' . strtr( $schema, array( '"' => '""' ) ) . '"."customize_rule" ("rootParagraphId", "selector", "media")' . self::RENDER_EOL;
+            $sql .= '     VALUES (' . ( empty( $rule->rootParagraphId ) ? 'NULL' : (int) $rule->rootParagraphId ) . ', \'' . strtr( $rule->selector, array( '\'' => '\'\'' ) ) . '\', \'' . strtr( $rule->media, array( '\'' => '\'\'' ) ) . '\');' . self::RENDER_EOL . self::RENDER_EOL;
 
             $rawPropertyNames = $rule->getRawPropertyNames();
 

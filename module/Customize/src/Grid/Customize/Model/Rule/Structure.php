@@ -88,11 +88,11 @@ class Structure extends MapperAwareAbstract
     protected $selector = self::SELECTOR_ALL;
 
     /**
-     * Paragraph id, to which bounded
+     * Root paragraph id, to which bounded
      *
      * @var int
      */
-    protected $paragraphId = null;
+    protected $rootParagraphId = null;
 
     /**
      * Properties data
@@ -127,24 +127,24 @@ class Structure extends MapperAwareAbstract
 
         $matches = array();
 
-        if ( empty( $this->paragraphId ) &&
+        if ( empty( $this->rootParagraphId ) &&
              preg_match( '/#paragraph-(\d+)/', $selector, $matches ) )
         {
-            $this->setParagraphId( $matches[1] );
+            $this->setRootParagraphId( $matches[1] );
         }
 
         return $this;
     }
 
     /**
-     * Set paragraph id, to which bounded
+     * Set root paragraph id, to which bounded
      *
      * @param int $id
      * @return \Customize\Model\Rule\Structure
      */
-    public function setParagraphId( $id )
+    public function setRootParagraphId( $id )
     {
-        $this->paragraphId = ( (int) $id ) ?: null;
+        $this->rootParagraphId = ( (int) $id ) ?: null;
         return $this;
     }
 

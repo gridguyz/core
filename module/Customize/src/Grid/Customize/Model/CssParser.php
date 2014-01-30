@@ -48,9 +48,6 @@ class CssParser
         $this->buffer = @ file_get_contents( $file );
         $this->acceptBom();
 
-        /* remove comments like this */
-        $this->buffer = preg_replace( '#/\\*.*?\\*/#s', '', $this->buffer );
-
         while ( ! empty( $this->buffer ) )
         {
             $this->acceptEntry( $sheet );
@@ -67,6 +64,25 @@ class CssParser
     protected function acceptBom()
     {
         $this->buffer = ltrim( $this->buffer, "\xEF\xBB\xBF" );
+    }
+
+    /**
+     * Accept white-space & comments
+     *
+     * @param   string  $additional
+     * @return  void
+     */
+    public function acceptWhiteSpace( $additional = '' )
+    {
+        $this->buffer = ltrim( $this->buffer, self::WHITE_SPACE . $additional );
+
+        while ( substr( $this->buffer, 0, 2 ) == '/*' )
+        {
+            $this->buffer = ltrim(
+                preg_replace( '#/\*.*?\*/s#', '', $this->buffer ),
+                self::WHITE_SPACE . $additional
+            );
+        }
     }
 
     /**
@@ -162,16 +178,19 @@ class CssParser
     {
         if ( 'url' == strtolower( substr( $this->buffer, 0, 3 ) ) )
         {
-            $this->buffer = ltrim( substr( $this->buffer, 3 ), self::WHITE_SPACE );
+            $this->buffer = substr( $this->buffer, 3 );
+            $this->acceptWhiteSpace();
 
             if ( '(' == $this->buffer[0] )
             {
-                $this->buffer = ltrim( substr( $this->buffer, 1 ), self::WHITE_SPACE );
-                $result = strtolower( $this->acceptString( ')' ) );
+                $this->buffer = substr( $this->buffer, 1 );
+                $this->acceptWhiteSpace();
+                $result = $this->acceptString( ')' );
 
                 if ( ')' == $this->buffer[0] )
                 {
-                    $this->buffer = ltrim( substr( $this->buffer, 1 ), self::WHITE_SPACE );
+                    $this->buffer = substr( $this->buffer, 1 );
+                    $this->acceptWhiteSpace();
                 }
 
                 return $result;
@@ -201,7 +220,12 @@ class CssParser
                 $result        .= '"';
                 $this->buffer  = substr( $this->buffer, 1 );
 
-                if ( preg_match( '/^.*?[^\\\\]"/', $this->buffer, $matches ) )
+                if ( $this->buffer && '"' == $this->buffer[0] )
+                {
+                    $result        .= '"';
+                    $this->buffer   = substr( $this->buffer, 1 );
+                }
+                else if ( preg_match( '/^.*?[^\\\\]"/', $this->buffer, $matches ) )
                 {
                     $result        .= $matches[0];
                     $this->buffer   = substr( $this->buffer, strlen( $matches[0] ) );
@@ -240,10 +264,11 @@ class CssParser
     protected function acceptProperty( Rule\Structure & $rule )
     {
         @ list( $name, $this->buffer ) = explode( ':', $this->buffer, 2 );
-        $this->buffer   = ltrim( $this->buffer, self::WHITE_SPACE );
-        $name           = rtrim( $name, self::WHITE_SPACE );
-        $value          = $this->acceptSafeValue();
-        $matches        = array();
+        $this->acceptWhiteSpace();
+
+        $name       = rtrim( $name, self::WHITE_SPACE );
+        $value      = $this->acceptSafeValue();
+        $matches    = array();
 
         if ( preg_match( '/!([a-z]+)$/', $value, $matches ) )
         {
@@ -269,7 +294,7 @@ class CssParser
      */
     protected function acceptEntry( Sheet\Structure & $sheet )
     {
-        $this->buffer = ltrim( $this->buffer, self::WHITE_SPACE . ';' );
+        $this->acceptWhiteSpace( ';' );
 
         if ( ! empty( $this->buffer ) )
         {
@@ -278,8 +303,9 @@ class CssParser
                 case '@':
                     if ( '@charset' == strtolower( substr( $this->buffer, 0, 8 ) ) )
                     {
-                        $this->buffer   = ltrim( substr( $this->buffer, 8 ), self::WHITE_SPACE );
-                        $charset        = $this->acceptString();
+                        $this->buffer = substr( $this->buffer, 8 );
+                        $this->acceptWhiteSpace();
+                        $charset = $this->acceptString();
 
                         if ( 'utf-8' != $charset )
                         {
@@ -300,18 +326,20 @@ class CssParser
                     }
                     else if ( '@import' == strtolower( substr( $this->buffer, 0, 7 ) ) )
                     {
-                        $this->buffer = ltrim( substr( $this->buffer, 7 ), self::WHITE_SPACE );
+                        $this->buffer = substr( $this->buffer, 7 );
+                        $this->acceptWhiteSpace();
                         $sheet->addImport( $this->acceptUrl() );
                     }
                     else if ( '@media' == strtolower( substr( $this->buffer, 0, 6 ) ) )
                     {
-                        $this->buffer = ltrim( substr( $this->buffer, 6 ), self::WHITE_SPACE );
+                        $this->buffer = substr( $this->buffer, 6 );
+                        $this->acceptWhiteSpace();
 
                         list( $media,
                               $this->buffer ) = explode( '{', $this->buffer, 2 );
 
-                        $this->buffer = ltrim( $this->buffer, self::WHITE_SPACE );
-                        $media        = preg_replace(
+                        $this->acceptWhiteSpace();
+                        $media = preg_replace(
                             '/\s+/', ' ',
                             rtrim( $media, self::WHITE_SPACE )
                         );
@@ -331,7 +359,8 @@ class CssParser
                     break;
 
                 case '}':
-                    $this->buffer = ltrim( substr( $this->buffer, 1 ), self::WHITE_SPACE );
+                    $this->buffer = substr( $this->buffer, 1 );
+                    $this->acceptWhiteSpace();
 
                     if ( ! empty( $this->media ) )
                     {
@@ -347,8 +376,8 @@ class CssParser
                     list( $selector,
                           $this->buffer ) = explode( '{', $this->buffer, 2 );
 
-                    $this->buffer   = ltrim( $this->buffer, self::WHITE_SPACE );
-                    $rule           = new Rule\Structure( array(
+                    $this->acceptWhiteSpace();
+                    $rule = new Rule\Structure( array(
                         'media'     => end( $this->media ),
                         'selector'  => preg_replace(
                             '/\s+/', ' ',
@@ -358,7 +387,7 @@ class CssParser
 
                     while ( true )
                     {
-                        $this->buffer = ltrim( $this->buffer, self::WHITE_SPACE . ';' );
+                        $this->acceptWhiteSpace( ';' );
 
                         if ( empty( $this->buffer ) )
                         {

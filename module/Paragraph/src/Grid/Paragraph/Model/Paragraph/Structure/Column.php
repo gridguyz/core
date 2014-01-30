@@ -86,7 +86,7 @@ class Column extends AbstractContainer
                 $rule::PRIORITY_IMPORTANT
             );
 
-            $rule->paragraphId = $id;
+            $rule->rootParagraphId = $this->getRootId() ?: $id;
             $rows += $rule->save();
         }
 

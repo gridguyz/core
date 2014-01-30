@@ -47,6 +47,11 @@ class Structure extends MapperAwareAbstract
      */
     public function setRule( Rule\Structure $rule, $key = null )
     {
+        if ( $this->paragraph && ( $rootId = $this->paragraph->getRootId() ) )
+        {
+            $rule->setRootParagraphId( $rootId );
+        }
+
         if ( empty( $key ) )
         {
             $this->rules[] = $rule;

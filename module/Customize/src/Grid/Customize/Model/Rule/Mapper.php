@@ -41,10 +41,10 @@ class Mapper extends ReadWriteMapperAbstract
      * @var array
      */
     protected static $columns = array(
-        'id'            => self::INT,
-        'media'         => self::STR,
-        'selector'      => self::STR,
-        'paragraphId'   => self::INT,
+        'id'                => self::INT,
+        'media'             => self::STR,
+        'selector'          => self::STR,
+        'rootParagraphId'   => self::INT,
     );
 
     /**
@@ -133,17 +133,12 @@ class Mapper extends ReadWriteMapperAbstract
                                   $joins        = null,
                                   $quantifier   = null )
     {
-        $table = $this->getTableInSchema( 'paragraph' );
         $joins = array_merge( (array) $joins, array(
-            'paragraph' => array(
-                'table'     => $table,
-                'where'     => 'customize_rule.paragraphId = paragraph.id',
-                'type'      => Sql\Select::JOIN_LEFT,
-                'columns'   => array(),
-            ),
-            'root'      => array(
-                'table'     => array( 'root' => $table ),
-                'where'     => 'paragraph.rootId = root.id',
+            'rootParagraph' => array(
+                'table'     => array(
+                    'rootParagraph' => $this->getTableInSchema( 'paragraph' )
+                ),
+                'where'     => 'customize_rule.rootParagraphId = rootParagraph.id',
                 'type'      => Sql\Select::JOIN_LEFT,
                 'columns'   => array(
                     'rootType'  => 'type',
@@ -411,20 +406,13 @@ class Mapper extends ReadWriteMapperAbstract
         if ( empty( $rootId ) )
         {
             $where = array(
-                new Predicate\IsNull( 'paragraphId' )
+                new Predicate\IsNull( 'rootParagraphId' )
             );
         }
         else
         {
-            $select->join(
-                $this->getTableInSchema( 'paragraph' ),
-                'paragraph.id = customize_rule.paragraphId',
-                array(),
-                Sql\Select::JOIN_LEFT
-            );
-
             $where = array(
-                'paragraph.rootId' => (int) $rootId,
+                'rootParagraphId' => (int) $rootId,
             );
         }
 
@@ -459,20 +447,14 @@ class Mapper extends ReadWriteMapperAbstract
         if ( null === $rootId )
         {
             $where = array( new Predicate\IsNull(
-                'paragraphId'
+                'rootParagraphId'
             ) );
         }
         else
         {
-            $where = array( new Predicate\In(
-                'paragraphId',
-                $this->sql( $this->getTableInSchema( 'paragraph' ) )
-                     ->select()
-                     ->columns( array( 'id' ) )
-                     ->where( array(
-                         'rootId' => $rootId,
-                     ) )
-            ) );
+            $where = array(
+                'rootParagraphId' => (int) $rootId,
+            );
         }
 
         $delete = $this->sql()

@@ -210,11 +210,11 @@ class Exporter implements SiteInfoAwareInterface
      * Export paragraph's customize into a zip file
      *
      * @param string $url
-     * @param int $paragraphId
+     * @param int $rootParagraphId
      * @param int $contentId
      * @return string
      */
-    public function export( $url, $paragraphId, $contentId = null )
+    public function export( $url, $rootParagraphId, $contentId = null )
     {
         $info   = $this->getSiteInfo();
         $domain = $info->getFulldomain();
@@ -258,7 +258,7 @@ class Exporter implements SiteInfoAwareInterface
         }
 
         $added = $this->addCssByRoot( $zip, 'general.css', null ) || $added;
-        $added = $this->addCssByRoot( $zip, 'layout.css', $paragraphId ) || $added;
+        $added = $this->addCssByRoot( $zip, 'layout.css', $rootParagraphId ) || $added;
 
         if ( ! empty( $contentId ) )
         {
