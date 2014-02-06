@@ -116,64 +116,8 @@ class Model implements LocaleAwareInterface,
             return null;
         }
 
-        $last       = null;
-        $cache      = array();
-        $root       = new Navigation\Navigation;
-        $depthList  = new DepthList( $renderList );
-
-        $depthList->runin(
-            function ( $menu, $parent ) use ( & $cache, & $root )
-            {
-                $container = $root;
-                $cache[$menu->id] = new Navigation\Page\Uri( array(
-                    'label'         => $menu->getLabel() ?: '#',
-                    'target'        => $menu->getTarget(),
-                    'visible'       => $menu->isVisible(),
-                    'uri'           => '#',
-                    'priority'      => 1,
-                    'changefreq'    => 'never',
-                ) );
-
-                if ( $parent )
-                {
-                    $parent->addChild( $menu );
-
-                    if ( isset( $cache[$parent->id] ) )
-                    {
-                        $container = $cache[$parent->id];
-
-                        $cache[$menu->id]->set(
-                            'priority',
-                            $container->get( 'priority' ) * 0.8
-                        );
-                    }
-                }
-
-                $container->addPage( $cache[$menu->id] );
-            },
-            function ( $menu ) use ( & $cache, & $last )
-            {
-                $uri  = $menu->getUri();
-                $last = $cache[$menu->id]->setUri( $uri );
-
-                if ( $menu->hasChildren() )
-                {
-                    $last->setClass( 'has-children' );
-                }
-
-                if ( $menu->isActive() )
-                {
-                    $last->setActive( true );
-                }
-
-                if ( ! empty( $uri ) && $uri[0] !== '#' )
-                {
-                    $last->set( 'changefreq', 'always' );
-                }
-            }
-        );
-
-        return null === $id ? $root : $last;
+        $convert = new ConvertToNavigation( $renderList );
+        return null === $id ? $convert->getRoot() : $convert->getLast();
     }
 
     /**
