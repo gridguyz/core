@@ -48,7 +48,7 @@ return array (
   'admin.menu.editLayout' => 'Elrendezés szerkesztése',
   'admin.menu.fileManager' => 'Fájl-kezelés',
   'admin.menu.importContent.predefined' => 'Elődefiniált oldalak',
-  'admin.menu.newContent' => 'Új tartalom',
+  'admin.menu.newContent' => 'Új oldal',
   'admin.menu.newParagraph' => 'Új paragrafus',
   'admin.menu.siteSettings' => 'Oldalbeállítások',
   'admin.menu.title' => 'Adminisztráció',
