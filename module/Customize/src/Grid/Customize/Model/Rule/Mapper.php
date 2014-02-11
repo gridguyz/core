@@ -5,6 +5,7 @@ namespace Grid\Customize\Model\Rule;
 use Zend\Db\Sql;
 use Zend\Db\Sql\Predicate;
 use Zork\Db\Sql\Predicate\NotIn;
+use Core\Customize\Model\Extra\Mapper as ExtraMapper;
 use Zork\Model\Mapper\DbAware\ReadWriteMapperAbstract;
 
 /**
@@ -48,12 +49,38 @@ class Mapper extends ReadWriteMapperAbstract
     );
 
     /**
+     * @var ExtraMapper
+     */
+    protected $extraMapper;
+
+    /**
+     * @return ExtraMapper
+     */
+    public function getExtraMapper()
+    {
+        return $this->extraMapper;
+    }
+
+    /**
+     * @param ExtraMapper $extraMapper
+     * @return \Grid\Customize\Model\Rule\Mapper
+     */
+    public function setExtraMapper( ExtraMapper $extraMapper )
+    {
+        $this->extraMapper = $extraMapper;
+        return $this;
+    }
+
+    /**
      * Contructor
      *
+     * @param ExtraMapper $customizeExtraMapper
      * @param \Customize\Model\Rule\Structure $customizeRuleStructurePrototype
      */
-    public function __construct( Structure $customizeRuleStructurePrototype = null )
+    public function __construct( ExtraMapper $customizeExtraMapper,
+                                 Structure $customizeRuleStructurePrototype = null )
     {
+        $this->setExtraMapper( $customizeExtraMapper );
         parent::__construct( $customizeRuleStructurePrototype ?: new Structure );
     }
 
@@ -385,6 +412,18 @@ class Mapper extends ReadWriteMapperAbstract
             'selector'  => (string) $selector,
             'media'     => (string) $media,
         ) );
+    }
+
+    /**
+     * @param   int|null $rootId
+     * @return  string|null
+     */
+    public function findExtraByRoot( $rootId = null )
+    {
+        $extra = $this->getExtraMapper()
+                      ->findByRoot( $rootId );
+
+        return empty( $extra ) ? null : $extra->extra;
     }
 
     /**

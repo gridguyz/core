@@ -18,11 +18,6 @@ class Model implements MapperAwareInterface
     use MapperAwareTrait;
 
     /**
-     * @var string
-     */
-    const EXTRA_IMPORT = './extra.css';
-
-    /**
      * Construct model
      *
      * @param \Customize\Model\Rule\Mapper $customizeRuleMapper
@@ -41,7 +36,6 @@ class Model implements MapperAwareInterface
     {
         return new Structure( array(
             'mapper'    => $this->getMapper(),
-            'imports'   => array( self::EXTRA_IMPORT ),
             'rules'     => $this->getMapper()
                                 ->findAll( array(), array(
                                     new Sql\Expression( 'CHAR_LENGTH( media ) ASC' ),
@@ -60,15 +54,17 @@ class Model implements MapperAwareInterface
      */
     public function findByRoot( $rootId = null )
     {
+        $mapper = $this->getMapper();
+
         return new Structure( array(
-            'mapper'    => $this->getMapper(),
-            'rules'     => $this->getMapper()
-                                ->findAllByRoot( $rootId, array(
-                                    new Sql\Expression( 'CHAR_LENGTH( media ) ASC' ),
-                                    new Sql\Expression( 'media DESC' ),
-                                    new Sql\Expression( 'CHAR_LENGTH( selector ) ASC' ),
-                                    new Sql\Expression( 'selector ASC' ),
-                                ) )
+            'mapper'    => $mapper,
+            'extra'     => $mapper->findExtraByRoot( $rootId ),
+            'rules'     => $mapper->findAllByRoot( $rootId, array(
+                new Sql\Expression( 'CHAR_LENGTH( media ) ASC' ),
+                new Sql\Expression( 'media DESC' ),
+                new Sql\Expression( 'CHAR_LENGTH( selector ) ASC' ),
+                new Sql\Expression( 'selector ASC' ),
+            ) )
         ) );
     }
 

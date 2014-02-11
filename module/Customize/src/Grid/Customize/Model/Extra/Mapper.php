@@ -3,172 +3,140 @@
 namespace Grid\Customize\Model\Extra;
 
 use Traversable;
-use Zork\Db\SiteInfo;
+use Zend\Db\Sql\Predicate;
 use Zend\Stdlib\ArrayUtils;
-use Zork\Db\SiteInfoAwareTrait;
-use Zork\Db\SiteInfoAwareInterface;
-use Zork\Model\MapperAwareInterface;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zork\Model\Mapper\DbAware\ReadWriteMapperAbstract;
 
 /**
- * Mapper
+ * Rule mapper
  *
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
-class Mapper implements HydratorInterface,
-                        SiteInfoAwareInterface
+class Mapper extends ReadWriteMapperAbstract
 {
 
-    use SiteInfoAwareTrait;
-
     /**
-     * @const string
-     */
-    const EXTRA_CSS_PATH_PATTERN = './public/uploads/%s/customize/extra.css';
-
-    /**
-     * Constructor
+     * Table name used in all queries
      *
-     * @param   \Zork\Db\SiteInfo   $siteInfo
+     * @var string
      */
-    public function __construct( SiteInfo $siteInfo )
+    protected static $tableName = 'customize_extra';
+
+    /**
+     * Default column-conversion functions as types;
+     * used in selected(), deselect()
+     *
+     * @var array
+     */
+    protected static $columns = array(
+        'id'                => self::INT,
+        'rootParagraphId'   => self::INT,
+        'extra'             => self::STR,
+        'updated'           => self::DATETIME,
+    );
+
+    /**
+     * Contructor
+     *
+     * @param \Customize\Model\Extra\Structure $customizeExtraStructurePrototype
+     */
+    public function __construct( Structure $customizeExtraStructurePrototype = null )
     {
-        $this->setSiteInfo( $siteInfo );
+        parent::__construct( $customizeExtraStructurePrototype ?: new Structure );
     }
 
     /**
-     * Get extra.css path
+     * Find structure by root paragraph
      *
-     * @return  string
+     * @param int|null $rootParagraphId
+     * @return \Customize\Model\Extra\Structure
      */
-    protected function getExtraCssPath()
+    public function findByRoot( $rootParagraphId )
     {
-        return sprintf(
-            static::EXTRA_CSS_PATH_PATTERN,
-            $this->getSiteInfo()
-                 ->getSchema()
-        );
-    }
-
-    /**
-     * Extract values from an object
-     *
-     * @param   object  $structure
-     * @return  array
-     */
-    public function extract( $structure )
-    {
-        if ( $structure instanceof Structure )
-        {
-            return $structure->toArray();
-        }
-
-        if ( $structure instanceof Traversable )
-        {
-            return ArrayUtils::iteratorToArray( $structure );
-        }
-
-        return (array) $structure;
-    }
-
-    /**
-     * Hydrate $object with the provided $data.
-     *
-     * @param   array   $data
-     * @param   object  $structure
-     * @return  object
-     */
-    public function hydrate( array $data, $structure )
-    {
-        if ( $structure instanceof Structure )
-        {
-            $structure->setOptions( $data );
-        }
-        else
-        {
-            foreach ( $data as $key => $value )
-            {
-                $structure->$key = $value;
-            }
-        }
-
-        if ( $structure instanceof MapperAwareInterface )
-        {
-            $structure->setMapper( $this );
-        }
-
-        return $structure;
-    }
-
-    /**
-     * Find (the only) structure
-     *
-     * @return  Structure
-     */
-    public function find()
-    {
-        $path = $this->getExtraCssPath();
-        $css  = '';
-
-        if ( is_file( $path ) )
-        {
-            $css = (string) @ file_get_contents( $path );
-        }
-
-        return new Structure( array(
-            'css'       => $css,
-            'mapper'    => $this,
+        return $this->findOne( array(
+            'rootParagraphId' => ( (int) $rootParagraphId ) ?: null,
         ) );
     }
 
     /**
-     * Save (the only) structure
+     * Find updated times
      *
-     * @param   Structure|array|string  $structureOrCss
-     * @return  int
+     * @param   array|int   $rootParagraphIds
+     * @param   bool|null   $global
+     * @return  DateTime[]
      */
-    public function save( $structureOrCss )
+    public function findUpdated( $rootParagraphIds, $global = null )
     {
-        if ( $structureOrCss instanceof Structure )
+        if ( $rootParagraphIds instanceof Traversable )
         {
-            $structureOrCss = $structureOrCss->css;
+            $rootParagraphIds = ArrayUtils::iteratorToArray( $rootParagraphIds );
+        }
+        else if ( ! is_array( $rootParagraphIds ) )
+        {
+            $rootParagraphIds = (array) $rootParagraphIds;
         }
 
-        if ( $structureOrCss instanceof Traversable )
+        if ( null === $global && in_array( null, $rootParagraphIds ) )
         {
-            $structureOrCss = ArrayUtils::iteratorToArray( $structureOrCss );
+            $global = true;
         }
 
-        if ( is_array( $structureOrCss ) )
+        $rootParagraphIds = array_filter( $rootParagraphIds );
+
+        if ( $global )
         {
-            if ( array_key_exists( 'css', $structureOrCss ) )
-            {
-                $structureOrCss = (string) $structureOrCss['css'];
-            }
-            else
-            {
-                $structureOrCss = (string) reset( $structureOrCss );
-            }
+            $where = array(
+                new Predicate\PredicateSet(
+                    array(
+                        new Predicate\IsNull( 'rootParagraphId' ),
+                        new Predicate\In( 'rootParagraphId', $rootParagraphIds ),
+                    ),
+                    Predicate\PredicateSet::COMBINED_BY_OR
+                ),
+            );
         }
         else
         {
-            $structureOrCss = (string) $structureOrCss;
+            $where = array(
+                'rootParagraphId' => $rootParagraphIds,
+            );
         }
 
-        return (int) @ file_put_contents(
-            $this->getExtraCssPath(),
-            $structureOrCss
-        );
-    }
+        $sql        = $this->sql();
+        $platform   = $sql->getAdapter()
+                          ->getPlatform();
+        $select     = $sql->select()
+                          ->columns( array( 'rootParagraphId', 'updated' ) )
+                          ->where( $where )
+                          ->order( array(
+                              'COALESCE( '
+                                . $platform->quoteIdentifier( 'rootParagraphId' )
+                                . ', 0 ) ASC'
+                          ) );
 
-    /**
-     * Delete (the only) structure by overwriting it with the default
-     *
-     * @return  int
-     */
-    public function delete()
-    {
-        return $this->save( new Structure );
+        /* @var $result \Zend\Db\Adapter\Driver\ResultInterface */
+
+        $result = $this->sql()
+                       ->prepareStatementForSqlObject( $select )
+                       ->execute();
+
+        $affected = $result->getAffectedRows();
+
+        if ( $affected < 1 )
+        {
+            return array();
+        }
+
+        $updated = array();
+
+        foreach ( $result as $row )
+        {
+            $updated[$row['rootParagraphId']] = DateTime::create(
+                $row['updated']
+            );
+        }
+
+        return $updated;
     }
 
 }

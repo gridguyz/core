@@ -38,6 +38,13 @@ class Structure extends MapperAwareAbstract
     protected $rules = array();
 
     /**
+     * Extra css
+     *
+     * @var string
+     */
+    protected $extra;
+
+    /**
      * Get all imports
      *
      * @param array $imports
@@ -97,6 +104,16 @@ class Structure extends MapperAwareAbstract
     }
 
     /**
+     * @param   string  $extra
+     * @return  \Grid\Customize\Model\Sheet\Structure
+     */
+    public function setExtra( $extra )
+    {
+        $this->extra = trim( $extra );
+        return $this;
+    }
+
+    /**
      * Render line
      *
      * @param   null|resource   $handle
@@ -106,7 +123,7 @@ class Structure extends MapperAwareAbstract
      */
     protected function renderLine( $handle, $line, $result )
     {
-        $write = $line . self::RENDER_EOL;
+        $write = $line . static::RENDER_EOL;
 
         if ( $handle )
         {
@@ -159,7 +176,7 @@ class Structure extends MapperAwareAbstract
         }
 
         if ( $this->renderLine( $handle,
-                                '@charset "' . strtr( self::RENDER_CHARSET,
+                                '@charset "' . strtr( static::RENDER_CHARSET,
                                                       $escape ) . '";',
                                 $result ) )
         {
@@ -222,7 +239,7 @@ class Structure extends MapperAwareAbstract
                 if ( $media )
                 {
                     if ( $this->renderLine( $handle,
-                                            '}' . self::RENDER_EOL,
+                                            '}' . static::RENDER_EOL,
                                             $result ) )
                     {
                         if ( $handle )
@@ -242,7 +259,7 @@ class Structure extends MapperAwareAbstract
                 $media = $newMedia;
 
                 if ( $this->renderLine( $handle,
-                                        '@media ' . $media . self::RENDER_EOL . '{',
+                                        '@media ' . $media . static::RENDER_EOL . '{',
                                         $result ) )
                 {
                     if ( $handle )
@@ -266,7 +283,7 @@ class Structure extends MapperAwareAbstract
                 if ( $this->renderLine( $handle,
                                         ( $media ? "\t" : '' ) .
                                         $rule->selector .
-                                        self::RENDER_EOL .
+                                        static::RENDER_EOL .
                                         ( $media ? "\t" : '' ) . '{',
                                         $result ) )
                 {
@@ -308,7 +325,7 @@ class Structure extends MapperAwareAbstract
 
                 if ( $this->renderLine( $handle,
                                         ( $media ? "\t" : '' ) .
-                                        '}' . self::RENDER_EOL,
+                                        '}' . static::RENDER_EOL,
                                         $result ) )
                 {
                     if ( $handle )
@@ -344,67 +361,32 @@ class Structure extends MapperAwareAbstract
             }
         }
 
+        if ( $this->extra )
+        {
+            $extra = static::RENDER_EOL . $this->extra;
+
+            if ( $this->renderLine( $handle, $extra, $result ) )
+            {
+                if ( $handle )
+                {
+                    @ fclose( $handle );
+
+                    if ( $path )
+                    {
+                        @ unlink( $path );
+                    }
+                }
+
+                return $result;
+            }
+        }
+
         if ( $handle )
         {
             @ fclose( $handle );
         }
 
         return $result;
-    }
-
-    /**
-     * Render rules to a css-file
-     *
-     * @param string $schema
-     * @return \Customize\Model\Sheet\Structure
-     */
-    public function _toSql( $schema )
-    {
-        $sql    = '';
-        $schema = $schema ?: '_central';
-
-        foreach ( $this->imports as $import )
-        {
-            $sql .= '-- import ' . $import . self::RENDER_EOL;
-        }
-
-        foreach ( $this->rules as $rule )
-        {
-            $sql .= 'INSERT INTO "' . strtr( $schema, array( '"' => '""' ) ) . '"."customize_rule" ("rootParagraphId", "selector", "media")' . self::RENDER_EOL;
-            $sql .= '     VALUES (' . ( empty( $rule->rootParagraphId ) ? 'NULL' : (int) $rule->rootParagraphId ) . ', \'' . strtr( $rule->selector, array( '\'' => '\'\'' ) ) . '\', \'' . strtr( $rule->media, array( '\'' => '\'\'' ) ) . '\');' . self::RENDER_EOL . self::RENDER_EOL;
-
-            $rawPropertyNames = $rule->getRawPropertyNames();
-
-            if ( ! empty( $rawPropertyNames ) )
-            {
-                $sql .= 'INSERT INTO "_central"."customize_property" ("ruleId", "name", "value", "priority")' . self::RENDER_EOL;
-                $sql .= '     VALUES ';
-                $first = true;
-
-                foreach ( $rawPropertyNames as $propery )
-                {
-                    if ( $first )
-                    {
-                        $first = false;
-                    }
-                    else
-                    {
-                        $sql .= ',' . self::RENDER_EOL . '            ';
-                    }
-
-                    $value = $rule->getRawPropertyValue( $propery );
-                    $prio  = $rule->getRawPropertyPriority( $propery );
-                    $sql .= '(currval(\'' . strtr( $schema, array( '"' => '""' ) ) . '.customize_rule_id_seq\'), \'' .
-                            strtr( $propery, array( '\'' => '\'\'' ) ) . '\', \'' .
-                            strtr( $value, array( '\'' => '\'\'' ) ) . '\', ' .
-                            ( empty( $prio ) ? 'NULL' : '\'' . strtr( $prio, array( '\'' => '\'\'' ) ) . '\'' ) . ')';
-                }
-
-                $sql .= ';' . self::RENDER_EOL . self::RENDER_EOL . self::RENDER_EOL;
-            }
-        }
-
-        return $sql;
     }
 
 }

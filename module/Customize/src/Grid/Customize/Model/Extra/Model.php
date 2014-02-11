@@ -6,7 +6,7 @@ use Zork\Model\MapperAwareTrait;
 use Zork\Model\MapperAwareInterface;
 
 /**
- * Extra css model
+ * Customize-rule
  *
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
@@ -18,7 +18,7 @@ class Model implements MapperAwareInterface
     /**
      * Construct model
      *
-     * @param \Customize\Model\Rule\Mapper $customizeExtraMapper
+     * @param \Customize\Model\Extra\Mapper $customizeExtraMapper
      */
     public function __construct( Mapper $customizeExtraMapper )
     {
@@ -26,26 +26,98 @@ class Model implements MapperAwareInterface
     }
 
     /**
-     * Find (the only) structure
+     * Create a rule
      *
-     * @return  Structure
+     * @param array|\Traversable $data
+     * @return \Customize\Model\Extra\Structure
      */
-    public function find()
+    public function create( $data )
     {
         return $this->getMapper()
-                    ->find();
+                    ->create( $data );
     }
 
     /**
-     * Save (the only) structure
+     * Get customize extra by id
      *
-     * @param   Structure|array|string  $structureOrCss
-     * @return  int
+     * @param int $id
+     * @return \Customize\Model\Extra\Structure
      */
-    public function save( $structureOrCss )
+    public function find( $id )
     {
         return $this->getMapper()
-                    ->save( $structureOrCss );
+                    ->find( $id );
+    }
+
+    /**
+     * Get customize extra by selector & media
+     *
+     * @param int|null $rootParagraphId
+     * @return \Customize\Model\Extra\Structure
+     */
+    public function findByRoot( $rootParagraphId )
+    {
+        $root  = ( (int) $rootParagraphId ) ?: null;
+        $extra = $this->getMapper()
+                      ->findByRoot( $root );
+
+        if ( empty( $extra ) )
+        {
+            $extra = $this->getMapper()
+                          ->create( array(
+                              'rootParagraphId' => $root,
+                          ) );
+        }
+
+        return $extra;
+    }
+
+    /**
+     * Find updated times
+     *
+     * @param   array|int   $rootParagraphIds
+     * @param   bool|null   $global
+     * @return  \Zork\Stdlib\DateTime[]
+     */
+    public function findUpdated( $rootParagraphIds, $global = null )
+    {
+        return $this->getMapper()
+                    ->findUpdated( $rootParagraphIds, $global );
+    }
+
+    /**
+     * Save customize extra
+     *
+     * @param \Customize\Model\Extra\Structure $extra
+     * @return int
+     */
+    public function save( Structure $extra )
+    {
+        return $this->getMapper()
+                    ->save( $extra );
+    }
+
+    /**
+     * Delete customize extra
+     *
+     * @param \Customize\Model\Extra\Structure|int $extra object or id
+     * @return int
+     */
+    public function delete( $extra )
+    {
+        return $this->getMapper()
+                    ->delete( $extra );
+    }
+
+    /**
+     * Get paginator for listing
+     *
+     * @return \Zend\Paginator\Paginator
+     */
+    public function getPaginator()
+    {
+        return $this->getMapper()
+                    ->getPaginator();
     }
 
 }

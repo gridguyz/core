@@ -27,10 +27,10 @@ ALTER TABLE "_central"."customize_rule"
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION "_central"."customize_insert_update_rootParagraphId_trigger"()
-     RETURNS INTEGER
-         SET search_path FROM CURRENT
-    LANGUAGE plpgsql
-          AS $$
+                   RETURNS TRIGGER
+                       SET search_path FROM CURRENT
+                  LANGUAGE plpgsql
+                        AS $$
 BEGIN
 
     IF NEW."rootParagraphId" IS NOT NULL THEN

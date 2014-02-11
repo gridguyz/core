@@ -6,41 +6,15 @@ return array(
             'Grid\Customize\Render\CustomCss' => array(
                 'type' => 'Zend\Mvc\Router\Http\Regex',
                 'options' => array(
-                    'regex'     => '/uploads/(?P<schema>[^/]*)/customize/custom\.(?P<hash>[^\./]*)\.css',
-                    'spec'      => '/uploads/%schema%/customize/custom.%hash%.css',
+                    'regex'     => '/uploads/(?P<schema>[^/]*)/customize/custom\.(?P<id>[^\./]*)\.(?P<hash>[^\./]*)\.css',
+                    'spec'      => '/uploads/%schema%/customize/custom.%id%.%hash%.css',
                     'defaults'  => array(
                         'controller' => 'Grid\Customize\Controller\Render',
                         'action'     => 'custom-css',
+                        'id'         => 'global',
                     ),
                 ),
             ),
-         /* 'Grid\Customize\Render\FileToSql' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route'     => '/app/:locale/admin/customize/file-to-sql',
-                    'constraints'   => array(
-                        'locale'    => '\w+',
-                    ),
-                    'defaults'  => array(
-                        'controller' => 'Grid\Customize\Controller\Render',
-                        'action'     => 'file-to-sql',
-                    ),
-                ),
-            ), */
-         /* 'Grid\Customize\Render\DbToSql' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route'     => '/app/:locale/admin/customize/db-to-sql/:id',
-                    'constraints'   => array(
-                        'locale'    => '\w+',
-                        'id'        => '[1-9][0-9]*',
-                    ),
-                    'defaults'  => array(
-                        'controller' => 'Grid\Customize\Controller\Render',
-                        'action'     => 'db-to-sql',
-                    ),
-                ),
-            ), */
             'Grid\Customize\Admin\Create' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -68,7 +42,7 @@ return array(
                     ),
                 ),
             ),
-            'Grid\Customize\Admin\EditExtra' => array(
+         /* 'Grid\Customize\Admin\EditExtra' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'         => '/app/:locale/admin/customize/edit-extra',
@@ -80,7 +54,7 @@ return array(
                         'action'        => 'edit-extra',
                     ),
                 ),
-            ),
+            ), */
             'Grid\Customize\Admin\List' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -186,9 +160,7 @@ return array(
             ),
         ),
         'Grid\MultisiteCentral'  => array(
-            'uploadsFiles'  => array(
-                'customize/extra.css',
-            ),
+            'uploadsFiles'  => array(),
             'uploadsDirs'   => array(
                 'customize',
             ),
@@ -314,16 +286,6 @@ return array(
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
-        ),
-        'head_defaults'     => array(
-            'headLink'      => array(
-                'customize' => array(
-                    'rel'   => 'stylesheet',
-                    'type'  => 'text/css',
-                    'id'    => 'customizeStyleSheet',
-                    'href'  => '#customizeStyleSheet',
-                ),
-            ),
         ),
     ),
 );

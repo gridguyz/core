@@ -44,9 +44,7 @@ class Patch extends AbstractPatch
      *
      * @var array
      */
-    protected $uploadsFiles = array(
-        'customize/extra.css' => './uploads/central/customize/extra.css',
-    );
+    protected $uploadsFiles = array();
 
     /**
      * Run after patching
@@ -57,6 +55,14 @@ class Patch extends AbstractPatch
      */
     public function afterPatch( $from, $to )
     {
+        $schema = $this->getPatchData()
+                       ->get( 'db', 'schema' );
+
+        if ( is_array( $schema ) )
+        {
+            $schema = reset( $schema );
+        }
+
         if ( $this->isZeroVersion( $from ) )
         {
             $developer = $this->selectFromTable( 'user', 'id', array(
@@ -111,14 +117,6 @@ class Patch extends AbstractPatch
                 $subDomain = $this->insertDefaultSubDomain( $layout, $content );
             }
 
-            $schema = $this->getPatchData()
-                           ->get( 'db', 'schema' );
-
-            if ( is_array( $schema ) )
-            {
-                $schema = reset( $schema );
-            }
-
             if ( ! empty( $schema ) )
             {
                 foreach ( $this->uploadsDirs as $uploadsDir )
@@ -149,6 +147,26 @@ class Patch extends AbstractPatch
                         ) )
                     );
                 }
+            }
+        }
+        else if ( ! empty( $schema ) )
+        {
+            $extraCssFile = 'uploads/' . $schema . '/customize/extra.css';
+
+            if ( file_exists( $extraCssFile ) && is_readable( $extraCssFile ) )
+            {
+                $extraCss = preg_replace(
+                    '/^\s*@charset\s+(["\'][^"\']+["\']|[^;]+)\s*;\s+/',
+                    '',
+                    @ file_get_contents( $extraCssFile )
+                );
+
+                if ( ! empty( $extraCss ) )
+                {
+                    $this->appendCustomizeGlobalExtra( $extraCss );
+                }
+
+                @ unlink( $extraCssFile );
             }
         }
 
@@ -497,6 +515,42 @@ class Patch extends AbstractPatch
                 'defaultLayoutId'   => $layout,
                 'defaultContentId'  => $content,
             )
+        );
+    }
+
+    /**
+     * Append global extra css to customize
+     *
+     * @param   string  $globalExtraCss
+     * @return  bool
+     */
+    protected function appendCustomizeGlobalExtra( $globalExtraCss )
+    {
+        $where   = array( 'rootParagraphId' => null );
+        $current = $this->selectFromTable(
+            'customize_extra',
+            'extra',
+            $where
+        );
+
+        if ( null === $current )
+        {
+            return (bool) $this->insertIntoTable(
+                'customize_extra',
+                array(
+                    'rootParagraphId'   => null,
+                    'extra'             => $globalExtraCss,
+                ),
+                true
+            );
+        }
+
+        return (bool) $this->updateTable(
+            'customize_extra',
+            array(
+                'extra' => $current . "\n\n" . $globalExtraCss,
+            ),
+            $where
         );
     }
 

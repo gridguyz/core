@@ -2,10 +2,11 @@
 
 namespace Grid\Customize\Model\Extra;
 
+use Zork\Stdlib\DateTime;
 use Zork\Model\Structure\MapperAwareAbstract;
 
 /**
- * Structure
+ * Rule structure
  *
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
@@ -13,53 +14,81 @@ class Structure extends MapperAwareAbstract
 {
 
     /**
-     * @const string
+     * Customize extra id
+     *
+     * @var int
      */
-    const DEFAULT_CSS = '@charset "utf-8";';
+    protected $id = null;
 
     /**
-     * @const int
+     * Root paragraph id, to which bounded
+     *
+     * @var int
      */
-    const DEFAULT_CSS_MATCH_LENGTH = 8;
+    protected $rootParagraphId = null;
 
     /**
+     * Customize extra css
+     *
      * @var string
      */
-    protected $css;
+    protected $extra = '';
 
     /**
-     * Get css
+     * Customize extra updated
      *
-     * @return  string
+     * @var \DateTime
      */
-    public function getCss()
-    {
-        if ( empty( $this->css ) )
-        {
-            return static::DEFAULT_CSS . PHP_EOL . PHP_EOL;
-        }
+    protected $updated;
 
-        return $this->css;
+    /**
+     * Set root paragraph id, to which bounded
+     *
+     * @param int $id
+     * @return \Customize\Model\Rule\Structure
+     */
+    public function setRootParagraphId( $id )
+    {
+        $this->rootParagraphId = ( (int) $id ) ?: null;
+        return $this;
     }
 
     /**
-     * Set css
+     * Set extra
      *
-     * @param   string  $css
-     * @return  Structure
+     * @param string $extra
+     * @return \Customize\Model\Extra\Structure
      */
-    protected function setCss( $css )
+    public function setExtra( $extra )
     {
-        $css = trim( $css ) . PHP_EOL;
-        $len = static::DEFAULT_CSS_MATCH_LENGTH;
+        $this->extra = trim( (string) $extra );
+        return $this;
+    }
 
-        if ( strlen( $css ) < $len ||
-             substr( $css, 0, $len ) != substr( static::DEFAULT_CSS, 0, $len ) )
+    /**
+     * Get updated
+     *
+     * @return \Zork\Stdlib\DateTime
+     */
+    public function getUpdated()
+    {
+        if ( empty( $this->updated ) )
         {
-            $css = static::DEFAULT_CSS . PHP_EOL . PHP_EOL . $css;
+            return new DateTime;
         }
 
-        $this->css = $css;
+        return $this->updated;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param null|int|string|\DateTime|\Zork\Stdlib\DateTime $updated
+     * @return \Customize\Model\Rule\Structure
+     */
+    public function setUpdated( $updated )
+    {
+        $this->updated = DateTime::create( $updated, true );
         return $this;
     }
 

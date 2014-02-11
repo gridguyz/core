@@ -25,26 +25,49 @@ class RenderController extends AbstractActionController
      */
     public function customCssAction()
     {
-        $config = $this->getServiceLocator()
-                       ->get( 'Configuration' )
-                            [ 'view_manager' ]
-                            [ 'head_defaults' ];
+        /* @var $siteInfo \Zork\Db\SiteInfo */
+        /* @var $model \Grid\Customize\Model\Extra\Model */
+        /* @var $structure \Grid\Customize\Model\Extra\Structure */
+        $params     = $this->params();
+        $request    = $this->getRequest();
+        $id         = $params->fromRoute( 'id' );
+        $rootId     = is_numeric( $id ) ? (int) $id : null;
+        $schema     = $params->fromRoute( 'schema' );
+        $locator    = $this->getServiceLocator();
+        $siteInfo   = $locator->get( 'Zork\Db\SiteInfo' );
 
-        if ( empty( $config['headLink']['customize']['href'] ) )
+        if ( $schema != $siteInfo->getSchema() )
         {
-            throw new \LogicException(
-                'There is no custom.css setting in the "view_manager.head_defaults"'
-            );
+            $this->getResponse()
+                 ->setResultCode( 403 );
+
+            return;
         }
 
-        $request  = $this->getRequest();
-        $fileBase = self::PUBLIC_DIR . '/';
-        $filePath = trim( $config['headLink']['customize']['href'], '/' );
-        $file     = $fileBase . $filePath;
+        $model      = $locator->get( 'Grid\Customize\Model\Extra\Model' );
+        $structure  = $model->findByRoot( $rootId );
 
-        if ( ! is_file( $file ) )
+        if ( empty( $structure ) )
         {
-            $dir = dirname( $file );
+            $this->getResponse()
+                 ->setResultCode( 404 );
+
+            return;
+        }
+
+        $url        = $this->url();
+        $hash       = $structure->updated->toHash();
+        $cssPath    = $url->fromRoute( 'Grid\Customize\Render\CustomCss', array(
+            'schema' => $schema,
+            'id'     => $rootId ?: 'global',
+            'hash'   => $hash,
+        ) );
+
+        $cssFile = static::PUBLIC_DIR . $cssPath;
+
+        if ( ! is_file( $cssFile ) )
+        {
+            $dir = dirname( $cssFile );
 
             if ( ! is_dir( $dir ) )
             {
@@ -58,71 +81,33 @@ class RenderController extends AbstractActionController
                     FileSystemIterator::KEY_AS_FILENAME |
                     FileSystemIterator::CURRENT_AS_PATHNAME
                 ),
-                '#.*[/\\\\]custom\..*\.css$#'
+                '#.*[/\\\\]custom\.[^/\\\\]+\.css$#'
             );
 
-            foreach ( $iterator as $path )
+            foreach ( $iterator as $unlinkPath )
             {
-                @ unlink( $path );
+                @ unlink( $unlinkPath );
             }
 
             $this->getServiceLocator()
                  ->get( 'Grid\Customize\Model\Sheet\Model' )
-                 ->findComplete()
-                 ->render( $file );
+                 ->findByRoot( $rootId )
+                 ->render( $cssFile );
         }
 
-        $path = $request->getUri()
-                        ->getPath();
+        $requestPath = $request->getUri()
+                               ->getPath();
 
-        if ( trim( $path, '/' ) != $filePath )
+        if ( ltrim( $requestPath, '/' ) != ltrim( $cssPath, '/' ) )
         {
             return $this->redirect()
-                        ->toUrl( '/' . $filePath );
+                        ->toUrl( $cssPath );
         }
 
-        $response = Readfile::fromFile( $file, 'text/css' );
+        $response = Readfile::fromFile( $cssFile, 'text/css' );
 
         $this->getEvent()
              ->setResponse( $response );
-
-        return $response;
-    }
-
-    /**
-     * @TODO remove
-     * @return \Zend\Http\Response
-     */
-    public function fileToSqlAction()
-    {
-        $request    = $this->getRequest();
-        $response   = $this->getResponse();
-        $parser     = new \Customize\Model\CssParser();
-        $sheet      = $parser->parse( $request->getQuery( 'file' ) );
-
-        $response->setContent( $sheet->_toSql( $request->getQuery( 'schema' ) ) )
-                 ->getHeaders()
-                 ->addHeaderLine( 'Content-Type', 'text/plain; charset=utf-8' );
-
-        return $response;
-    }
-
-    /**
-     * @TODO remove
-     * @return \Zend\Http\Response
-     */
-    public function dbToSqlAction()
-    {
-        $params     = $this->params();
-        $request    = $this->getRequest();
-        $response   = $this->getResponse();
-        $sheet      = $this->getServiceLocator()
-                           ->get( 'Grid\Customize\Model\Sheet\Model' )
-                           ->findByRoot( $params->fromRoute( 'id' ) );
-
-        $response->setContent( $sheet->_toSql( $request->getQuery( 'schema' ) ) )
-                 ->getHeaders()
-                 ->addHeaderLine( 'Content-Type', 'text/plain; charset=utf-8' );
 
         return $response;
     }

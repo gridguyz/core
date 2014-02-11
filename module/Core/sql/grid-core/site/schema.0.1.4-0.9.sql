@@ -209,21 +209,21 @@ INSERT INTO "customize_rule_x_paragraph" ( "ruleId", "paragraphId" )
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION "customize_rule_update_selector_trigger"()
-     RETURNS INTEGER
-         SET search_path FROM CURRENT
-    LANGUAGE plpgsql
-          AS $$
+                   RETURNS TRIGGER
+                       SET search_path FROM CURRENT
+                  LANGUAGE plpgsql
+                        AS $$
 DECLARE
     "v_match"       TEXT[];
     "v_insert"      INTEGER;
-    "v_preserve"    INTEGER[]   DEFAULT ARRAY[];
+    "v_preserve"    INTEGER[]   DEFAULT CAST( ARRAY[] AS INTEGER[] );
 BEGIN
 
     FOR "v_match" IN SELECT regexp_matches( NEW."selector",
                                             '#paragraph-(-?\d+)',
                                             'g' ) LOOP
 
-        "v_insert" = INTEGER( "v_match"[1] );
+        "v_insert" = CAST( "v_match"[1] AS INTEGER );
 
         IF EXISTS ( SELECT *
                       FROM "paragraph"
@@ -247,7 +247,7 @@ BEGIN
 
     DELETE FROM "customize_rule_x_paragraph"
           WHERE "ruleId"        = NEW."id"
-            AND "paragraphId"   NOT IN "v_preserve";
+            AND "paragraphId"   <> ALL ( "v_preserve" );
 
     RETURN NEW;
 
@@ -271,10 +271,10 @@ UPDATE "customize_rule"
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION "customize_rule_x_paragraph_update_paragraphId_trigger"()
-     RETURNS INTEGER
-         SET search_path FROM CURRENT
-    LANGUAGE plpgsql
-          AS $$
+                   RETURNS TRIGGER
+                       SET search_path FROM CURRENT
+                  LANGUAGE plpgsql
+                        AS $$
 BEGIN
 
     UPDATE "customize_rule"
@@ -305,10 +305,10 @@ CREATE TRIGGER "1000__update_paragraphId"
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION "customize_rule_x_paragraph_delete_trigger"()
-     RETURNS INTEGER
-         SET search_path FROM CURRENT
-    LANGUAGE plpgsql
-          AS $$
+                   RETURNS TRIGGER
+                       SET search_path FROM CURRENT
+                  LANGUAGE plpgsql
+                        AS $$
 BEGIN
 
     IF NOT EXISTS( SELECT *
@@ -363,10 +363,10 @@ ALTER TABLE "customize_rule"
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION "customize_insert_update_rootParagraphId_trigger"()
-     RETURNS INTEGER
-         SET search_path FROM CURRENT
-    LANGUAGE plpgsql
-          AS $$
+                   RETURNS TRIGGER
+                       SET search_path FROM CURRENT
+                  LANGUAGE plpgsql
+                        AS $$
 BEGIN
 
     IF NEW."rootParagraphId" IS NOT NULL THEN
@@ -406,12 +406,64 @@ CREATE TABLE "customize_extra"
     "updated"           TIMESTAMP WITH TIME ZONE    NOT NULL    DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY ( "id" ),
-    UNIQUE ( COALESCE( "rootParagraphId", 0 ) ),
     FOREIGN KEY ( "rootParagraphId" )
      REFERENCES "paragraph" ( "id" )
       ON UPDATE CASCADE
       ON DELETE CASCADE
 );
+
+CREATE UNIQUE INDEX "customize_extra_rootParagraphId_idx"
+                 ON "customize_extra" ( COALESCE( "rootParagraphId", 0 ) );
+
+--------------------------------------------------------------------------------
+-- function: customize_extra_update( int )                                    --
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION "customize_extra_update"( "pRootId" INTEGER )
+                   RETURNS VOID
+                    CALLED ON NULL INPUT
+                       SET search_path FROM CURRENT
+                  LANGUAGE plpgsql
+                        AS $$
+BEGIN
+
+    IF "pRootId" IS NULL THEN
+
+        UPDATE "customize_extra"
+           SET "updated"            = CURRENT_TIMESTAMP
+         WHERE "rootParagraphId"    IS NULL;
+
+        IF NOT FOUND THEN
+
+            INSERT INTO "customize_extra" ( "rootParagraphId",
+                                            "extra",
+                                            "updated" )
+                 VALUES ( NULL,
+                          '',
+                          CURRENT_TIMESTAMP );
+
+        END IF;
+
+    ELSE
+
+        UPDATE "customize_extra"
+           SET "updated"            = CURRENT_TIMESTAMP
+         WHERE "rootParagraphId"    = "pRootId";
+
+        IF NOT FOUND THEN
+
+            INSERT INTO "customize_extra" ( "rootParagraphId",
+                                            "extra",
+                                            "updated" )
+                 VALUES ( "pRootId",
+                          '',
+                          CURRENT_TIMESTAMP );
+
+        END IF;
+
+    END IF;
+
+END $$;
 
 --------------------------------------------------------------------------------
 -- trigger: customize_extra.1000__insert_update_rootParagraphId               --
@@ -441,42 +493,13 @@ CREATE OR REPLACE FUNCTION "customize_changes_trigger"()
                         AS $$
 BEGIN
 
-    IF OLD IS NOT NULL THEN
-
-        IF OLD."rootParagraphId" IS NULL THEN
-
-            UPDATE "customize_extra"
-               SET "updated"            = CURRENT_TIMESTAMP
-             WHERE "rootParagraphId"    IS NULL;
-
-        ELSE
-
-            UPDATE "customize_extra"
-               SET "updated"            = CURRENT_TIMESTAMP
-             WHERE "rootParagraphId"    = OLD."rootParagraphId";
-
-        END IF;
-
+    IF TG_OP <> 'INSERT' THEN
+        PERFORM "customize_extra_update"( OLD."rootParagraphId" );
     END IF;
 
-    IF NEW IS NOT NULL THEN
-
-        IF NEW."rootParagraphId" IS NULL THEN
-
-            UPDATE "customize_extra"
-               SET "updated"            = CURRENT_TIMESTAMP
-             WHERE "rootParagraphId"    IS NULL;
-
-        ELSE
-
-            UPDATE "customize_extra"
-               SET "updated"            = CURRENT_TIMESTAMP
-             WHERE "rootParagraphId"    = NEW."rootParagraphId";
-
-        END IF;
-
+    IF TG_OP <> 'DELETE' THEN
+        PERFORM "customize_extra_update"( NEW."rootParagraphId" );
         RETURN NEW;
-
     END IF;
 
     RETURN OLD;
@@ -515,56 +538,26 @@ CREATE OR REPLACE FUNCTION "customize_property_changes_trigger"()
                        SET search_path FROM CURRENT
                   LANGUAGE plpgsql
                         AS $$
-DECLARE
-    "v_root"    INTEGER;
 BEGIN
 
-    IF OLD IS NOT NULL THEN
+    IF TG_OP <> 'INSERT' THEN
 
-        SELECT "rootParagraphId"
-          INTO "v_root"
-          FROM "customize_rule"
-         WHERE "id" = OLD."ruleId";
-
-        IF "v_root" IS NULL THEN
-
-            UPDATE "customize_extra"
-               SET "updated"            = CURRENT_TIMESTAMP
-             WHERE "rootParagraphId"    IS NULL;
-
-        ELSE
-
-            UPDATE "customize_extra"
-               SET "updated"            = CURRENT_TIMESTAMP
-             WHERE "rootParagraphId"    = "v_root";
-
-        END IF;
+        PERFORM "customize_extra_update"( (
+            SELECT "rootParagraphId"
+              FROM "customize_rule"
+             WHERE "id" = OLD."ruleId"
+        ) );
 
     END IF;
 
-    IF NEW IS NOT NULL THEN
+    IF TG_OP <> 'DELETE' THEN
 
-        IF OLD IS NULL OR OLD."ruleId" <> NEW."ruleId" THEN
-
-            SELECT "rootParagraphId"
-              INTO "v_root"
-              FROM "customize_rule"
-             WHERE "id" = NEW."ruleId";
-
-            IF "v_root" IS NULL THEN
-
-                UPDATE "customize_extra"
-                   SET "updated"            = CURRENT_TIMESTAMP
-                 WHERE "rootParagraphId"    IS NULL;
-
-            ELSE
-
-                UPDATE "customize_extra"
-                   SET "updated"            = CURRENT_TIMESTAMP
-                 WHERE "rootParagraphId"    = "v_root";
-
-            END IF;
-
+        IF TG_OP = 'INSERT' OR OLD."ruleId" <> NEW."ruleId" THEN
+            PERFORM "customize_extra_update"( (
+                SELECT "rootParagraphId"
+                  FROM "customize_rule"
+                 WHERE "id" = NEW."ruleId"
+            ) );
         END IF;
 
         RETURN NEW;

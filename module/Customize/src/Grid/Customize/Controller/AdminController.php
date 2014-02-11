@@ -108,7 +108,7 @@ class AdminController extends AbstractListController
 
     /**
      * Edit extra css
-     */
+     * /
     public function editExtraAction()
     {
         $request    = $this->getRequest();
@@ -118,7 +118,7 @@ class AdminController extends AbstractListController
                               ->get( 'Grid\Customize\Extra' );
         $extra      = $model->find();
 
-        /* @var $form \Zend\Form\Form */
+        /* @var $form \Zend\Form\Form * /
         $form->setHydrator( $model->getMapper() )
              ->bind( $extra );
 
@@ -153,7 +153,7 @@ class AdminController extends AbstractListController
             'form'  => $form,
             'extra' => $extra,
         );
-    }
+    } */
 
     /**
      * Delete a rule
