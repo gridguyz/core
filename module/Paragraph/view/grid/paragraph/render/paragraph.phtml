@@ -21,7 +21,14 @@ else
     $root->content  = $this->content;
 }
 
-$list->runin( function ( $paragraph ) use ( $view ) { ?>
+$list->runin( function ( $paragraph ) use ( $view ) {
+
+    if ( $paragraph->id && $paragraph->id == $paragraph->rottId )
+    {
+        $view->customCss( $paragraph->id );
+    }
+
+?>
 
 <div class="paragraph-container paragraph-<?= $paragraph->type ?>-container"
      id="paragraph-<?= $paragraph->id ?>-container"
@@ -120,6 +127,9 @@ $list->runin( function ( $paragraph ) use ( $view ) { ?>
 <?php endif ?>
 
 <?php } );
+
+$view->customCss()
+     ->useGlobal();
 
 if ( ! empty( $rootContent ) )
 {

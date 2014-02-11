@@ -129,7 +129,7 @@ class CustomCss extends AbstractHelper
             }
             else
             {
-                return $this->offsetSet( null, $set );
+                return $this->append( $set );
             }
         }
 
@@ -137,10 +137,10 @@ class CustomCss extends AbstractHelper
     }
 
     /**
-     * Get root
+     * Get offset
      *
      * @param   int|string  $offset
-     * @return  array
+     * @return  int
      */
     public function & offsetGet( $offset )
     {
@@ -148,10 +148,10 @@ class CustomCss extends AbstractHelper
     }
 
     /**
-     * Set root
+     * Set offset
      *
-     * @param   int|string  $offset
-     * @param   array       $value
+     * @param   int|string|null $offset
+     * @param   int|null        $value
      * @return  \Zork\View\Helper\OpenGraph
      */
     public function offsetSet( $offset, $value )
@@ -194,6 +194,36 @@ class CustomCss extends AbstractHelper
     }
 
     /**
+     * Append
+     *
+     * @param   int|null    $value
+     * @return  \Zork\View\Helper\OpenGraph
+     */
+    public function append( $value )
+    {
+        $this->roots[] = ( (int) $value ) ?: null;
+        return $this;
+    }
+
+    /**
+     * Use global
+     *
+     * @param   int|null    $value
+     * @return  \Zork\View\Helper\OpenGraph
+     */
+    public function useGlobal( $use = true )
+    {
+        $this->roots = array_filter( $this->roots );
+
+        if ( $use )
+        {
+            $this->roots[] = null;
+        }
+
+        return $this;
+    }
+
+    /**
      * Retrieve an external iterator
      * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
      *
@@ -218,12 +248,13 @@ class CustomCss extends AbstractHelper
     /**
      * Apply custom css
      *
-     * @return  string
+     * @return  CustomCss
      */
-    public function apply( $global = null )
+    public function apply()
     {
         if ( method_exists( $this->view, 'plugin' ) )
         {
+            $global     = false;
             $roots      = (array) $this->roots;
             $siteInfo   = $this->getSiteInfo();
             $schema     = $siteInfo->getSchema();
@@ -239,7 +270,7 @@ class CustomCss extends AbstractHelper
 
             if ( $global )
             {
-                array_unshift( $roots, null );
+                $roots[] = null;
             }
 
             $updated = $this->extraModel

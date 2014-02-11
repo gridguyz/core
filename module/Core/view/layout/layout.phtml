@@ -23,6 +23,9 @@ else
     $content = $this->content;
 }
 
+$this->customCss()
+     ->apply();
+
 $this->openGraph()
      ->append( array(
          'og:locale'    => $this->openGraph()
