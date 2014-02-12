@@ -280,13 +280,20 @@ class CustomCss extends AbstractHelper
             {
                 if ( isset( $updated[$root] ) )
                 {
+                    $id = $root ? (int) $root : 'global';
+
                     $headLink->prependStylesheet(
                         $url( 'Grid\Customize\Render\CustomCss', array(
                             'schema'    => $schema,
-                            'id'        => $root ? (int) $root : 'global',
+                            'id'        => $id,
                             'hash'      => $updated[$root]->toHash(),
                         ) ),
-                        'all'
+                        'all',
+                        false,
+                        array(
+                            'class'             => 'customize-stylesheet',
+                            'data-customize'    => $id,
+                        )
                     );
                 }
             }

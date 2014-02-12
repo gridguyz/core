@@ -4,21 +4,6 @@
  * @var Zend\View\Renderer\PhpRenderer $this
  */
 
-$links = $this->headLink()
-              ->getContainer()
-              ->getArrayCopy();
-
-foreach ( $links as $index => $item )
-{
-    if ( ! empty( $item->id ) &&
-           'customizeStyleSheet' === $item->id )
-    {
-        $this->headLink()
-             ->getContainer()
-             ->offsetUnset( $index );
-    }
-}
-
 $this->headLink()
      ->appendStylesheet( '/styles/admin.css', 'all' );
 
