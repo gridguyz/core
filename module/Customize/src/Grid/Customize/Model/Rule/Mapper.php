@@ -5,7 +5,7 @@ namespace Grid\Customize\Model\Rule;
 use Zend\Db\Sql;
 use Zend\Db\Sql\Predicate;
 use Zork\Db\Sql\Predicate\NotIn;
-use Core\Customize\Model\Extra\Mapper as ExtraMapper;
+use Grid\Customize\Model\Extra\Mapper as ExtraMapper;
 use Zork\Model\Mapper\DbAware\ReadWriteMapperAbstract;
 
 /**
@@ -416,14 +416,14 @@ class Mapper extends ReadWriteMapperAbstract
 
     /**
      * @param   int|null $rootId
-     * @return  string|null
+     * @return  \Customize\Model\Extra\Structure|null
      */
     public function findExtraByRoot( $rootId = null )
     {
         $extra = $this->getExtraMapper()
                       ->findByRoot( $rootId );
 
-        return empty( $extra ) ? null : $extra->extra;
+        return empty( $extra ) ? null : $extra;
     }
 
     /**

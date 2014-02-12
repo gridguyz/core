@@ -23,7 +23,7 @@ else
 
 $list->runin( function ( $paragraph ) use ( $view ) {
 
-    if ( $paragraph->id && $paragraph->id == $paragraph->rottId )
+    if ( $paragraph->id && $paragraph->id == $paragraph->rootId )
     {
         $view->customCss( $paragraph->id );
     }
@@ -128,7 +128,7 @@ $list->runin( function ( $paragraph ) use ( $view ) {
 
 <?php } );
 
-$view->customCss()
+$this->customCss()
      ->useGlobal();
 
 if ( ! empty( $rootContent ) )

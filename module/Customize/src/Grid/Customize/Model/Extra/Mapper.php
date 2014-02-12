@@ -3,6 +3,7 @@
 namespace Grid\Customize\Model\Extra;
 
 use Traversable;
+use Zork\Stdlib\DateTime;
 use Zend\Db\Sql\Predicate;
 use Zend\Db\Sql\Expression;
 use Zend\Stdlib\ArrayUtils;
@@ -80,6 +81,11 @@ class Mapper extends ReadWriteMapperAbstract
         if ( null === $global && in_array( null, $rootParagraphIds ) )
         {
             $global = true;
+        }
+
+        if ( empty( $rootParagraphIds ) )
+        {
+            return array();
         }
 
         $rootParagraphIds = array_filter( $rootParagraphIds );

@@ -40,9 +40,16 @@ class Structure extends MapperAwareAbstract
     /**
      * Extra css
      *
-     * @var string
+     * @var string|null
      */
     protected $extra;
+
+    /**
+     * Comment
+     *
+     * @var string|null
+     */
+    protected $comment;
 
     /**
      * Get all imports
@@ -109,7 +116,17 @@ class Structure extends MapperAwareAbstract
      */
     public function setExtra( $extra )
     {
-        $this->extra = trim( $extra );
+        $this->extra = trim( $extra ) ?: null;
+        return $this;
+    }
+
+    /**
+     * @param   string  $comment
+     * @return  \Grid\Customize\Model\Sheet\Structure
+     */
+    public function setComment( $comment )
+    {
+        $this->comment = trim( $comment ) ?: null;
         return $this;
     }
 
@@ -191,6 +208,37 @@ class Structure extends MapperAwareAbstract
             }
 
             return $result;
+        }
+
+        if ( $this->comment )
+        {
+            $commentLines = array_map(
+                function ( $line ) {
+                    return ' * ' . $line;
+                },
+                preg_split( '/\s*[\n\r]+\s*/', $this->comment )
+            );
+
+            array_unshift( $commentLines, static::RENDER_EOL . '/**' );
+            array_push( $commentLines, ' */' . static::RENDER_EOL );
+
+            foreach ( $commentLines as $comment )
+            {
+                if ( $this->renderLine( $handle, $comment, $result ) )
+                {
+                    if ( $handle )
+                    {
+                        @ fclose( $handle );
+
+                        if ( $path )
+                        {
+                            @ unlink( $path );
+                        }
+                    }
+
+                    return $result;
+                }
+            }
         }
 
         foreach ( $this->imports as $import )

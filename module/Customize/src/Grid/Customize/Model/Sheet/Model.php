@@ -2,6 +2,7 @@
 
 namespace Grid\Customize\Model\Sheet;
 
+use DateTime;
 use Zend\Db\Sql;
 use Zork\Model\MapperAwareTrait;
 use Zork\Model\MapperAwareInterface;
@@ -55,10 +56,13 @@ class Model implements MapperAwareInterface
     public function findByRoot( $rootId = null )
     {
         $mapper = $this->getMapper();
+        $extra  = $mapper->findExtraByRoot( $rootId );
+        $head   = $extra ? $extra->updated->format( DateTime::ISO8601 ) : null;
 
         return new Structure( array(
             'mapper'    => $mapper,
-            'extra'     => $mapper->findExtraByRoot( $rootId ),
+            'comment'   => $head,
+            'extra'     => $extra ? $extra->extra : null,
             'rules'     => $mapper->findAllByRoot( $rootId, array(
                 new Sql\Expression( 'CHAR_LENGTH( media ) ASC' ),
                 new Sql\Expression( 'media DESC' ),
