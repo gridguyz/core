@@ -55,11 +55,12 @@ class RenderController extends AbstractActionController
             return;
         }
 
+        $id         = $rootId ?: 'global';
         $url        = $this->url();
         $hash       = $structure->updated->toHash();
         $cssPath    = $url->fromRoute( 'Grid\Customize\Render\CustomCss', array(
             'schema' => $schema,
-            'id'     => $rootId ?: 'global',
+            'id'     => $id,
             'hash'   => $hash,
         ) );
 
@@ -81,7 +82,9 @@ class RenderController extends AbstractActionController
                     FileSystemIterator::KEY_AS_FILENAME |
                     FileSystemIterator::CURRENT_AS_PATHNAME
                 ),
-                '#.*[/\\\\]custom\.[^/\\\\]+\.css$#'
+                '#.*[/\\\\]custom\.([^\\.]+|'
+                    . preg_quote( $id, '#' )
+                    . '\.[^\\.]+)\.css$#'
             );
 
             foreach ( $iterator as $unlinkPath )
