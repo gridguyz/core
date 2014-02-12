@@ -622,9 +622,10 @@
                                 .each( function () {
                                     var self = $( this );
 
-                                    if ( self.attr( "id" ) === "customizeStyleSheet" )
+                                    if ( self.is( ".customize-stylesheet[data-customize]" ) )
                                     {
-                                        $( "#customizeStyleSheet" ).remove();
+                                        $( "head link.customize-stylesheet[data-customize='"
+                                                + self.data( "customize" ) + "']" ).remove();
                                     }
 
                                     js.link( self.attr( "href" ), {

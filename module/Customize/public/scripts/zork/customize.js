@@ -13,7 +13,7 @@
         return;
     }
 
-    var css = $( "#customizeStyleSheet" );
+    var customCssSelector = "head link.customize-stylesheet[data-customize]";
 
     /**
      * @class Customize module
@@ -30,30 +30,26 @@
 
     global.Zork.Customize.prototype.reload = function ()
     {
-        css = css && css.length ? css : $( "#customizeStyleSheet" );
+        $( customCssSelector ).each( function () {
+            var css     = $( this ),
+                id      = css.data( "customize" ),
+                href    = js.core.uploadsUrl
+                        + "/customize/custom." + id + "."
+                        + Number( new Date() ).toString(36)
+                        + ".css",
+                link    = $( "<link />" )
+                            .one( "ready load", function () {
+                                css.remove();
+                            } )
+                            .attr( {
+                                "href"  : href,
+                                "type"  : "text/css",
+                                "rel"   : "stylesheet"
+                            } );
 
-        var href = js.core.uploadsUrl
-                 + "/customize/custom."
-                 + Number( new Date() ).toString(36)
-                 + ".css",
-            link = $( "<link />" )
-                .one( "ready load", function ( evt ) {
-                    if ( css.length )
-                    {
-                        css.remove();
-                    }
-
-                    css = $( this ).attr(
-                        "id", "customizeStyleSheet"
-                    );
-                } )
-                .attr( {
-                    "href"  : href,
-                    "type"  : "text/css",
-                    "rel"   : "stylesheet"
-                } );
-
-        $( "head" ).append( link );
+                css.removeClass( "customize-stylesheet" );
+                $( "head" ).append( link );
+        } );
     };
 
     global.Zork.Customize.prototype.properties = function ( element )
