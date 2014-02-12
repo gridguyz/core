@@ -29,6 +29,35 @@ class Model implements MapperAwareInterface
     }
 
     /**
+     * @return array
+     */
+    protected function getRuleOrder()
+    {
+        return array(
+            new Sql\Expression(
+                'CHAR_LENGTH( ? ) ASC',
+                array( 'media' ),
+                array( Sql\Expression::TYPE_IDENTIFIER )
+            ),
+            new Sql\Expression(
+                '? DESC',
+                array( 'media' ),
+                array( Sql\Expression::TYPE_IDENTIFIER )
+            ),
+            new Sql\Expression(
+                'CHAR_LENGTH( ? ) ASC',
+                array( 'selector' ),
+                array( Sql\Expression::TYPE_IDENTIFIER )
+            ),
+            new Sql\Expression(
+                '? ASC',
+                array( 'selector' ),
+                array( Sql\Expression::TYPE_IDENTIFIER )
+            ),
+        );
+    }
+
+    /**
      * Get the complete structure
      *
      * @return \Customize\Model\Sheet\Structure
@@ -38,12 +67,7 @@ class Model implements MapperAwareInterface
         return new Structure( array(
             'mapper'    => $this->getMapper(),
             'rules'     => $this->getMapper()
-                                ->findAll( array(), array(
-                                    new Sql\Expression( 'CHAR_LENGTH( media ) ASC' ),
-                                    new Sql\Expression( 'media DESC' ),
-                                    new Sql\Expression( 'CHAR_LENGTH( selector ) ASC' ),
-                                    new Sql\Expression( 'selector ASC' ),
-                                ) )
+                                ->findAll( array(), $this->getRuleOrder() )
         ) );
     }
 
@@ -55,20 +79,20 @@ class Model implements MapperAwareInterface
      */
     public function findByRoot( $rootId = null )
     {
-        $mapper = $this->getMapper();
-        $extra  = $mapper->findExtraByRoot( $rootId );
-        $head   = $extra ? $extra->updated->format( DateTime::ISO8601 ) : null;
+        $mapper     = $this->getMapper();
+        $extra      = $mapper->findExtraByRoot( $rootId );
+        $comment    = $extra
+                    ? $extra->updated->format( DateTime::ISO8601 )
+                    : null;
 
         return new Structure( array(
             'mapper'    => $mapper,
-            'comment'   => $head,
+            'comment'   => $comment,
             'extra'     => $extra ? $extra->extra : null,
-            'rules'     => $mapper->findAllByRoot( $rootId, array(
-                new Sql\Expression( 'CHAR_LENGTH( media ) ASC' ),
-                new Sql\Expression( 'media DESC' ),
-                new Sql\Expression( 'CHAR_LENGTH( selector ) ASC' ),
-                new Sql\Expression( 'selector ASC' ),
-            ) )
+            'rules'     => $mapper->findAllByRoot(
+                $rootId,
+                $this->getRuleOrder()
+            )
         ) );
     }
 

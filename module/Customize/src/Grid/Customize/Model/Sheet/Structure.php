@@ -220,7 +220,7 @@ class Structure extends MapperAwareAbstract
             );
 
             array_unshift( $commentLines, static::RENDER_EOL . '/**' );
-            array_push( $commentLines, ' */' . static::RENDER_EOL );
+            array_push( $commentLines, ' */' );
 
             foreach ( $commentLines as $comment )
             {
@@ -307,7 +307,8 @@ class Structure extends MapperAwareAbstract
                 $media = $newMedia;
 
                 if ( $this->renderLine( $handle,
-                                        '@media ' . $media . static::RENDER_EOL . '{',
+                                        '@media ' . $media . static::RENDER_EOL
+                                            . '{' . static::RENDER_EOL,
                                         $result ) )
                 {
                     if ( $handle )
