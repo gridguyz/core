@@ -4,6 +4,7 @@ namespace Grid\Customize\Model\Extra;
 
 use Traversable;
 use Zend\Db\Sql\Predicate;
+use Zend\Db\Sql\Expression;
 use Zend\Stdlib\ArrayUtils;
 use Zork\Model\Mapper\DbAware\ReadWriteMapperAbstract;
 
@@ -102,17 +103,17 @@ class Mapper extends ReadWriteMapperAbstract
             );
         }
 
-        $sql        = $this->sql();
-        $platform   = $sql->getAdapter()
-                          ->getPlatform();
-        $select     = $sql->select()
-                          ->columns( array( 'rootParagraphId', 'updated' ) )
-                          ->where( $where )
-                          ->order( array(
-                              'COALESCE( '
-                                . $platform->quoteIdentifier( 'rootParagraphId' )
-                                . ', 0 ) ASC'
-                          ) );
+        $select = $this->sql()
+                       ->select()
+                       ->columns( array( 'rootParagraphId', 'updated' ) )
+                       ->where( $where )
+                       ->order( array(
+                           new Expression(
+                               'COALESCE( ?, 0 ) ASC',
+                               array( 'rootParagraphId' ),
+                               array( Expression::TYPE_IDENTIFIER )
+                           ),
+                       ) );
 
         /* @var $result \Zend\Db\Adapter\Driver\ResultInterface */
 
