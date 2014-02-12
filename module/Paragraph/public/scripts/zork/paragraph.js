@@ -620,19 +620,22 @@
                                     .replace( /^[^<]/, "" ) ) )
                                 .find( "link[rel='stylesheet']" )
                                 .each( function () {
-                                    var self = $( this );
+                                    var self = $( this ),
+                                        attr = {
+                                            "rel": "stylesheet",
+                                            "type": self.attr( "type" ),
+                                            "media": self.attr( "media" )
+                                        };
 
                                     if ( self.is( ".customize-stylesheet[data-customize]" ) )
                                     {
+                                        attr["class"] = "customize-stylesheet";
+                                        attr["data-customize"] = self.data( "customize" );
                                         $( "head link.customize-stylesheet[data-customize='"
-                                                + self.data( "customize" ) + "']" ).remove();
+                                                + attr["data-customize"] + "']" ).remove();
                                     }
 
-                                    js.link( self.attr( "href" ), {
-                                        "rel": "stylesheet",
-                                        "type": self.attr( "type" ),
-                                        "media": self.attr( "media" )
-                                    } );
+                                    js.link( self.attr( "href" ), attr );
                                 } );
 
                             layer();
