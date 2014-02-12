@@ -42,10 +42,13 @@
                                 css.remove();
                             } )
                             .attr( {
-                                "href"  : href,
-                                "type"  : "text/css",
-                                "rel"   : "stylesheet"
-                            } );
+                                "href"              : href,
+                                "type"              : "text/css",
+                                "rel"               : "stylesheet",
+                                "class"             : "customize-stylesheet",
+                                "data-customize"    : id
+                            } )
+                            .data( "customize", id );
 
                 css.removeClass( "customize-stylesheet" );
                 $( "head" ).append( link );
