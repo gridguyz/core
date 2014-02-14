@@ -16,7 +16,11 @@ if ( ! $this->format ): ?>
          ->setPage( $this->page )
          ->setColumns( array(
               'type'    => $rowSet->column( $rowSet::TRANSLATE, 'paragraph.type', '', 'paragraph' ),
-              'name'    => $rowSet::STRING,
+              'name'    => function ( $row ) use ( $view ) {
+                return $row->type == 'metaContent'
+                     ? '<i>' . $view->translate( 'paragraph.metaContent.' . $row->name, 'paragraph' ) . '</i>'
+                     : $row->name;
+              },
               'updated' => $rowSet::DATETIME,
               'actions' => function ( $row ) use ( $view ) {
                 $view->placeholder( 'listActions' )->set( '' );
