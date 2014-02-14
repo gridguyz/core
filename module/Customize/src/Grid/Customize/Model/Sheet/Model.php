@@ -2,11 +2,9 @@
 
 namespace Grid\Customize\Model\Sheet;
 
-use DateTime;
-use Zend\Db\Sql;
 use Zork\Model\MapperAwareTrait;
 use Zork\Model\MapperAwareInterface;
-use Grid\Customize\Model\Rule\Mapper as RuleMapper;
+use Grid\Customize\Model\Extra\Structure as ExtraStructure;
 
 /**
  * Customize-rule
@@ -21,54 +19,23 @@ class Model implements MapperAwareInterface
     /**
      * Construct model
      *
-     * @param \Customize\Model\Rule\Mapper $customizeRuleMapper
+     * @param \Customize\Model\Sheet\Mapper $customizeSheetMapper
      */
-    public function __construct( RuleMapper $customizeRuleMapper )
+    public function __construct( Mapper $customizeSheetMapper )
     {
-        $this->setMapper( $customizeRuleMapper );
-    }
-
-    /**
-     * @return array
-     */
-    protected function getRuleOrder()
-    {
-        return array(
-            new Sql\Expression(
-                'CHAR_LENGTH( ? ) ASC',
-                array( 'media' ),
-                array( Sql\Expression::TYPE_IDENTIFIER )
-            ),
-            new Sql\Expression(
-                '? DESC',
-                array( 'media' ),
-                array( Sql\Expression::TYPE_IDENTIFIER )
-            ),
-            new Sql\Expression(
-                'CHAR_LENGTH( ? ) ASC',
-                array( 'selector' ),
-                array( Sql\Expression::TYPE_IDENTIFIER )
-            ),
-            new Sql\Expression(
-                '? ASC',
-                array( 'selector' ),
-                array( Sql\Expression::TYPE_IDENTIFIER )
-            ),
-        );
+        $this->setMapper( $customizeSheetMapper );
     }
 
     /**
      * Get the complete structure
      *
+     * @deprecated
      * @return \Customize\Model\Sheet\Structure
      */
     public function findComplete()
     {
-        return new Structure( array(
-            'mapper'    => $this->getMapper(),
-            'rules'     => $this->getMapper()
-                                ->findAll( array(), $this->getRuleOrder() )
-        ) );
+        return $this->getMapper()
+                    ->findComplete();
     }
 
     /**
@@ -77,23 +44,45 @@ class Model implements MapperAwareInterface
      * @param int|null $rootId
      * @return \Customize\Model\Sheet\Structure
      */
-    public function findByRoot( $rootId = null )
+    public function find( $rootId = null )
     {
-        $mapper     = $this->getMapper();
-        $extra      = $mapper->findExtraByRoot( $rootId );
-        $comment    = $extra
-                    ? $extra->updated->format( DateTime::ISO8601 )
-                    : null;
+        return $this->getMapper()
+                    ->find( $rootId );
+    }
 
-        return new Structure( array(
-            'mapper'    => $mapper,
-            'comment'   => $comment,
-            'extra'     => $extra ? $extra->extra : null,
-            'rules'     => $mapper->findAllByRoot(
-                $rootId,
-                $this->getRuleOrder()
-            )
-        ) );
+    /**
+     * Find a structure by its extra structure
+     *
+     * @param   ExtraStructure  $extra
+     * @return  Structure
+     */
+    public function findByExtra( ExtraStructure $extra )
+    {
+        return $this->getMapper()
+                    ->findByExtra( $extra );
+    }
+
+    /**
+     * Get paginator for listing (roots only)
+     *
+     * @return  \Zend\Paginator\Paginator
+     */
+    public function getPaginator()
+    {
+        return $this->getMapper()
+                    ->getPaginator();
+    }
+
+    /**
+     * Save a structure
+     *
+     * @param   Structure $structure
+     * @return  int
+     */
+    public function save( &$structure )
+    {
+        return $this->getMapper()
+                    ->save( $structure );
     }
 
     /**
@@ -102,10 +91,10 @@ class Model implements MapperAwareInterface
      * @param int|null $rootId
      * @return int
      */
-    public function deleteByRoot( $rootId = null )
+    public function delete( $rootId = null )
     {
         return $this->getMapper()
-                    ->deleteByRoot( $rootId );
+                    ->delete( $rootId );
     }
 
 }

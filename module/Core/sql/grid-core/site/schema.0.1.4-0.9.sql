@@ -359,6 +359,16 @@ ALTER TABLE "customize_rule"
                ON UPDATE CASCADE
                ON DELETE CASCADE;
 
+ALTER TABLE "customize_rule"
+       DROP CONSTRAINT IF EXISTS "customize_rule_selector_media_key" CASCADE;
+
+CREATE UNIQUE INDEX "customize_rule_selector_media_rootParagraphId_idx"
+                 ON "customize_rule" (
+                        "selector",
+                        "media",
+                        COALESCE( "rootParagraphId", 0 )
+                    );
+
 --------------------------------------------------------------------------------
 -- function: customize_insert_update_rootParagraphId_trigger()                --
 --------------------------------------------------------------------------------

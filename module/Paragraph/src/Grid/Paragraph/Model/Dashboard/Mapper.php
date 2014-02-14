@@ -233,15 +233,16 @@ class Mapper implements HydratorInterface,
 
         foreach ( $selectors as $key => $selector )
         {
-            $rule = $this->getCustomizeRuleMapper()
-                         ->findBySelector( $selector );
+            $rootId = $paragraph->rootId;
+            $rule   = $this->getCustomizeRuleMapper()
+                           ->findBySelector( $selector, '', $rootId );
 
             if ( empty( $rule ) )
             {
                 $rule = $this->getCustomizeRuleMapper()
                              ->create( array(
-                                 'paragraphId'  => $paragraph->id,
-                                 'selector'     => $selector,
+                                 'rootParagraphId'  => $rootId,
+                                 'selector'         => $selector,
                              ) );
             }
 

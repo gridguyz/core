@@ -2,8 +2,10 @@
 
 namespace Grid\Customize\Model\Sheet;
 
+use DateTime;
 use Zork\Model\Structure\MapperAwareAbstract;
 use Grid\Customize\Model\Rule\Structure as RuleStructure;
+use Grid\Customize\Model\Extra\Structure as ExtraStructure;
 
 /**
  * Rule structure
@@ -19,9 +21,11 @@ class Structure extends MapperAwareAbstract
     const RENDER_CHARSET    = 'utf-8';
 
     /**
-     * @var string
+     * Root paragraph id
+     *
+     * @var int|null
      */
-    const RENDER_EOL        = PHP_EOL;
+    protected $rootId;
 
     /**
      * Imports
@@ -50,6 +54,16 @@ class Structure extends MapperAwareAbstract
      * @var string|null
      */
     protected $comment;
+
+    /**
+     * @param   int $rootId
+     * @return  \Grid\Customize\Model\Sheet\Structure
+     */
+    public function setRootId( $rootId )
+    {
+        $this->rootId = ( (int) $rootId ) ?: null;
+        return $this;
+    }
 
     /**
      * Get all imports
@@ -111,13 +125,71 @@ class Structure extends MapperAwareAbstract
     }
 
     /**
-     * @param   string  $extra
+     * @return ExtraStructure
+     */
+    public function getExtra()
+    {
+        if ( null === $this->extra )
+        {
+            if ( ( $mapper      = $this->getMapper() ) &&
+                 ( $extraMapper = $mapper->getExtraMapper() ) )
+            {
+                if ( $this->rootId )
+                {
+                    $this->extra = $extraMapper->find( $this->rootId );
+                }
+
+                if ( ! $this->extra )
+                {
+                    $this->extra = $extraMapper->create( array() );
+                }
+            }
+            else
+            {
+                $this->extra = new ExtraStructure( array(
+                    'id' => $this->rootId,
+                ) );
+            }
+        }
+
+        return $this->extra;
+    }
+
+    /**
+     * @param   ExtraStructure|null $extra
      * @return  \Grid\Customize\Model\Sheet\Structure
      */
-    public function setExtra( $extra )
+    public function setExtra( ExtraStructure $extra = null )
     {
-        $this->extra = trim( $extra ) ?: null;
+        $this->extra = $extra;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtraContent()
+    {
+        return $this->getExtra()->extra;
+    }
+
+    /**
+     * @param   string|null $extraContent
+     * @return  \Grid\Customize\Model\Sheet\Structure
+     */
+    public function setExtraContent( $extraContent )
+    {
+        $this->getExtra()->extra = trim( $extraContent ) ?: null;
+        return $this;
+    }
+
+    /**
+     * @return  bool
+     */
+    public function hasExtraContent()
+    {
+        return isset( $this->extra ) &&
+               ! empty( $this->extra->extra );
     }
 
     /**
@@ -131,83 +203,45 @@ class Structure extends MapperAwareAbstract
     }
 
     /**
-     * Render line
+     * Reset all contents
      *
-     * @param   null|resource   $handle
-     * @param   string          $line
-     * @param   string|bool     $result
-     * @return  bool
+     * @return  Structure
      */
-    protected function renderLine( $handle, $line, $result )
+    public function resetContents()
     {
-        $write = $line . static::RENDER_EOL;
+        $this->setImports( array() )
+             ->setRules( array() );
 
-        if ( $handle )
+        if ( $this->hasExtraContent() )
         {
-            if ( false === fwrite( $handle, $write ) )
-            {
-                $result = false;
-                return true;
-            }
-        }
-        else
-        {
-            $result .= $write;
+            $this->setExtraContent( null );
         }
 
-        return false;
+        return $this;
     }
 
     /**
      * Render rules to a css-file
      *
-     * @param   string|resource|null    $file
-     * @return  bool|string
+     * @param   RendererInterface|resource|string|null  $file
+     * @param   string|null                             $eol
+     * @return  RendererInterface
      */
-    public function render( $file = null )
+    public function render( $file = null, $eol = null )
     {
         static $escape = array( '"' => '\\"' );
+        $renderer   = AbstractRenderer::factory( $file, $eol );
+        $eol        = $renderer->getEol();
 
-        if ( empty( $file ) )
+        $renderer->writeLine(
+            '@charset "' . strtr( static::RENDER_CHARSET, $escape ) . '";'
+        );
+
+        if ( ! $this->comment && $this->extra && $this->extra->updated )
         {
-            $path   = null;
-            $handle = null;
-            $result = '';
-        }
-        else if ( is_resource( $file ) )
-        {
-            $path   = null;
-            $handle = $file;
-            $result = true;
-        }
-        else
-        {
-            $path   = (string) $file;
-            $handle = @ fopen( $path, 'w' );
-            $result = true;
-
-            if ( ! $handle )
-            {
-                return false;
-            }
-        }
-
-        if ( $this->renderLine( $handle,
-                                '@charset "' . strtr( static::RENDER_CHARSET,
-                                                      $escape ) . '";',
-                                $result ) )
-        {
-            if ( $handle )
-            {
-                @ fclose( $handle );
-
-                if ( $path )
-                {
-                    @ unlink( $path );
-                }
-            }
-
-            return $result;
+            $this->comment = $this->extra
+                                  ->updated
+                                  ->format( DateTime::ISO8601 );
         }
 
         if ( $this->comment )
@@ -219,62 +253,20 @@ class Structure extends MapperAwareAbstract
                 preg_split( '/\s*[\n\r]+\s*/', $this->comment )
             );
 
-            array_unshift( $commentLines, static::RENDER_EOL . '/**' );
+            array_unshift( $commentLines, $eol . '/**' );
             array_push( $commentLines, ' */' );
 
             foreach ( $commentLines as $comment )
             {
-                if ( $this->renderLine( $handle, $comment, $result ) )
-                {
-                    if ( $handle )
-                    {
-                        @ fclose( $handle );
-
-                        if ( $path )
-                        {
-                            @ unlink( $path );
-                        }
-                    }
-
-                    return $result;
-                }
+                $renderer->writeLine( $comment );
             }
         }
 
         foreach ( $this->imports as $import )
         {
-            if ( $this->renderLine( $handle,
-                                    '@import url("' . strtr( $import,
-                                                             $escape ) . '");',
-                                    $result ) )
-            {
-                if ( $handle )
-                {
-                    @ fclose( $handle );
-
-                    if ( $path )
-                    {
-                        @ unlink( $path );
-                    }
-                }
-
-                return $result;
-            }
-        }
-
-        if ( $this->renderLine( $handle, '', $result ) )
-        {
-            if ( $handle )
-            {
-                @ fclose( $handle );
-
-                if ( $path )
-                {
-                    @ unlink( $path );
-                }
-            }
-
-            return $result;
+            $renderer->writeLine(
+                '@import url("' . strtr( $import, $escape ) . '");' . $eol
+            );
         }
 
         $media = '';
@@ -286,156 +278,68 @@ class Structure extends MapperAwareAbstract
             {
                 if ( $media )
                 {
-                    if ( $this->renderLine( $handle,
-                                            '}' . static::RENDER_EOL,
-                                            $result ) )
-                    {
-                        if ( $handle )
-                        {
-                            @ fclose( $handle );
-
-                            if ( $path )
-                            {
-                                @ unlink( $path );
-                            }
-                        }
-
-                        return $result;
-                    }
+                    $renderer->writeLine( '}' . $eol );
                 }
 
                 $media = $newMedia;
-
-                if ( $this->renderLine( $handle,
-                                        '@media ' . $media . static::RENDER_EOL
-                                            . '{' . static::RENDER_EOL,
-                                        $result ) )
-                {
-                    if ( $handle )
-                    {
-                        @ fclose( $handle );
-
-                        if ( $path )
-                        {
-                            @ unlink( $path );
-                        }
-                    }
-
-                    return $result;
-                }
+                $renderer->writeLine( '@media ' . $media . $eol . '{' . $eol );
             }
 
             $rawPropertyNames = $rule->getRawPropertyNames();
 
             if ( ! empty( $rawPropertyNames ) )
             {
-                if ( $this->renderLine( $handle,
-                                        ( $media ? "\t" : '' ) .
-                                        $rule->selector .
-                                        static::RENDER_EOL .
-                                        ( $media ? "\t" : '' ) . '{',
-                                        $result ) )
-                {
-                    if ( $handle )
-                    {
-                        @ fclose( $handle );
-
-                        if ( $path )
-                        {
-                            @ unlink( $path );
-                        }
-                    }
-
-                    return $result;
-                }
+                $renderer->writeLine(
+                    ( $media ? "\t" : '' ) .
+                    $rule->selector . $eol .
+                    ( $media ? "\t" : '' ) . '{'
+                );
 
                 foreach ( $rawPropertyNames as $propery )
                 {
-                    if ( $this->renderLine( $handle,
-                                            ( $media ? "\t" : '' ) .
-                                            "\t" . $propery . ': ' .
-                                            $rule->getRawPropertyValue( $propery ) .
-                                            $rule->getRawPropertyPostfix( $propery ) . ';',
-                                            $result ) )
-                    {
-                        if ( $handle )
-                        {
-                            @ fclose( $handle );
-
-                            if ( $path )
-                            {
-                                @ unlink( $path );
-                            }
-                        }
-
-                        return $result;
-                    }
+                    $renderer->writeLine(
+                        ( $media ? "\t" : '' ) .
+                        "\t" . $propery . ': ' .
+                        $rule->getRawPropertyValue( $propery ) .
+                        $rule->getRawPropertyPostfix( $propery ) . ';'
+                    );
                 }
 
-                if ( $this->renderLine( $handle,
-                                        ( $media ? "\t" : '' ) .
-                                        '}' . static::RENDER_EOL,
-                                        $result ) )
-                {
-                    if ( $handle )
-                    {
-                        @ fclose( $handle );
-
-                        if ( $path )
-                        {
-                            @ unlink( $path );
-                        }
-                    }
-
-                    return $result;
-                }
+                $renderer->writeLine( ( $media ? "\t" : '' ) . '}' . $eol );
             }
         }
 
         if ( $media )
         {
-            if ( $this->renderLine( $handle, '}', $result ) )
-            {
-                if ( $handle )
-                {
-                    @ fclose( $handle );
-
-                    if ( $path )
-                    {
-                        @ unlink( $path );
-                    }
-                }
-
-                return $result;
-            }
+            $renderer->writeLine( '}' );
         }
 
-        if ( $this->extra )
+        if ( $this->hasExtraContent() )
         {
-            $extra = static::RENDER_EOL . $this->extra;
-
-            if ( $this->renderLine( $handle, $extra, $result ) )
-            {
-                if ( $handle )
-                {
-                    @ fclose( $handle );
-
-                    if ( $path )
-                    {
-                        @ unlink( $path );
-                    }
-                }
-
-                return $result;
-            }
+            $renderer->writeLine( $eol . $this->getExtraContent() );
         }
 
-        if ( $handle )
-        {
-            @ fclose( $handle );
-        }
+        return $renderer;
+    }
 
-        return $result;
+    /**
+     * @param   string|resource $file
+     * @return  ParserInterface
+     */
+    public function parseFile( $file )
+    {
+        $parser = new Parser;
+        return $parser->parseFile( $this, $file );
+    }
+
+    /**
+     * @param   string  $data
+     * @return  ParserInterface
+     */
+    public function parseString( $data )
+    {
+        $parser = new Parser;
+        return $parser->parseFile( $this, $data );
     }
 
 }

@@ -15,7 +15,7 @@ return array(
                     ),
                 ),
             ),
-            'Grid\Customize\Admin\Create' => array(
+         /* 'Grid\Customize\Admin\Create' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
                     'route'     => '/app/:locale/admin/customize/create',
@@ -28,6 +28,19 @@ return array(
                     ),
                 ),
             ),
+            'Grid\Customize\Admin\EditExtra' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route'         => '/app/:locale/admin/customize/edit-extra',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
+                    'defaults'      => array(
+                        'controller'    => 'Grid\Customize\Controller\Admin',
+                        'action'        => 'edit-extra',
+                    ),
+                ),
+            ), */
             'Grid\Customize\Admin\Edit' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -42,19 +55,6 @@ return array(
                     ),
                 ),
             ),
-         /* 'Grid\Customize\Admin\EditExtra' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route'         => '/app/:locale/admin/customize/edit-extra',
-                    'constraints'   => array(
-                        'locale'    => '\w+',
-                    ),
-                    'defaults'      => array(
-                        'controller'    => 'Grid\Customize\Controller\Admin',
-                        'action'        => 'edit-extra',
-                    ),
-                ),
-            ), */
             'Grid\Customize\Admin\List' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
@@ -79,6 +79,33 @@ return array(
                     'defaults'      => array(
                         'controller'    => 'Grid\Customize\Controller\Admin',
                         'action'        => 'delete',
+                    ),
+                ),
+            ),
+            'Grid\Customize\CssAdmin\Edit' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route'         => '/app/:locale/admin/customize-css/edit/:id',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                        'id'        => '[1-9][0-9]*',
+                    ),
+                    'defaults'      => array(
+                        'controller'    => 'Grid\Customize\Controller\CssAdmin',
+                        'action'        => 'edit',
+                    ),
+                ),
+            ),
+            'Grid\Customize\CssAdmin\List' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route'     => '/app/:locale/admin/customize-css/list',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                    ),
+                    'defaults'  => array(
+                        'controller' => 'Grid\Customize\Controller\CssAdmin',
+                        'action'     => 'list',
                     ),
                 ),
             ),
@@ -118,6 +145,7 @@ return array(
         'invokables' => array(
             'Grid\Customize\Controller\Admin'        => 'Grid\Customize\Controller\AdminController',
             'Grid\Customize\Controller\Render'       => 'Grid\Customize\Controller\RenderController',
+            'Grid\Customize\Controller\CssAdmin'     => 'Grid\Customize\Controller\CssAdminController',
             'Grid\Customize\Controller\ImportExport' => 'Grid\Customize\Controller\ImportExportController',
         ),
     ),
@@ -131,15 +159,23 @@ return array(
                     'uri'           => '#',
                     'parentOnly'    => true,
                     'pages'         => array(
-                        'list'      => array(
+                        'cssList'   => array(
                             'order'         => 1,
+                            'label'         => 'admin.navTop.customize.cssList',
+                            'textDomain'    => 'admin',
+                            'route'         => 'Grid\Customize\AdminCss\List',
+                            'resource'      => 'customize',
+                            'privilege'     => 'create',
+                        ),
+                        'ruleList'  => array(
+                            'order'         => 2,
                             'label'         => 'admin.navTop.customize.ruleList',
                             'textDomain'    => 'admin',
                             'route'         => 'Grid\Customize\Admin\List',
                             'resource'      => 'customize',
                             'privilege'     => 'edit',
                         ),
-                        'create'    => array(
+                     /* 'create'    => array(
                             'order'         => 2,
                             'label'         => 'admin.navTop.customize.ruleCreate',
                             'textDomain'    => 'admin',
@@ -154,7 +190,7 @@ return array(
                             'route'         => 'Grid\Customize\Admin\EditExtra',
                             'resource'      => 'customize',
                             'privilege'     => 'edit',
-                        ),
+                        ), */
                     ),
                 ),
             ),
@@ -180,7 +216,7 @@ return array(
                         'type'      => 'Zork\Form\Element\Textarea',
                         'name'      => 'selector',
                         'options'   => array(
-                            'label'     => 'customize.form.selector',
+                            'label'     => 'customize.form.rules.selector',
                             'required'  => true,
                             'rpc_validators'    => array(
                                 'Grid\Customize\Model\Rpc::isSelectorAvailable',
@@ -193,7 +229,7 @@ return array(
                         'type'      => 'Zork\Form\Element\Textarea',
                         'name'      => 'media',
                         'options'   => array(
-                            'label'     => 'customize.form.media',
+                            'label'     => 'customize.form.rules.media',
                             'required'  => false,
                         ),
                     ),
@@ -203,7 +239,7 @@ return array(
                         'type'      => 'Grid\Customize\Form\Element\Properties',
                         'name'      => 'properties',
                         'options'   => array(
-                            'label'     => 'customize.form.properties',
+                            'label'     => 'customize.form.rules.properties',
                             'required'  => false,
                         ),
                     ),
@@ -213,13 +249,39 @@ return array(
                         'type'      => 'Zork\Form\Element\Submit',
                         'name'      => 'save',
                         'attributes'    => array(
-                            'value'     => 'customize.form.submit',
+                            'value'     => 'customize.form.rules.submit',
                         ),
                     ),
                 ),
             ),
         ),
-        'Grid\Customize\Extra' => array(
+        'Grid\Customize\Css' => array(
+            'elements' => array(
+                'css' => array(
+                    'spec'  => array(
+                        'type'      => 'Zork\Form\Element\Textarea',
+                        'name'      => 'css',
+                        'options'   => array(
+                            'label'     => 'customize.form.css.css',
+                            'required'  => true,
+                        ),
+                        'attributes'    => array(
+                            'data-js-type'  => 'js.form.element.codeEditor',
+                        ),
+                    ),
+                ),
+                'save'      => array(
+                    'spec'  => array(
+                        'type'      => 'Zork\Form\Element\Submit',
+                        'name'      => 'save',
+                        'attributes'    => array(
+                            'value'     => 'customize.form.css.submit',
+                        ),
+                    ),
+                ),
+            ),
+        ),
+     /* 'Grid\Customize\Extra' => array(
             'elements' => array(
                 'css' => array(
                     'spec'  => array(
@@ -239,12 +301,12 @@ return array(
                         'type'      => 'Zork\Form\Element\Submit',
                         'name'      => 'save',
                         'attributes'    => array(
-                            'value'     => 'customize.form.submit',
+                            'value'     => 'customize.form.extra.submit',
                         ),
                     ),
                 ),
             ),
-        ),
+        ), */
         'Grid\Customize\Import' => array(
             'elements' => array(
                 'file' => array(

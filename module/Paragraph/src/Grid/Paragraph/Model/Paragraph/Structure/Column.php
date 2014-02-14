@@ -78,7 +78,11 @@ class Column extends AbstractContainer
         {
             $rule = $this->getServiceLocator()
                          ->get( 'Grid\Customize\Model\Rule\Model' )
-                         ->findBySelector( sprintf( static::WIDTH_SELECTOR, $id ) );
+                         ->findBySelector(
+                             sprintf( static::WIDTH_SELECTOR, $id ),
+                             '',
+                             $this->getRootId()
+                         );
 
             $rule->setProperty(
                 'width',

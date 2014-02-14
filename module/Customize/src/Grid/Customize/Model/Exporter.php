@@ -16,6 +16,7 @@ use Grid\Customize\Model\Sheet\Model as SheetModel;
 /**
  * Exporter model
  *
+ * @deprecated
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
 class Exporter implements SiteInfoAwareInterface

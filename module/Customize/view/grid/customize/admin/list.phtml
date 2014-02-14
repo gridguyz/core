@@ -2,7 +2,7 @@
 /**
  * @var $this \Zend\View\Renderer\PhpRenderer
  */
-$this->headTitle( $title = $this->translate( 'customize.list.title', 'customize' ) );
+$this->headTitle( $title = $this->translate( 'customize.list.rules.title', 'customize' ) );
 $view   = $this;
 $rowSet = $this->rowSet();
 
@@ -10,7 +10,7 @@ if ( ! $this->format ): ?>
 <h1><?= $title ?></h1>
 <?php endif ?>
 <?= $this->rowSet( $this->paginator, $rowSet::FLAG_LAYOUT_ALL )
-         ->setColumnTranslatePrefix( 'customize.list.column' )
+         ->setColumnTranslatePrefix( 'customize.list.rules.column' )
          ->setColumnTranslatePostfix( 'title' )
          ->setColumnTranslateTextDomain( 'customize' )
          ->setPage( $this->page )
@@ -42,12 +42,3 @@ if ( $this->isAllowed( 'customize', 'edit' ) ): ?>
               },
           ) )
          ->render( $this->format );
-
-if ( ! $this->format && $this->isAllowed( 'customize', 'create' )  ): ?>
-<div class="more-links">
-    <a class="button-appearance"
-       href="/app/<?= $view->locale() ?>/admin/customize/create">
-        <?= $view->translate( 'default.createNew' ); ?>
-    </a>
-</div>
-<?php endif ?>

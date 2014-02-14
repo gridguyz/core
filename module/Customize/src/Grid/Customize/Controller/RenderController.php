@@ -94,7 +94,7 @@ class RenderController extends AbstractActionController
 
             $this->getServiceLocator()
                  ->get( 'Grid\Customize\Model\Sheet\Model' )
-                 ->findByRoot( $rootId )
+                 ->findByExtra( $structure )
                  ->render( $cssFile );
         }
 

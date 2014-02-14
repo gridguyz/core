@@ -122,7 +122,7 @@ class Columns extends AbstractContainer
             foreach ( (array) $this->getColumnIds() as $id )
             {
                 $selector = sprintf( Column::WIDTH_SELECTOR, $id );
-                $this->columnWidths[$id] = (int) $ruleModel->findBySelector( $selector )
+                $this->columnWidths[$id] = (int) $ruleModel->findBySelector( $selector, '', $this->getRootId() )
                                                            ->getPropertyValue( 'width' );
             }
         }
@@ -190,8 +190,11 @@ class Columns extends AbstractContainer
 
             foreach ( $this->columnWidths as $id => $width )
             {
-                $selector   = sprintf( Column::WIDTH_SELECTOR, $id );
-                $rule       = $ruleModel->findBySelector( $selector );
+                $rule = $ruleModel->findBySelector(
+                    sprintf( Column::WIDTH_SELECTOR, $id ),
+                    '',
+                    $this->getRootId()
+                );
 
                 $rule->setProperty(
                     'width',

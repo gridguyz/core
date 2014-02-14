@@ -6,7 +6,7 @@ use Zork\Stdlib\Message;
 use Grid\Core\Controller\AbstractListController;
 
 /**
- * GroupAdminController
+ * AdminController
  *
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */

@@ -14,6 +14,7 @@ use Grid\Customize\Model\Sheet\Model as SheetModel;
 /**
  * Importer model
  *
+ * @deprecated
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
 class Importer implements SiteInfoAwareInterface

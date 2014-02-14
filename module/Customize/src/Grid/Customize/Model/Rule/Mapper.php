@@ -5,7 +5,6 @@ namespace Grid\Customize\Model\Rule;
 use Zend\Db\Sql;
 use Zend\Db\Sql\Predicate;
 use Zork\Db\Sql\Predicate\NotIn;
-use Grid\Customize\Model\Extra\Mapper as ExtraMapper;
 use Zork\Model\Mapper\DbAware\ReadWriteMapperAbstract;
 
 /**
@@ -49,38 +48,12 @@ class Mapper extends ReadWriteMapperAbstract
     );
 
     /**
-     * @var ExtraMapper
-     */
-    protected $extraMapper;
-
-    /**
-     * @return ExtraMapper
-     */
-    public function getExtraMapper()
-    {
-        return $this->extraMapper;
-    }
-
-    /**
-     * @param ExtraMapper $extraMapper
-     * @return \Grid\Customize\Model\Rule\Mapper
-     */
-    public function setExtraMapper( ExtraMapper $extraMapper )
-    {
-        $this->extraMapper = $extraMapper;
-        return $this;
-    }
-
-    /**
      * Contructor
      *
-     * @param ExtraMapper $customizeExtraMapper
      * @param \Customize\Model\Rule\Structure $customizeRuleStructurePrototype
      */
-    public function __construct( ExtraMapper $customizeExtraMapper,
-                                 Structure $customizeRuleStructurePrototype = null )
+    public function __construct( Structure $customizeRuleStructurePrototype = null )
     {
-        $this->setExtraMapper( $customizeExtraMapper );
         parent::__construct( $customizeRuleStructurePrototype ?: new Structure );
     }
 
@@ -315,6 +288,37 @@ class Mapper extends ReadWriteMapperAbstract
     }
 
     /**
+     * @param   mixed   $structure
+     * @param   string  $property
+     * @param   mixed   $default
+     * @return  mixed
+     */
+    private function getSaveProperty( & $structure, $property, $default = null )
+    {
+        return is_array( $structure )
+            ? ( empty( $structure[$property] ) ? $default : $structure[$property] )
+            : ( empty( $structure->$property ) ? $default : $structure->$property );
+    }
+
+    /**
+     * @param   mixed   $structure
+     * @param   string  $property
+     * @param   mixed   $value
+     * @return  void
+     */
+    private function setSaveProperty( & $structure, $property, $value )
+    {
+        if ( is_array( $structure ) )
+        {
+            $structure[$property] = $value;
+        }
+        else
+        {
+            $structure->$property = $value;
+        }
+    }
+
+    /**
      * Save element structure to datasource
      *
      * @param array|\Customize\Model\Rule\Structure $structure
@@ -322,11 +326,37 @@ class Mapper extends ReadWriteMapperAbstract
      */
     public function save( & $structure )
     {
-        $result = parent::save( $structure );
+        $id = $this->getSaveProperty( $structure, 'id' );
 
-        $id = is_array( $structure )
-            ? ( empty( $structure['id'] )   ? null : $structure['id']   )
-            : ( empty( $structure->id )     ? null : $structure->id     );
+        if ( empty( $id ) )
+        {
+            $selector = $this->getSaveProperty( $structure, 'selector', '' );
+            $media    = $this->getSaveProperty( $structure, 'media', '' );
+            $rootId   = $this->getSaveProperty( $structure, 'rootParagraphId' );
+            $sql      = $this->sql();
+            $select   = $sql->select()
+                            ->columns( array( 'id' ) )
+                            ->where( array(
+                                'selector'        => $selector,
+                                'media'           => $media,
+                                'rootParagraphId' => $rootId,
+                            ) )
+                            ->limit( 1 );
+
+            $result = $sql->prepareStatementForSqlObject( $select )
+                          ->execute();
+
+            if ( $result->getAffectedRows() )
+            {
+                foreach ( $result as $row )
+                {
+                    $this->setSaveProperty( $structure, 'id', $row['id'] );
+                }
+            }
+        }
+
+        $result = parent::save( $structure );
+        $id     = $this->getSaveProperty( $structure, 'id' );
 
         if ( $result > 0 && ! empty( $id ) )
         {
@@ -404,26 +434,30 @@ class Mapper extends ReadWriteMapperAbstract
      *
      * @param string $selector
      * @param string $media [optional]
+     * @param int $rootId [optional]
      * @return \Customize\Model\Rule\Structure
      */
-    public function findBySelector( $selector, $media = '' )
+    public function findBySelector( $selector, $media = '', $rootId = null )
     {
-        return $this->findOne( array(
+        $where = array(
             'selector'  => (string) $selector,
             'media'     => (string) $media,
-        ) );
-    }
+        );
 
-    /**
-     * @param   int|null $rootId
-     * @return  \Customize\Model\Extra\Structure|null
-     */
-    public function findExtraByRoot( $rootId = null )
-    {
-        $extra = $this->getExtraMapper()
-                      ->findByRoot( $rootId );
+        if ( empty( $rootId ) )
+        {
+            $where = array(
+                new Predicate\IsNull( 'rootParagraphId' )
+            );
+        }
+        else
+        {
+            $where = array(
+                'rootParagraphId' => (int) $rootId,
+            );
+        }
 
-        return empty( $extra ) ? null : $extra;
+        return $this->findOne( $where );
     }
 
     /**
@@ -478,10 +512,11 @@ class Mapper extends ReadWriteMapperAbstract
     /**
      * Delete rules by root-id
      *
-     * @param int|null $rootId
-     * @return int
+     * @param   int|null    $rootId
+     * @param   int[]       $except
+     * @return  int
      */
-    public function deleteByRoot( $rootId = null )
+    public function deleteByRoot( $rootId = null, array $except = array() )
     {
         if ( null === $rootId )
         {
@@ -494,6 +529,11 @@ class Mapper extends ReadWriteMapperAbstract
             $where = array(
                 'rootParagraphId' => (int) $rootId,
             );
+        }
+
+        if ( ! empty( $except ) )
+        {
+            $where[] = new Predicate\NotIn( 'id', $except );
         }
 
         $delete = $this->sql()

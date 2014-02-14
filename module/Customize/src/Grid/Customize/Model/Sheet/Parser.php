@@ -1,14 +1,15 @@
 <?php
 
-namespace Grid\Customize\Model;
+namespace Grid\Customize\Model\Sheet;
+
+use Customize\Model\Rule\Structure as RuleStructure;
 
 /**
- * CssParser
+ * Parser
  *
- * @deprecated
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
-class CssParser
+class Parser implements ParserInterface
 {
 
     /**
@@ -26,6 +27,13 @@ class CssParser
     protected $media = array();
 
     /**
+     * Extra states
+     *
+     * @var array
+     */
+    protected $extras = array();
+
+    /**
      * Buffer state
      *
      * @var string
@@ -33,28 +41,107 @@ class CssParser
     protected $buffer = '';
 
     /**
-     * Parse a css file
+     * Sheet state
      *
-     * @param string $file
-     * @return \Customize\Model\Sheet\Structure
+     * @var Structure
      */
-    public function parse( $file )
+    protected $sheet;
+
+    /**
+     * @param   Structure       $sheet
+     * @param   string|resource $file
+     * @return  ParserInterface
+     */
+    public function parseFile( Structure $sheet, $file )
     {
-        if ( ! is_file( $file ) || ! is_readable( $file ) )
+        $this->sheet = $sheet;
+
+        if ( is_resource( $file ) )
         {
-            return null;
+            $this->buffer = stream_get_contents( $file );
+        }
+        else if ( ! is_file( $file ) || ! is_readable( $file ) )
+        {
+            throw new Exception\InvalidArgumentException( sprintf(
+                '%s: $file "%s" is not readable, or does not exists',
+                __METHOD__,
+                $file
+            ) );
+        }
+        else
+        {
+            $this->buffer = file_get_contents( $file );
         }
 
-        $sheet  = new Sheet\Structure();
-        $this->buffer = @ file_get_contents( $file );
+        $this->parse();
+        return $this;
+    }
+
+    /**
+     * @param   Structure       $sheet
+     * @param   string          $data
+     * @return  ParserInterface
+     */
+    public function parseString( Structure $sheet, $data )
+    {
+        $this->sheet    = $sheet;
+        $this->buffer   = (string) $data;
+        $this->parse();
+        return $this;
+    }
+
+    /**
+     * Parse css content
+     *
+     * @return  void
+     */
+    protected function parse()
+    {
+        $this->media    = array();
+        $this->extras   = array();
+        $this->sheet->resetContents();
         $this->acceptBom();
 
         while ( ! empty( $this->buffer ) )
         {
-            $this->acceptEntry( $sheet );
+            $this->acceptEntry();
         }
 
-        return $sheet;
+        $extraContent = '';
+
+        foreach ( $this->extras as $media => $extra )
+        {
+            if ( empty( $media ) )
+            {
+                $extraContent .= $extra;
+            }
+            else
+            {
+                $extraContent .= "@media $media\n{\n$extra\n}\n";
+            }
+
+            $extraContent .= "\n";
+        }
+
+        $this->sheet->setExtraContent( $extraContent );
+    }
+
+    /**
+     * Append extra data
+     *
+     * @param   string  $data
+     * @return  void
+     */
+    protected function appendExtra( $data )
+    {
+        $media = end( $this->media );
+
+        if ( ! isset( $this->extras[$media] ) )
+        {
+            $this->extras[$media] = '';
+        }
+
+        $this->extras[$media] .= $data;
     }
 
     /**
@@ -89,11 +176,12 @@ class CssParser
     /**
      * Accept Unknown brackets
      *
-     * @return void
+     * @return  string
      */
     protected function acceptUnknowBrackets()
     {
-        $level = 0;
+        $level  = 0;
+        $result = '';
 
         do
         {
@@ -101,23 +189,35 @@ class CssParser
             {
                 case '{':
                     $level++;
+                    $result .= '{';
                     $this->buffer = substr( $this->buffer, 1 );
                     break;
 
                 case '}':
                     $level--;
+                    $result .= '}';
                     $this->buffer = substr( $this->buffer, 1 );
                     break;
 
                 default:
-                    $this->buffer = preg_replace(
+                    $newBuffer = preg_replace(
                         '/^[^\{\}]+/', '',
                         $this->buffer
                     );
+
+                    $result .= substr(
+                        $this->buffer,
+                        0,
+                        strlen( $this->buffer ) - strlen( $newBuffer )
+                    );
+
+                    $this->buffer = $newBuffer;
                     break;
             }
         }
         while ( $level > 0 );
+
+        return $result;
     }
 
     /**
@@ -259,10 +359,10 @@ class CssParser
     /**
      * Accept property
      *
-     * @param \Customize\Model\Rule\Structure $rule
-     * @return void
+     * @param   RuleStructure $rule
+     * @return  void
      */
-    protected function acceptProperty( Rule\Structure & $rule )
+    protected function acceptProperty( RuleStructure &$rule )
     {
         @ list( $name, $this->buffer ) = explode( ':', $this->buffer, 2 );
         $this->acceptWhiteSpace();
@@ -290,10 +390,9 @@ class CssParser
     /**
      * Accept entry
      *
-     * @param \Customize\Model\Sheet\Structure $sheet
-     * @return void
+     * @return  void
      */
-    protected function acceptEntry( Sheet\Structure & $sheet )
+    protected function acceptEntry()
     {
         $this->acceptWhiteSpace( ';' );
 
@@ -327,9 +426,19 @@ class CssParser
                     }
                     else if ( '@import' == strtolower( substr( $this->buffer, 0, 7 ) ) )
                     {
+                        $oldBuffer = $this->buffer;
                         $this->buffer = substr( $this->buffer, 7 );
                         $this->acceptWhiteSpace();
-                        $sheet->addImport( $this->acceptUrl() );
+                        $this->sheet->addImport( $this->acceptUrl() );
+                        $this->acceptSafeValue();
+
+                        $this->appendExtra( substr(
+                            $oldBuffer,
+                            0,
+                            strlen( $oldBuffer ) - strlen( $this->buffer )
+                        ) . ";\n" );
+
+                        $oldBuffer = null;
                     }
                     else if ( '@media' == strtolower( substr( $this->buffer, 0, 6 ) ) )
                     {
@@ -354,7 +463,15 @@ class CssParser
                     }
                     else
                     {
-                        $this->buffer = preg_replace( '/^[^\{\;]+/', '', $this->buffer );
+                        $newBuffer = preg_replace( '/^[^\{\;]+/', '', $this->buffer );
+
+                        $this->appendExtra( substr(
+                            $this->buffer,
+                            0,
+                            strlen( $this->buffer ) - strlen( $newBuffer )
+                        ) );
+
+                        $this->buffer = $newBuffer;
                     }
 
                     break;
@@ -370,7 +487,7 @@ class CssParser
                     break;
 
                 case '{':
-                    $this->acceptUnknowBrackets();
+                    $this->appendExtra( $this->acceptUnknowBrackets() );
                     break;
 
                 default:
@@ -378,13 +495,23 @@ class CssParser
                           $this->buffer ) = explode( '{', $this->buffer, 2 );
 
                     $this->acceptWhiteSpace();
-                    $rule = new Rule\Structure( array(
+                    $rule = array(
                         'media'     => end( $this->media ),
                         'selector'  => preg_replace(
                             '/\s+/', ' ',
                             rtrim( $selector, self::WHITE_SPACE )
                         ),
-                    ) );
+                    );
+
+                    if ( ( $mapper = $this->sheet->getMapper() ) &&
+                         ( $ruleMapper = $mapper->getRuleMapper() ) )
+                    {
+                        $rule = $ruleMapper->create( $rule );
+                    }
+                    else
+                    {
+                        $rule = new RuleStructure( $rule );
+                    }
 
                     while ( true )
                     {
@@ -404,7 +531,7 @@ class CssParser
                         $this->acceptProperty( $rule );
                     }
 
-                    $sheet->addRule( $rule );
+                    $this->sheet->addRule( $rule );
                     break;
             }
         }
