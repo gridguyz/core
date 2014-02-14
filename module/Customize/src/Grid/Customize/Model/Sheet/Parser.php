@@ -167,7 +167,7 @@ class Parser implements ParserInterface
         while ( substr( $this->buffer, 0, 2 ) == '/*' )
         {
             $this->buffer = ltrim(
-                preg_replace( '#/\*.*?\*/s#', '', $this->buffer ),
+                preg_replace( '#/\*.*?\*/#s', '', $this->buffer ),
                 self::WHITE_SPACE . $additional
             );
         }
