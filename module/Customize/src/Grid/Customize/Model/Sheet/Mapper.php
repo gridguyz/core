@@ -3,9 +3,9 @@
 namespace Grid\Customize\Model\Sheet;
 
 use Zend\Db\Sql\Select;
-use Zend\Db\Sql\Predicate;
 use Zend\Db\Sql\Expression;
 use Zend\Stdlib\ArrayUtils;
+use Zork\Db\Sql\Predicate\TypedParameters;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 use Zork\Model\Mapper\ReadWriteMapperInterface;
 use Grid\Customize\Model\Rule\Mapper as RuleMapper;
@@ -287,12 +287,18 @@ class Mapper implements ReadWriteMapperInterface, HydratorInterface
         return $this->getParagraphMapper()
                     ->getPaginator(
                         array(
-                            new Predicate\Operator(
-                                'id',
-                                Predicate\Operator::OP_EQ,
-                                'rootId',
-                                Predicate\Operator::TYPE_IDENTIFIER,
-                                Predicate\Operator::TYPE_IDENTIFIER
+                            new TypedParameters(
+                                '?.? = ?.?',
+                                array(
+                                    'paragraph', 'id',
+                                    'paragraph', 'rootId',
+                                ),
+                                array(
+                                    TypedParameters::TYPE_IDENTIFIER,
+                                    TypedParameters::TYPE_IDENTIFIER,
+                                    TypedParameters::TYPE_IDENTIFIER,
+                                    TypedParameters::TYPE_IDENTIFIER,
+                                )
                             ),
                         ),
                         array( 'id' => 'ASC' ),
