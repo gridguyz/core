@@ -1,2 +1,12 @@
 @charset "utf-8";
 
+.CodeMirror-toolbar
+{
+    top: 1px;
+    right: 20px;
+    z-index: 1;
+    height: 32px;
+    display: block;
+    text-align: right;
+    position: absolute;
+}

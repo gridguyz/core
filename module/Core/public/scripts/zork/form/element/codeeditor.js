@@ -34,13 +34,13 @@
             sets        = $( '<div class="CodeMirror-toolbar">' ),
             set         = $( settpl );
 
-        $.each( buttons, function ( button ) {
-            if ( ! button || button === "|" ) {
+        $.each( buttons, function () {
+            if ( ! this || this === "|" ) {
                 sets.append( set.buttonset() );
                 set = $( settpl );
-            } else if ( typeof button.click !== "undefined" ) {
-                var click = button.click;
-                delete button.click;
+            } else if ( typeof this.click !== "undefined" ) {
+                var click = this.click;
+                delete this.click;
 
                 if ( ! Function.isFunction( click ) )
                 {
@@ -48,11 +48,11 @@
                     click   = function () { cm.execCommand( com ); };
                 }
 
-                set.append( $( buttpl ).button( button ).click( click ) );
+                set.append( $( buttpl ).button( this ).click( click ) );
             }
         } );
 
-        $( cm.getWrapperElement() ).prepend( sets.append( set ) );
+        $( cm.getWrapperElement() ).prepend( sets.append( set.buttonset() ) );
     } );
 
     /**
