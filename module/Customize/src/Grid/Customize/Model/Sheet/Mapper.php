@@ -6,6 +6,7 @@ use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Predicate;
 use Zend\Db\Sql\Expression;
 use Zend\Stdlib\ArrayUtils;
+use Zend\Stdlib\Hydrator\HydratorInterface;
 use Zork\Model\Mapper\ReadWriteMapperInterface;
 use Grid\Customize\Model\Rule\Mapper as RuleMapper;
 use Grid\Customize\Model\Extra\Mapper as ExtraMapper;
@@ -17,7 +18,7 @@ use Grid\Paragraph\Model\Paragraph\Mapper as ParagraphMapper;
  *
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
-class Mapper implements ReadWriteMapperInterface
+class Mapper implements ReadWriteMapperInterface, HydratorInterface
 {
 
     /**
@@ -415,6 +416,64 @@ class Mapper implements ReadWriteMapperInterface
         }
 
         return $this->save( $structure );
+    }
+
+    /**
+     * Extract values from an object
+     *
+     * @param   object  $object
+     * @return  array
+     */
+    public function extract( $object )
+    {
+        if ( $object instanceof Structure )
+        {
+            return array(
+                'css' => $object->render()
+                                ->getBuffer(),
+            );
+        }
+
+        return array(
+            'css' => isset( $object->css )
+                ? (string) $object->css
+                : null,
+        );
+    }
+
+    /**
+     * Hydrate $object with the provided $data.
+     *
+     * @param   array   $data
+     * @param   object  $object
+     * @return  object
+     */
+    public function hydrate( array $data, $object )
+    {
+        if ( $object instanceof Structure )
+        {
+            if ( ! empty( $data['cssFile'] ) && is_file( $data['cssFile'] ) )
+            {
+                $object->parseFile( $data['cssFile'] );
+            }
+            else if ( ! empty( $data['css'] ) )
+            {
+                $object->parseString( $data['css'] );
+            }
+        }
+        else
+        {
+            if ( ! empty( $data['cssFile'] ) && is_file( $data['cssFile'] ) )
+            {
+                $object->css = file_get_contents( $data['cssFile'] );
+            }
+            else if ( ! empty( $data['css'] ) )
+            {
+                $object->css = (string) $data['css'];
+            }
+        }
+
+        return $object;
     }
 
 }

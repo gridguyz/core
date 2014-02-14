@@ -163,7 +163,7 @@ return array(
                             'order'         => 1,
                             'label'         => 'admin.navTop.customize.cssList',
                             'textDomain'    => 'admin',
-                            'route'         => 'Grid\Customize\AdminCss\List',
+                            'route'         => 'Grid\Customize\CssAdmin\List',
                             'resource'      => 'customize',
                             'privilege'     => 'create',
                         ),

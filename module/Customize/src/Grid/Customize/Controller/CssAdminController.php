@@ -41,6 +41,8 @@ class CssAdminController extends AbstractListController
      */
     public function editAction()
     {
+        /* @var $form \Zork\Form\Form */
+        /* @var $model \Grid\Customize\Model\Sheet\Model */
         $params     = $this->params();
         $request    = $this->getRequest();
         $locator    = $this->getServiceLocator();
@@ -49,25 +51,24 @@ class CssAdminController extends AbstractListController
         $model      = $locator->get( 'Grid\Customize\Model\Sheet\Model' );
         $form       = $locator->get( 'Form' )
                               ->get( 'Grid\Customize\Css' );
-        $extra      = $model->findByRoot( $rootId );
+        $sheet      = $model->find( $rootId );
+
+        $form->setHydrator( $model->getMapper() )
+             ->bind( $sheet );
 
         if ( $request->isPost() )
         {
             $form->setData( $request->getPost() );
 
-            if ( $form->isValid() && $extra->save() )
+            if ( $form->isValid() && $sheet->save() )
             {
                 $this->messenger()
                      ->add( 'customize.form.success',
                             'customize', Message::LEVEL_INFO );
 
                 return $this->redirect()
-                            ->toRoute( 'Grid\Customize\Admin\EditExtra', array(
+                            ->toRoute( 'Grid\Customize\CssAdmin\List', array(
                                 'locale' => (string) $this->locale(),
-                            ), array(
-                                'query' => array(
-                                    'refresh' => true,
-                                ),
                             ) );
             }
             else
@@ -80,7 +81,7 @@ class CssAdminController extends AbstractListController
 
         return array(
             'form'  => $form,
-            'extra' => $extra,
+            'sheet' => $sheet,
         );
     }
 
