@@ -2,7 +2,7 @@
 
 namespace Grid\Customize\Model\Sheet;
 
-use Customize\Model\Rule\Structure as RuleStructure;
+use Grid\Customize\Model\Rule\Structure as RuleStructure;
 
 /**
  * Parser

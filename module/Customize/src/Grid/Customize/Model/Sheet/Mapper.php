@@ -5,6 +5,7 @@ namespace Grid\Customize\Model\Sheet;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Expression;
 use Zend\Stdlib\ArrayUtils;
+use Zork\Model\MapperAwareInterface;
 use Zork\Db\Sql\Predicate\TypedParameters;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 use Zork\Model\Mapper\ReadWriteMapperInterface;
@@ -456,6 +457,11 @@ class Mapper implements ReadWriteMapperInterface, HydratorInterface
      */
     public function hydrate( array $data, $object )
     {
+        if ( $object instanceof MapperAwareInterface )
+        {
+            $object->setMapper( $this );
+        }
+
         if ( $object instanceof Structure )
         {
             if ( ! empty( $data['cssFile'] ) && is_file( $data['cssFile'] ) )
