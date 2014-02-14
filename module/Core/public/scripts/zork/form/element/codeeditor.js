@@ -20,8 +20,8 @@
             "theme" : "default"
         };
 
-    js.style( codeMirrorPath + "/lib/codeeditor.css" );
-    js.script( codeMirrorPath + "/lib/compressed-zork.css" );
+    js.style( codeMirrorPath + "/lib/codemirror.css" );
+    js.script( codeMirrorPath + "/lib/compressed-zork.js" );
 
     /**
      * Code-editor element
