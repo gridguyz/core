@@ -19,13 +19,12 @@
     js.style( codeMirrorPath + "/lib/codemirror.css" );
     js.style( codeMirrorPath + "/addon/dialog/dialog.css" );
     js.style( codeMirrorPath + "/addon/display/fullscreen.css" );
-    js.style( codeMirrorPath + "/addon/fold/foldgutter.css" );
-    js.style( codeMirrorPath + "/addon/hint/show-hint.css" );
-    js.style( codeMirrorPath + "/addon/lint/lint.css" );
-    js.style( codeMirrorPath + "/addon/merge/merge.css" );
-    js.style( codeMirrorPath + "/addon/tern/tern.css" );
     js.style( "/styles/scripts/codeeditor.css" );
     js.script( codeMirrorPath + "/lib/compressed-zork.js" );
+    js.script( codeMirrorPath + "/addon/dialog/dialog.js" );
+    js.script( codeMirrorPath + "/addon/display/fullscreen.js" );
+    js.script( codeMirrorPath + "/addon/search/searchcursor.js" );
+    js.script( codeMirrorPath + "/addon/search/search.js" );
 
     CodeMirror.defineExtension( "createToolbar", function ( buttons ) {
         var cm          = this,
@@ -39,8 +38,11 @@
                 sets.append( set.buttonset() );
                 set = $( settpl );
             } else if ( typeof this.click !== "undefined" ) {
-                var click = this.click;
+                var click = this.click,
+                    title = String( this.title || "" );
+
                 delete this.click;
+                delete this.title;
 
                 if ( ! Function.isFunction( click ) )
                 {
@@ -48,11 +50,17 @@
                     click   = function () { cm.execCommand( com ); };
                 }
 
-                set.append( $( buttpl ).button( this ).click( click ) );
+                set.append(
+                    $( buttpl )
+                        .button( this )
+                        .attr( "title", title )
+                        .click( click )
+                );
             }
         } );
 
         $( cm.getWrapperElement() ).prepend( sets.append( set.buttonset() ) );
+        return sets[0];
     } );
 
     /**
@@ -67,20 +75,30 @@
         if ( element.is( "textarea" ) )
         {
             var node    = element[0],
-                params  = {
-                    "mode": element.data( "jsCodeeditorMode" ) || "text/html",
-                    "theme": element.data( "jsCodeeditorTheme" ) || "default"
-                },
-                mirror  = CodeMirror.fromTextArea( node, params );
+                mode    = element.data( "jsCodeeditorMode" ) || "text/html",
+                theme   = String( element.data( "jsCodeeditorTheme" ) || "" ).toLowerCase() || "default",
+                lineNum = !! element.data( "jsCodeeditorLinenumbers" ),
+                mirror  = CodeMirror.fromTextArea( node, {
+                    "mode": mode,
+                    "theme": theme,
+                    "tabSize": 2,
+                    "indentWithTabs": true,
+                    "lineNumbers": lineNum
+                } );
 
-            if ( params.theme !== "default" )
+            if ( theme !== "default" )
             {
-                js.style( codeMirrorPath + "/theme/" + params.theme + ".css" );
+                js.style( codeMirrorPath + "/theme/" + theme + ".css" );
             }
 
             mirror.createToolbar( [ {
-                "text": true,
-                "label": js.core.translate( "default.insert" ),
+                "text": false,
+                "title":js.core.translate( "default.search" ),
+                "icons": { "primary": "ui-icon-search" },
+                "click": "search"
+            }, {
+                "text": false,
+                "title": js.core.translate( "default.insert" ),
                 "icons": { "primary": "ui-icon-image" },
                 "click": function () {
                     js.caller.zork.require( "js.core.pathselect", function ( pathselect ) {
@@ -92,6 +110,11 @@
                         } );
                     } );
                 }
+            }, {
+                "text": false,
+                "title":js.core.translate( "default.fullscreen" ),
+                "icons": { "primary": "ui-icon-extlink" },
+                "click": "fullscreen"
             } ] );
         }
     };
