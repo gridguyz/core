@@ -339,7 +339,7 @@ class Structure extends MapperAwareAbstract
     public function parseString( $data )
     {
         $parser = new Parser;
-        return $parser->parseFile( $this, $data );
+        return $parser->parseString( $this, $data );
     }
 
 }
