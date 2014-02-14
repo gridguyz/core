@@ -14,14 +14,46 @@
     }
 
     var codeMirrorVersion   = "3.21",
-        codeMirrorPath      = "/scripts/library/codemirror-" + codeMirrorVersion,
-        codeMirrorDefaults  = {
-            "mode"  : "text/html",
-            "theme" : "default"
-        };
+        codeMirrorPath      = "/scripts/library/codemirror-" + codeMirrorVersion;
 
     js.style( codeMirrorPath + "/lib/codemirror.css" );
+    js.style( codeMirrorPath + "/addon/dialog/dialog.css" );
+    js.style( codeMirrorPath + "/addon/display/fullscreen.css" );
+    js.style( codeMirrorPath + "/addon/fold/foldgutter.css" );
+    js.style( codeMirrorPath + "/addon/hint/show-hint.css" );
+    js.style( codeMirrorPath + "/addon/lint/lint.css" );
+    js.style( codeMirrorPath + "/addon/merge/merge.css" );
+    js.style( codeMirrorPath + "/addon/tern/tern.css" );
+    js.style( "/styles/scripts/codeeditor.css" );
     js.script( codeMirrorPath + "/lib/compressed-zork.js" );
+
+    CodeMirror.defineExtension( "createToolbar", function ( buttons ) {
+        var cm          = this,
+            settpl      = '<span class="CodeMirror-toolbar-buttonset">',
+            buttpl      = '<button type="button">',
+            sets        = $( '<div class="CodeMirror-toolbar">' ),
+            set         = $( settpl );
+
+        $.each( buttons, function ( button ) {
+            if ( ! button || button === "|" ) {
+                sets.append( set.buttonset() );
+                set = $( settpl );
+            } else if ( typeof button.click !== "undefined" ) {
+                var click = button.click;
+                delete button.click;
+
+                if ( ! Function.isFunction( click ) )
+                {
+                    var com = String( click );
+                    click   = function () { cm.execCommand( com ); };
+                }
+
+                set.append( $( buttpl ).button( button ).click( click ) );
+            }
+        } );
+
+        $( cm.getWrapperElement() ).prepend( sets.append( set ) );
+    } );
 
     /**
      * Code-editor element
@@ -36,26 +68,31 @@
         {
             var node    = element[0],
                 params  = {
-                    "mode": element.data( "jsCodeeditorMode" ) || codeMirrorDefaults.mode,
-                    "theme": element.data( "jsCodeeditorTheme" ) || codeMirrorDefaults.theme
+                    "mode": element.data( "jsCodeeditorMode" ) || "text/html",
+                    "theme": element.data( "jsCodeeditorTheme" ) || "default"
                 },
-                mirror  = CodeMirror.fromTextArea( node, params ),
-                insert  = $( "<button type='button' />" ).button( {
-                                "text": true,
-                                "label": js.core.translate( "default.insert" ),
-                                "icons": { "primary": "ui-icon-image" }
-                            } ).click( function () {
-                                js.caller.zork.require( "js.core.pathselect", function ( pathselect ) {
-                                    pathselect( {
-                                        "file"      : true,
-                                        "select"    : function ( file ) {
-                                            mirror.getDoc().replaceSelection( String( file ) );
-                                        }
-                                    } );
-                                } );
-                            } );
+                mirror  = CodeMirror.fromTextArea( node, params );
 
-            mirror.addWidget( { "line": 1, "ch": 70 }, insert[0], true );
+            if ( params.theme !== "default" )
+            {
+                js.style( codeMirrorPath + "/theme/" + params.theme + ".css" );
+            }
+
+            mirror.createToolbar( [ {
+                "text": true,
+                "label": js.core.translate( "default.insert" ),
+                "icons": { "primary": "ui-icon-image" },
+                "click": function () {
+                    js.caller.zork.require( "js.core.pathselect", function ( pathselect ) {
+                        pathselect( {
+                            "file"      : true,
+                            "select"    : function ( file ) {
+                                mirror.getDoc().replaceSelection( String( file ) );
+                            }
+                        } );
+                    } );
+                }
+            } ] );
         }
     };
 

@@ -392,6 +392,11 @@ form dl dd.input-textarea textarea
     height: 6em;
 }
 
+form dl dd.input-textarea .CodeMirror
+{
+    text-align: left;
+}
+
 form dl dd.input-radio label,
 form dl dd.input-radio_group label,
 form dl dd.input-multi_checkbox label,
