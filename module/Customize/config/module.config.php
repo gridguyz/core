@@ -266,7 +266,8 @@ return array(
                             'required'  => true,
                         ),
                         'attributes'    => array(
-                            'data-js-type'  => 'js.form.element.codeEditor',
+                            'data-js-type'              => 'js.form.element.codeEditor',
+                            'data-js-codeeditor-mode'   => 'text/css',
                         ),
                     ),
                 ),
