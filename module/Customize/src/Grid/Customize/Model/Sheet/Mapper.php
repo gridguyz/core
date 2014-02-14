@@ -10,7 +10,7 @@ use Zork\Model\Mapper\ReadWriteMapperInterface;
 use Grid\Customize\Model\Rule\Mapper as RuleMapper;
 use Grid\Customize\Model\Extra\Mapper as ExtraMapper;
 use Grid\Customize\Model\Extra\Structure as ExtraStructure;
-use Grid\paragraph\Model\Paragraph\Mapper as ParagraphMapper;
+use Grid\Paragraph\Model\Paragraph\Mapper as ParagraphMapper;
 
 /**
  * Mapper
