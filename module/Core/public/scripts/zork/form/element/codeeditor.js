@@ -37,7 +37,7 @@
             if ( ! this || this === "|" ) {
                 sets.append( set.buttonset() );
                 set = $( settpl );
-            } else if ( typeof this.click !== "undefined" ) {
+            } else if ( $.isPlainObject( this ) ) {
                 var click = this.click,
                     title = String( this.title || "" );
 
@@ -56,6 +56,8 @@
                         .attr( "title", title )
                         .click( click )
                 );
+            } else {
+                set.append( this );
             }
         } );
 
@@ -78,12 +80,50 @@
                 mode    = element.data( "jsCodeeditorMode" ) || "text/html",
                 theme   = String( element.data( "jsCodeeditorTheme" ) || "" ).toLowerCase() || "default",
                 lineNum = !! element.data( "jsCodeeditorLinenumbers" ),
-                mirror  = CodeMirror.fromTextArea( node, {
+                switchFullscreen = function () {
+                    var fs = ! mirror.getOption( "fullScreen" );
+                    mirror.setOption( "fullScreen", fs );
+
+                    if ( fs )
+                    {
+                        switchButton.blur().button( "option", "icons", {
+                            "primary": "ui-icon-newwin"
+                        } );
+                    }
+                    else
+                    {
+                        switchButton.blur().button( "option", "icons", {
+                            "primary": "ui-icon-extlink"
+                        } );
+                    }
+                },
+                switchBack = function () {
+                    if ( mirror.getOption( "fullScreen" ) )
+                    {
+                        mirror.setOption( "fullScreen", false );
+
+                        switchButton.blur().button( "option", "icons", {
+                            "primary": "ui-icon-extlink"
+                        } );
+                    }
+                },
+                switchButton = $( '<button type="button">' )
+                    .attr( "title", js.core.translate( "default.fullscreen" ) )
+                    .button( {
+                        "text": false,
+                        "icons": { "primary": "ui-icon-extlink" },
+                    } )
+                    .click( switchFullscreen ),
+                mirror = CodeMirror.fromTextArea( node, {
                     "mode": mode,
                     "theme": theme,
                     "tabSize": 2,
                     "indentWithTabs": true,
-                    "lineNumbers": lineNum
+                    "lineNumbers": lineNum,
+                    "extraKeys": {
+                        "F11": switchFullscreen,
+                        "Esc": switchBack
+                    }
                 } );
 
             if ( theme !== "default" )
@@ -95,7 +135,7 @@
                 "text": false,
                 "title":js.core.translate( "default.search" ),
                 "icons": { "primary": "ui-icon-search" },
-                "click": "search"
+                "click": "find"
             }, {
                 "text": false,
                 "title": js.core.translate( "default.insert" ),
@@ -110,12 +150,7 @@
                         } );
                     } );
                 }
-            }, {
-                "text": false,
-                "title":js.core.translate( "default.fullscreen" ),
-                "icons": { "primary": "ui-icon-extlink" },
-                "click": "fullscreen"
-            } ] );
+            }, switchButton ] );
         }
     };
 
