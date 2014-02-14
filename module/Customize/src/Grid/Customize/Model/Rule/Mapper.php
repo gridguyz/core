@@ -5,6 +5,7 @@ namespace Grid\Customize\Model\Rule;
 use Zend\Db\Sql;
 use Zend\Db\Sql\Predicate;
 use Zork\Db\Sql\Predicate\NotIn;
+use Zork\Model\Structure\StructureAbstract;
 use Zork\Model\Mapper\DbAware\ReadWriteMapperAbstract;
 
 /**
@@ -308,7 +309,11 @@ class Mapper extends ReadWriteMapperAbstract
      */
     private function setSaveProperty( & $structure, $property, $value )
     {
-        if ( is_array( $structure ) )
+        if ( $structure instanceof StructureAbstract )
+        {
+            $structure->setOption( $property, $value );
+        }
+        else if ( is_array( $structure ) )
         {
             $structure[$property] = $value;
         }
