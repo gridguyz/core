@@ -13,7 +13,8 @@
         return;
     }
 
-    var /* PERMISSION_ALLOWED      = 0,
+    var
+     /* PERMISSION_ALLOWED      = 0,
         PERMISSION_NOT_ALLOWED  = 1,
         PERMISSION_DENIED       = 2,
         notifications           = ( typeof Notification !== "undefined" &&
@@ -183,13 +184,14 @@
         if ( params instanceof $ || Object.isElement( params ) )
         {
             params = $( params );
+            var important = params.data( "jsMessageImportant" );
 
             js.caller.js.require( "js.ui.message" )._notify( {
                 "message": params.html(),
                 "title": params.attr( "title" ) ||
                     params.data( "jsMessageTitle" ) ||
                     js.ui.message.defaultParams.header,
-                "important": params.data( "jsMessageImportant" ) === "true",
+                "important": important === "true" || important === true,
                 "display": parseInt( params.data( "jsMessageDisplay" ), 10 ) ||
                     js.ui.message.defaultParams.display
             } );
