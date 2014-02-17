@@ -2,9 +2,9 @@
 
 .CodeMirror-toolbar
 {
-    top: 0px;
-    right: 15px;
     z-index: 1;
+    right: 15px;
+    bottom: 0px;
     display: block;
     text-align: right;
     position: absolute;

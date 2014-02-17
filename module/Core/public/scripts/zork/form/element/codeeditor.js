@@ -61,7 +61,11 @@
             }
         } );
 
-        $( cm.getWrapperElement() ).prepend( sets.append( set.buttonset() ) );
+        setTimeout( function () {
+            $( cm.getWrapperElement() ).append( sets.append( set.buttonset() ) );
+            cm.refresh();
+        }, 500 );
+
         return sets[0];
     } );
 
@@ -133,10 +137,40 @@
 
             mirror.createToolbar( [ {
                 "text": false,
-                "title":js.core.translate( "default.search" ),
+                "title":js.core.translate( "default.undo" ),
+                "icons": { "primary": "ui-icon-arrowreturnthick-1-w" },
+                "click": "undo"
+            }, {
+                "text": false,
+                "title":js.core.translate( "default.redo" ),
+                "icons": { "primary": "ui-icon-arrowreturnthick-1-e" },
+                "click": "redo"
+            }, "|", {
+                "text": false,
+                "title":js.core.translate( "default.find" ),
                 "icons": { "primary": "ui-icon-search" },
                 "click": "find"
             }, {
+                "text": false,
+                "title":js.core.translate( "default.findPrevious" ),
+                "icons": { "primary": "ui-icon-seek-prev" },
+                "click": "findPrev"
+            }, {
+                "text": false,
+                "title":js.core.translate( "default.findNext" ),
+                "icons": { "primary": "ui-icon-seek-next" },
+                "click": "findNext"
+            }, {
+                "text": false,
+                "title":js.core.translate( "default.replace" ),
+                "icons": { "primary": "ui-icon-arrowrefresh-1-e" },
+                "click": "replace"
+            }, {
+                "text": false,
+                "title":js.core.translate( "default.replaceAll" ),
+                "icons": { "primary": "ui-icon-refresh" },
+                "click": "replaceAll"
+            }, "|", {
                 "text": false,
                 "title": js.core.translate( "default.insert" ),
                 "icons": { "primary": "ui-icon-image" },
