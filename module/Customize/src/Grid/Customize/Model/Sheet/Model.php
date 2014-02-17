@@ -88,13 +88,27 @@ class Model implements MapperAwareInterface
     /**
      * Delete rules by root-id
      *
-     * @param int|null $rootId
-     * @return int
+     * @param   int|null    $rootId
+     * @return  int
      */
     public function delete( $rootId = null )
     {
         return $this->getMapper()
                     ->delete( $rootId );
+    }
+
+    /**
+     * Delete rules by root-id
+     *
+     * @param   int|null    $rootId
+     * @return  Structure
+     */
+    public function createEmpty( $rootId = null )
+    {
+        return $this->getMapper()
+                    ->create( array(
+                        'rootId' => ( (int) $rootId ) ?: null,
+                    ) );
     }
 
 }

@@ -113,9 +113,7 @@ class CssAdminController extends AbstractListController
         $model      = $locator->get( 'Grid\Customize\Model\Sheet\Model' );
         $form       = $locator->get( 'Form' )
                               ->get( 'Grid\Customize\Css' );
-        $sheet      = $model->create( array(
-            'rootId' => $rootId,
-        ) );
+        $sheet      = $model->createEmpty( $rootId );
 
         $form->setHydrator( $model->getMapper() )
              ->bind( $sheet );
