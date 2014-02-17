@@ -67,10 +67,13 @@ $indent     = '        ';
 <?= $this->inlineScript()
          ->toString( $indent )?>
 
-<?php foreach ( $this->messenger() as $message ): ?>
-        <div class="ui-helper-hidden" data-js-type="<?=
-                Message::LEVEL_INFO === $message->getLevel()
-                ? 'zork.ui.message' : 'zork.ui.dialog'; ?>">
+<?php foreach ( $this->messenger() as $message ):
+      $level = $message->getLevel(); ?>
+        <div class="ui-helper-hidden"
+             data-js-type="<?= Message::LEVEL_ERROR === $level
+                ? 'zork.ui.dialog' : 'zork.ui.message' ?>"<?=
+             Message::LEVEL_WARN  === $level
+                ? ' data-js-message-important="true"' : '' ?>>
 <?php if ( $message->hasTranslations() ): ?>
                 <?= $this->translate( $message->getMessage(), $message->getTextDomain() ) ?>
 <?php else: ?>
