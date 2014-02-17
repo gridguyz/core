@@ -290,12 +290,15 @@ class Mapper implements ReadWriteMapperInterface, HydratorInterface
                     ->getPaginator(
                         array(
                             new TypedParameters(
-                                '?.? = ?.?',
+                                '?.? = ?.? OR ?.? IS NULL',
                                 array(
                                     'paragraph', 'id',
                                     'paragraph', 'rootId',
+                                    'paragraph', 'id',
                                 ),
                                 array(
+                                    TypedParameters::TYPE_IDENTIFIER,
+                                    TypedParameters::TYPE_IDENTIFIER,
                                     TypedParameters::TYPE_IDENTIFIER,
                                     TypedParameters::TYPE_IDENTIFIER,
                                     TypedParameters::TYPE_IDENTIFIER,
@@ -303,24 +306,42 @@ class Mapper implements ReadWriteMapperInterface, HydratorInterface
                                 )
                             ),
                         ),
-                        array( 'id' => 'ASC' ),
+                        array(
+                            new Expression(
+                                'COALESCE( ? ) ASC',
+                                array( 'id' ),
+                                array( Expression::TYPE_IDENTIFIER )
+                            ),
+                        ),
                         null,
                         array(
-                            'customize_extra' => array(
-                                'type'      => Select::JOIN_LEFT,
-                                'table'     => 'customize_extra',
-                                'where'     => 'customize_extra.rootParagraphId = paragraph.id',
-                                'columns'   => array(
-                                    'updated'   => 'updated',
-                                ),
-                            ),
                             'customize_global' => array(
-                                'type'      => Select::JOIN_RIGHT,
+                                'type'      => 'FULL OUTER',
                                 'table'     => array(
                                     'customize_global' => new Values( array( null ) )
                                 ),
                                 'where'     => new Expression( 'FALSE' ),
                                 'columns'   => array(),
+                            ),
+                            'customize_extra' => array(
+                                'type'      => Select::JOIN_LEFT,
+                                'table'     => 'customize_extra',
+                                'where'     => new Expression(
+                                    '?.? IS NOT DISTINCT FROM ?.?',
+                                    array(
+                                        'customize_extra', 'rootParagraphId',
+                                        'paragraph', 'id',
+                                    ),
+                                    array(
+                                        Expression::TYPE_IDENTIFIER,
+                                        Expression::TYPE_IDENTIFIER,
+                                        Expression::TYPE_IDENTIFIER,
+                                        Expression::TYPE_IDENTIFIER,
+                                    )
+                                ),
+                                'columns'   => array(
+                                    'updated'   => 'updated',
+                                ),
                             ),
                         )
                     );
