@@ -31,6 +31,7 @@ return array(
     'customize.list.css.column.actions.title' => 'Actions',
     'customize.list.css.column.name.title' => 'Root name',
     'customize.list.css.column.type.title' => 'Root type',
+    'customize.list.css.column.type.global' => 'Global (no root)',
     'customize.list.css.column.updated.title' => 'Updated',
     'customize.list.css.create' => 'Create css',
     'customize.list.css.title' => 'Custom CSS list',

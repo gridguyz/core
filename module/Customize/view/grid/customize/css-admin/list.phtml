@@ -14,21 +14,33 @@ if ( ! $this->format ): ?>
          ->setColumnTranslatePostfix( 'title' )
          ->setColumnTranslateTextDomain( 'customize' )
          ->setPage( $this->page )
+         ->setNotSetLabels( array(
+              'type'    => 'customize.list.css.column.type.global',
+         ) )
          ->setColumns( array(
               'type'    => $rowSet->column( $rowSet::TRANSLATE, 'paragraph.type', '', 'paragraph' ),
               'name'    => function ( $row ) use ( $view ) {
+                if ( empty( $row->id ) )
+                {
+                    return '<i>' . $view->translate(
+                        'customize.list.css.column.type.global',
+                        'customize'
+                    ) . '</i>';
+                }
+
                 return $row->type == 'metaContent'
                      ? '<i>' . $view->translate( 'paragraph.metaContent.' . $row->name, 'paragraph' ) . '</i>'
                      : $row->name;
               },
               'updated' => $rowSet::DATETIME,
               'actions' => function ( $row ) use ( $view ) {
+                $id = empty( $row->id ) ? 'global' : (int) $row->id;
                 $view->placeholder( 'listActions' )->set( '' );
                 $view->placeholder( 'listActions' )->captureStart();
 ?>
     <a class="action-button edit"
        title="<?= $view->translate( 'default.edit' ); ?>"
-       href="/app/<?= $view->locale() ?>/admin/customize-css/edit/<?= $row->id ?>">
+       href="/app/<?= $view->locale() ?>/admin/customize-css/edit/<?= $id ?>">
     </a>
 <?php
                 $view->placeholder( 'listActions' )->captureEnd();
