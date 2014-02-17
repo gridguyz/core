@@ -116,7 +116,7 @@
         var form = element.length
                  ? $( element[0].form || element.closest( "form" ) )
                  : null,
-            previewButton = $( "<input type='submit' />" ).text(
+            previewButton = $( "<input type='submit' />" ).val(
                 element.data( "jsCustomizePreviewLabel" ) ||
                     js.core.translate( "customize.preview.label" )
             );

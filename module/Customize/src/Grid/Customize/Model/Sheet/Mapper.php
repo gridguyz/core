@@ -471,15 +471,19 @@ class Mapper implements ReadWriteMapperInterface, HydratorInterface
         if ( $object instanceof Structure )
         {
             return array(
-                'css' => $object->render()
-                                ->getBuffer(),
+                'rootId'    => $object->rootId,
+                'css'       => $object->render()
+                                      ->getBuffer(),
             );
         }
 
         return array(
-            'css' => isset( $object->css )
-                ? (string) $object->css
-                : null,
+            'rootId'    => isset( $object->rootId )
+                            ? (string) $object->rootId
+                            : null,
+            'css'       => isset( $object->css )
+                            ? (string) $object->css
+                            : null,
         );
     }
 
@@ -518,6 +522,11 @@ class Mapper implements ReadWriteMapperInterface, HydratorInterface
             {
                 $object->css = (string) $data['css'];
             }
+        }
+
+        if ( array_key_exists( 'rootId', $data ) )
+        {
+            $object->rootId = $data['rootId'];
         }
 
         return $object;
