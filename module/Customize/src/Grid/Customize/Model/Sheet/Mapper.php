@@ -3,6 +3,7 @@
 namespace Grid\Customize\Model\Sheet;
 
 use Zend\Db\Sql\Select;
+use Zork\Db\Sql\Values;
 use Zend\Db\Sql\Expression;
 use Zend\Stdlib\ArrayUtils;
 use Zork\Model\MapperAwareInterface;
@@ -312,6 +313,14 @@ class Mapper implements ReadWriteMapperInterface, HydratorInterface
                                 'columns'   => array(
                                     'updated'   => 'updated',
                                 ),
+                            ),
+                            'customize_global' => array(
+                                'type'      => Select::JOIN_RIGHT,
+                                'table'     => array(
+                                    'customize_global' => new Values( array( null ) )
+                                ),
+                                'where'     => new Expression( 'FALSE' ),
+                                'columns'   => array(),
                             ),
                         )
                     );

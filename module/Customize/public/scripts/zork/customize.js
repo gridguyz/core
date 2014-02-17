@@ -109,4 +109,49 @@
 
     global.Zork.Customize.prototype.properties.isElementConstructor = true;
 
+    global.Zork.Customize.prototype.preview = function ( element )
+    {
+        element  = $( element );
+
+        var form = element.length
+                 ? $( element[0].form || element.closest( "form" ) )
+                 : null,
+            previewButton = $( "<input type='submit' />" ).text(
+                element.data( "jsCustomizePreviewLabel" ) ||
+                    js.core.translate( "customize.preview.label" )
+            );
+
+        if ( form && form.length )
+        {
+            var rootId  = form.find( ':input[name="rootId"]' ).val(),
+                id      = parseInt( rootId, 10 ) || "global";
+
+            previewButton.click( function () {
+                var action = form.prop( "action" ) || form.attr( "action" ) || "",
+                    target = form.prop( "target" ) || form.attr( "target" ) || "_self",
+                    newact = "/app/" + js.core.defaultLocale + "/admin/customize-css/preview/" + id;
+
+                form.attr( "action", newact )
+                    .prop( "action", newact )
+                    .attr( "target", "_blank" )
+                    .prop( "target", "_blank" );
+
+                setTimeout( function () {
+
+                    form.attr( "action", action )
+                        .prop( "action", action )
+                        .attr( "target", target )
+                        .prop( "target", target );
+
+                }, 500 );
+            } );
+
+            element.after( previewButton )
+                   .parent()
+                   .buttonset();
+        }
+    };
+
+    global.Zork.Customize.prototype.preview.isElementConstructor = true;
+
 } ( window, jQuery, zork ) );

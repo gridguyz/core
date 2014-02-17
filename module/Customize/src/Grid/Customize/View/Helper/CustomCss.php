@@ -7,12 +7,16 @@ use Traversable;
 use ArrayAccess;
 use ArrayIterator;
 use IteratorAggregate;
+use Zork\Stdlib\Message;
 use Zork\Db\SiteInfo;
 use Zork\Db\SiteInfoAwareTrait;
 use Zork\Db\SiteInfoAwareInterface;
 use Zend\View\Helper\Url;
 use Zend\View\Helper\HeadLink;
+use Zork\View\Helper\Messenger;
+use Zend\I18n\View\Helper\Translate;
 use Zend\View\Helper\AbstractHelper;
+use Grid\Customize\Service\CssPreview;
 use Grid\Customize\Model\Extra\Model as ExtraModel;
 
 /**
@@ -40,6 +44,21 @@ class CustomCss extends AbstractHelper
     protected $urlHelper;
 
     /**
+     * @var \Zork\View\Helper\Messenger
+     */
+    protected $messengerHelper;
+
+    /**
+     * @var \Zend\I18n\View\Helper\Translate
+     */
+    protected $translateHelper;
+
+    /**
+     * @var CssPreview
+     */
+    protected $cssPreview;
+
+    /**
      * @var int[]
      */
     protected $roots = array();
@@ -50,12 +69,16 @@ class CustomCss extends AbstractHelper
     protected $extraModel;
 
     /**
-     * @param ExtraModel $customizeExtraModel
+     * @param   ExtraModel  $customizeExtraModel
+     * @param   CssPreview  $customizeCssPreview
+     * @param   SiteInfo    $siteInfo
      */
     public function __construct( ExtraModel $customizeExtraModel,
+                                 CssPreview $customizeCssPreview,
                                  SiteInfo $siteInfo )
     {
         $this->extraModel = $customizeExtraModel;
+        $this->cssPreview = $customizeCssPreview;
         $this->setSiteInfo( $siteInfo );
     }
 
@@ -111,6 +134,60 @@ class CustomCss extends AbstractHelper
         }
 
         return $this->urlHelper;
+    }
+
+    /**
+     * Retrieve the Messenger helper
+     *
+     * @return \Zork\View\Helper\Messenger
+     * @codeCoverageIgnore
+     */
+    protected function getMessengerHelper()
+    {
+        if ( $this->messengerHelper )
+        {
+            return $this->messengerHelper;
+        }
+
+        if ( method_exists( $this->view, 'plugin' ) )
+        {
+            $this->messengerHelper = $this->view
+                                          ->plugin( 'messenger' );
+        }
+
+        if ( ! $this->messengerHelper instanceof Messenger )
+        {
+            $this->messengerHelper = new Messenger();
+        }
+
+        return $this->messengerHelper;
+    }
+
+    /**
+     * Retrieve the Translate helper
+     *
+     * @return \Zend\I18n\View\Helper\Translate
+     * @codeCoverageIgnore
+     */
+    protected function getTranslateHelper()
+    {
+        if ( $this->translateHelper )
+        {
+            return $this->translateHelper;
+        }
+
+        if ( method_exists( $this->view, 'plugin' ) )
+        {
+            $this->translateHelper = $this->view
+                                          ->plugin( 'translate' );
+        }
+
+        if ( ! $this->translateHelper instanceof Translate )
+        {
+            $this->translateHelper = new Translate();
+        }
+
+        return $this->translateHelper;
     }
 
     /**
@@ -256,9 +333,6 @@ class CustomCss extends AbstractHelper
         {
             $global     = false;
             $roots      = (array) $this->roots;
-            $siteInfo   = $this->getSiteInfo();
-            $schema     = $siteInfo->getSchema();
-            $url        = $this->getUrlHelper();
             $headLink   = $this->getHeadLinkHelper();
 
             if ( null === $global && in_array( null, $roots ) )
@@ -273,21 +347,57 @@ class CustomCss extends AbstractHelper
                 $roots[] = null;
             }
 
-            $updated = $this->extraModel
-                            ->findUpdated( $roots );
+            $find       = array();
+            $urls       = array();
+            $preview    = false;
+
+            foreach ( $roots as $root )
+            {
+                if ( $this->cssPreview->hasPreviewById( $root ) )
+                {
+                    $urls[$root] = $this->cssPreview
+                                        ->getPreviewById( $root );
+                }
+
+                if ( empty( $urls[$root] ) )
+                {
+                    $find[] = $root;
+                }
+                else
+                {
+                    $preview = true;
+                }
+            }
+
+            if ( ! empty( $find ) )
+            {
+                $url        = $this->getUrlHelper();
+                $siteInfo   = $this->getSiteInfo();
+                $schema     = $siteInfo->getSchema();
+                $updated    = $this->extraModel
+                                   ->findUpdated( $find );
+
+                foreach ( $find as $root )
+                {
+                    if ( isset( $updated[$root] ) )
+                    {
+                        $urls[$root] = $url( 'Grid\Customize\Render\CustomCss', array(
+                            'schema'    => $schema,
+                            'id'        => $root ? (int) $root : 'global',
+                            'hash'      => $updated[$root]->toHash(),
+                        ) );
+                    }
+                }
+            }
 
             foreach ( array_reverse( $roots ) as $root )
             {
-                if ( isset( $updated[$root] ) )
+                if ( ! empty( $urls[$root] ) )
                 {
                     $id = $root ? (int) $root : 'global';
 
                     $headLink->prependStylesheet(
-                        $url( 'Grid\Customize\Render\CustomCss', array(
-                            'schema'    => $schema,
-                            'id'        => $id,
-                            'hash'      => $updated[$root]->toHash(),
-                        ) ),
+                        $urls[$root],
                         'all',
                         false,
                         array(
@@ -296,6 +406,31 @@ class CustomCss extends AbstractHelper
                         )
                     );
                 }
+            }
+
+            if ( $preview )
+            {
+                if ( empty( $url ) )
+                {
+                    $url = $this->getUrlHelper();
+                }
+
+                $translate = $this->getTranslateHelper();
+
+                $this->getMessengerHelper()
+                     ->add(
+                         sprintf(
+                             $translate(
+                                 'customize.preview.applied.reset-link.%s',
+                                 'customize'
+                             ),
+                             $url(
+                                 'Grid\Customize\CssAdmin\ResetPreviews'
+                             )
+                         ),
+                         false,
+                         Message::LEVEL_WARN
+                     );
             }
 
             $this->roots = array();
