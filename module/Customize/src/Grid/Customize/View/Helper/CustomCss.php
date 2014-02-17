@@ -424,9 +424,9 @@ class CustomCss extends AbstractHelper
                                  'customize.preview.applied.reset-link.%s',
                                  'customize'
                              ),
-                             $url(
-                                 'Grid\Customize\CssAdmin\ResetPreviews'
-                             )
+                             $url( 'Grid\Customize\CssAdmin\ResetPreviews', array(
+                                 'locale' => \Locale::getDefault(),
+                             ) )
                          ),
                          false,
                          Message::LEVEL_WARN
