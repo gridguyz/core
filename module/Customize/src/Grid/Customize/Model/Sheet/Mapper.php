@@ -308,7 +308,7 @@ class Mapper implements ReadWriteMapperInterface, HydratorInterface
                         ),
                         array(
                             new Expression(
-                                'COALESCE( ? ) ASC',
+                                'COALESCE( ?, 0 ) ASC',
                                 array( 'id' ),
                                 array( Expression::TYPE_IDENTIFIER )
                             ),
