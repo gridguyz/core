@@ -3,6 +3,7 @@
 namespace Grid\Customize\Controller;
 
 use Zork\Stdlib\Message;
+use Zork\Stdlib\DateTime;
 use Grid\Core\Controller\AbstractListController;
 
 /**
@@ -16,7 +17,7 @@ class CssAdminController extends AbstractListController
     /**
      * @const string
      */
-    const PREVIEW_FILE = '/uploads/tmp/customize-preview-%s';
+    const PREVIEW_FILE = '/tmp/customize-preview-%s';
 
     /**
      * @const string
@@ -76,8 +77,13 @@ class CssAdminController extends AbstractListController
                      ->add( 'customize.form.success',
                             'customize', Message::LEVEL_INFO );
 
-                $locator->get( 'Grid\Customize\Service\CssPreview' )
-                        ->unsetPreviewById( $rootId );
+                $cssPreview = $locator->get( 'Grid\Customize\Service\CssPreview' );
+
+                if ( $cssPreview->hasPreviewById( $rootId ) )
+                {
+                    @ unlink( 'public' . $cssPreview->getPreviewById( $rootId ) );
+                    $cssPreview->unsetPreviewById( $rootId );
+                }
 
                 return $this->redirect()
                             ->toRoute( 'Grid\Customize\CssAdmin\List', array(
@@ -130,16 +136,16 @@ class CssAdminController extends AbstractListController
 
                 $id     = $rootId === null ? 'global' : $rootId;
                 $prefix = 'public';
-                $file   = sprintf( static::PREVIEW_FILE, $id );
-                $suffix = '';
+                $file   = sprintf( static::PREVIEW_FILE, $id ) . '.';
 
-                while ( file_exists( $prefix . $file . $suffix .
-                                     static::PREVIEW_EXTENSION ) )
+                do
                 {
-                    $suffix--;
+                    $suffix = new DateTime;
                 }
+                while ( file_exists( $prefix . $file . $suffix->toHash() .
+                                     static::PREVIEW_EXTENSION ) );
 
-                $url    = $file . $suffix . static::PREVIEW_EXTENSION;
+                $url    = $file . $suffix->toHash() . static::PREVIEW_EXTENSION;
                 $path   = $prefix . $url;
                 $sheet->render( $path );
 
