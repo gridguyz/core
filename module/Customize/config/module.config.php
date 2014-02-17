@@ -88,7 +88,7 @@ return array(
                     'route'         => '/app/:locale/admin/customize-css/edit/:id',
                     'constraints'   => array(
                         'locale'    => '\w+',
-                        'id'        => '[1-9][0-9]*',
+                        'id'        => 'global|[1-9][0-9]*',
                     ),
                     'defaults'      => array(
                         'controller'    => 'Grid\Customize\Controller\CssAdmin',
@@ -115,7 +115,7 @@ return array(
                     'route'         => '/app/:locale/admin/customize-css/preview/:id',
                     'constraints'   => array(
                         'locale'    => '\w+',
-                        'id'        => '[1-9][0-9]*',
+                        'id'        => 'global|[1-9][0-9]*',
                     ),
                     'defaults'      => array(
                         'controller'    => 'Grid\Customize\Controller\CssAdmin',
