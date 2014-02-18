@@ -54,19 +54,22 @@ class Model implements MapperAwareInterface
      *
      * @param string $selector
      * @param string $media [optional]
+     * @param null|int $rootId [optional]
      * @return \Customize\Model\Rule\Structure
      */
-    public function findBySelector( $selector, $media = '' )
+    public function findBySelector( $selector, $media = '', $rootId = null )
     {
-        $rule = $this->getMapper()
-                     ->findBySelector( $selector, $media );
+        $rootId = ( (int) $rootId ) ?: null;
+        $rule   = $this->getMapper()
+                       ->findBySelector( $selector, $media, $rootId );
 
         if ( empty( $rule ) )
         {
             $rule = $this->getMapper()
                          ->create( array(
-                             'media'    => $media,
-                             'selector' => $selector,
+                             'media'            => $media,
+                             'selector'         => $selector,
+                             'rootParagraphId'  => $rootId,
                          ) );
         }
 

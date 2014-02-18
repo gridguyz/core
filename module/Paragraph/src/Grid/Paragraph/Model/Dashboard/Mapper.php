@@ -241,8 +241,9 @@ class Mapper implements HydratorInterface,
             {
                 $rule = $this->getCustomizeRuleMapper()
                              ->create( array(
-                                 'rootParagraphId'  => $rootId,
+                                 'media'            => '',
                                  'selector'         => $selector,
+                                 'rootParagraphId'  => $rootId,
                              ) );
             }
 
