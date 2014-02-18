@@ -161,6 +161,12 @@ class SnippetController extends AbstractListController
      */
     public function editAction()
     {
+        static $typeToMime = array(
+            'css'   => 'text/css',
+            'js'    => 'text/javascript',
+        );
+
+        /* @var $form \Zork\Form\Form */
         $params     = $this->params();
         $request    = $this->getRequest();
         $locator    = $this->getServiceLocator();
@@ -175,6 +181,17 @@ class SnippetController extends AbstractListController
                  ->setStatusCode( 404 );
 
             return;
+        }
+
+        $type = $snippet->type;
+
+        if ( ! empty( $typeToMime[$type] ) )
+        {
+            $form->get( 'code' )
+                 ->setAttribute(
+                     'data-js-codeeditor-mode',
+                     $typeToMime[$type]
+                 );
         }
 
         /* @var $form \Zend\Form\Form */

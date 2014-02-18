@@ -351,7 +351,17 @@
                             isv  = hasv ? this.checkValidity() : true,
                             pars = {};
 
-                        if ( type === "checkbox" )
+                        if ( self.is( "textarea:data(jsCodeeditorWidget)" ) )
+                        {
+                            var cm = self.data( "jsCodeeditorWidget" );
+                            val = cm && cm.getDoc() ? cm.getDoc().getValue() : val;
+
+                            if ( val )
+                            {
+                                self.val( val );
+                            }
+                        }
+                        else if ( type === "checkbox" )
                         {
                             val = this.checked ? self.attr( "value" ) : null;
                         }

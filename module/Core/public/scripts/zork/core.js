@@ -3482,17 +3482,6 @@
     {
         selector = selector || "head, body";
 
-        $( selector ).find( "form" ).each( function () {
-            var self = $( this );
-            js.require( "js.form.html5", function () {
-                if ( ! self.data( "jsFormParsed" ) )
-                {
-                    js.form.html5( self );
-                    self.data( "jsFormParsed", true );
-                }
-            } );
-        } );
-
         $( selector ).find( "[data-js-type]" ).each( function () {
             var t = this, self = $( this ),
                 types = String( self.data( "jsType" ) || "" ).split( /[\s,]+/ );
@@ -3522,6 +3511,17 @@
 
                 self.data( "jsTypeParsed", true );
             }
+        } );
+
+        $( selector ).find( "form" ).each( function () {
+            var self = $( this );
+            js.require( "js.form.html5", function () {
+                if ( ! self.data( "jsFormParsed" ) )
+                {
+                    js.form.html5( self );
+                    self.data( "jsFormParsed", true );
+                }
+            } );
         } );
     };
 

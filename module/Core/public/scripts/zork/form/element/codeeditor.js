@@ -80,7 +80,8 @@
 
         if ( element.is( "textarea" ) )
         {
-            var node    = element[0],
+            var generation,
+                node    = element[0],
                 mode    = element.data( "jsCodeeditorMode" ) || "text/html",
                 theme   = String( element.data( "jsCodeeditorTheme" ) || "" ).toLowerCase() || "default",
                 lineNum = !! element.data( "jsCodeeditorLinenumbers" ),
@@ -134,6 +135,20 @@
             {
                 js.style( codeMirrorPath + "/theme/" + theme + ".css" );
             }
+
+            element.data( "jsCodeeditorWidget", mirror );
+            generation = mirror.getDoc().changeGeneration();
+
+            mirror.on( "change", function () {
+                var doc = mirror.getDoc();
+
+                if ( ! doc.isClean( generation ) )
+                {
+                    generation = doc.changeGeneration();
+                    element.val( doc.getValue() )
+                           .trigger( "change" );
+                }
+            } );
 
             mirror.createToolbar( [ {
                 "text": false,

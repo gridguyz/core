@@ -982,7 +982,8 @@ return array(
                             'required'  => true,
                         ),
                         'attributes'    => array(
-                            'data-js-type'  => 'js.form.element.codeEditor',
+                            'data-js-type'              => 'js.form.element.codeEditor',
+                            'data-js-codeeditor-mode'   => 'text/html',
                         ),
                     ),
                 ),
@@ -2872,7 +2873,8 @@ return array(
                                         'required'  => true,
                                     ),
                                     'attributes'    => array(
-                                        'data-js-type'  => 'js.form.element.codeEditor',
+                                        'data-js-type'              => 'js.form.element.codeEditor',
+                                        'data-js-codeeditor-mode'   => 'text/html',
                                     ),
                                 ),
                             ),
@@ -3074,6 +3076,9 @@ return array(
                                 'js'    => 'paragraph.snippet.type.js',
                                 'css'   => 'paragraph.snippet.type.css',
                             ),
+                            'attributes'    => array(
+                                'data-js-type'  => 'js.paragraph.snippet.type',
+                            ),
                         ),
                     ),
                 ),
@@ -3086,7 +3091,8 @@ return array(
                             'required'  => true,
                         ),
                         'attributes'    => array(
-                            'data-js-type'  => 'js.form.element.codeEditor',
+                            'data-js-type'              => 'js.form.element.codeEditor',
+                            'data-js-codeeditor-mode'   => 'text/plain',
                         ),
                     ),
                 ),
@@ -3168,7 +3174,8 @@ return array(
                             'required'  => true,
                         ),
                         'attributes'    => array(
-                            'data-js-type'  => 'js.form.element.codeEditor',
+                            'data-js-type'              => 'js.form.element.codeEditor',
+                            'data-js-codeeditor-mode'   => 'text/plain',
                         ),
                     ),
                 ),
