@@ -553,15 +553,28 @@ class Mapper extends ReadWriteMapperAbstract
      *
      * @param   string      $selector
      * @param   string      $media
+     * @param   int|null    $rootId
      * @param   int|null    $excludeId
      * @return  bool
      */
-    public function isSelectorExists( $selector, $media = '', $excludeId = null )
+    public function isSelectorExists( $selector,
+                                      $media        = '',
+                                      $rootId       = null,
+                                      $excludeId    = null )
     {
         $where = array(
             'selector'  => (string) $selector,
             'media'     => (string) $media,
         );
+
+        if ( empty( $rootId ) )
+        {
+            $where[] = new Predicate\IsNull( 'rootParagraphId' );
+        }
+        else
+        {
+            $where['rootParagraphId'] = (int) $rootId;
+        }
 
         if ( ! empty( $excludeId ) )
         {

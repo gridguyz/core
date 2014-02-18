@@ -238,6 +238,12 @@ return array(
                         'name'      => 'id',
                     ),
                 ),
+                'rootParagraphId'   => array(
+                    'spec'  => array(
+                        'type'      => 'Zork\Form\Element\Hidden',
+                        'name'      => 'rootParagraphId',
+                    ),
+                ),
                 'selector'  => array(
                     'spec'  => array(
                         'type'      => 'Zork\Form\Element\Textarea',

@@ -102,10 +102,13 @@ class Rpc implements CallableInterface
      * Is selector available
      *
      * @param   string $email
-     * @param   array|object $fields [optional]
+     * @param   array|object|string $fields [optional]
+     * @param   int|null $rootId [optional]
      * @return  string
      */
-    public function isSelectorAvailable( $selector, $fields = array() )
+    public function isSelectorAvailable( $selector,
+                                         $fields = array(),
+                                         $rootId = null )
     {
         if ( is_scalar( $fields ) )
         {
@@ -115,12 +118,13 @@ class Rpc implements CallableInterface
         else
         {
             $fields = (object) $fields;
-            $media  = empty( $fields->media ) ? '' : $fields->media;
-            $id     = empty( $fields->id ) ? null : $fields->id;
+            $media  = empty( $fields->media )           ? ''    : $fields->media;
+            $rootId = empty( $fields->rootParagraphId ) ? null  : (int) $fields->rootParagraphId;
+            $id     = empty( $fields->id )              ? null  : (int) $fields->id;
         }
 
         if ( $this->getRuleMapper()
-                  ->isSelectorExists( $selector, $media, $id ) )
+                  ->isSelectorExists( $selector, $media, $rootId, $id ) )
         {
             return static::SELECTOR_TAKEN;
         }
