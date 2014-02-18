@@ -62,7 +62,7 @@
 
         var addButton = $( "<button type='button' />" ).text(
                 element.data( "jsPropertiesAddLabel" ) ||
-                    js.core.translate( "customize.form.addProperty" )
+                    js.core.translate( "customize.form.rules.addProperty" )
             );
 
         addButton.click( function () {
