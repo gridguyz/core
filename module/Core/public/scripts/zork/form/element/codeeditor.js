@@ -82,7 +82,7 @@
         {
             var generation,
                 node    = element[0],
-                mode    = element.data( "jsCodeeditorMode" ) || "text/html",
+                mode    = element.data( "jsCodeeditorMode" ) || "text/plain",
                 theme   = String( element.data( "jsCodeeditorTheme" ) || "" ).toLowerCase() || "default",
                 lineNum = !! element.data( "jsCodeeditorLinenumbers" ),
                 switchFullscreen = function () {
