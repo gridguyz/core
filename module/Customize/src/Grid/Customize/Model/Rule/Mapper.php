@@ -451,15 +451,11 @@ class Mapper extends ReadWriteMapperAbstract
 
         if ( empty( $rootId ) )
         {
-            $where = array(
-                new Predicate\IsNull( 'rootParagraphId' )
-            );
+            $where[] = new Predicate\IsNull( 'rootParagraphId' );
         }
         else
         {
-            $where = array(
-                'rootParagraphId' => (int) $rootId,
-            );
+            $where['rootParagraphId'] = (int) $rootId;
         }
 
         return $this->findOne( $where );
