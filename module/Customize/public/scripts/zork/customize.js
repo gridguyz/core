@@ -67,7 +67,7 @@
 
         addButton.click( function () {
             js.ui.dialog.prompt( {
-                "message": js.core.translate( "customize.form.addMessage" ),
+                "message": js.core.translate( "customize.form.rules.addMessage" ),
                 "input": function ( prop ) {
                     if ( prop && ( prop = String( prop ).replace( /[^a-zA-Z0-9\-]/, "" ) ) ) {
 
@@ -88,7 +88,7 @@
                                                         "name": "properties[" + prop + "][priority]"
                                                     } )
                                             )
-                                            .append( js.core.translate( "customize.form.important" ) )
+                                            .append( js.core.translate( "customize.form.rules.important" ) )
                                     )
                             )
                             .prepend(
