@@ -3076,9 +3076,9 @@ return array(
                                 'js'    => 'paragraph.snippet.type.js',
                                 'css'   => 'paragraph.snippet.type.css',
                             ),
-                            'attributes'    => array(
-                                'data-js-type'  => 'js.paragraph.snippet.type',
-                            ),
+                        ),
+                        'attributes'    => array(
+                            'data-js-type'  => 'js.paragraph.snippet.type',
                         ),
                     ),
                 ),
