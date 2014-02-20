@@ -335,7 +335,7 @@ class CustomCss extends AbstractHelper
             $roots      = (array) $this->roots;
             $headLink   = $this->getHeadLinkHelper();
 
-            if ( null === $global && in_array( null, $roots ) )
+            if ( in_array( null, $roots ) )
             {
                 $global = true;
             }
