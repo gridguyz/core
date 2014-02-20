@@ -390,7 +390,7 @@ class CustomCss extends AbstractHelper
                 }
             }
 
-            foreach ( array_reverse( $roots ) as $root )
+            foreach ( $roots as $root )
             {
                 if ( ! empty( $urls[$root] ) )
                 {
