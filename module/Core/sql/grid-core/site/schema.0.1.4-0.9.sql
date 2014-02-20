@@ -500,6 +500,12 @@ DROP TRIGGER IF EXISTS "9000__customize_changes"
 DROP TRIGGER IF EXISTS "9000__customize_changes"
                     ON "customize_property" CASCADE;
 
+DROP TRIGGER IF EXISTS "customize_rule_changes"
+                    ON "customize_rule" CASCADE;
+
+DROP TRIGGER IF EXISTS "customize_property_changes"
+                    ON "customize_property" CASCADE;
+
 CREATE OR REPLACE FUNCTION "customize_changes_trigger"()
                    RETURNS TRIGGER
                        SET search_path FROM CURRENT
