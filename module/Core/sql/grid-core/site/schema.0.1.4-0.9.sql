@@ -202,7 +202,8 @@ CREATE TABLE "customize_rule_x_paragraph"
 
 INSERT INTO "customize_rule_x_paragraph" ( "ruleId", "paragraphId" )
      SELECT "id", "paragraphId"
-       FROM "customize_rule";
+       FROM "customize_rule"
+      WHERE "paragraphId" IS NOT NULL;
 
 --------------------------------------------------------------------------------
 -- function: customize_rule_insert_update_selector_trigger                    --
