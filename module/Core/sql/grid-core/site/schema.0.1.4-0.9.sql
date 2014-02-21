@@ -83,7 +83,7 @@ BEGIN
     UPDATE "customize_rule_clone_tmp"
        SET "id"                 = -"id",
            "rootParagraphId"    = -"rootParagraphId",
-           "selector"           = '#tmp#clone ' || regexp_replace(
+           "selector"           = regexp_replace(
                "selector",
                '#paragraph-(\d+)',
                '#paragraph--\1',
@@ -113,6 +113,10 @@ BEGIN
             AND "paragraph_property"."name"         = "paragraph_property_clone_tmp"."name"
           WHERE "paragraph_property"."paragraphId"  IS NULL;
 
+    INSERT INTO "customize_extra"
+         SELECT "customize_extra_clone_tmp".*
+           FROM "customize_extra_clone_tmp";
+
     INSERT INTO "customize_rule"
          SELECT "customize_rule_clone_tmp".*
            FROM "customize_rule_clone_tmp";
@@ -120,10 +124,6 @@ BEGIN
     INSERT INTO "customize_property"
          SELECT "customize_property_clone_tmp".*
            FROM "customize_property_clone_tmp";
-
-    INSERT INTO "customize_extra"
-         SELECT "customize_extra_clone_tmp".*
-           FROM "customize_extra_clone_tmp";
 
     IF "v_copy_tags" THEN
 
@@ -137,13 +137,19 @@ BEGIN
 
     END IF;
 
+    DELETE FROM "paragraph_property"
+          WHERE "locale"        = '*'
+            AND "name"          = 'lastModified'
+            AND "paragraphId"   < 0;
+
     -- replace ids with newly generated ones
 
     "v_new_rootId" = nextval( 'paragraph_id_seq' );
 
     UPDATE "paragraph"
-       SET "id" = "v_new_rootId"
-     WHERE "id" = -"p_rootId";
+       SET "id"     = "v_new_rootId",
+           "rootId" = "v_new_rootId"
+     WHERE "id"     = -"p_rootId";
 
     UPDATE "paragraph"
        SET "rootId" = "v_new_rootId"
@@ -154,8 +160,7 @@ BEGIN
      WHERE "id" < 0;
 
     UPDATE "customize_rule"
-       SET "id"         = nextval( 'customize_rule_id_seq' ),
-           "selector"   = regexp_replace( "selector", '^#tmp#clone ' , '' )
+       SET "id" = nextval( 'customize_rule_id_seq' )
      WHERE "id" < 0;
 
     UPDATE "customize_property"
@@ -174,7 +179,7 @@ BEGIN
     DROP TABLE IF EXISTS "customize_property_clone_tmp";
     DROP TABLE IF EXISTS "customize_extra_clone_tmp";
 
-    -- return with new ids
+    -- return with new pargraph id
 
     RETURN "v_new_rootId";
 
@@ -624,6 +629,10 @@ CREATE OR REPLACE FUNCTION "customize_paragraph_root_changes_trigger"()
 DECLARE
     "vOldExtra" TEXT;
 BEGIN
+
+    IF OLD."rootId" = OLD."id" OR NEW."rootId" = NEW."id" THEN
+        RETURN NEW;
+    END IF;
 
     IF OLD."rootId" <> NEW."rootId" THEN
 
