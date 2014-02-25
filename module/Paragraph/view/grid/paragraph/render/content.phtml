@@ -25,10 +25,10 @@ if ( ! empty( $this->paragraph->metaDescription ) )
 
 $this->openGraph( OpenGraph::TYPE_ARTICLE )
      ->append( array(
-         'og:url'       => 'http://'
-                         . $this->domain()
-                         . $this->paragraph->getUri( (string) $this->locale() ),
-         'og:title'     => $this->paragraph->title,
+         'og:title' => $this->paragraph->title,
+         'og:url'   => $this->domain( null, $this->paragraph->getUri(
+            (string) $this->locale()
+         ) ),
      ) );
 
 if ( ! empty( $this->paragraph->leadImage ) )
@@ -36,7 +36,7 @@ if ( ! empty( $this->paragraph->leadImage ) )
     $this->openGraph()
          ->append(
                'og:image',
-               'http://' . $this->domain() . $this->paragraph->leadImage
+               $this->domain( null, $this->paragraph->leadImage )
            );
 }
 

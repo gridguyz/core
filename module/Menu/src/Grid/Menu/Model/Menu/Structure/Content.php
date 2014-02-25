@@ -268,9 +268,10 @@ class Content extends ProxyAbstract
 
                 if ( ! empty( $subdomain ) )
                 {
-                    $base = 'http://' . $subdomain->subdomain .
-                            ( $subdomain->subdomain ? '.' : '' ) .
-                            $info->getDomain() . '/';
+                    $base = $info->getSubdomainUrl(
+                        (string) $subdomain->subdomain,
+                        $base
+                    );
                 }
 
                 if ( empty( $uri ) )

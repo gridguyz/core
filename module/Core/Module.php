@@ -135,13 +135,15 @@ class Module extends ModuleAbstract
              $serviceManager->has( 'RedirectToDomain' ) )
         {
             $redirect   = $serviceManager->get( 'RedirectToDomain' );
-            $url        = 'http://' . $redirect->getDomain();
+            $path       = '';
             $request    = $event->getRequest();
 
             if ( $request instanceof HttpRequest && $redirect->getUsePath() )
             {
-                $url .= $request->getRequestUri();
+                $path = $request->getRequestUri();
             }
+
+            $url = $redirect->getUrl( $path );
 
             $response->setStatusCode( 302 )
                      ->getHeaders()
@@ -151,7 +153,8 @@ class Module extends ModuleAbstract
                      ) );
 
             $this->response = $response->setContent( sprintf(
-                '<meta http-equiv="refresh" content="0;url=%1$s"><a href="%1$s">%1$s</a>',
+                '<meta http-equiv="refresh" content="0;url=%1$s">'
+                    . '<a href="%1$s">%1$s</a>',
                 htmlspecialchars( $url )
             ) );
         }

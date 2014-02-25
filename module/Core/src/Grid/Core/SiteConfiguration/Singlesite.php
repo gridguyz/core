@@ -130,6 +130,8 @@ class Singlesite extends AbstractDomainAware
                     'subdomain'     => $subdomain,
                     'subdomainId'   => $data['id'],
                     'fulldomain'    => $fulldomain,
+                    'scheme'        => $this->getScheme(),
+                    'port'          => $this->getPort(),
                 ) );
 
                 $sm->setService( 'SiteInfo', $info );
@@ -141,7 +143,9 @@ class Singlesite extends AbstractDomainAware
             $sm->setService(
                 'RedirectToDomain',
                 new RedirectionService(
+                    $this->getScheme(),
                     $domain,
+                    $this->getPort(),
                     'sub-domain not found',
                     false
                 )
@@ -160,7 +164,9 @@ class Singlesite extends AbstractDomainAware
                 $sm->setService(
                     'RedirectToDomain',
                     new RedirectionService(
+                        $this->getScheme(),
                         $config['defaultDomain'],
+                        $this->getPort(),
                         'sub-domain not found',
                         false
                     )

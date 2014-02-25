@@ -9,20 +9,17 @@ $this->headLink()
 
 $this->openGraph( OpenGraph::TYPE_PROFILE )
      ->append( array(
-         'og:url'           => 'http://'
-                             . $this->domain()
-                             . $this->user->getUri( (string) $this->locale() ),
          'og:title'         => $this->user->displayName,
          'og:description'   => $this->translate( 'user.view.title', 'user' ),
+         'og:url'           => $this->domain( null, $this->user->getUri(
+             (string) $this->locale()
+         ) ),
      ) );
 
 if ( ! empty( $this->user->avatar ) )
 {
     $this->openGraph()
-         ->append(
-               'og:image',
-               'http://' . $this->domain() . $this->user->avatar
-           );
+         ->append( 'og:image', $this->domain( null, $this->user->avatar ) );
 }
 
 $this->openGraph()

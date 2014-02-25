@@ -6,9 +6,6 @@ $this->headTitle( $title = $this->translate( 'subDomain.list.title', 'subDomain'
 $view   = $this;
 $rowSet = $this->rowSet();
 
-/* @var $siteInfo \Zork\Db\SiteInfo */
-$siteInfo = $this->appService( 'SiteInfo' );
-
 if ( ! $this->format ): ?>
 <h1><?= $title ?></h1>
 <?php endif ?>
@@ -28,15 +25,13 @@ if ( ! $this->format ): ?>
               'locale'              => $rowSet::LOCALE,
               'defaultLayoutName'   => $rowSet::STRING,
               'defaultContentName'  => $rowSet::STRING,
-              'actions'             => function ( $row ) use ( $view, $siteInfo ) {
+              'actions'             => function ( $row ) use ( $view ) {
                 $view->placeholder( 'listActions' )->set( '' );
                 $view->placeholder( 'listActions' )->captureStart();
 ?>
     <a class="action-button view" target="_blank"
        title="<?= $view->translate( 'default.view' ) ?>"
-       href="http://<?= $row->subdomain,
-                        $row->subdomain ? '.' : '',
-                        $siteInfo->getDomain() ?>">
+       href="<?= $view->domain( (string) $row->subdomain, true ) ?>">
     </a>
 <?php if ( $this->isAllowed( 'sub-domain', 'edit' ) ): ?>
     <a class="action-button edit"

@@ -56,29 +56,28 @@ class Paragraph extends AdapterAbstract
 
         if ( $absolute )
         {
-            $domain = $this->getSiteInfo()
-                           ->getFulldomain();
-            $uri    = 'http://' . $domain . $uri;
+            $uri = $this->getSiteInfo()
+                        ->getSubdomainUrl( null, $uri );
         }
 
         return $uri;
     }
 
     /**
-     * Get domain by subdomain id
+     * Get subdomain by subdomain id
      *
      * @staticvar   array       $subdomains
      * @param       int|null    $subdomainId
      * @return      string
      */
-    protected function getDomain( $subdomainId = null )
+    protected function getSubdomain( $subdomainId = null )
     {
         static $subdomains = array();
         $siteInfo = $this->getSiteInfo();
 
         if ( empty( $subdomainId ) || $siteInfo->getSubdomainId() == $subdomainId )
         {
-            return $siteInfo->getFulldomain();
+            return $siteInfo->getSubdomain();
         }
 
         if ( ! isset( $subdomains[$subdomainId] ) )
@@ -98,9 +97,7 @@ class Paragraph extends AdapterAbstract
             }
         }
 
-        $subdomain = $subdomains[$subdomainId];
-        $domain    = $siteInfo->getDomain();
-        return ( $subdomain ? $subdomain . '.' : '' ) . $domain;
+        return $subdomains[$subdomainId];
     }
 
     /**
@@ -131,7 +128,11 @@ class Paragraph extends AdapterAbstract
 
         if ( $absolute || $subdomain != $uri->subdomainId )
         {
-            $result = 'http://' . $this->getDomain( $uri->subdomainId ) . $result;
+            $result = $this->getSiteInfo()
+                           ->getSubdomainUrl(
+                               $this->getSubdomain( $uri->subdomainId ),
+                               $result
+                           );
         }
 
         return $result;

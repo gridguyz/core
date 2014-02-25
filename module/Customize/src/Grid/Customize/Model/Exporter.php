@@ -131,14 +131,14 @@ class Exporter implements SiteInfoAwareInterface
      *
      * @param string $domain
      * @param string $path
-     * @param string $schema
+     * @param string $scheme
      * @return string
      */
-    protected function httpGet( $domain, $path, $schema = 'http://' )
+    protected function httpGet( $domain, $path, $scheme = 'http://' )
     {
         $request = new HttpRequest;
         $request->setMethod( HttpRequest::METHOD_GET )
-                ->setUri( $schema . $domain . '/' . ltrim( $path, '/' ) )
+                ->setUri( $scheme . $domain . '/' . ltrim( $path, '/' ) )
                 ->getHeaders()
                 ->addHeaderLine( 'Host', $domain );
 
@@ -300,7 +300,7 @@ class Exporter implements SiteInfoAwareInterface
                     '\\0' . PHP_EOL .
                     '    <link href="./custom.css" type="text/css" ' .
                               'rel="stylesheet" />' . PHP_EOL .
-                    '    <base href="http://' . $domain . '/" />',
+                    '    <base href="//' . $domain . '/" />',
                     '',
                 ),
                 $this->httpGet( $domain, $url )
