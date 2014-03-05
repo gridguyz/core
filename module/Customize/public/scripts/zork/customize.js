@@ -124,16 +124,17 @@
                 element.data( "jsCustomizeCancelLabel" ) ||
                     js.core.translate( "default.cancel" )
             ),
-            click = function ( url ) {
-                var newact = String( url );
+            click = function ( newAction, newTarget ) {
+                var newact = String( newAction || "/" ),
+                    newtar = String( newTarget || "_blank" );
                 return function () {
                     var action = form.prop( "action" ) || form.attr( "action" ) || "",
                         target = form.prop( "target" ) || form.attr( "target" ) || "_self";
 
                     form.attr( "action", newact )
                         .prop( "action", newact )
-                        .attr( "target", "_blank" )
-                        .prop( "target", "_blank" );
+                        .attr( "target", newtar )
+                        .prop( "target", newtar );
 
                     setTimeout( function () {
 
@@ -153,12 +154,14 @@
 
             previewButton.click( click(
                 "/app/" + js.core.defaultLocale +
-                "/admin/customize-css/preview/" + id
+                "/admin/customize-css/preview/" + id,
+                "_blank"
             ) );
 
             cancelButton.click( click(
                 "/app/" + js.core.defaultLocale +
-                "/admin/customize-css/cancel/" + id
+                "/admin/customize-css/cancel/" + id,
+                "_top"
             ) );
 
             cancelButton.css( "margin-left", "2em" );
