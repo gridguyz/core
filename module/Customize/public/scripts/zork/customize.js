@@ -119,36 +119,52 @@
             previewButton = $( "<input type='submit' />" ).val(
                 element.data( "jsCustomizePreviewLabel" ) ||
                     js.core.translate( "customize.preview.label" )
-            );
+            ),
+            cancelButton = $( "<input type='submit' />" ).val(
+                element.data( "jsCustomizeCancelLabel" ) ||
+                    js.core.translate( "default.cancel" )
+            ),
+            click = function ( url ) {
+                var newact = String( url );
+                return function () {
+                    var action = form.prop( "action" ) || form.attr( "action" ) || "",
+                        target = form.prop( "target" ) || form.attr( "target" ) || "_self";
+
+                    form.attr( "action", newact )
+                        .prop( "action", newact )
+                        .attr( "target", "_blank" )
+                        .prop( "target", "_blank" );
+
+                    setTimeout( function () {
+
+                        form.attr( "action", action )
+                            .prop( "action", action )
+                            .attr( "target", target )
+                            .prop( "target", target );
+
+                    }, 500 );
+                };
+            };
 
         if ( form && form.length )
         {
             var rootId  = form.find( ':input[name="rootId"]' ).val(),
                 id      = parseInt( rootId, 10 ) || "global";
 
-            previewButton.click( function () {
-                var action = form.prop( "action" ) || form.attr( "action" ) || "",
-                    target = form.prop( "target" ) || form.attr( "target" ) || "_self",
-                    newact = "/app/" + js.core.defaultLocale + "/admin/customize-css/preview/" + id;
+            previewButton.click( click(
+                "/app/" + js.core.defaultLocale +
+                "/admin/customize-css/preview/" + id
+            ) );
 
-                form.attr( "action", newact )
-                    .prop( "action", newact )
-                    .attr( "target", "_blank" )
-                    .prop( "target", "_blank" );
+            cancelButton.click( click(
+                "/app/" + js.core.defaultLocale +
+                "/admin/customize-css/cancel/" + id
+            ) );
 
-                setTimeout( function () {
+            cancelButton.css( "margin-left", "2em" );
 
-                    form.attr( "action", action )
-                        .prop( "action", action )
-                        .attr( "target", target )
-                        .prop( "target", target );
-
-                }, 500 );
-            } );
-
-            element.after( previewButton )
-                   .parent()
-                   .buttonset();
+            element.after( cancelButton )
+                   .after( previewButton );
         }
     };
 

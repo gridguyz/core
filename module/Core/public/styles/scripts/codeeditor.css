@@ -1,6 +1,11 @@
 @charset "utf-8";
 
-.CodeMirror-toolbar
+.CodeMirror
+{
+    font-size: 10pt;
+}
+
+.CodeMirror .CodeMirror-toolbar
 {
     z-index: 1;
     right: 15px;
@@ -8,4 +13,13 @@
     display: block;
     text-align: right;
     position: absolute;
+}
+
+.CodeMirror .CodeMirror-dialog
+{
+    margin: 0em;
+    padding: 0.5em;
+    border: 0px none;
+    text-align: right;
+    background-color: #d3d4d9;
 }

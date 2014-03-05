@@ -1,0 +1,27 @@
+@charset "utf-8";
+
+.admin.grid-customize-controller-ns.cssAdmin-controller.edit-action form .label.label-textarea
+{
+    float: none;
+    width: auto;
+    height: auto;
+    color: #ffffff;
+    font-size: 14px;
+    text-align: left;
+    line-height: 24px;
+    padding: 5px 17px;
+    border: 1px solid #3673d6;
+    margin: -17px -17px 20px -17px;
+    background-color: #4673e6;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #5587f6), color-stop(1, #4673e6));
+    background-image: -webkit-linear-gradient(top, #5587f6 0%, #4673e6 100%);
+    background-image: -moz-linear-gradient(top, #5587f6 0%, #4673e6 100%);
+    background-image: -ms-linear-gradient(top, #5587f6 0%, #4673e6 100%);
+    background-image: -o-linear-gradient(top, #5587f6 0%, #4673e6 100%);
+    background-image: linear-gradient(to bottom, #5587f6 0%, #4673e6 100%);
+}
+
+.admin.grid-customize-controller-ns.cssAdmin-controller.edit-action form .input.input-submit
+{
+    text-align: right;
+}

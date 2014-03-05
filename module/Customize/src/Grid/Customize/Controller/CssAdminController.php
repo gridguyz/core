@@ -181,6 +181,30 @@ class CssAdminController extends AbstractListController
     }
 
     /**
+     * Cancel an edit of a css
+     */
+    public function cancelAction()
+    {
+        /* @var $cssPreview \Grid\Customize\Service\CssPreview */
+        $params     = $this->params();
+        $locator    = $this->getServiceLocator();
+        $cssPreview = $locator->get( 'Grid\Customize\Service\CssPreview' );
+        $id         = $params->fromRoute( 'id' );
+        $rootId     = is_numeric( $id ) ? (int) $id : null;
+
+        if ( $cssPreview->hasPreviewById( $rootId ) )
+        {
+            @ unlink( 'public' . $cssPreview->getPreviewById( $rootId ) );
+            $cssPreview->unsetPreviewById( $rootId );
+        }
+
+        return $this->redirect()
+                    ->toRoute( 'Grid\Customize\CssAdmin\List', array(
+                        'locale' => (string) $this->locale(),
+                    ) );
+    }
+
+    /**
      * Reset all previews
      */
     public function resetPreviewsAction()
@@ -191,12 +215,7 @@ class CssAdminController extends AbstractListController
 
         foreach ( $cssPreview->getPreviews() as $url )
         {
-            $file = 'public' . $url;
-
-            if ( file_exists( $file ) )
-            {
-                @ unlink( $file );
-            }
+            @ unlink( 'public' . $url );
         }
 
         $cssPreview->unsetPreviews();

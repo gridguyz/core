@@ -123,6 +123,20 @@ return array(
                     ),
                 ),
             ),
+            'Grid\Customize\CssAdmin\Cancel' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route'         => '/app/:locale/admin/customize-css/cancel/:id',
+                    'constraints'   => array(
+                        'locale'    => '\w+',
+                        'id'        => 'global|[1-9][0-9]*',
+                    ),
+                    'defaults'      => array(
+                        'controller'    => 'Grid\Customize\Controller\CssAdmin',
+                        'action'        => 'cancel',
+                    ),
+                ),
+            ),
             'Grid\Customize\CssAdmin\ResetPreviews' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
