@@ -47,11 +47,11 @@
     return cm.getSearchCursor(query, pos, queryCaseInsensitive(query));
   }
   function dialog(cm, text, shortText, deflt, f) {
-    if (cm.openDialog) cm.openDialog(text, f, {value: deflt});
+    if (cm.openDialog) cm.openDialog(text, f, {value: deflt, bottom: true});
     else f(prompt(shortText, deflt));
   }
   function confirmDialog(cm, text, shortText, fs) {
-    if (cm.openConfirm) cm.openConfirm(text, fs);
+    if (cm.openConopenDialogfirm) cm.openConfirm(text, fs, {bottom: true});
     else if (confirm(shortText)) fs[0]();
   }
   function parseQuery(query) {
