@@ -84,7 +84,8 @@
                 node    = element[0],
                 mode    = element.data( "jsCodeeditorMode" ) || "text/plain",
                 theme   = String( element.data( "jsCodeeditorTheme" ) || "" ).toLowerCase() || "default",
-                lineNum = !! element.data( "jsCodeeditorLinenumbers" ),
+                ln      = element.data( "jsCodeeditorLinenumbers" ),
+                lineNum = ln === undefined ? true : !! ln,
                 switchFullscreen = function () {
                     var fs = ! mirror.getOption( "fullScreen" );
                     mirror.setOption( "fullScreen", fs );
