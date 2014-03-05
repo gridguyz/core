@@ -12,6 +12,7 @@
     right: 15px;
     bottom: 15px;
     display: block;
+    font-size: 14px;
     text-align: right;
     position: absolute;
 }
@@ -23,4 +24,17 @@
     border: 0px none;
     text-align: right;
     background-color: #d3d4d9;
+}
+
+.CodeMirror .CodeMirror-dialog input
+{
+    color: #111;
+    background: #fff;
+    border: 1px solid #d5d5d5;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #f1f1f1), color-stop(1, #ffffff));
+    background-image: -webkit-linear-gradient(top, #f1f1f1 0%, #ffffff 100%);
+    background-image: -moz-linear-gradient(top, #f1f1f1 0%, #ffffff 100%);
+    background-image: -ms-linear-gradient(top, #f1f1f1 0%, #ffffff 100%);
+    background-image: -o-linear-gradient(top, #f1f1f1 0%, #ffffff 100%);
+    background-image: linear-gradient(to bottom, #f1f1f1 0%, #ffffff 100%);
 }
