@@ -18,6 +18,7 @@ return array(
     'customize.form.rules.important' => 'Important',
     'customize.form.import.file' => 'Import from file',
     'customize.form.import.submit' => 'Import',
+    'customize.form.import.title' => 'Import paragraph structure & customize',
     'customize.form.extra.title' => 'Edit extra CSS',
     'customize.form.extra.css' => 'Extra CSS content',
     'customize.form.extra.submit' => 'Save',

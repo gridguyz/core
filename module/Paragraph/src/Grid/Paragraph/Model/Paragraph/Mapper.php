@@ -788,6 +788,88 @@ class Mapper extends ReadWriteMapperAbstract
     }
 
     /**
+     * Find render-list (data-only)
+     *
+     * @param   int|string $idOrMetaName
+     * @return  array[]
+     */
+    public function findRenderListData( $idOrMetaName )
+    {
+        $platform = $this->getDbAdapter()
+                         ->getPlatform();
+
+        $columns = $this->getSelectColumns();
+        $columns['_depth'] = new Sql\Expression( '(' .
+            $this->sql( null )
+                 ->select( array( 'parent' => static::$tableName ) )
+                 ->columns( array(
+                     new Sql\Expression( 'COUNT(*)' )
+                 ) )
+                 ->where( array(
+                     new Sql\Predicate\Expression(
+                         $platform->quoteIdentifierChain( array( 'parent', 'rootId' ) ) . ' = ' .
+                         $platform->quoteIdentifierChain( array( static::$tableName, 'rootId' ) )
+                     ),
+                     new Sql\Predicate\Expression(
+                         $platform->quoteIdentifierChain( array( static::$tableName, 'left' ) ) .
+                         ' BETWEEN ' . $platform->quoteIdentifierChain( array( 'parent', 'left' ) ) .
+                             ' AND ' . $platform->quoteIdentifierChain( array( 'parent', 'right' ) )
+                     ),
+                 ) )
+                 ->getSqlString( $platform ) .
+        ')' );
+
+        $select = $this->select( $columns )
+                       ->join(
+                           array( 'root' => self::$tableName ),
+                           '( ' . self::$tableName . '.rootId = root.rootId ) AND ' .
+                           '( ' . self::$tableName . '.left BETWEEN root.left AND root.right ) ',
+                           array()
+                       )
+                       ->order( 'left' );
+
+        if ( is_numeric( $idOrMetaName ) )
+        {
+            $select->where( array(
+                'root.id'   => (int) $idOrMetaName,
+            ) );
+        }
+        else
+        {
+            $select->where( array(
+                'root.type' => 'metaContent',
+                'root.name' => (string) $idOrMetaName,
+            ) );
+        }
+
+        /* @var $result \Zend\Db\Adapter\Driver\ResultInterface */
+
+        $return = array();
+        $result = $this->sql()
+                       ->prepareStatementForSqlObject( $select )
+                       ->execute();
+
+        foreach ( $result as $row )
+        {
+            $depth = (int) $row['_depth'];
+            unset( $row['_depth'] );
+
+            if ( empty( $row['proxyData'] ) )
+            {
+                $row['proxyData'] = array();
+            }
+            else
+            {
+                $row['proxyData'] = json_decode( $row['proxyData'], true );
+            }
+
+            $return[] = array( $depth, $row );
+        }
+
+        return $return;
+    }
+
+    /**
      * @param int $id
      * @return array
      */

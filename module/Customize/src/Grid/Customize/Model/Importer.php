@@ -3,337 +3,619 @@
 namespace Grid\Customize\Model;
 
 use ZipArchive;
+use DOMElement;
+use DOMDocument;
 use Zork\Db\SiteInfo;
-use Zork\Stdlib\String;
-use RecursiveIteratorIterator;
-use RecursiveDirectoryIterator;
-use Zork\Db\SiteInfoAwareTrait;
-use Zork\Db\SiteInfoAwareInterface;
+use Zork\Stdlib\DateTime;
+use Zork\Libxml\ErrorHandler;
 use Grid\Customize\Model\Sheet\Model as SheetModel;
+use Grid\Paragraph\Model\Paragraph\Model as ParagraphModel;
 
 /**
  * Importer model
  *
- * @deprecated
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
-class Importer implements SiteInfoAwareInterface
+class Importer extends AbstractImportExport
 {
-
-    use SiteInfoAwareTrait;
-
-    /**
-     * @const string
-     */
-    const PUBLIC_DIR    = './public/';
-
-    /**
-     * @const string
-     */
-    const UPLOADS_DIR   = 'uploads/';
-
-    /**
-     * @var string
-     */
-    const IMPORT_DIR    = 'tmp/';
-
-    /**
-     * @var \Customize\Model\Sheet\Model
-     */
-    private $sheetModel = null;
-
-    /**
-     * @var \Customize\Model\CssParser
-     */
-    private $cssParser = null;
-
-    /**
-     * Get the customize-sheet model
-     *
-     * @return \Customize\Model\Sheet\Model
-     */
-    protected function getSheetModel()
-    {
-        return $this->sheetModel;
-    }
-
-    /**
-     * Set the customize-sheet model
-     *
-     * @param \Customize\Model\Sheet\Model $sheet
-     * @return \Customize\Model\Exporter
-     */
-    protected function setSheetModel( SheetModel $sheet )
-    {
-        $this->sheetModel = $sheet;
-        return $this;
-    }
-
-    /**
-     * Get the css-parser
-     *
-     * @return \Customize\Model\CssParser
-     */
-    protected function getCssParser()
-    {
-        return $this->cssParser;
-    }
-
-    /**
-     * Set the css-parser
-     *
-     * @param \Customize\Model\CssParser $parser
-     * @return \Customize\Model\Exporter
-     */
-    protected function setCssParser( CssParser $parser )
-    {
-        $this->cssParser = $parser;
-        return $this;
-    }
 
     /**
      * Constructor
      *
-     * @param \Customize\Model\Sheet\Model $sheet
-     * @param \Customize\Model\CssParser $cssParser
-     * @param \Zork\Db\SiteInfo $siteInfo
+     * @param   SheetModel      $sheetModel
+     * @param   ParagraphModel  $paragraphModel
+     * @param   SiteInfo        $siteInfo
      */
-    public function __construct( SheetModel $sheet,
-                                 CssParser $cssParser,
-                                 SiteInfo $siteInfo )
+    public function __construct( SheetModel     $sheetModel,
+                                 ParagraphModel $paragraphModel,
+                                 SiteInfo       $siteInfo )
     {
-        $this->setSheetModel( $sheet )
-             ->setCssParser( $cssParser )
-             ->setSiteInfo( $siteInfo );
+        parent::__construct( $sheetModel, $paragraphModel, $siteInfo );
     }
 
     /**
-     * Generate a random import-name
+     * Import paragraph & customize from a zip file
      *
-     * @return string
+     * @param   string|ZipArchive   $file
+     * @param   boolean             $throw
+     * @return  int|\ErrorException
      */
-    protected function generateImportName()
+    public function import( $file, $throw = true )
     {
-        do
+        static $validSchema     = 'vendor/gridguyz/core/module/Core/public/styles/schemas/paragraph/1.0.xsd';
+        static $validSystemIds  = array(
+            'http://gridguyz.com/styles/schemas/paragraph/1.0.dtd',
+            'public/styles/schemas/paragraph/1.0.dtd',
+            './public/styles/schemas/paragraph/1.0.dtd',
+            'vendor/gridguyz/core/module/Core/public/styles/schemas/paragraph/1.0.dtd',
+            './vendor/gridguyz/core/module/Core/public/styles/schemas/paragraph/1.0.dtd',
+        );
+
+        if ( $file instanceof ZipArchive )
         {
-            $name = 'import-' . String::generateRandom();
-            $path = static::PUBLIC_DIR . static::IMPORT_DIR . '/' . $name;
+            $zip    = $file;
+            $file   = '$object.zip';
         }
-        while ( is_file( $path ) || is_dir( $path ) );
-
-        return $name;
-    }
-
-    /**
-     * Parse css-file into rules
-     *
-     * @param string $file
-     * @param array $rules
-     */
-    protected function parseCss( $file, array & $rules )
-    {
-        $dir   = dirname( $file );
-        $sheet = $this->getCssParser()
-                      ->parse( $file );
-
-        if ( ! empty( $sheet ) )
+        else
         {
-            foreach ( $sheet->imports as $import )
+            if ( ! is_file( $file ) )
             {
-                $this->parseCss( $dir . '/' . $import, $rules );
+                throw new \InvalidArgumentException( sprintf(
+                    '%s: "%s" is not a file',
+                    __METHOD__,
+                    $file
+                ) );
             }
 
-            $rules = array_merge( $rules, $sheet->rules );
-        }
-    }
+            $zip    = new ZipArchive();
+            $open   = $zip->open( $file, ZipArchive::CHECKCONS );
 
-    /**
-     * Add a css file's content to the db (under rootId in hierarchy)
-     *
-     * @param string $dir
-     * @param string $file
-     * @param int|null $rootId
-     */
-    protected function addCssByRoot( $dir, $file, $rootId )
-    {
-        $rows = 0;
-        $path = $dir . '/' . $file;
-
-        if ( is_file( $path ) )
-        {
-            $this->getSheetModel()
-                 ->deleteByRoot( $rootId );
-
-            /* @var $rules Grid\Customize\Model\Rule\Structure[] */
-            $rules = array();
-            $this->parseCss( $path, $rules );
-
-            $mapper = $this->getSheetModel()
-                           ->getMapper();
-
-            foreach ( $rules as $rule )
+            if ( $open !== true )
             {
-                $rows += $mapper->save( $rule );
+                throw new \RuntimeException( sprintf(
+                    '%s: "%s" cannot be opened as a zip file (errno #%d)',
+                    __METHOD__,
+                    $file,
+                    $open
+                ) );
             }
         }
 
-        return $rows;
-    }
+        $stats = $zip->statName( 'paragraph.xml', ZipArchive::FL_NOCASE );
 
-    /**
-     * Remove contents
-     *
-     * @param string $path
-     * @param bool $resursive
-     */
-    protected function removeContents( $path, $resursive = false )
-    {
-        if ( file_exists( $path ) )
-        {
-            if ( $resursive )
-            {
-                $iterator = new RecursiveIteratorIterator(
-                    new RecursiveDirectoryIterator(
-                        $path,
-                        RecursiveDirectoryIterator::KEY_AS_PATHNAME |
-                        RecursiveDirectoryIterator::CURRENT_AS_SELF |
-                        RecursiveDirectoryIterator::SKIP_DOTS
-                    ),
-                    RecursiveIteratorIterator::CHILD_FIRST
-                );
-
-                foreach ( $iterator as $key => $self )
-                {
-                    if ( $self->isDir() )
-                    {
-                        @ rmdir( $key );
-                    }
-                    else
-                    {
-                        @ unlink( $key );
-                    }
-                }
-            }
-            else
-            {
-                @ unlink( $path );
-            }
-        }
-    }
-
-    /**
-     * Add file/dir contents to customize path
-     *
-     * @param string $dir
-     * @param string $file
-     * @param bool $resursive set to true on dirs
-     */
-    protected function moveContents( $dir, $file, $resursive = false )
-    {
-        static $schema = null;
-        $path = $dir . '/' . $file;
-
-        if ( file_exists( $path ) )
-        {
-            if ( null === $schema )
-            {
-                $info   = $this->getSiteInfo();
-                $schema = $info->getSchema();
-            }
-
-            $to = static::PUBLIC_DIR . static::UPLOADS_DIR . $schema . '/customize/' . $file;
-            $this->removeContents( $to, $resursive );
-
-            if ( $resursive )
-            {
-                $iterator = new RecursiveIteratorIterator(
-                    new RecursiveDirectoryIterator(
-                        $path,
-                        RecursiveDirectoryIterator::KEY_AS_PATHNAME |
-                        RecursiveDirectoryIterator::CURRENT_AS_SELF |
-                        RecursiveDirectoryIterator::SKIP_DOTS
-                    ),
-                    RecursiveIteratorIterator::SELF_FIRST
-                );
-
-                foreach ( $iterator as $key => $self )
-                {
-                    if ( $self->isDir() )
-                    {
-                        @ mkdir( $key, 0777, true );
-                    }
-                    else
-                    {
-                        @ copy( $key, $to . '/' . $self->getSubPathname() );
-                    }
-                }
-            }
-            else
-            {
-                @ copy( $path, $to );
-            }
-        }
-    }
-
-    /**
-     * Import paragraph's customize from a zip file
-     *
-     * @param string $file
-     * @param int $rootParagraphId
-     * @return string
-     */
-    public function import( $file, $rootParagraphId )
-    {
-        if ( ! is_file( $file ) )
+        if ( empty( $stats ) ||
+             empty( $stats['size'] ) ||
+             ! isset( $stats['index'] ) )
         {
             throw new \InvalidArgumentException( sprintf(
-                '%s: "%s" is not a file',
+                '%s: "paragraph.xml" is not found in "%s"',
                 __METHOD__,
                 $file
             ) );
         }
 
-        $zip = new ZipArchive();
+        $document = new DOMDocument();
+        $document->loadXML( $zip->getFromIndex( $stats['index'] ) );
+        $document->baseURI      = '.';
+        $document->documentURI  = 'paragraph.xml';
+        $document->normalizeDocument();
+        ErrorHandler::start();
 
-        if ( $zip->open( $file, ZipArchive::CHECKCONS ) !== true )
+        if ( $document->doctype )
         {
-            throw new \RuntimeException( sprintf(
-                '%s: "%s" cannot be opened as a zip file',
+            $doctype = $document->doctype;
+
+            if ( static::GPML_ROOT != strtolower( $doctype->name ) )
+            {
+                ErrorHandler::stop();
+                throw new \InvalidArgumentException( sprintf(
+                    '%s: DOCTYPE "%s" in "%s#paragraph.xml" does not match "%s"',
+                    __METHOD__,
+                    $doctype->name,
+                    $file,
+                    static::GPML_ROOT
+                ) );
+            }
+
+            if ( ! in_array( $doctype->systemId, $validSystemIds ) )
+            {
+                ErrorHandler::stop();
+                throw new \InvalidArgumentException( sprintf(
+                    '%s: SYSTEM ID "%s" in "%s#paragraph.xml"\'s ' .
+                        'DOCTYPE does not match one of "%s"',
+                    __METHOD__,
+                    $doctype->systemId,
+                    $file,
+                    implode( '", "', $validSystemIds )
+                ) );
+            }
+
+            if ( ! $document->validate() )
+            {
+                return ErrorHandler::stop( $throw );
+            }
+        }
+
+        if ( ! $document->schemaValidate( realpath( $validSchema ) ) )
+        {
+            return ErrorHandler::stop( $throw );
+        }
+
+        $domains        = array();
+        $paragraphIdMap = array();
+        $gpml           = $document->documentElement;
+        $version        = $gpml->getAttribute( 'version' );
+        $dbSchema       = $gpml->getAttribute( 'db-schema' );
+
+        if ( version_compare( $version, '1.0', '<' ) )
+        {
+            ErrorHandler::stop();
+            throw new \InvalidArgumentException( sprintf(
+                '%s: unknown version "%s" in "%s#paragraph.xml"',
                 __METHOD__,
+                $version,
                 $file
             ) );
         }
 
-        $dir = static::PUBLIC_DIR . static::IMPORT_DIR . $this->generateImportName();
-
-        if ( ! @ mkdir( $dir, 0777, true ) )
+        foreach ( $gpml->childNodes as $child )
         {
-            throw new \RuntimeException( sprintf(
-                '%s: Temp dir "%s" cannot be created',
-                __METHOD__,
-                $dir
-            ) );
+            if ( $child instanceof DOMElement )
+            {
+                switch ( $child->tagName )
+                {
+                    case 'domain':
+                        $domains[] = trim( $child->textContent );
+                        break;
+
+                    case 'paragraph':
+                        $rootParagraphId = $this->importRootParagraph(
+                            $child,
+                            $zip,
+                            $paragraphIdMap,
+                            $domains,
+                            $dbSchema
+                        );
+                        break;
+
+                    case 'customize-rule':
+                        $this->importCustomizeRule(
+                            $rootParagraphId,
+                            $child,
+                            $zip,
+                            $paragraphIdMap,
+                            $domains,
+                            $dbSchema
+                        );
+                        break;
+
+                    case 'customize-extra':
+                        $this->importCustomizeExtra(
+                            $rootParagraphId,
+                            trim( $child->textContent )
+                        );
+                        break;
+                }
+            }
         }
 
-        $extract = $zip->extractTo( $dir );
-        $zip->close();
+        $error = ErrorHandler::stop( false );
 
-        if ( true !== $extract )
+        if ( $error )
         {
-            throw new \RuntimeException( sprintf(
-                '%s: Zip file "%s" cannot be extracted',
-                __METHOD__,
-                $file
-            ) );
+            if ( $throw )
+            {
+                throw $error;
+            }
+            else
+            {
+                return $error;
+            }
         }
 
-        $this->addCssByRoot( $dir, 'layout.css', $rootParagraphId );
-        $this->addCssByRoot( $dir, 'general.css', null );
-        $this->moveContents( $dir, 'extra.css', false );
-        $this->moveContents( $dir, 'resources', true );
-        $this->removeContents( $dir, true );
+        return $rootParagraphId;
+    }
 
-        return true;
+    /**
+     * Import root-paragraph from its node
+     *
+     * @param   DOMElement  $paragraphNode
+     * @param   ZipArchive  $zip
+     * @param   array       $paragraphIdMap
+     * @param   array       $domains
+     * @param   string      $dbSchema
+     * @return  int
+     */
+    protected function importRootParagraph( DOMElement $paragraphNode,
+                                            ZipArchive $zip,
+                                            array &$paragraphIdMap,
+                                            array $domains,
+                                            $dbSchema )
+    {
+        return $this->saveParagraphStructure(
+            $this->loadParagraphStructure(
+                $paragraphNode,
+                $zip,
+                $domains,
+                $dbSchema
+            ),
+            $paragraphIdMap
+        );
+    }
+
+    /**
+     * Load paragraph structure from its node
+     *
+     * @param   DOMElement  $paragraphNode
+     * @param   ZipArchive  $zip
+     * @param   array       $domains
+     * @param   string      $dbSchema
+     * @param   int         $offset
+     * @return  array
+     */
+    protected function loadParagraphStructure( DOMElement $paragraphNode,
+                                               ZipArchive $zip,
+                                               array $domains,
+                                               $dbSchema,
+                                               &$offset = 1)
+    {
+        $offset     = ( (int) $offset ) ?: 1;
+        $structure  = array(
+            'id'            => $paragraphNode->getAttribute( 'id' ),
+            'type'          => $paragraphNode->getAttribute( 'type' ),
+            'name'          => $paragraphNode->hasAttribute( 'name' )
+                             ? $paragraphNode->getAttribute( 'name' )
+                             : null,
+            'left'          => $offset,
+            'right'         => ++$offset,
+            'properties'    => array(),
+            'children'      => array(),
+        );
+
+        foreach ( $paragraphNode->childNodes as $child )
+        {
+            if ( $child instanceof DOMElement )
+            {
+                switch ( $child->tagName )
+                {
+                    case 'paragraph':
+                        $structure['children'][] = $this->loadParagraphStructure(
+                            $child,
+                            $domains,
+                            $dbSchema,
+                            $offset
+                        );
+
+                        $structure['right'] = ++$offset;
+                        break;
+
+                    case 'paragraph-property':
+                        $substitutions = array();
+
+                        foreach ( $child->childNodes as $substitutionNode )
+                        {
+                            if ( $substitutionNode instanceof DOMElement &&
+                                 $substitutionNode->tagName === 'substitution' )
+                            {
+                                $name   = $substitutionNode->getAttribute( 'original' );
+                                $value  = $substitutionNode->getAttribute( 'file' );
+                                $substitutions[$name] = $value;
+                            }
+                        }
+
+                        $value = $this->processValue(
+                            $child->getAttribute( 'value' ),
+                            $zip,
+                            $substitutions,
+                            $domains,
+                            $dbSchema
+                        );
+
+                        $structure['properties'][] = array(
+                            'name'      => $child->getAttribute( 'name' ),
+                            'locale'    => ( $child->getAttribute( 'locale' ) ?: '*' ),
+                            'value'     => $value,
+                        );
+                        break;
+                }
+            }
+        }
+
+        return $structure;
+    }
+
+    /**
+     * Save paragraph structure to database
+     *
+     * @param   array   $structure
+     * @param   array   $paragraphIdMap
+     * @return  int
+     */
+    protected function saveParagraphStructure( array $structure,
+                                               array &$paragraphIdMap,
+                                               $rootId = null )
+    {
+        $model      = $this->getParagraphModel();
+        $paragraph  = $model->create( array(
+            'type'      => $structure['type'],
+            'name'      => $structure['name'],
+            'left'      => $structure['left'],
+            'right'     => $structure['right'],
+            'rootId'    => $rootId,
+        ) );
+
+        if ( $paragraph->save() && isset( $paragraph->id ) )
+        {
+            $id = $paragraph->id;
+        }
+        else
+        {
+            return null;
+        }
+
+        $paragraphIdMap[$structure['id']] = $id;
+        $model->saveRawProperties( $id, $structure['properties'] );
+
+        foreach ( $structure['children'] as $child )
+        {
+            $this->saveParagraphStructure( $child, $paragraphIdMap, $id );
+        }
+
+        return $id;
+    }
+
+    /**
+     * Import customize-rule from its node
+     *
+     * @param   int         $rootParagraphId
+     * @param   DOMElement  $ruleNode
+     * @param   ZipArchive  $zip
+     * @param   array       $paragraphIdMap
+     * @param   array       $domains
+     * @param   string      $dbSchema
+     * @return  int
+     */
+    protected function importCustomizeRule( $rootParagraphId,
+                                            DOMElement $ruleNode,
+                                            ZipArchive $zip,
+                                            array $paragraphIdMap,
+                                            array $domains,
+                                            $dbSchema )
+    {
+        /* @var $mapper \Grid\Customize\Model\Rule\Mapper */
+        $properties = array();
+        $model      = $this->getSheetModel();
+        $mapper     = $model->getMapper()->getRuleMapper();
+        $media      = $ruleNode->getAttribute( 'media' ) ?: '';
+        $selector   = $this->processCustomizeRuleSelector(
+            $ruleNode->getAttribute( 'selector' ),
+            $paragraphIdMap
+        );
+
+        foreach ( $ruleNode->childNodes as $child )
+        {
+            if ( $child instanceof DOMElement &&
+                 $child->tagName === 'customize-property' )
+            {
+                $substitutions = array();
+
+                foreach ( $child->childNodes as $substitutionNode )
+                {
+                    if ( $substitutionNode instanceof DOMElement &&
+                         $substitutionNode->tagName === 'substitution' )
+                    {
+                        $name   = $substitutionNode->getAttribute( 'original' );
+                        $value  = $substitutionNode->getAttribute( 'file' );
+                        $substitutions[$name] = $value;
+                    }
+                }
+
+                $value = $this->processValue(
+                    $child->getAttribute( 'value' ),
+                    $zip,
+                    $substitutions,
+                    $domains,
+                    $dbSchema,
+                    $paragraphIdMap
+                );
+
+                $properties[] = array(
+                    'name'      => $child->getAttribute( 'name' ),
+                    'value'     => $value,
+                    'priority'  => $child->hasAttribute( 'priority' )
+                                 ? $child->getAttribute( 'priority' )
+                                 : null,
+                );
+            }
+        }
+
+        $rule = $mapper->create( array(
+            'selector'          => $selector,
+            'media'             => $media,
+            'rawProperties'     => $properties,
+            'rootParagraphId'   => $rootParagraphId,
+        ) );
+
+        return $rule->save();
+    }
+
+    /**
+     * Import customize-extra from its content
+     *
+     * @param   int     $rootParagraphId
+     * @param   string  $extra
+     * @return  int
+     */
+    protected function importCustomizeExtra( $rootParagraphId, $extra )
+    {
+        /* @var $mapper \Grid\Customize\Model\Extra\Mapper */
+        $model  = $this->getSheetModel();
+        $mapper = $model->getMapper()->getExtraMapper();
+        $extra  = $mapper->create( array(
+            'rootParagraphId'   => $rootParagraphId,
+            'extra'             => $extra,
+        ) );
+
+        return $extra->save();
+    }
+
+    /**
+     * Process a customize-rule's selector
+     *
+     * @param   string  $selector
+     * @param   array   $paragraphIdMap
+     * @return  string
+     */
+    public function processCustomizeRuleSelector( $selector,
+                                                  array $paragraphIdMap )
+    {
+        return preg_replace_callback(
+            '/#paragraph-(-?\d+)/',
+            function ( $matches ) use ( $paragraphIdMap )
+            {
+                $id = (string) (int) $matches[1];
+
+                if ( isset( $paragraphIdMap[$id] ) )
+                {
+                    $id = $paragraphIdMap[$id];
+                }
+
+                return '#paragraph-' . $id;
+            },
+            $selector
+        );
+    }
+
+    /**
+     * Process a single value
+     *
+     * @param   string      $value
+     * @param   ZipArchive  $zip
+     * @param   array       $substitutions
+     * @param   array       $domains
+     * @param   string      $dbSchema
+     * @param   array|null  $paragraphIdMap
+     * @return  string
+     */
+    public function processValue( $value,
+                                  ZipArchive $zip,
+                                  array $substitutions,
+                                  array $domains,
+                                  $dbSchema,
+                                  array $paragraphIdMap = null)
+    {
+        if ( empty( $substitutions ) )
+        {
+            return $value;
+        }
+
+        $base       = static::PUBLIC_DIR . static::UPLOADS_DIR;
+        $siteInfo   = $this->getSiteInfo();
+        $importDir  = null;
+
+        foreach ( $substitutions as $original => $file )
+        {
+            $stats = $zip->statName( $file, ZipArchive::FL_NOCASE );
+
+            if ( ! empty( $stats ) && isset( $stats['index'] ) )
+            {
+                $contents   = null;
+                $file       = trim( $stats['name'], '/' );
+
+                if ( $siteInfo->getSchema() == $dbSchema &&
+                     substr( $file, 0, strlen( $base ) ) == $base &&
+                     is_file( $file ) &&
+                     filesize( $file ) == $stats['size']  )
+                {
+                    $contents = $zip->getFromIndex( $stats['index'] );
+
+                    if ( file_get_contents( $file ) == $contents )
+                    {
+                        $contents = null;
+                        continue;
+                    }
+                }
+
+                if ( null === $importDir )
+                {
+                    $importDir = static::UPLOADS_DIR
+                               . $siteInfo->getSchema()
+                               . '/pages/imports/'
+                               . (new DateTime)->toHash() . '/';
+
+                    if ( ! is_dir( static::PUBLIC_DIR . $importDir ) )
+                    {
+                        @mkdir( static::PUBLIC_DIR . $importDir, 0777, true );
+                    }
+                }
+
+                $info   = pathinfo( $file );
+                $name   = str_replace( '%', '.', rawurlencode( $info['filename'] ) );
+                $ext    = '';
+                $suffix = '';
+
+                if ( isset( $info['extension'] ) )
+                {
+                    $ext = '.' . str_replace( '%', '.', rawurlencode( $info['extension'] ) );
+                }
+
+                while ( is_file( static::PUBLIC_DIR . $importDir . $name . $suffix . $ext ) )
+                {
+                    --$suffix;
+                }
+
+                $url    = $importDir . $name . $suffix . $ext;
+                $path   = static::PUBLIC_DIR . $url;
+
+                if ( $contents )
+                {
+                    $write = false !== file_put_contents( $path, $contents );
+                }
+                else if ( is_resource( $source = $zip->getStream( $stats['name'] ) ) )
+                {
+                    $destination = @fopen( $path, 'w' );
+
+                    if ( is_resource( $destination ) )
+                    {
+                        $write = stream_copy_to_stream( $source, $destination );
+                        fclose( $destination );
+                    }
+                    else
+                    {
+                        $write = false;
+                    }
+
+                    fclose( $source );
+                }
+                else
+                {
+                    $write = false;
+                }
+
+                if ( $write )
+                {
+                    $value = str_replace( $original, $url, $value );
+                }
+            }
+        }
+
+        foreach ( $domains as $domain )
+        {
+            $value = preg_replace(
+                '((https?://)([^/:]+?\.)?'
+                    . preg_quote( $domain )
+                    . '(:\d+)?/?)i',
+                function ( $matches ) use ( $siteInfo )
+                {
+                    return $siteInfo->getSubdomainUrl(
+                        empty( $matches[2] ) ? '' : $matches[2],
+                        true
+                    );
+                }
+            );
+        }
+
+        return $value;
     }
 
 }

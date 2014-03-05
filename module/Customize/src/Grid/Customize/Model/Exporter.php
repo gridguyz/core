@@ -3,312 +3,368 @@
 namespace Grid\Customize\Model;
 
 use ZipArchive;
+use DOMElement;
+use DOMImplementation;
 use Zork\Db\SiteInfo;
-use Zork\Stdlib\String;
-use RecursiveIteratorIterator;
-use RecursiveDirectoryIterator;
-use Zork\Db\SiteInfoAwareTrait;
-use Zork\Db\SiteInfoAwareInterface;
-use Zend\Http\Client as HttpClient;
-use Zend\Http\Request as HttpRequest;
+use Zork\Iterator\DepthList;
 use Grid\Customize\Model\Sheet\Model as SheetModel;
+use Grid\Paragraph\Model\Paragraph\Model as ParagraphModel;
 
 /**
  * Exporter model
  *
- * @deprecated
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
-class Exporter implements SiteInfoAwareInterface
+class Exporter extends AbstractImportExport
+            implements ServiceLocatorAwareInterface
 {
 
-    use SiteInfoAwareTrait;
+    use ServiceLocatorAwareTrait;
 
     /**
-     * @const string
+     * @var DomainList
      */
-    const PUBLIC_DIR    = './public/';
+    private $domainList = null;
 
     /**
-     * @const string
+     * @var string
      */
-    const UPLOADS_DIR   = 'uploads/';
+    private $urlPattern = null;
 
     /**
-     * @const string
-     */
-    const EXPORT_DIR    = 'tmp/';
-
-    /**
-     * @var \Customize\Model\Sheet\Model
-     */
-    private $sheetModel = null;
-
-    /**
-     * @var \Zend\Http\Client
-     */
-    private $httpClient = null;
-
-    /**
-     * Get the customize-sheet model
+     * Get the domain-list
      *
-     * @return \Customize\Model\Sheet\Model
+     * @return  DomainList
      */
-    protected function getSheetModel()
+    protected function getDomainList()
     {
-        return $this->sheetModel;
+        return $this->domainList;
     }
 
     /**
-     * Set the customize-sheet model
+     * Set the domain-list
      *
-     * @param \Customize\Model\Sheet\Model $sheet
-     * @return \Customize\Model\Exporter
+     * @param   DomainList  $domainList
+     * @return  Exporter
      */
-    protected function setSheetModel( SheetModel $sheet )
+    protected function setDomainList( DomainList $domainList )
     {
-        $this->sheetModel = $sheet;
+        $this->urlPattern = null;
+        $this->domainList = $domainList;
         return $this;
     }
 
     /**
-     * Get the http-client
+     * Get url pattern
      *
-     * @return \Zend\Http\Client
+     * @return  string
      */
-    protected function getHttpClient()
+    protected function getUrlPattern()
     {
-        return $this->httpClient;
-    }
+        if ( $this->urlPattern )
+        {
+            return $this->urlPattern;
+        }
 
-    /**
-     * Set the http-client
-     *
-     * @param \Zend\Http\Client $client
-     * @return \Customize\Model\Exporter
-     */
-    protected function setHttpClient( HttpClient $client )
-    {
-        $this->httpClient = $client;
-        return $this;
+        $domains = iterator_to_array( $this->getDomainList() );
+
+        if ( empty( $domains ) )
+        {
+            $domains = array( 'localhost' );
+        }
+
+        return $this->urlPattern = '(|(https?:)?//([^/]+\.)?('
+             . implode( '|', array_map( 'preg_quote', $domains ) )
+             . ')(:\d+)?)';
     }
 
     /**
      * Constructor
      *
-     * @param \Customize\Model\Sheet\Model $sheet
-     * @param \Zend\Http\Client $client
-     * @param \Zork\Db\SiteInfo $siteInfo
+     * @param   DomainList      $domainList
+     * @param   SheetModel      $sheetModel
+     * @param   ParagraphModel  $paragraphModel
+     * @param   SiteInfo        $siteInfo
      */
-    public function __construct( SheetModel $sheet,
-                                 HttpClient $client,
-                                 SiteInfo $siteInfo )
+    public function __construct( DomainList     $domainList,
+                                 SheetModel     $sheetModel,
+                                 ParagraphModel $paragraphModel,
+                                 SiteInfo       $siteInfo )
     {
-        $this->setSheetModel( $sheet )
-             ->setHttpClient( $client )
-             ->setSiteInfo( $siteInfo );
+        parent::__construct( $sheetModel, $paragraphModel, $siteInfo );
+        $this->setDomainList( $domainList );
     }
 
     /**
-     * Generate a random export-name
+     * Set property-node(s)' value
      *
-     * @return string
+     * @param   ZipArchive  $zip
+     * @param   DOMElement  $element
+     * @param   string|null $value
+     * @param   boolean     $css
+     * @return  string|null
      */
-    protected function generateExportName( $suffix )
+    protected function setPropertyNodeValue( ZipArchive $zip,
+                                             DOMElement $element,
+                                             $value,
+                                             $css = false )
     {
-        do
+        if ( empty( $value ) )
         {
-            $name = 'export-' . String::generateRandom();
-            $path = static::PUBLIC_DIR . static::EXPORT_DIR . $name . $suffix;
+            return $value;
         }
-        while ( is_file( $path ) || is_dir( $path ) );
 
-        return $name . $suffix;
-    }
+        $matches    = array();
+        $substits   = array();
+        $public     = static::PUBLIC_DIR;
+        $uploads    = static::UPLOADS_DIR;
+        $value      = (string) $value;
+        $pattprefix = $this->getUrlPattern();
+        $pattern    = '(^' . $pattprefix . '(/'
+                    . preg_quote( $uploads ) . '.*)$)i';
 
-    /**
-     * HTTP get an uri (at the actual domain)
-     *
-     * @param string $domain
-     * @param string $path
-     * @param string $scheme
-     * @return string
-     */
-    protected function httpGet( $domain, $path, $scheme = 'http://' )
-    {
-        $request = new HttpRequest;
-        $request->setMethod( HttpRequest::METHOD_GET )
-                ->setUri( $scheme . $domain . '/' . ltrim( $path, '/' ) )
-                ->getHeaders()
-                ->addHeaderLine( 'Host', $domain );
-
-        return $this->getHttpClient()
-                    ->send( $request )
-                    ->getContent();
-    }
-
-    /**
-     * Add a css file by root-id to the zip-archive
-     *
-     * @param ZipArchive $zip
-     * @param type $name
-     * @param type $rootId
-     * @param bool $convertUrls
-     */
-    protected function addCssByRoot( ZipArchive $zip, $name, $rootId, $convertUrls = true )
-    {
-        $tmpp   = static::PUBLIC_DIR . static::EXPORT_DIR . $this->generateExportName( '.css' );
-        $added  = false;
-
-        $this->getSheetModel()
-             ->findByRoot( $rootId )
-             ->render( $tmpp );
-
-        $tmp = file_get_contents( $tmpp );
-
-        if ( $convertUrls )
+        if ( preg_match( $pattern, $value, $matches ) )
         {
-            $tmp = preg_replace_callback(
-                '#url\("?(/uploads/[^/]+/([^/]+)/.*?)"?\)#',
-                function ( $match ) use ( $zip, $added )
+            $path = $matches[6];
+            $file = rtrim( $public, '/' ) . '/' . ltrim( $path, '/' );
+
+            if ( file_exists( $file ) )
+            {
+                $value = $path;
+                $substits[$path] = $file;
+            }
+        }
+
+        $pattern = '(([\'"])(' . $pattprefix . '(/'
+                 . preg_quote( $uploads ) . '.*?))(?<!\\\\)(\\1))i';
+
+        if ( empty( $substits ) )
+        {
+            $replace = function ( $matches ) use ( &$substits, $css, $public ) {
+                $path = $matches[8];
+
+                if ( ! $css )
                 {
-                    $file = static::PUBLIC_DIR . $match[1];
+                    $path = html_entity_decode( $path, ENT_QUOTES | ENT_HTML5 );
+                }
 
-                    if ( $match[2] != 'customize' && is_file( $file ) )
-                    {
-                        $prefix = 'resources/uploads/';
-                        $suffix = strrchr( $file, '.' );
-                        $base = basename( $file, $suffix );
-                        $index = '';
+                $path = rawurldecode( $path );
+                $file = rtrim( $public, '/' ) . '/' . ltrim( $path, '/' );
 
-                        while ( false !== $zip->locateName( $prefix .
-                                $base . $index . $suffix ) )
-                        {
-                            --$index;
-                        }
+                if ( file_exists( $file ) )
+                {
+                    $substits[$matches[8]] = $file;
+                    return $matches[1] . $matches[8] . $matches[9];
+                }
 
-                        if ( $zip->addFile( $file, $prefix .
-                                $base . $index . $suffix ) )
-                        {
-                            $added = true;
-                            return 'url("./' . $prefix .
-                                    $base . $index . $suffix . '")';
-                        }
-                    }
+                return $matches[0];
+            };
 
-                    return $match[0];
-                },
-                $tmp
-            );
+            $value = preg_replace_callback( $pattern, $replace, $value );
+
+            if ( $css )
+            {
+                $pattern = '((url\\()(' . $pattprefix . '(/'
+                         . preg_quote( $uploads ) . '.*?))(?<!\\\\)(\\)))i';
+                $value   = preg_replace_callback( $pattern, $replace, $value );
+            }
         }
 
-        $zip->addFromString( $name, $tmp );
-        @ unlink( $tmpp );
-        return $added;
+        if ( ! empty( $substits ) )
+        {
+            $document = $element->ownerDocument;
+
+            foreach ( $substits as $path => $file )
+            {
+                if ( $zip->addFile( $file, $file ) )
+                {
+                    $substitution = $document->createElement( 'substitution' );
+                    $substitution->setAttribute( 'original', $path );
+                    $substitution->setAttribute( 'file', $file );
+                    $element->appendChild( $substitution );
+                }
+            }
+        }
+
+        return $value;
     }
 
     /**
      * Export paragraph's customize into a zip file
      *
-     * @param string $url
-     * @param int $rootParagraphId
-     * @param int $contentId
-     * @return string
+     * @param   int                     $rootId
+     * @return  ZipArchive|string|null  $zip
+     * @return  ZipArchive
      */
-    public function export( $url, $rootParagraphId, $contentId = null )
+    public function export( $rootId, $zip = null )
     {
-        $info   = $this->getSiteInfo();
-        $domain = $info->getFulldomain();
-        $zipp   = static::PUBLIC_DIR . static::EXPORT_DIR . $this->generateExportName( '.zip' );
-        $upl    = static::PUBLIC_DIR . static::UPLOADS_DIR . $info->getSchema() . '/customize';
-        $zip    = new ZipArchive();
-        $added  = false;
-
-        if ( $zip->open( $zipp,
-                         ZipArchive::CREATE | ZipArchive::OVERWRITE ) !== true )
-        {
-            throw new \RuntimeException( sprintf(
-                '%s: Zip file "%s" cannot be created',
-                __METHOD__,
-                $zipp
-            ) );
-        }
-
-        if ( is_dir( $upl . '/resources' ) )
-        {
-            $iterator = new RecursiveDirectoryIterator(
-                $upl . '/resources',
-                RecursiveDirectoryIterator::KEY_AS_PATHNAME |
-                RecursiveDirectoryIterator::CURRENT_AS_SELF |
-                RecursiveDirectoryIterator::SKIP_DOTS
-            );
-
-            $iterator = new RecursiveIteratorIterator(
-                $iterator,
-                RecursiveIteratorIterator::LEAVES_ONLY
-            );
-
-            foreach ( $iterator as $path => $self )
-            {
-                $zip->addFile( $path, 'resources/' . ltrim(
-                    str_replace( '\\', '/', $self->getSubPathname() ), '/'
-                ) );
-
-                $resAdded = true;
-            }
-        }
-
-        $added = $this->addCssByRoot( $zip, 'general.css', null ) || $added;
-        $added = $this->addCssByRoot( $zip, 'layout.css', $rootParagraphId ) || $added;
-
-        if ( ! empty( $contentId ) )
-        {
-            $added = $this->addCssByRoot( $zip, 'content.css', $contentId, false ) || $added;
-        }
-
-        if ( ! $added )
-        {
-            $zip->addEmptyDir( 'resources' );
-        }
-
-        if ( is_file( $upl . '/extra.css' ) )
-        {
-            $zip->addFile( $upl . '/extra.css', 'extra.css' );
-        }
-        else
-        {
-            $zip->addFromString( 'extra.css', '@charset "utf-8";' . PHP_EOL . PHP_EOL );
-        }
-
-        $zip->addFromString(
-            'custom.css',
-            '@charset "utf-8";' . PHP_EOL . PHP_EOL .
-            '@import url("./extra.css");' . PHP_EOL .
-            '@import url("./general.css");' . PHP_EOL .
-            '@import url("./layout.css");' . PHP_EOL .
-            ( empty( $contentId ) ? '' : '@import url("./content.css");' . PHP_EOL )
-        );
-
-        $zip->addFromString(
-            'index.html',
-            preg_replace(
-                array(
-                    '#<head(\s[^>]*)?>#',
-                    '#\s*<link\s[^>]*/customize/custom.[A-Za-z0-9]+.css[^>]*>#',
-                ),
-                array(
-                    '\\0' . PHP_EOL .
-                    '    <link href="./custom.css" type="text/css" ' .
-                              'rel="stylesheet" />' . PHP_EOL .
-                    '    <base href="//' . $domain . '/" />',
-                    '',
-                ),
-                $this->httpGet( $domain, $url )
+        $rootId         = (int) $rootId;
+        $info           = $this->getSiteInfo();
+        $domainList     = $this->getDomainList();
+        $sheetModel     = $this->getSheetModel();
+        $paragraphModel = $this->getParagraphModel();
+        $dom            = new DOMImplementation;
+        $document       = $dom->createDocument(
+            static::GPML_NAMESPACE,
+            static::GPML_ROOT,
+            $dom->createDocumentType(
+                static::GPML_ROOT,
+                static::GPML_PUBLIC,
+                static::GPML_SYSTEM
             )
         );
 
-        $zip->close();
-        return $zipp;
+        if ( null === $zip )
+        {
+            $suffix  = '';
+            $zipPath = static::PUBLIC_DIR
+                     . static::TEMP_DIR
+                     . 'paragraph-export-'
+                     . $rootId;
+
+            while ( is_file( $zipPath . $suffix . '.zip' ) )
+            {
+                $suffix--;
+            }
+
+            $zip = $zipPath . $suffix . '.zip';
+        }
+
+        if ( ! $zip instanceof ZipArchive )
+        {
+            $zipPath = (string) $zip;
+            $zip     = new ZipArchive;
+            $open    = $zip->open(
+                $zipPath,
+                ZipArchive::CREATE | ZipArchive::OVERWRITE
+            );
+
+            if ( true !== $open )
+            {
+                throw new \RuntimeException( sprintf(
+                    '%s: "%s" cannot be created as a zip file (errno #%d)',
+                    __METHOD__,
+                    $zipPath,
+                    $open
+                ) );
+            }
+        }
+
+        $gpml = $document->documentElement;
+     // $gpml->setAttribute( 'xmlns', 'http://gridguyz.com/#gpml' );
+        $gpml->setAttribute( 'version', '1.0' );
+        $gpml->setAttribute( 'db-schema', $info->getSchema() );
+
+        foreach ( $domainList as $domain )
+        {
+            $domainTextNode = $document->createTextNode( (string) $domain );
+            $domainElement  = $document->createElement( 'domain' );
+            $domainElement->appendChild( $domainTextNode );
+            $gpml->appendChild( $domainElement );
+        }
+
+        $nodeStack  = array( $gpml );
+        $paragraphs = new DepthList(
+            $paragraphModel->getMapper()
+                           ->findRenderListData( $rootId )
+        );
+
+        $paragraphs->runin( function ( $paragraph ) use (
+            &$nodeStack,
+            $document,
+            $zip
+        ) {
+            $nodeStack[] = $node = $document->createElement( 'paragraph' );
+            $node->setAttribute( 'id', $paragraph['id'] );
+            $node->setAttribute( 'type', $paragraph['type'] );
+
+            if ( isset( $paragraph['name'] ) )
+            {
+                $node->setAttribute( 'name', $paragraph['name'] );
+            }
+
+            if ( ! empty( $paragraph['proxyData'] ) )
+            {
+                foreach ( $paragraph['proxyData'] as $property )
+                {
+                    $propNode = $document->createElement( 'paragraph-property' );
+
+                    $propNode->setAttribute(
+                        'locale',
+                        empty( $property['locale'] )
+                            ? '*'
+                            : $property['locale']
+                    );
+
+                    $propNode->setAttribute( 'name', $property['name'] );
+
+                    if ( isset( $property['value'] ) )
+                    {
+                        $propNode->setAttribute(
+                            'value',
+                            $this->setPropertyNodeValue(
+                                $zip,
+                                $propNode,
+                                $property['value']
+                            )
+                        );
+                    }
+
+                    $node->appendChild( $propNode );
+                }
+            }
+        }, function () use ( &$nodeStack ) {
+            $append = array_pop( $nodeStack );
+            end( $nodeStack )->appendChild( $append );
+        } );
+
+        /* @var $sheet \Grid\Customize\Model\Sheet\Structure */
+        $sheet = $sheetModel->find( $rootId );
+
+        foreach ( $sheet->rules as $rule )
+        {
+            /* @var $rule \Grid\Customize\Model\Rule\Structure */
+            $ruleNode = $document->createElement( 'customize-rule' );
+            $ruleNode->setAttribute( 'selector', $rule->selector );
+            $ruleNode->setAttribute( 'media', $rule->media );
+
+            foreach ( $rule->getRawPropertyNames() as $property )
+            {
+                $propNode = $document->createElement( 'customize-property' );
+                $priority = $rule->getRawPropertyPriority( $property );
+                $propNode->setAttribute( 'name', $property );
+
+                $propNode->setAttribute(
+                    'value',
+                    $this->setPropertyNodeValue(
+                        $zip,
+                        $propNode,
+                        $rule->getRawPropertyValue( $property ),
+                        true
+                    )
+                );
+
+                if ( $priority )
+                {
+                    $propNode->setAttribute( 'priority', $priority );
+                }
+            }
+
+            $gpml->appendChild( $ruleNode );
+        }
+
+        $extra = trim( $sheet->getExtraContent() );
+
+        if ( ! empty( $extra ) )
+        {
+            $extraText = $document->createTextNode( "\n$extra\n" );
+            $extraNode = $document->createElement( 'customize-extra' );
+            $extraNode->appendChild( $extraText );
+            $gpml->appendChild( $extraNode );
+        }
+
+        $zip->addFromString( 'paragraph.xml', $document->saveXML() );
+        return $zip;
     }
 
 }
