@@ -3,6 +3,7 @@
 .CodeMirror
 {
     font-size: 10pt;
+    border: 1px solid #d3d4d9;
 }
 
 .CodeMirror .CodeMirror-toolbar
