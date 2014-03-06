@@ -16,10 +16,7 @@ use Grid\Paragraph\Model\Paragraph\Model as ParagraphModel;
  * @author David Pozsar <david.pozsar@megaweb.hu>
  */
 class Exporter extends AbstractImportExport
-            implements ServiceLocatorAwareInterface
 {
-
-    use ServiceLocatorAwareTrait;
 
     /**
      * @var DomainList
