@@ -21,9 +21,10 @@ class ImportExportController extends AbstractAdminController
      */
     protected $aclRights = array(
         '' => array(
-            'customize' => 'edit',
+            'customize' => 'view',
         ),
         'import' => array(
+            'customize' => 'create',
             'paragraph' => 'create',
         ),
     );
