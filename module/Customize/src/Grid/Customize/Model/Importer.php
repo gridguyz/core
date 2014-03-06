@@ -280,6 +280,7 @@ class Importer extends AbstractImportExport
                     case 'paragraph':
                         $structure['children'][] = $this->loadParagraphStructure(
                             $child,
+                            $zip,
                             $domains,
                             $dbSchema,
                             $offset
