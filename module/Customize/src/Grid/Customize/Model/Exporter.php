@@ -357,6 +357,7 @@ class Exporter extends AbstractImportExport
             $gpml->appendChild( $extraNode );
         }
 
+        $document->formatOutput = true;
         $zip->addFromString( 'paragraph.xml', $document->saveXML() );
         $zip->close();
         return $zipPath;
