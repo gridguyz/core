@@ -342,6 +342,8 @@ class Exporter extends AbstractImportExport
                 {
                     $propNode->setAttribute( 'priority', $priority );
                 }
+
+                $ruleNode->appendChild( $propNode );
             }
 
             $gpml->appendChild( $ruleNode );
