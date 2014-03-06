@@ -3,7 +3,7 @@
 namespace Grid\Customize\Controller;
 
 use Zork\Stdlib\Message;
-use Zork\Http\PhpEnvironment\Response\Zip;
+use Zork\Http\PhpEnvironment\Response\Readfile;
 use Zork\Mvc\Controller\AbstractAdminController;
 
 /**
@@ -107,9 +107,8 @@ class ImportExportController extends AbstractAdminController
             return;
         }
 
-        /* @var $zip \ZipArchive */
-        $zip = $serviceLocator->get( 'Grid\Customize\Model\Exporter' )
-                              ->export( $paragraph->id );
+        $zipFile = $serviceLocator->get( 'Grid\Customize\Model\Exporter' )
+                                  ->export( $paragraph->id );
 
         $name = strtolower( $paragraph->name );
 
@@ -118,7 +117,12 @@ class ImportExportController extends AbstractAdminController
             $name = 'paragraph-' . $paragraph->id;
         }
 
-        $response = Zip::fromArchive( $zip, $name . '.zip' );
+        $response = Readfile::fromFile(
+            $zipFile,
+            'application/zip',
+            $name . '.zip',
+            true
+        );
 
         $this->getEvent()
              ->setResponse( $response );

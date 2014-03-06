@@ -189,9 +189,9 @@ class Exporter extends AbstractImportExport
     /**
      * Export paragraph's customize into a zip file
      *
-     * @param   int                     $rootId
-     * @return  ZipArchive|string|null  $zip
-     * @return  ZipArchive
+     * @param   int         $rootId
+     * @return  string|null $zip
+     * @return  string
      */
     public function export( $rootId, $zip = null )
     {
@@ -211,7 +211,7 @@ class Exporter extends AbstractImportExport
             )
         );
 
-        if ( null === $zip )
+        if ( empty( $zip ) )
         {
             $suffix  = '';
             $zipPath = static::PUBLIC_DIR
@@ -227,24 +227,21 @@ class Exporter extends AbstractImportExport
             $zip = $zipPath . $suffix . '.zip';
         }
 
-        if ( ! $zip instanceof ZipArchive )
-        {
-            $zipPath = (string) $zip;
-            $zip     = new ZipArchive;
-            $open    = $zip->open(
-                $zipPath,
-                ZipArchive::CREATE | ZipArchive::OVERWRITE
-            );
+        $zipPath = (string) $zip;
+        $zip     = new ZipArchive;
+        $open    = $zip->open(
+            $zipPath,
+            ZipArchive::CREATE | ZipArchive::OVERWRITE
+        );
 
-            if ( true !== $open )
-            {
-                throw new \RuntimeException( sprintf(
-                    '%s: "%s" cannot be created as a zip file (errno #%d)',
-                    __METHOD__,
-                    $zipPath,
-                    $open
-                ) );
-            }
+        if ( true !== $open )
+        {
+            throw new \RuntimeException( sprintf(
+                '%s: "%s" cannot be created as a zip file (errno #%d)',
+                __METHOD__,
+                $zipPath,
+                $open
+            ) );
         }
 
         $gpml = $document->documentElement;
@@ -361,7 +358,8 @@ class Exporter extends AbstractImportExport
         }
 
         $zip->addFromString( 'paragraph.xml', $document->saveXML() );
-        return $zip;
+        $zip->close();
+        return $zipPath;
     }
 
 }
