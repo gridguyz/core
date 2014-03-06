@@ -96,7 +96,6 @@ class Importer extends AbstractImportExport
 
         $document = new DOMDocument();
         $document->loadXML( $zip->getFromIndex( $stats['index'] ) );
-        $document->baseURI      = '.';
         $document->documentURI  = 'paragraph.xml';
         $document->normalizeDocument();
         ErrorHandler::start();

@@ -3,6 +3,7 @@
 namespace Grid\Customize\Controller;
 
 use Zork\Stdlib\Message;
+use Zend\Stdlib\ArrayUtils;
 use Zork\Http\PhpEnvironment\Response\Readfile;
 use Zork\Mvc\Controller\AbstractAdminController;
 
@@ -34,6 +35,7 @@ class ImportExportController extends AbstractAdminController
      */
     public function importAction()
     {
+        /* @var $form \Zork\Form\Form */
         $request        = $this->getRequest();
         $return         = (string) $request->getQuery( 'returnUri' );
         $serviceLocator = $this->getServiceLocator();
@@ -42,17 +44,18 @@ class ImportExportController extends AbstractAdminController
 
         if ( $request->isPost() )
         {
-            $form->setData( $request->getPost() );
+            $form->setData( ArrayUtils::merge(
+                $request->getPost()
+                        ->toArray(),
+                $request->getFiles()
+                        ->toArray()
+            ) );
 
             if ( $form->isValid() )
             {
-                $file = preg_replace(
-                    '#^/#', './',
-                    $form->getValue( 'file' )
-                );
-
+                $data     = $form->getData();
                 $imported = $serviceLocator->get( 'Grid\Customize\Model\Importer' )
-                                           ->import( $file );
+                                           ->import( $data['file']['tmp_name'] );
 
                 if ( $imported )
                 {
