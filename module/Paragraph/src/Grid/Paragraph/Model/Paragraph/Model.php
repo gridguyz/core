@@ -661,6 +661,18 @@ class Model implements MapperAwareInterface,
     }
 
     /**
+     * Save paragraph form raw data
+     *
+     * @param   array   $data
+     * @return  int
+     */
+    public function saveRawData( array $data )
+    {
+        return $this->getMapper()
+                    ->saveRawData( $data );
+    }
+
+    /**
      * Save raw paragraph properties
      *
      * @param   int                 $id

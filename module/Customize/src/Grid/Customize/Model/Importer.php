@@ -336,7 +336,7 @@ class Importer extends AbstractImportExport
                                                $rootId = null )
     {
         $model      = $this->getParagraphModel();
-        $paragraph  = $model->create( array(
+        $paragraph  = $model->saveRawData( array(
             'type'      => $structure['type'],
             'name'      => $structure['name'],
             'left'      => $structure['left'],
@@ -344,24 +344,24 @@ class Importer extends AbstractImportExport
             'rootId'    => $rootId,
         ) );
 
-        if ( $paragraph->save() && isset( $paragraph->id ) )
-        {
-            $id = $paragraph->id;
-        }
-        else
+        if ( empty( $paragraph ) )
         {
             return null;
         }
 
-        $paragraphIdMap[$structure['id']] = $id;
-        $model->saveRawProperties( $id, $structure['properties'] );
+        $paragraphIdMap[$structure['id']] = $paragraph;
+        $model->saveRawProperties( $paragraph, $structure['properties'] );
 
         foreach ( $structure['children'] as $child )
         {
-            $this->saveParagraphStructure( $child, $paragraphIdMap, $id );
+            $this->saveParagraphStructure(
+                $child,
+                $paragraphIdMap,
+                $rootId ? $rootId : $paragraph
+            );
         }
 
-        return $id;
+        return $paragraph;
     }
 
     /**

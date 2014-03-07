@@ -1307,6 +1307,22 @@ class Mapper extends ReadWriteMapperAbstract
     }
 
     /**
+     * Save paragraph form raw data
+     *
+     * @param   array   $data
+     * @return  int|null
+     */
+    public function saveRawData( array $data )
+    {
+        if ( ! parent::save( $data ) )
+        {
+            return null;
+        }
+
+        return isset( $data['id'] ) ? $data['id'] : null;
+    }
+
+    /**
      * Is paragraph-id exists
      *
      * @param   int $paragraphId
