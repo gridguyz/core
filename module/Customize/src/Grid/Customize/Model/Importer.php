@@ -601,7 +601,12 @@ class Importer extends AbstractImportExport
 
         foreach ( $domains as $domain )
         {
-            $value = preg_replace(
+            if ( $domain === $siteInfo->getDomain() )
+            {
+                continue;
+            }
+
+            $value = preg_replace_callback(
                 '((https?://)([^/:]+?\.)?'
                     . preg_quote( $domain )
                     . '(:\d+)?/?)i',
@@ -611,7 +616,8 @@ class Importer extends AbstractImportExport
                         empty( $matches[2] ) ? '' : $matches[2],
                         true
                     );
-                }
+                },
+                $value
             );
         }
 

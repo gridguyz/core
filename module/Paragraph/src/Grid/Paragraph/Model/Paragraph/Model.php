@@ -660,4 +660,17 @@ class Model implements MapperAwareInterface,
                     ->cloneNode( $sourceNode, $sourceSchema );
     }
 
+    /**
+     * Save raw paragraph properties
+     *
+     * @param   int                 $id
+     * @param   array|\Traversable  $properties
+     * @return  int
+     */
+    public function saveRawProperties( $id, $properties )
+    {
+        return $this->getMapper()
+                    ->saveRawProperties( $id, $properties );
+    }
+
 }
