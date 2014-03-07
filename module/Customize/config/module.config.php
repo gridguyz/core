@@ -349,7 +349,7 @@ return array(
             'elements' => array(
                 'file' => array(
                     'spec'   => array(
-                        'type'      => 'Zork\Form\Element\PathSelect',
+                        'type'      => 'Zork\Form\Element\File',
                         'name'      => 'file',
                         'options'   => array(
                             'label'     => 'customize.form.import.file',
