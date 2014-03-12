@@ -151,50 +151,56 @@ class Patch extends AbstractPatch
         }
         else
         {
-            $row = $this->query( 'SELECT CURRENT_SCHEMA AS "schema"' )
-                        ->fetchObject();
+            $schemas = array( $schema );
 
-            if ( ! empty( $row->schema ) )
+            if ( $this->getPatcher()
+                      ->isMultisite() )
             {
-                $schema = $row->schema;
+                $schemas = $this->selectColumnFromTable(
+                    array( '_central', 'site' ),
+                    'schema'
+                );
             }
 
-            $extraCssFile = 'public/uploads/' . $schema . '/customize/extra.css';
-
-            if ( file_exists( $extraCssFile ) )
+            foreach ( $schemas as $schema )
             {
-                if ( is_readable( $extraCssFile ) )
+                $extraCssFile = 'public/uploads/' . $schema . '/customize/extra.css';
+
+                if ( file_exists( $extraCssFile ) )
                 {
-                    $message = 'valid';
+                    if ( is_readable( $extraCssFile ) )
+                    {
+                        $message = 'valid';
+                    }
+                    else
+                    {
+                        $message = 'not readable';
+                    }
                 }
                 else
                 {
-                    $message = 'not readable';
+                    $message = 'not exists';
                 }
-            }
-            else
-            {
-                $message = 'not exists';
-            }
 
-            $this->getInstaller()
-                 ->patchLog( 'customize extra %s is %s', $extraCssFile, $message );
+                $this->getInstaller()
+                     ->patchLog( 'customize extra %s is %s', $extraCssFile, $message );
 
-         /* if ( file_exists( $extraCssFile ) && is_readable( $extraCssFile ) )
-            {
-                $extraCss = preg_replace(
-                    '/^\s*@charset\s+(["\'][^"\']+["\']|[^;]+)\s*;\s+/',
-                    '',
-                    @ file_get_contents( $extraCssFile )
-                );
-
-                if ( ! empty( $extraCss ) )
+             /* if ( file_exists( $extraCssFile ) && is_readable( $extraCssFile ) )
                 {
-                    $this->appendCustomizeGlobalExtra( $extraCss );
-                }
+                    $extraCss = preg_replace(
+                        '/^\s*@charset\s+(["\'][^"\']+["\']|[^;]+)\s*;\s+/',
+                        '',
+                        @ file_get_contents( $extraCssFile )
+                    );
 
-                @ unlink( $extraCssFile );
-            } */
+                    if ( ! empty( $extraCss ) )
+                    {
+                        $this->appendCustomizeGlobalExtra( $extraCss, $schema );
+                    }
+
+                    @ unlink( $extraCssFile );
+                } */
+            }
         }
 
         $this->mergePackagesConfig();
@@ -548,14 +554,22 @@ class Patch extends AbstractPatch
     /**
      * Append global extra css to customize
      *
-     * @param   string  $globalExtraCss
+     * @param   string      $globalExtraCss
+     * @param   string|null $schema
      * @return  bool
      */
-    protected function appendCustomizeGlobalExtra( $globalExtraCss )
+    protected function appendCustomizeGlobalExtra( $globalExtraCss, $schema = null )
     {
-        $where   = array( 'rootParagraphId' => null );
+        $where = array( 'rootParagraphId' => null );
+        $table = 'customize_extra';
+
+        if ( $schema )
+        {
+            $table = array( $schema, $table );
+        }
+
         $current = $this->selectFromTable(
-            'customize_extra',
+            $table,
             'extra',
             $where
         );
@@ -563,7 +577,7 @@ class Patch extends AbstractPatch
         if ( null === $current )
         {
             return (bool) $this->insertIntoTable(
-                'customize_extra',
+                $table,
                 array(
                     'rootParagraphId'   => null,
                     'extra'             => $globalExtraCss,
@@ -573,7 +587,7 @@ class Patch extends AbstractPatch
         }
 
         return (bool) $this->updateTable(
-            'customize_extra',
+            $table,
             array(
                 'extra' => $current . "\n\n" . $globalExtraCss,
             ),
