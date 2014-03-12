@@ -149,24 +149,40 @@ class Patch extends AbstractPatch
                 }
             }
         }
-        else if ( ! empty( $schema ) )
+        else
         {
-            $extraCssFile = 'uploads/' . $schema . '/customize/extra.css';
+            $query = $this->getDb()
+                          ->query( 'SELECT CURRENT_SCHEMA AS "schema"' );
 
-            if ( file_exists( $extraCssFile ) && is_readable( $extraCssFile ) )
+            if ( $query->execute() )
             {
-                $extraCss = preg_replace(
-                    '/^\s*@charset\s+(["\'][^"\']+["\']|[^;]+)\s*;\s+/',
-                    '',
-                    @ file_get_contents( $extraCssFile )
-                );
+                $row = $query->fetchObject();
 
-                if ( ! empty( $extraCss ) )
+                if ( ! empty( $row->schema ) )
                 {
-                    $this->appendCustomizeGlobalExtra( $extraCss );
+                    $schema = $row->schema;
                 }
+            }
 
-                @ unlink( $extraCssFile );
+            if ( ! empty( $schema ) )
+            {
+                $extraCssFile = 'uploads/' . $schema . '/customize/extra.css';
+
+                if ( file_exists( $extraCssFile ) && is_readable( $extraCssFile ) )
+                {
+                    $extraCss = preg_replace(
+                        '/^\s*@charset\s+(["\'][^"\']+["\']|[^;]+)\s*;\s+/',
+                        '',
+                        @ file_get_contents( $extraCssFile )
+                    );
+
+                    if ( ! empty( $extraCss ) )
+                    {
+                        $this->appendCustomizeGlobalExtra( $extraCss );
+                    }
+
+                    @ unlink( $extraCssFile );
+                }
             }
         }
 
