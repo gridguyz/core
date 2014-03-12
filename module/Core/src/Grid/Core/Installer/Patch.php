@@ -151,55 +151,50 @@ class Patch extends AbstractPatch
         }
         else
         {
-            $query = $this->getDb()
-                          ->query( 'SELECT CURRENT_SCHEMA AS "schema"' );
+            $row = $this->query( 'SELECT CURRENT_SCHEMA AS "schema"' )
+                        ->fetchObject();
 
-            if ( $query->execute() )
+            if ( ! empty( $row->schema ) )
             {
-                $row = $query->fetchObject();
+                $schema = $row->schema;
+            }
 
-                if ( ! empty( $row->schema ) )
+            $extraCssFile = 'public/uploads/' . $schema . '/customize/extra.css';
+
+            if ( file_exists( $extraCssFile ) )
+            {
+                if ( is_readable( $extraCssFile ) )
                 {
-                    $schema = $row->schema;
-                }
-
-                $extraCssFile = 'public/uploads/' . $schema . '/customize/extra.css';
-
-                if ( file_exists( $extraCssFile ) )
-                {
-                    if ( is_readable( $extraCssFile ) )
-                    {
-                        $message = 'valid';
-                    }
-                    else
-                    {
-                        $message = 'not readable';
-                    }
+                    $message = 'valid';
                 }
                 else
                 {
-                    $message = 'not exists';
+                    $message = 'not readable';
+                }
+            }
+            else
+            {
+                $message = 'not exists';
+            }
+
+            $this->getInstaller()
+                 ->patchLog( 'customize extra %s is %s', $extraCssFile, $message );
+
+         /* if ( file_exists( $extraCssFile ) && is_readable( $extraCssFile ) )
+            {
+                $extraCss = preg_replace(
+                    '/^\s*@charset\s+(["\'][^"\']+["\']|[^;]+)\s*;\s+/',
+                    '',
+                    @ file_get_contents( $extraCssFile )
+                );
+
+                if ( ! empty( $extraCss ) )
+                {
+                    $this->appendCustomizeGlobalExtra( $extraCss );
                 }
 
-                $this->getInstaller()
-                     ->patchLog( 'customize extra %s is %s', $extraCssFile, $message );
-
-             /* if ( file_exists( $extraCssFile ) && is_readable( $extraCssFile ) )
-                {
-                    $extraCss = preg_replace(
-                        '/^\s*@charset\s+(["\'][^"\']+["\']|[^;]+)\s*;\s+/',
-                        '',
-                        @ file_get_contents( $extraCssFile )
-                    );
-
-                    if ( ! empty( $extraCss ) )
-                    {
-                        $this->appendCustomizeGlobalExtra( $extraCss );
-                    }
-
-                    @ unlink( $extraCssFile );
-                } */
-            }
+                @ unlink( $extraCssFile );
+            } */
         }
 
         $this->mergePackagesConfig();
