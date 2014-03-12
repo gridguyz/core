@@ -559,14 +559,27 @@ class Patch extends AbstractPatch
 
         if ( null === $current )
         {
-            return (bool) $this->insertIntoTable(
+            $update = $this->updateTable(
                 $table,
                 array(
-                    'rootParagraphId'   => null,
-                    'extra'             => $globalExtraCss,
+                    'extra' => $globalExtraCss,
                 ),
-                true
+                $where
             );
+
+            if ( ! $update )
+            {
+                return (bool) $this->insertIntoTable(
+                    $table,
+                    array(
+                        'rootParagraphId'   => null,
+                        'extra'             => $globalExtraCss,
+                    ),
+                    true
+                );
+            }
+
+            return $update;
         }
 
         return (bool) $this->updateTable(
