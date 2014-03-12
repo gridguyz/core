@@ -56,7 +56,7 @@ return array (
   'admin.navTop.central' => 'Central pages',
   'admin.navTop.content' => 'Contents',
   'admin.navTop.customize' => 'Customize',
-  'admin.navTop.customize.cssList' => 'Custom CSS list',
+  'admin.navTop.customize.cssList' => 'CSS Editor',
   'admin.navTop.customize.editExtra' => 'Edit extra CSS',
   'admin.navTop.customize.ruleCreate' => 'Create new CSS rule',
   'admin.navTop.customize.ruleList' => 'List CSS rules',
