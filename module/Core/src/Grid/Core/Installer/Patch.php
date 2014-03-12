@@ -166,26 +166,7 @@ class Patch extends AbstractPatch
             {
                 $extraCssFile = 'public/uploads/' . $schema . '/customize/extra.css';
 
-                if ( file_exists( $extraCssFile ) )
-                {
-                    if ( is_readable( $extraCssFile ) )
-                    {
-                        $message = 'valid';
-                    }
-                    else
-                    {
-                        $message = 'not readable';
-                    }
-                }
-                else
-                {
-                    $message = 'not exists';
-                }
-
-                $this->getInstaller()
-                     ->patchLog( 'customize extra %s is %s', $extraCssFile, $message );
-
-             /* if ( file_exists( $extraCssFile ) && is_readable( $extraCssFile ) )
+                if ( file_exists( $extraCssFile ) && is_readable( $extraCssFile ) )
                 {
                     $extraCss = preg_replace(
                         '/^\s*@charset\s+(["\'][^"\']+["\']|[^;]+)\s*;\s+/',
@@ -196,10 +177,12 @@ class Patch extends AbstractPatch
                     if ( ! empty( $extraCss ) )
                     {
                         $this->appendCustomizeGlobalExtra( $extraCss, $schema );
+                        $this->getInstaller()
+                             ->patchLog( 'customize extra %s merged', $extraCssFile );
                     }
 
                     @ unlink( $extraCssFile );
-                } */
+                }
             }
         }
 
