@@ -579,7 +579,7 @@ class Patch extends AbstractPatch
                 );
             }
 
-            return $update;
+            return (bool) $update;
         }
 
         return (bool) $this->updateTable(
