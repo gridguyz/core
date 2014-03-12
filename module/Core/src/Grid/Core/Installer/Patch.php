@@ -166,7 +166,7 @@ class Patch extends AbstractPatch
 
             if ( ! empty( $schema ) )
             {
-                $extraCssFile = 'uploads/' . $schema . '/customize/extra.css';
+                $extraCssFile = 'public/uploads/' . $schema . '/customize/extra.css';
 
                 if ( file_exists( $extraCssFile ) && is_readable( $extraCssFile ) )
                 {
