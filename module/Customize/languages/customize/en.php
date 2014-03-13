@@ -10,6 +10,7 @@ return array (
   'customize.form.extra.title' => 'Edit extra CSS',
   'customize.form.import.file' => 'Import from file',
   'customize.form.import.submit' => 'Import',
+  'customize.form.import.title' => 'Import paragraph structure & customize',
   'customize.form.rules.addMessage' => 'Please, enter the name of the new property',
   'customize.form.rules.addProperty' => 'Add property',
   'customize.form.rules.failed' => 'Save failed',
