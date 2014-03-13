@@ -3,7 +3,7 @@
 namespace Grid\Customize\Controller;
 
 use Zork\Stdlib\Message;
-use Zend\View\Model\ViewModel;
+use Zend\Stdlib\ArrayUtils;
 use Zork\Http\PhpEnvironment\Response\Readfile;
 use Zork\Mvc\Controller\AbstractAdminController;
 
@@ -22,7 +22,11 @@ class ImportExportController extends AbstractAdminController
      */
     protected $aclRights = array(
         '' => array(
-            'customize' => 'edit',
+            'customize' => 'view',
+        ),
+        'import' => array(
+            'customize' => 'create',
+            'paragraph' => 'create',
         ),
     );
 
@@ -31,39 +35,29 @@ class ImportExportController extends AbstractAdminController
      */
     public function importAction()
     {
-        $params         = $this->params();
+        /* @var $form \Zork\Form\Form */
         $request        = $this->getRequest();
         $return         = (string) $request->getQuery( 'returnUri' );
-        $paragraphModel = $this->getServiceLocator()
-                               ->get( 'Grid\Paragraph\Model\Paragraph\Model' );
-        $layout         = $paragraphModel->find( $params->fromRoute( 'layoutId' ) );
-
-        if ( empty( $layout ) )
-        {
-            $this->getResponse()
-                 ->setResultCode( 404 );
-
-            return;
-        }
-
-        $form = $this->getServiceLocator()
-                     ->get( 'Form' )
-                     ->get( 'Grid\Customize\Import' );
+        $serviceLocator = $this->getServiceLocator();
+        $form           = $serviceLocator->get( 'Form' )
+                                         ->get( 'Grid\Customize\Import' );
 
         if ( $request->isPost() )
         {
-            $form->setData( $request->getPost() );
+            $form->setData( ArrayUtils::merge(
+                $request->getPost()
+                        ->toArray(),
+                $request->getFiles()
+                        ->toArray()
+            ) );
 
             if ( $form->isValid() )
             {
-                $file = preg_replace(
-                    '#^/#', './',
-                    $form->getValue( 'file' )
-                );
+                $data     = $form->getData();
+                $imported = $serviceLocator->get( 'Grid\Customize\Model\Importer' )
+                                           ->import( $data['file']['tmp_name'] );
 
-                if ( $this->getServiceLocator()
-                          ->get( 'Grid\Customize\Model\Importer' )
-                          ->import( $file, $layout->id ) )
+                if ( $imported )
                 {
                     $this->messenger()
                          ->add( 'customize.form.success',
@@ -76,35 +70,39 @@ class ImportExportController extends AbstractAdminController
                                 'customize', Message::LEVEL_ERROR );
                 }
 
-                return $this->redirect()
-                            ->toUrl( $return );
+                if ( $return )
+                {
+                    return $this->redirect()
+                                ->toUrl( $return );
+                }
+                else if ( $imported )
+                {
+                    return $this->redirect()
+                                ->toRoute( 'Grid\Paragraph\Render\Paragraph', array(
+                                    'locale'        => (string) $this->locale(),
+                                    'paragraphId'   => $imported,
+                                ) );
+                }
             }
         }
 
-        $view = new ViewModel( array(
-            'form'      => $form->setAttribute( 'action', $request->getRequestUri() ),
-            'layoutId'  => $layout->id,
-            'contentId' => $params->fromRoute( 'contentId' ),
-            'exportUri' => preg_replace(
-                '#https?://[^/]+#', '', $return
-            )
-        ) );
-
-        return $view->setTerminal( true );
+        return array(
+            'form' => $form,
+        );
     }
 
     /**
-     * Export layout action
+     * Export paragraph action
      */
     public function exportAction()
     {
         $params         = $this->params();
-        $request        = $this->getRequest();
-        $paragraphModel = $this->getServiceLocator()
-                               ->get( 'Grid\Paragraph\Model\Paragraph\Model' );
-        $layout         = $paragraphModel->find( $params->fromRoute( 'layoutId' ) );
+        $paragraphId    = $params->fromRoute( 'paragraphId' );
+        $serviceLocator = $this->getServiceLocator();
+        $paragraphModel = $serviceLocator->get( 'Grid\Paragraph\Model\Paragraph\Model' );
+        $paragraph      = $paragraphModel->find( $paragraphId );
 
-        if ( empty( $layout ) )
+        if ( empty( $paragraph ) )
         {
             $this->getResponse()
                  ->setResultCode( 404 );
@@ -112,16 +110,20 @@ class ImportExportController extends AbstractAdminController
             return;
         }
 
-        $zip = $this->getServiceLocator()
-                    ->get( 'Grid\Customize\Model\Exporter' )
-                    ->export( $request->getQuery( 'exportUri' ),
-                              $layout->id,
-                              $params->fromRoute( 'contentId' ) );
+        $zipFile = $serviceLocator->get( 'Grid\Customize\Model\Exporter' )
+                                  ->export( $paragraph->id );
+
+        $name = strtolower( $paragraph->name );
+
+        if ( empty( $name ) )
+        {
+            $name = 'paragraph-' . $paragraph->id;
+        }
 
         $response = Readfile::fromFile(
-            $zip,
+            $zipFile,
             'application/zip',
-            'layout-' . $layout->id . '.zip',
+            $name . '.zip',
             true
         );
 

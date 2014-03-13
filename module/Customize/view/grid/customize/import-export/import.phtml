@@ -1,9 +1,7 @@
-<a href="/app/<?= $this->locale()
-    ?>/customize/export/<?= $this->layoutId
-    ?><?php if ( ! empty( $this->contentId ) ): ?>/<?= $this->contentId
-    ?><?php endif
-    ?>?exportUri=<?= urlencode( $this->exportUri )
-    ?>" target="_blank">
-    <?= $this->translate( 'default.export' ) ?>
-</a>
-<?= $this->form( $this->form, 'customize' ) ?>
+<?php $this->headTitle(
+    $title = $this->translate( 'customize.form.import.title', 'customize' )
+) ?>
+<h1><?= $title ?></h1>
+<div class="page">
+    <?= $this->form( $this->form, 'customize' ) ?>
+</div>

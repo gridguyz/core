@@ -150,14 +150,12 @@ return array(
                     ),
                 ),
             ),
-         /* 'Grid\Customize\ImportExport\Import' => array(
+            'Grid\Customize\ImportExport\Import' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route'         => '/app/:locale/customize/import/:layoutId[/[:contentId]]',
+                    'route'         => '/app/:locale/admin/customize/import',
                     'constraints'   => array(
                         'locale'    => '\w+',
-                        'layoutId'  => '[1-9][0-9]*',
-                        'contentId' => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
                         'controller'    => 'Grid\Customize\Controller\ImportExport',
@@ -168,18 +166,17 @@ return array(
             'Grid\Customize\ImportExport\Export' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route'         => '/app/:locale/customize/export/:layoutId[/[:contentId]]',
+                    'route'         => '/app/:locale/admin/customize/export/:paragraphId',
                     'constraints'   => array(
-                        'locale'    => '\w+',
-                        'layoutId'  => '[1-9][0-9]*',
-                        'contentId' => '[1-9][0-9]*',
+                        'locale'        => '\w+',
+                        'paragraphId'   => '[1-9][0-9]*',
                     ),
                     'defaults'      => array(
                         'controller'    => 'Grid\Customize\Controller\ImportExport',
                         'action'        => 'export',
                     ),
                 ),
-            ), */
+            ),
         ),
     ),
     'controllers' => array(
@@ -187,7 +184,7 @@ return array(
             'Grid\Customize\Controller\Admin'        => 'Grid\Customize\Controller\AdminController',
             'Grid\Customize\Controller\Render'       => 'Grid\Customize\Controller\RenderController',
             'Grid\Customize\Controller\CssAdmin'     => 'Grid\Customize\Controller\CssAdminController',
-         // 'Grid\Customize\Controller\ImportExport' => 'Grid\Customize\Controller\ImportExportController',
+            'Grid\Customize\Controller\ImportExport' => 'Grid\Customize\Controller\ImportExportController',
         ),
     ),
     'modules' => array(
@@ -362,11 +359,11 @@ return array(
                 ),
             ),
         ), */
-     /* 'Grid\Customize\Import' => array(
+        'Grid\Customize\Import' => array(
             'elements' => array(
                 'file' => array(
                     'spec'   => array(
-                        'type'      => 'Zork\Form\Element\PathSelect',
+                        'type'      => 'Zork\Form\Element\File',
                         'name'      => 'file',
                         'options'   => array(
                             'label'     => 'customize.form.import.file',
@@ -384,7 +381,7 @@ return array(
                     ),
                 ),
             ),
-        ), */
+        ),
     ),
     'translator' => array(
         'translation_file_patterns' => array(
@@ -398,10 +395,11 @@ return array(
     ),
     'view_manager' => array(
         'template_map' => array(
-            'grid/customize/admin/list'     => __DIR__ . '/../view/grid/customize/admin/list.phtml',
-            'grid/customize/admin/edit'     => __DIR__ . '/../view/grid/customize/admin/edit.phtml',
-            'grid/customize/css-admin/list' => __DIR__ . '/../view/grid/customize/css-admin/list.phtml',
-            'grid/customize/css-admin/edit' => __DIR__ . '/../view/grid/customize/css-admin/edit.phtml',
+            'grid/customize/admin/list'             => __DIR__ . '/../view/grid/customize/admin/list.phtml',
+            'grid/customize/admin/edit'             => __DIR__ . '/../view/grid/customize/admin/edit.phtml',
+            'grid/customize/css-admin/list'         => __DIR__ . '/../view/grid/customize/css-admin/list.phtml',
+            'grid/customize/css-admin/edit'         => __DIR__ . '/../view/grid/customize/css-admin/edit.phtml',
+            'grid/customize/import-export/import'   => __DIR__ . '/../view/grid/customize/import-export/import.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',

@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<!--
+
+    Gridguyz Paragraph XML-based markup language
+
+    Namespace = http://gridguyz.com/#gpml
+
+    Version: 1.0
+    Author: David Pozsar <david.pozsar@megaweb.hu>
+
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://gridguyz.com/#gpml"
+           xmlns="http://gridguyz.com/#gpml">
+
+<!--================================= Types =================================-->
+
+    <!-- Version identifiers -->
+    <xs:simpleType name="version">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="(0|[1-9][0-9]*)(\.(0|[1-9][0-9]*))*"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Used for css priority -->
+    <xs:simpleType name="cssPriority">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="important"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+<!--===================== Structure & meta informations =====================-->
+
+    <!-- Root node -->
+    <xs:element name="gpml">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="domain"
+                            minOccurs="0"
+                            maxOccurs="unbounded"/>
+                <xs:element ref="paragraph"
+                            minOccurs="1"
+                            maxOccurs="1"/>
+                <xs:element ref="customize-rule"
+                            minOccurs="0"
+                            maxOccurs="unbounded"/>
+                <xs:element ref="customize-extra"
+                            minOccurs="0"
+                            maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute name="version"
+                          type="version"
+                          use="required"/>
+            <xs:attribute name="db-schema"
+                          type="xs:string"
+                          use="required"/>
+            <xs:attribute name="created"
+                          type="xs:dateTime"
+                          use="optional"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Domain node -->
+    <xs:element name="domain">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:whiteSpace value="collapse"/>
+                <xs:pattern value="[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+
+<!--======================== Paragraph-related nodes ========================-->
+
+    <!-- Paragraph node -->
+    <xs:element name="paragraph">
+        <xs:complexType>
+            <xs:choice minOccurs="0"
+                       maxOccurs="unbounded">
+                <xs:element ref="paragraph"/>
+                <xs:element ref="paragraph-property"/>
+            </xs:choice>
+            <xs:attribute name="id"
+                          type="xs:integer"
+                          use="required"/>
+            <xs:attribute name="type"
+                          type="xs:string"
+                          use="required"/>
+            <xs:attribute name="name"
+                          type="xs:string"
+                          use="optional"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Paragraph-property node -->
+    <xs:element name="paragraph-property">
+        <xs:complexType>
+            <xs:sequence minOccurs="0"
+                         maxOccurs="unbounded">
+                <xs:element ref="substitution"/>
+            </xs:sequence>
+            <xs:attribute name="locale"
+                          type="xs:string"
+                          use="optional"
+                          default="*"/>
+            <xs:attribute name="name"
+                          type="xs:string"
+                          use="required"/>
+            <xs:attribute name="value"
+                          type="xs:string"
+                          use="optional"/>
+        </xs:complexType>
+    </xs:element>
+
+<!--======================== Customize-related nodes ========================-->
+
+    <!-- Customize-rule node -->
+    <xs:element name="customize-rule">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="customize-property"
+                            minOccurs="0"
+                            maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="selector"
+                          type="xs:string"
+                          use="required"/>
+            <xs:attribute name="media"
+                          type="xs:string"
+                          use="optional"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Customize-property node -->
+    <xs:element name="customize-property">
+        <xs:complexType>
+            <xs:sequence minOccurs="0"
+                         maxOccurs="unbounded">
+                <xs:element ref="substitution"/>
+            </xs:sequence>
+            <xs:attribute name="name"
+                          type="xs:string"
+                          use="required"/>
+            <xs:attribute name="value"
+                          type="xs:string"
+                          use="optional"/>
+            <xs:attribute name="priority"
+                          type="cssPriority"
+                          use="optional"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Customize-extra node -->
+    <xs:element name="customize-extra">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:whiteSpace value="preserve"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+
+<!--========================== Value-substitutions ==========================-->
+
+    <!-- Substitution node -->
+    <xs:element name="substitution">
+        <xs:complexType>
+            <xs:attribute name="original"
+                          type="xs:string"
+                          use="required"/>
+            <xs:attribute name="file"
+                          type="xs:string"
+                          use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

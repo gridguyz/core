@@ -1,0 +1,64 @@
+<!DOCTYPE gpml SYSTEM "public/styles/schemas/paragraph/1.0.dtd">
+<gpml xmlns="http://gridguyz.com/#gpml"
+      version="1.0"
+      db-schema="site_source">
+    <domain>gridguyz.com</domain>
+    <paragraph id="1"
+               type="layout"
+               name="Sample exported layout">
+        <paragraph id="2"
+                   type="menu" />
+        <paragraph id="3"
+                   type="columns">
+            <paragraph id="4"
+                       type="column">
+                <paragraph id="5"
+                           type="login">
+                    <paragraph-property locale="*"
+                                        name="displayRegisterLink"
+                                        value="1"/>
+                    <paragraph-property locale="*"
+                                        name="displayPasswordRequestLink"
+                                        value="1"/>
+                    <paragraph-property locale="*"
+                                        name="displayLoginWithLink"
+                                        value="1"/>
+                </paragraph>
+            </paragraph>
+            <paragraph id="6"
+                       type="column">
+                <paragraph id="7"
+                           type="contentPlaceholder" />
+            </paragraph>
+        </paragraph>
+    </paragraph>
+    <customize-rule selector="body">
+        <customize-property name="font-family"
+                            value="&quot;Open Sans&quot;, sans-serif"/>
+    </customize-rule>
+    <customize-rule selector="#paragraph-1.paragraph.paragraph-layout">
+        <customize-property name="width"
+                            value="1000px"/>
+    </customize-rule>
+    <customize-rule selector="#paragraph-4-container.paragraph-container.paragraph-column-container">
+        <customize-property name="width"
+                            value="25%"
+                            priority="important"/>
+    </customize-rule>
+    <customize-rule selector="#paragraph-6-container.paragraph-container.paragraph-column-container">
+        <customize-property name="width"
+                            value="75%"
+                            priority="important"/>
+    </customize-rule>
+    <customize-extra>
+@font-face
+{
+    font-family: &quot;Open Sans&quot;;
+    font-style: normal;
+    font-weight: 400;
+    src: local(&quot;Open Sans&quot;),
+         local(&quot;OpenSans&quot;),
+         url(&quot;http://themes.googleusercontent.com/static/fonts/opensans/v8/cJZKeOuBrn4kERxqtaUH3aCWcynf_cDxXwCLxiixG1c.ttf&quot;) format(&quot;truetype&quot;);
+}
+    </customize-extra>
+</gpml>

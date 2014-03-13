@@ -788,6 +788,88 @@ class Mapper extends ReadWriteMapperAbstract
     }
 
     /**
+     * Find render-list (data-only)
+     *
+     * @param   int|string $idOrMetaName
+     * @return  array[]
+     */
+    public function findRenderListData( $idOrMetaName )
+    {
+        $platform = $this->getDbAdapter()
+                         ->getPlatform();
+
+        $columns = $this->getSelectColumns();
+        $columns['_depth'] = new Sql\Expression( '(' .
+            $this->sql( null )
+                 ->select( array( 'parent' => static::$tableName ) )
+                 ->columns( array(
+                     new Sql\Expression( 'COUNT(*)' )
+                 ) )
+                 ->where( array(
+                     new Sql\Predicate\Expression(
+                         $platform->quoteIdentifierChain( array( 'parent', 'rootId' ) ) . ' = ' .
+                         $platform->quoteIdentifierChain( array( static::$tableName, 'rootId' ) )
+                     ),
+                     new Sql\Predicate\Expression(
+                         $platform->quoteIdentifierChain( array( static::$tableName, 'left' ) ) .
+                         ' BETWEEN ' . $platform->quoteIdentifierChain( array( 'parent', 'left' ) ) .
+                             ' AND ' . $platform->quoteIdentifierChain( array( 'parent', 'right' ) )
+                     ),
+                 ) )
+                 ->getSqlString( $platform ) .
+        ')' );
+
+        $select = $this->select( $columns )
+                       ->join(
+                           array( 'root' => self::$tableName ),
+                           '( ' . self::$tableName . '.rootId = root.rootId ) AND ' .
+                           '( ' . self::$tableName . '.left BETWEEN root.left AND root.right ) ',
+                           array()
+                       )
+                       ->order( 'left' );
+
+        if ( is_numeric( $idOrMetaName ) )
+        {
+            $select->where( array(
+                'root.id'   => (int) $idOrMetaName,
+            ) );
+        }
+        else
+        {
+            $select->where( array(
+                'root.type' => 'metaContent',
+                'root.name' => (string) $idOrMetaName,
+            ) );
+        }
+
+        /* @var $result \Zend\Db\Adapter\Driver\ResultInterface */
+
+        $return = array();
+        $result = $this->sql()
+                       ->prepareStatementForSqlObject( $select )
+                       ->execute();
+
+        foreach ( $result as $row )
+        {
+            $depth = (int) $row['_depth'];
+            unset( $row['_depth'] );
+
+            if ( empty( $row['proxyData'] ) )
+            {
+                $row['proxyData'] = array();
+            }
+            else
+            {
+                $row['proxyData'] = json_decode( $row['proxyData'], true );
+            }
+
+            $return[] = array( $depth, $row );
+        }
+
+        return $return;
+    }
+
+    /**
      * @param int $id
      * @return array
      */
@@ -897,19 +979,36 @@ class Mapper extends ReadWriteMapperAbstract
     /**
      * Save a property
      *
-     * @param int $id
-     * @param bool $localeAware
-     * @param string $name
-     * @param mixed $value
-     * @return int
+     * @param   int         $id
+     * @param   bool|string $localeOrLocaleAware
+     * @param   string      $name
+     * @param   mixed       $value
+     * @return  int
      */
-    protected function saveProperty( $id, $localeAware, $name, $value )
+    protected function saveProperty( $id, $localeOrLocaleAware, $name, $value )
     {
         $rows   = 0;
-        $locale = $localeAware ? $this->getLocale() : '*';
         $sql    = $this->sql( $this->getTableInSchema(
             static::$propertyTableName
         ) );
+
+        if ( empty( $localeOrLocaleAware ) )
+        {
+            $localeOrLocaleAware = false;
+        }
+        else if ( is_numeric( $localeOrLocaleAware ) )
+        {
+            $localeOrLocaleAware = (bool) $localeOrLocaleAware;
+        }
+
+        if ( is_bool( $localeOrLocaleAware ) )
+        {
+            $locale = $localeOrLocaleAware ? $this->getLocale() : '*';
+        }
+        else
+        {
+            $locale = (string) $localeOrLocaleAware;
+        }
 
         $like = strtr( $name, array(
             '\\' => '\\\\',
@@ -1115,6 +1214,33 @@ class Mapper extends ReadWriteMapperAbstract
     }
 
     /**
+     * Save raw paragraph properties
+     *
+     * @param   int                 $id
+     * @param   array|\Traversable  $properties
+     * @return  int
+     */
+    public function saveRawProperties( $id, $properties )
+    {
+        $result = 0;
+
+        if ( ! empty( $properties ) )
+        {
+            foreach ( $properties as $property )
+            {
+                $result += $this->saveProperty(
+                    $id,
+                    empty( $property['locale'] ) ? null : $property['locale'],
+                    empty( $property['name']   ) ? null : $property['name'],
+                    empty( $property['value']  ) ? null : $property['value']
+                );
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Save element structure to datasource
      *
      * @param \Paragraph\Model\Paragraph\Structure\ProxyAbstract $structure
@@ -1178,6 +1304,22 @@ class Mapper extends ReadWriteMapperAbstract
         }
 
         return $result;
+    }
+
+    /**
+     * Save paragraph form raw data
+     *
+     * @param   array   $data
+     * @return  int|null
+     */
+    public function saveRawData( array $data )
+    {
+        if ( ! parent::save( $data ) )
+        {
+            return null;
+        }
+
+        return isset( $data['id'] ) ? $data['id'] : null;
     }
 
     /**

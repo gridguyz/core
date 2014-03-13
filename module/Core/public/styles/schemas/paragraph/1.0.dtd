@@ -1,0 +1,106 @@
+<!--
+
+    Gridguyz Paragraph XML-based markup language
+
+    Namespace = http://gridguyz.com/#gpml
+
+    This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+    PUBLIC "-//Gridguyz//Paragraph 1.0//EN"
+    SYSTEM "http://gridguyz.com/styles/schemas/paragraph/1.0.dtd"
+
+    or (if you use at a gridguyz installation) just simply:
+
+    SYSTEM "public/styles/schemas/paragraph/1.0.dtd"
+
+    Version: 1.0
+    Author: David Pozsar <david.pozsar@megaweb.hu>
+
+-->
+
+<!--================================= Types =================================-->
+
+<!-- Uniform Resource Identifier, see [RFC2396] -->
+<!ENTITY % URI "CDATA">
+
+<!-- Used for names etc. -->
+<!ENTITY % Text "CDATA">
+
+<!-- Used for db ids -->
+<!ENTITY % Integer "CDATA">
+
+<!-- Version identifiers -->
+<!ENTITY % Version "CDATA">
+
+<!-- Date and time information. ISO date format -->
+<!ENTITY % Datetime "CDATA">
+
+<!-- Used for css priority -->
+<!ENTITY % CssPriority "(important)">
+
+<!--===================== Structure & meta informations =====================-->
+
+<!-- Root tag -->
+<!ELEMENT gpml (domain*, paragraph, customize-rule*, customize-extra?)>
+
+<!ATTLIST gpml
+    version     %Version;       #REQUIRED
+    db-schema   %Text;          #REQUIRED
+    created     %Datetime;      #IMPLIED
+    xmlns       %URI;           #FIXED      'http://gridguyz.com/#gpml'
+>
+
+<!-- Domain tag -->
+<!ELEMENT domain (#PCDATA)>
+
+<!--======================== Paragraph-related tags =========================-->
+
+<!-- Paragraph tag -->
+<!ELEMENT paragraph ((paragraph|paragraph-property)*)>
+
+<!ATTLIST paragraph
+    id          %Integer;       #REQUIRED
+    type        %Text;          #REQUIRED
+    name        %Text;          #IMPLIED
+>
+
+<!-- Paragraph-property tag -->
+<!ELEMENT paragraph-property (substitution*)>
+
+<!ATTLIST paragraph-property
+    locale      %Text;          #IMPLIED
+    name        %Text;          #REQUIRED
+    value       %Text;          #IMPLIED
+>
+
+<!--======================== Customize-related tags =========================-->
+
+<!-- Customize-rule tag -->
+<!ELEMENT customize-rule (customize-property*)>
+
+<!ATTLIST customize-rule
+    selector    %Text;          #REQUIRED
+    media       %Text;          #IMPLIED
+>
+
+<!-- Customize-property tag -->
+<!ELEMENT customize-property (substitution*)>
+
+<!ATTLIST customize-property
+    name        %Text;          #REQUIRED
+    value       %Text;          #IMPLIED
+    priority    %CssPriority;   #IMPLIED
+>
+
+<!-- Customize-extra tag -->
+<!ELEMENT customize-extra (#PCDATA)>
+
+<!--========================== Value-substitutions ==========================-->
+
+<!-- Substitution tag -->
+<!ELEMENT substitution EMPTY>
+
+<!ATTLIST substitution
+    original    %Text;          #REQUIRED
+    file        %Text;          #REQUIRED
+>

@@ -314,6 +314,16 @@ table.table-pairs td
     background-image: url("/images/common/buttons/button-clone-hover.png");
 }
 
+.action-button.export
+{
+    background-image: url("/images/common/buttons/button-export.png");
+}
+
+.action-button.export:hover
+{
+    background-image: url("/images/common/buttons/button-export-hover.png");
+}
+
 .action-button.set-default
 {
     background-image: url("/images/common/buttons/button-enable.png");

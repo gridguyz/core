@@ -42,9 +42,26 @@ if ( ! $this->format ): ?>
        title="<?= $view->translate( 'default.edit' ); ?>"
        href="/app/<?= $view->locale() ?>/admin/customize-css/edit/<?= $id ?>">
     </a>
-<?php
+<?php if ( ! empty( $row->id ) && $row->type != 'metaContent' ): ?>
+
+    <a class="action-button export"
+       title="<?= $view->translate( 'default.export' ); ?>"
+       href="/app/<?= $view->locale() ?>/admin/customize/export/<?= $id ?>">
+    </a>
+<?php endif;
                 $view->placeholder( 'listActions' )->captureEnd();
                 return (string) $view->placeholder( 'listActions' );
               },
           ) )
          ->render( $this->format );
+
+if ( ! $this->format &&
+       $this->isAllowed( 'customize', 'create' ) &&
+       $this->isAllowed( 'paragraph', 'create' ) ): ?>
+<div class="more-links">
+    <a class="button-appearance"
+       href="/app/<?= $view->locale() ?>/admin/customize/import">
+        <?= $view->translate( 'customize.form.import.title' ); ?>
+    </a>
+</div>
+<?php endif;

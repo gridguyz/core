@@ -19,7 +19,7 @@ class Model implements MapperAwareInterface
     /**
      * Construct model
      *
-     * @param \Customize\Model\Sheet\Mapper $customizeSheetMapper
+     * @param   Mapper  $customizeSheetMapper
      */
     public function __construct( Mapper $customizeSheetMapper )
     {
@@ -30,7 +30,7 @@ class Model implements MapperAwareInterface
      * Get the complete structure
      *
      * @deprecated
-     * @return \Customize\Model\Sheet\Structure
+     * @return  Structure
      */
     public function findComplete()
     {
@@ -41,8 +41,8 @@ class Model implements MapperAwareInterface
     /**
      * Get sub-structure by root-id
      *
-     * @param int|null $rootId
-     * @return \Customize\Model\Sheet\Structure
+     * @param   int|null    $rootId
+     * @return  Structure
      */
     public function find( $rootId = null )
     {
