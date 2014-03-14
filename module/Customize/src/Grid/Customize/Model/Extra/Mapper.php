@@ -92,15 +92,24 @@ class Mapper extends ReadWriteMapperAbstract
 
         if ( $global )
         {
-            $where = array(
-                new Predicate\PredicateSet(
-                    array(
-                        new Predicate\IsNull( 'rootParagraphId' ),
-                        new Predicate\In( 'rootParagraphId', $rootParagraphIds ),
+            if ( empty( $rootParagraphIds ) )
+            {
+                $where = array(
+                    new Predicate\IsNull( 'rootParagraphId' ),
+                );
+            }
+            else
+            {
+                $where = array(
+                    new Predicate\PredicateSet(
+                        array(
+                            new Predicate\IsNull( 'rootParagraphId' ),
+                            new Predicate\In( 'rootParagraphId', $rootParagraphIds ),
+                        ),
+                        Predicate\PredicateSet::COMBINED_BY_OR
                     ),
-                    Predicate\PredicateSet::COMBINED_BY_OR
-                ),
-            );
+                );
+            }
         }
         else
         {
