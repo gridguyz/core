@@ -145,6 +145,8 @@ return array (
   'paragraph.form.customize.general.legend.siteWizardFormDlDd' => 'Input container',
   'paragraph.form.customize.general.legend.siteWizardFormDlDt' => 'Label container',
   'paragraph.form.customize.general.legend.tag' => 'Tags customize',
+  'paragraph.form.customize.general.legend.youtubeThumbnail' => 'Thumbnail',
+  'paragraph.form.customize.general.legend.youtubeTitle' => 'Video title',
   'paragraph.form.customize.general.margin' => 'Margin',
   'paragraph.form.customize.general.padding' => 'Padding',
   'paragraph.form.customize.general.text' => 'Text',
