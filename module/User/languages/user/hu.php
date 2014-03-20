@@ -10,6 +10,7 @@ return array (
   'user.action.confirm.success' => 'Email megerősítése sikeres',
   'user.action.delete.failed' => 'Törlés sikertelen',
   'user.action.delete.success' => 'Törlés sikeres',
+  'user.action.grant' => 'Jogok megadása',
   'user.action.loginWith.%s' => '%s -(v)al',
   'user.form.create.confirmed' => 'Megerősítve',
   'user.form.create.email' => 'Email',
