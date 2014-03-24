@@ -265,7 +265,6 @@ return array (
   'paragraph.type-group.code' => 'Code',
   'paragraph.type-group.container' => 'Container',
   'paragraph.type-group.functions' => 'APPz',
-  'paragraph.type-group.media' => 'Media',
   'paragraph.type.banner' => 'Banner',
   'paragraph.type.box' => 'Box',
   'paragraph.type.box.description' => 'Box description',
