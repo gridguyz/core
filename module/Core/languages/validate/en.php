@@ -28,5 +28,5 @@ return array(
     'validate.than.less' => 'Doesn\'t less',
     'validate.than.more' => 'Doesn\'t more',
     'validate.file.zip.cannotBeOpened' => 'File "%value%" cannot be opened as zip',
-    'validate.file.zip.entryNotFound.%entry%' => 'Zip file does not appears to be valid: entry "%entry%" not found',
+    'validate.file.zip.entryNotFound.%entry%' => 'Zip file "%value%" does not appears to be valid: entry "%entry%" not found',
 );
