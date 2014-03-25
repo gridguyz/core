@@ -101,7 +101,7 @@ return array (
   'admin.navTop.system.gitLog' => 'Git log',
   'admin.navTop.system.modules' => 'Modulok',
   'admin.navTop.system.translation' => 'Fordítások',
-  'admin.navTop.tag' => 'Cimkék',
+  'admin.navTop.tag' => 'Címkék',
   'admin.navTop.tagCreate' => 'Új címke készítése',
   'admin.navTop.tagList' => 'Cimkelista',
   'admin.navTop.uri' => 'Barátságos URL-ek',
