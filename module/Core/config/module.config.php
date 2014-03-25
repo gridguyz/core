@@ -391,6 +391,7 @@ return array(
             'Zork\I18n\Timezone\Timezone'                   => 'timezone',
             'Zend\I18n\Translator\Translator'               => 'translator',
             'Zork\I18n\Translator\Translator'               => 'translator',
+            'Zend\Validator\Translator\TranslatorInterface' => 'Zork\Validator\Translator\I18nTranslatorGateway',
             'Zork\Mvc\AdminLocale'                          => 'adminLocale',
             'Zork\Log\LoggerManager'                        => 'logger',
         ),
