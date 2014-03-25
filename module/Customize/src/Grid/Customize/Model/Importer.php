@@ -594,7 +594,7 @@ class Importer extends AbstractImportExport
 
                 if ( $write )
                 {
-                    $value = str_replace( $original, $url, $value );
+                    $value = str_replace( $original, '/' . $url, $value );
                 }
             }
         }
