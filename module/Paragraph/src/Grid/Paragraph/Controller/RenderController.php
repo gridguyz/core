@@ -4,8 +4,8 @@ namespace Grid\Paragraph\Controller;
 
 use Zend\View\Model\ViewModel;
 use Zend\Mvc\Controller\AbstractActionController;
-use Grid\Paragraph\Model\Paragraph\Structure\Layout;
 use Grid\Paragraph\Model\Paragraph\Structure\Content;
+use Grid\Paragraph\Model\Paragraph\Structure\AbstractRoot;
 use Grid\Paragraph\Model\Paragraph\Structure\LayoutAwareInterface;
 use Grid\Paragraph\Model\Paragraph\Structure\PublishRestrictedInterface;
 
@@ -84,7 +84,20 @@ class RenderController extends AbstractActionController
         {
             $this->paragraphLayout( $paragraph->getLayoutId() );
         }
-        else if ( ! $paragraph instanceof Layout )
+        else if ( $paragraph instanceof AbstractRoot )
+        {
+            $auth = $service->get( 'Zend\Authentication\AuthenticationService' );
+
+            if ( $auth->hasIdentity() )
+            {
+                $view->setVariable(
+                    'adminMenuSettings',
+                    $service->get( 'Grid\User\Model\User\Settings\Model' )
+                            ->find( $auth->getIdentity()->id, 'adminMenu' )
+                );
+            }
+        }
+        else
         {
             $view->setTerminal( true );
         }
