@@ -30,26 +30,31 @@ $list->runin( function ( $paragraph ) use ( $view ) {
 
 ?>
 
-<div class="paragraph-container paragraph-<?= $paragraph->type ?>-container"
-     id="paragraph-<?= $paragraph->id ?>-container"
-     data-paragraph-id="<?= $paragraph->id ?>"
-     data-paragraph-type="<?= $paragraph->type ?>"
-     data-paragraph-name="<?= $view->escapeHtml( $paragraph->nameLabel ) ?>"
-     data-paragraph-properties="<?= implode( ' ', $paragraph::getAllowedFunctions() ) ?>"
-     data-paragraph-only-child-of="<?= $paragraph::onlyChildOf() ?>"
-     data-paragraph-only-parent-of="<?= $paragraph::onlyParentOf() ?>">
-    <div class="paragraph paragraph-<?= $paragraph->type ?>"
-         id="paragraph-<?= $paragraph->id ?>">
-        <div class="paragraph-content paragraph-content-open paragraph-<?= $paragraph->type ?>-content"
-             ><?= $paragraph->renderOpen( $view ) ?></div>
-        <div class="paragraph-children paragraph-<?= $paragraph->type ?>-children">
+<<?= $paragraph::CONTAINER_TAG ?>
+        class="paragraph-container paragraph-<?= $paragraph->type ?>-container"
+        id="paragraph-<?= $paragraph->id ?>-container"
+        data-paragraph-id="<?= $paragraph->id ?>"
+        data-paragraph-type="<?= $paragraph->type ?>"
+        data-paragraph-name="<?= $view->escapeHtml( $paragraph->nameLabel ) ?>"
+        data-paragraph-properties="<?= implode( ' ', $paragraph::getAllowedFunctions() ) ?>"
+        data-paragraph-only-child-of="<?= $paragraph::onlyChildOf() ?>"
+        data-paragraph-only-parent-of="<?= $paragraph::onlyParentOf() ?>">
+    <<?= $paragraph::PARAGRAPH_TAG ?>
+            class="paragraph paragraph-<?= $paragraph->type ?>"
+            id="paragraph-<?= $paragraph->id ?>">
+        <<?= $paragraph::CONTENT_OPEN_TAG ?>
+            class="paragraph-content paragraph-content-open paragraph-<?= $paragraph->type ?>-content"
+            ><?= $paragraph->renderOpen( $view ) ?></<?= $paragraph::CONTENT_OPEN_TAG ?>>
+        <<?= $paragraph::CHILDREN_TAG ?>
+            class="paragraph-children paragraph-<?= $paragraph->type ?>-children">
 <?php }, function ( $paragraph ) use ( $view ) { ?>
 
-        </div>
-        <div class="paragraph-content paragraph-content-close paragraph-<?= $paragraph->type ?>-content"
-             ><?= $paragraph->renderClose( $view ) ?></div>
-    </div>
-</div>
+        </<?= $paragraph::CHILDREN_TAG ?>>
+        <<?= $paragraph::CONTENT_CLOSE_TAG ?>
+            class="paragraph-content paragraph-content-close paragraph-<?= $paragraph->type ?>-content"
+            ><?= $paragraph->renderClose( $view ) ?></<?= $paragraph::CONTENT_CLOSE_TAG ?>>
+    </<?= $paragraph::PARAGRAPH_TAG ?>>
+</<?= $paragraph::CONTAINER_TAG ?>>
 
 <?php if ( $paragraph instanceof Layout &&
            isset( $view->adminMenuSettings ) &&

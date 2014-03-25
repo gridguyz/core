@@ -368,6 +368,22 @@ return array(
                         'options'   => array(
                             'label'     => 'customize.form.import.file',
                             'required'  => true,
+                            'validators'    => array(
+                             /* 'MimeType'  => array(
+                                    'name'      => 'Zend\Validator\File\MimeType',
+                                    'options'   => array(
+                                        'mimeType' => 'application/zip,application/x-zip'
+                                    ),
+                                ), */
+                                'Zip'     => array(
+                                    'name'      => 'Zork\Validator\File\Zip',
+                                    'options'   => array(
+                                        'entries'   => array(
+                                            'paragraph.xml' => ZipArchive::FL_NOCASE,
+                                        ),
+                                    ),
+                                ),
+                            ),
                         ),
                     ),
                 ),

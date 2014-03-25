@@ -61,6 +61,31 @@ abstract class ProxyAbstract
     const PROPERTY_REPRESENTS_IMAGES = 'representsImages';
 
     /**
+     * @const string
+     */
+    const CONTAINER_TAG = 'div';
+
+    /**
+     * @const string
+     */
+    const PARAGRAPH_TAG = 'div';
+
+    /**
+     * @const string
+     */
+    const CONTENT_OPEN_TAG = 'div';
+
+    /**
+     * @const string
+     */
+    const CONTENT_CLOSE_TAG = 'div';
+
+    /**
+     * @const string
+     */
+    const CHILDREN_TAG = 'div';
+
+    /**
      * This paragraph can be only child of ...
      *
      * @var string
