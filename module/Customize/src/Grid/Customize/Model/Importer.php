@@ -9,6 +9,7 @@ use Zork\Db\SiteInfo;
 use Zork\Stdlib\DateTime;
 use Zork\Libxml\ErrorHandler;
 use Grid\Customize\Model\Sheet\Model as SheetModel;
+use Grid\User\Model\Permissions\Model as PermissionsModel;
 use Grid\Paragraph\Model\Paragraph\Model as ParagraphModel;
 
 /**
@@ -20,27 +21,53 @@ class Importer extends AbstractImportExport
 {
 
     /**
+     * @var PermissionsModel
+     */
+    protected $permissionsModel;
+
+    /**
+     * @return  PermissionsModel
+     */
+    public function getPermissionsModel()
+    {
+        return $this->permissionsModel;
+    }
+
+    /**
+     * @param   PermissionsModel    $permissionsModel
+     * @return  Importer
+     */
+    public function setPermissionsModel(PermissionsModel $permissionsModel)
+    {
+        $this->permissionsModel = $permissionsModel;
+        return $this;
+    }
+
+    /**
      * Constructor
      *
-     * @param   SheetModel      $sheetModel
-     * @param   ParagraphModel  $paragraphModel
-     * @param   SiteInfo        $siteInfo
+     * @param   SheetModel          $sheetModel
+     * @param   ParagraphModel      $paragraphModel
+     * @param   SiteInfo            $siteInfo
+     * @param   PermissionsModel    $permissionsModel
      */
-    public function __construct( SheetModel     $sheetModel,
-                                 ParagraphModel $paragraphModel,
-                                 SiteInfo       $siteInfo )
+    public function __construct( SheetModel         $sheetModel,
+                                 ParagraphModel     $paragraphModel,
+                                 SiteInfo           $siteInfo,
+                                 PermissionsModel   $permissionsModel )
     {
         parent::__construct( $sheetModel, $paragraphModel, $siteInfo );
+        $this->setPermissionsModel( $permissionsModel );
     }
 
     /**
      * Import paragraph & customize from a zip file
      *
      * @param   string|ZipArchive   $file
-     * @param   boolean             $throw
-     * @return  int|\ErrorException
+     * @param   string|null         $basename
+     * @return  ImportResult
      */
-    public function import( $file, $throw = true )
+    public function import( $file, $basename = null )
     {
         static $validSchema     = 'vendor/gridguyz/core/module/Core/public/styles/schemas/paragraph/1.0.xsd';
         static $validSystemIds  = array(
@@ -53,18 +80,33 @@ class Importer extends AbstractImportExport
 
         if ( $file instanceof ZipArchive )
         {
-            $zip    = $file;
-            $file   = '$object.zip';
+            $zip = $file;
+
+            if ( $basename )
+            {
+                $file = $basename;
+            }
+            else
+            {
+                $basename = $file = '$object.zip';
+            }
         }
         else
         {
+            if ( ! $basename )
+            {
+                $basename = basename( $file );
+            }
+
             if ( ! is_file( $file ) )
             {
-                throw new \InvalidArgumentException( sprintf(
-                    '%s: "%s" is not a file',
-                    __METHOD__,
-                    $file
-                ) );
+                return new ImportResult(
+                    ImportResult::FILE_NOT_EXISTS,
+                    sprintf(
+                        '"%s" is not a file',
+                        $basename
+                    )
+                );
             }
 
             $zip    = new ZipArchive();
@@ -72,12 +114,14 @@ class Importer extends AbstractImportExport
 
             if ( $open !== true )
             {
-                throw new \RuntimeException( sprintf(
-                    '%s: "%s" cannot be opened as a zip file (errno #%d)',
-                    __METHOD__,
-                    $file,
-                    $open
-                ) );
+                return new ImportResult(
+                    ImportResult::FILE_NOT_ZIP,
+                    sprintf(
+                        '"%s" cannot be opened as a zip file (error #%d)',
+                        $basename,
+                        $open
+                    )
+                );
             }
         }
 
@@ -87,11 +131,13 @@ class Importer extends AbstractImportExport
              empty( $stats['size'] ) ||
              ! isset( $stats['index'] ) )
         {
-            throw new \InvalidArgumentException( sprintf(
-                '%s: "paragraph.xml" is not found in "%s"',
-                __METHOD__,
-                $file
-            ) );
+            return new ImportResult(
+                ImportResult::STRUCTURE_XML_NOT_FOUND,
+                sprintf(
+                    '"paragraph.xml" is not found in "%s"',
+                    $file
+                )
+            );
         }
 
         $document = new DOMDocument();
@@ -107,54 +153,74 @@ class Importer extends AbstractImportExport
             if ( static::GPML_ROOT != strtolower( $doctype->name ) )
             {
                 ErrorHandler::stop();
-                throw new \InvalidArgumentException( sprintf(
-                    '%s: DOCTYPE "%s" in "%s#paragraph.xml" does not match "%s"',
-                    __METHOD__,
-                    $doctype->name,
-                    $file,
-                    static::GPML_ROOT
-                ) );
+
+                return new ImportResult(
+                    ImportResult::STRUCTURE_XML_DOCTYPE_MISMATCH,
+                    sprintf(
+                        'DOCTYPE "%s" in "%s#paragraph.xml" does not match "%s"',
+                        $doctype->name,
+                        $basename,
+                        static::GPML_ROOT
+                    )
+                );
             }
 
             if ( ! in_array( $doctype->systemId, $validSystemIds ) )
             {
                 ErrorHandler::stop();
-                throw new \InvalidArgumentException( sprintf(
-                    '%s: SYSTEM ID "%s" in "%s#paragraph.xml"\'s ' .
-                        'DOCTYPE does not match one of "%s"',
-                    __METHOD__,
-                    $doctype->systemId,
-                    $file,
-                    implode( '", "', $validSystemIds )
-                ) );
+
+                return new ImportResult(
+                    ImportResult::STRUCTURE_XML_DOCTYPE_MISMATCH,
+                    sprintf(
+                        'SYSTEM ID "%s" in "%s#paragraph.xml"\'s ' .
+                            'DOCTYPE does not match one of "%s"',
+                        $doctype->systemId,
+                        $basename,
+                        implode( '", "', $validSystemIds )
+                    )
+                );
             }
 
             if ( ! $document->validate() )
             {
-                return ErrorHandler::stop( $throw );
+                $error = ErrorHandler::stop();
+
+                return new ImportResult(
+                    ImportResult::STRUCTURE_XML_NOT_VALID,
+                    $error ? $error->getMessage() : null
+                );
             }
         }
 
         if ( ! $document->schemaValidate( realpath( $validSchema ) ) )
         {
-            return ErrorHandler::stop( $throw );
+            $error = ErrorHandler::stop();
+
+            return new ImportResult(
+                ImportResult::STRUCTURE_XML_NOT_VALID,
+                $error ? $error->getMessage() : null
+            );
         }
 
-        $domains        = array();
-        $paragraphIdMap = array();
-        $gpml           = $document->documentElement;
-        $version        = $gpml->getAttribute( 'version' );
-        $dbSchema       = $gpml->getAttribute( 'db-schema' );
+        $rootParagraphId    = null;
+        $domains            = array();
+        $paragraphIdMap     = array();
+        $gpml               = $document->documentElement;
+        $version            = $gpml->getAttribute( 'version' );
+        $dbSchema           = $gpml->getAttribute( 'db-schema' );
 
         if ( version_compare( $version, '1.0', '<' ) )
         {
             ErrorHandler::stop();
-            throw new \InvalidArgumentException( sprintf(
-                '%s: unknown version "%s" in "%s#paragraph.xml"',
-                __METHOD__,
-                $version,
-                $file
-            ) );
+
+            return new ImportResult(
+                ImportResult::STRUCTURE_XML_UNKNOWN_VERSION,
+                sprintf(
+                    'unknown version "%s" in "%s#paragraph.xml"',
+                    $version,
+                    $basename
+                )
+            );
         }
 
         foreach ( $gpml->childNodes as $child )
@@ -168,6 +234,22 @@ class Importer extends AbstractImportExport
                         break;
 
                     case 'paragraph':
+                        $type           = $child->getAttribute( 'type' );
+                        $permissions    = $this->getPermissionsModel();
+
+                        if ( ! $permissions->isAllowed( 'paragraph.' . $type, 'create' ) )
+                        {
+                            return new ImportResult(
+                                ImportResult::STRUCTURE_TYPE_NOT_ALLOWED,
+                                sprintf(
+                                    'not allowed to create paragraph ' .
+                                    '(type: "%s") from "%s#paragraph.xml"',
+                                    $type,
+                                    $basename
+                                )
+                            );
+                        }
+
                         $rootParagraphId = $this->importRootParagraph(
                             $child,
                             $zip,
@@ -198,21 +280,20 @@ class Importer extends AbstractImportExport
             }
         }
 
-        $error = ErrorHandler::stop( false );
+        $error = ErrorHandler::stop();
 
         if ( $error )
         {
-            if ( $throw )
-            {
-                throw $error;
-            }
-            else
-            {
-                return $error;
-            }
+            return new ImportResult(
+                ImportResult::UNKNOWN_ERROR,
+                $error->getMessage()
+            );
         }
 
-        return $rootParagraphId;
+        return new ImportResult(
+            ImportResult::SUCCESS,
+            $rootParagraphId
+        );
     }
 
     /**

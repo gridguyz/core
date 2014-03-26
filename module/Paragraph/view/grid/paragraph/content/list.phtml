@@ -66,5 +66,14 @@ if ( ! $this->format && $this->isAllowed( 'paragraph.content', 'create' ) ): ?>
        href="/app/<?= $view->locale() ?>/admin/content/create">
         <?= $view->translate( 'default.createNew' ); ?>
     </a>
+<?php if ( $this->isAllowed( 'customize', 'create' ) ): ?>
+
+    <a class="button-appearance"
+       href="/app/<?= $view->locale() ?>/admin/customize/import?returnUri=<?=
+            rawurlencode( '/app/' . $view->locale() . '/admin/content/list' ) ?>">
+        <?= $view->translate( 'customize.form.import.title' ); ?>
+    </a>
+<?php endif ?>
+
 </div>
 <?php endif ?>

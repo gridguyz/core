@@ -38,6 +38,14 @@ if ( ! $this->format ): ?>
                 $view->placeholder( 'listActions' )->set( '' );
                 $view->placeholder( 'listActions' )->captureStart();
 ?>
+<?php if ( ! empty( $row->id ) ): ?>
+
+    <a class="action-button view"
+       title="<?= $view->translate( 'default.view' ); ?>"
+       href="/app/<?= $view->locale() ?>/paragraph/render/<?= $id ?>">
+    </a>
+<?php endif; ?>
+
     <a class="action-button edit"
        title="<?= $view->translate( 'default.edit' ); ?>"
        href="/app/<?= $view->locale() ?>/admin/customize-css/edit/<?= $id ?>">
@@ -56,8 +64,7 @@ if ( ! $this->format ): ?>
          ->render( $this->format );
 
 if ( ! $this->format &&
-       $this->isAllowed( 'customize', 'create' ) &&
-       $this->isAllowed( 'paragraph', 'create' ) ): ?>
+       $this->isAllowed( 'customize', 'create' ) ): ?>
 <div class="more-links">
     <a class="button-appearance"
        href="/app/<?= $view->locale() ?>/admin/customize/import">

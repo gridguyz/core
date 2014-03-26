@@ -73,7 +73,7 @@ class AuthenticationController extends AbstractActionController
     }
 
     /**
-     * Gte valid return-uri
+     * Get valid return-uri
      *
      * @param   string  $returnUri
      * @return  string
