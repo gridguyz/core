@@ -362,8 +362,10 @@ return array(
         'Grid\Customize\Import' => array(
             'elements' => array(
                 'returnUri' => array(
-                    'type'  => 'Zork\Form\Element\Hidden',
-                    'name'  => 'returnUri',
+                    'spec'   => array(
+                        'type'  => 'Zork\Form\Element\Hidden',
+                        'name'  => 'returnUri',
+                    ),
                 ),
                 'file' => array(
                     'spec'   => array(
