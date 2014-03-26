@@ -21,7 +21,7 @@ return array (
   'customize.form.rules.submit' => 'Save',
   'customize.form.rules.success' => 'Save success',
   'customize.form.rules.title' => 'Css rule',
-  'customize.import.success.link.%s' => 'Import successful!<br /><a href="%s">Click here</a> to see the results.',
+  'customize.import.success.link.%s' => 'Import successful!<br /><a target="_blank" href="%s">Click here</a> to see the results.',
   'customize.import.failed.message.%s.%s' => 'Import failed!<br />%s<br />%s',
   'customize.import.failed.unknownError' => 'Unknown error',
   'customize.import.failed.fileNotExists' => 'File doesn\'t exist',
