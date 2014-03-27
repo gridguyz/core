@@ -78,14 +78,33 @@ class MiddleLayoutModel
      */
     public function findMiddleParagraphLayoutById( $layoutParagraphId = null )
     {
-        if ( empty( $layoutParagraphId ) )
+        $layoutRenderList = null;
+
+        if ( ! empty( $layoutParagraphId ) )
         {
-            $layoutParagraphId = $this->subDomainModel
-                                      ->findActual()
-                                      ->defaultLayoutId;
+            $layoutRenderList = $this->paragraphModel
+                                     ->findRenderList( $layoutParagraphId );
+
+            if ( ! empty( $layoutRenderList ) )
+            {
+                list( $_, $root ) = reset( $layoutRenderList );
+
+                if ( 'layout' !== $root->type )
+                {
+                    $layoutRenderList = null;
+                }
+            }
         }
 
-        $layoutRenderList = $this->paragraphModel->findRenderList( $layoutParagraphId );
+        if ( empty( $layoutRenderList ) )
+        {
+            $layoutRenderList = $this->paragraphModel
+                                     ->findRenderList(
+                                         $this->subDomainModel
+                                              ->findActual()
+                                              ->defaultLayoutId
+                                     );
+        }
 
         if ( ! empty( $layoutRenderList ) )
         {
