@@ -96,16 +96,15 @@ class ImportExportController extends AbstractAdminController
 
             if ( $form->isValid() )
             {
-                $data   = $form->getData();
-                $file   = $data['file']['tmp_name'];
-                $name   = $data['file']['name'];
-                $result = $serviceLocator->get( 'Grid\Customize\Model\Importer' )
-                                         ->import( $file, $name );
+                $data       = $form->getData();
+                $file       = $data['file']['tmp_name'];
+                $name       = $data['file']['name'];
+                $translator = $serviceLocator->get( 'translator' );
+                $result     = $serviceLocator->get( 'Grid\Customize\Model\Importer' )
+                                             ->import( $file, $name );
 
                 if ( $result->isSuccess() )
                 {
-                    $translator = $serviceLocator->get( 'translator' );
-
                     $this->messenger()
                          ->add(
                              sprintf(
