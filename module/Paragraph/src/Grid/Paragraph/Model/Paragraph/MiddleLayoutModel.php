@@ -87,9 +87,9 @@ class MiddleLayoutModel
 
             if ( ! empty( $layoutRenderList ) )
             {
-                list( $_, $root ) = reset( $layoutRenderList );
+                @ list( $_, $root ) = reset( $layoutRenderList );
 
-                if ( 'layout' !== $root->type )
+                if ( empty( $root ) || 'layout' !== $root->type )
                 {
                     $layoutRenderList = null;
                 }
