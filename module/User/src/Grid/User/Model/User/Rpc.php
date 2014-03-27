@@ -36,7 +36,7 @@ class Rpc implements CallableInterface,
     }
 
     /**
-     * Get user by display name
+     * Is an email name available
      *
      * @param   string          $email
      * @param   array|object    $fields [optional]
@@ -56,7 +56,27 @@ class Rpc implements CallableInterface,
     }
 
     /**
-     * Get user by display name
+     * Is an email not taken
+     *
+     * @param   string          $email
+     * @param   array|object    $fields [optional]
+     * @return  bool
+     */
+    public function isEmailNotTaken( $email, $fields = array() )
+    {
+        $fields = (object) $fields;
+
+        return $this->getMapper()
+                    ->isEmailTaken(
+                          $email,
+                          empty( $fields->id ) ? null : $fields->id
+                      )
+               ? 'user.action.register.email.taken'
+               : true;
+    }
+
+    /**
+     * Is a display name available
      *
      * @param   string          $displayName
      * @param   array|object    $fields [optional]

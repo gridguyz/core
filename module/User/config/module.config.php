@@ -724,7 +724,7 @@ return array(
                             'label'             => 'user.form.create.email',
                             'required'          => true,
                             'rpc_validators'    => array(
-                                'Grid\User\Model\User\Rpc::isEmailAvailable',
+                                'Grid\User\Model\User\Rpc::isEmailNotTaken',
                             ),
                         ),
                     ),

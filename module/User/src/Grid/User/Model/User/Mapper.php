@@ -247,6 +247,27 @@ class Mapper extends ReadWriteMapperAbstract
     }
 
     /**
+     * Is email already taken
+     *
+     * @param string $email
+     * @param int|null $excludeId
+     * @return bool
+     */
+    public function isEmailTaken( $email, $excludeId = null )
+    {
+        return $this->isExists( empty( $excludeId ) ? array(
+            'email' => $email,
+        ) : array(
+            'email' => $email,
+            new Predicate\Operator(
+                'id',
+                Predicate\Operator::OP_NE,
+                $excludeId
+            ),
+        ) );
+    }
+
+    /**
      * Is dsplay name already exists
      *
      * @param string $displayName
