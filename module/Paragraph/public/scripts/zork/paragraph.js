@@ -315,7 +315,7 @@
 
         header.find( ".append" )
               .click( function () {
-                    var para = header.parent( draggable );
+                    var para = header.parent( droppable );
                     js.paragraph.append( para );
                 } );
 
