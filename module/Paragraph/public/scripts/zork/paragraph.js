@@ -323,7 +323,9 @@
             "handle": ".paragraph-edit-header .actions .title",
             "containers": "> .paragraph > .paragraph-children",
             "items": "> .paragraph-container[data-paragraph-id]",
-            "leaves": "[data-paragraph-only-parent-of='']",
+         // "leaves": "[data-paragraph-only-parent-of='']",
+            "leaves": ".paragraph-content-container, " +
+                      ".paragraph-metaContent-container",
             "accept": function ( parent, child ) {
                 parent = $( parent ).closest( ".paragraph-container" );
                 child  = $( child ).closest( ".paragraph-container" );
