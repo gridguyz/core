@@ -550,6 +550,16 @@ abstract class ProxyAbstract
     }
 
     /**
+     * Return additional attributes of paragraph tag
+     *
+     * @return  array
+     */
+    public function getAdditionalAttributes()
+    {
+        return array();
+    }
+
+    /**
      * Returns the base iterator (only basic properties)
      *
      * @return \Zork\Model\Structure\StructureIterator

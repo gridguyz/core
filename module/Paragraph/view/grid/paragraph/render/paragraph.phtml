@@ -3,6 +3,7 @@
 use Zork\Iterator\DepthList;
 use Grid\Paragraph\Model\Paragraph\Structure\Layout;
 use Grid\Paragraph\Model\Paragraph\StructureInterface;
+use Grid\Paragraph\Model\Paragraph\Structure\ReferencedParagraphInterface;
 
 $view = $this;
 $list = new DepthList( $this->paragraphRenderList );
@@ -40,14 +41,31 @@ $list->runin( function ( $paragraph ) use ( $view ) {
         data-paragraph-only-child-of="<?= $paragraph::onlyChildOf() ?>"
         data-paragraph-only-parent-of="<?= $paragraph::onlyParentOf() ?>">
     <<?= $paragraph::PARAGRAPH_TAG ?>
-            class="paragraph paragraph-<?= $paragraph->type ?>"
-            id="paragraph-<?= $paragraph->id ?>">
+<?php foreach ( (array) $paragraph->getAdditionalAttributes() as $attr => $value ): ?>
+
+            <?= $attr ?>="<?= $view->escapeHtmlAttr( $value ) ?>"
+<?php endforeach ?>
+
+            id="paragraph-<?= $paragraph->id ?>"
+            class="paragraph paragraph-<?= $paragraph->type ?>">
         <<?= $paragraph::CONTENT_OPEN_TAG ?>
             class="paragraph-content paragraph-content-open paragraph-<?= $paragraph->type ?>-content"
             ><?= $paragraph->renderOpen( $view ) ?></<?= $paragraph::CONTENT_OPEN_TAG ?>>
         <<?= $paragraph::CHILDREN_TAG ?>
             class="paragraph-children paragraph-<?= $paragraph->type ?>-children">
-<?php }, function ( $paragraph ) use ( $view ) { ?>
+<?php if ( $paragraph instanceof ReferencedParagraphInterface )
+{
+    $referencedRenderList = $paragraph->getReferencedRenderList();
+
+    if ( ! empty( $referencedRenderList ) )
+    {
+        echo $view->partial( 'grid/paragraph/render/paragraph', array(
+            'paragraphRenderList' => (array) $referencedRenderList,
+        ) );
+    }
+}
+
+}, function ( $paragraph ) use ( $view ) { ?>
 
         </<?= $paragraph::CHILDREN_TAG ?>>
         <<?= $paragraph::CONTENT_CLOSE_TAG ?>
