@@ -1096,6 +1096,26 @@ return array(
                                     ),
                                 ),
                             ),
+                            'fontStyle' => array(
+                                'spec'   => array(
+                                    'type'      => 'Zork\Form\Element\CssFontStyle',
+                                    'name'      => 'fontStyle',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.customize.css.fontStyle',
+                                        'required'  => false,
+                                    ),
+                                ),
+                            ),
+                            'fontWeight' => array(
+                                'spec'   => array(
+                                    'type'      => 'Zork\Form\Element\CssFontWeight',
+                                    'name'      => 'fontWeight',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.customize.css.fontWeight',
+                                        'required'  => false,
+                                    ),
+                                ),
+                            ),
                             'textTransform' => array(
                                 'spec'  => array(
                                     'type'      => 'Zork\Form\Element\CssTextTransform',
@@ -1613,6 +1633,26 @@ return array(
                                         'label'         => 'paragraph.form.customize.css.fontFamily',
                                         'required'      => false,
                                         'display_group' => 'paragraph.form.customize.general.text',
+                                    ),
+                                ),
+                            ),
+                            'fontStyle' => array(
+                                'spec'   => array(
+                                    'type'      => 'Zork\Form\Element\CssFontStyle',
+                                    'name'      => 'fontStyle',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.customize.css.fontStyle',
+                                        'required'  => false,
+                                    ),
+                                ),
+                            ),
+                            'fontWeight' => array(
+                                'spec'   => array(
+                                    'type'      => 'Zork\Form\Element\CssFontWeight',
+                                    'name'      => 'fontWeight',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.customize.css.fontWeight',
+                                        'required'  => false,
                                     ),
                                 ),
                             ),
