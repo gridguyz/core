@@ -48,6 +48,16 @@ abstract class ProxyAbstract
     /**
      * @var string
      */
+    const PROPERTY_EDIT_CONTENT = 'editContent';
+
+    /**
+     * @var string
+     */
+    const PROPERTY_EDIT_LAYOUT = 'editLayout';
+
+    /**
+     * @var string
+     */
     const PROPERTY_DELETE = 'delete';
 
     /**

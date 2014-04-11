@@ -126,9 +126,12 @@ class Layout extends AbstractRoot
      */
     public static function getAllowedFunctions()
     {
-        return array_diff(
-            parent::getAllowedFunctions(),
-            array( static::PROPERTY_DELETE )
+        return array_merge(
+            array_diff(
+                parent::getAllowedFunctions(),
+                array( static::PROPERTY_DELETE )
+            ),
+            array( static::PROPERTY_EDIT_LAYOUT )
         );
     }
 

@@ -187,9 +187,12 @@ class MetaContent extends AbstractRoot
      */
     public static function getAllowedFunctions()
     {
-        return array_diff(
-            parent::getAllowedFunctions(),
-            array( static::PROPERTY_DELETE )
+        return array_merge(
+            array_diff(
+                parent::getAllowedFunctions(),
+                array( static::PROPERTY_DELETE )
+            ),
+            array( static::PROPERTY_EDIT_CONTENT )
         );
     }
 
@@ -206,38 +209,38 @@ class MetaContent extends AbstractRoot
 
         return parent::prepareCreate();
     }
-    
+
     /**
      * Get tags of the paragraph
      *
      * @return array
      */
-    function getTags() 
-    { 
+    function getTags()
+    {
         if( $this->getRenderedMetaContent() instanceof TagsAwareInterface  )
         {
             return array_unique(
-                        array_merge( 
-                            parent::getTags(), 
-                            $this->getRenderedMetaContent()->getTags() 
+                        array_merge(
+                            parent::getTags(),
+                            $this->getRenderedMetaContent()->getTags()
                    ));
         }
         return parent::getTags();
     }
-    
+
     /**
      * Get tag ids of the paragraph
      *
      * @return array
      */
-    function getTagIds() 
-    { 
+    function getTagIds()
+    {
         if( $this->getRenderedMetaContent() instanceof TagsAwareInterface  )
         {
             return array_unique(
-                        array_merge( 
-                            parent::getTagIds(), 
-                            $this->getRenderedMetaContent()->getTagIds() 
+                        array_merge(
+                            parent::getTagIds(),
+                            $this->getRenderedMetaContent()->getTagIds()
                    ));
         }
         return parent::getTagIds();
@@ -248,22 +251,22 @@ class MetaContent extends AbstractRoot
      *
      * @return array
      */
-    function getLocaleTags() 
-    { 
+    function getLocaleTags()
+    {
         if( $this->getRenderedMetaContent() instanceof TagsAwareInterface  )
         {
             return array_unique(
-                        array_merge( 
-                            parent::getLocaleTags(), 
-                            $this->getRenderedMetaContent()->getLocaleTags() 
+                        array_merge(
+                            parent::getLocaleTags(),
+                            $this->getRenderedMetaContent()->getLocaleTags()
                    ));
         }
-        return parent::getLocaleTags(); 
+        return parent::getLocaleTags();
     }
-    
+
     /**
      * Get RenderedMetaContent
-     * 
+     *
      * @return null|object
      */
     public function getRenderedMetaContent()

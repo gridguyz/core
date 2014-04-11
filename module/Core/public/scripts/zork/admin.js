@@ -26,18 +26,14 @@
 
     global.Zork.prototype.admin = new global.Zork.Admin();
 
-    var para = function ( types ) {
-            var i, l, s = [];
-            types = Array.prototype.slice.call( arguments, 0 );
-
-            for ( i = 0, l = types.length; i < l; ++i )
-            {
-                s.push( ".paragraph-container.paragraph-" + types[i] +
-                        "-container[data-paragraph-type=" + types[i] +
-                        "][data-paragraph-id!=\"\"]" );
-            }
-
-            return $( s.join( ", " ) ).first();
+    var papr = function ( prop ) {
+            return $(
+                '.paragraph-container' +
+                '[data-paragraph-id]' +
+                '[data-paragraph-properties]' +
+                '[data-paragraph-id!=""]' +
+                '[data-paragraph-properties~="' + prop + '"]'
+            ).first();
         },
         offset = function ( elem, type ) {
             elem = $( elem );
@@ -724,8 +720,8 @@
 
     global.Zork.Admin.prototype.menu.refresh = function ()
     {
-        layout  = para( "layout" );
-        content = para( "content", "metaContent" );
+        layout  = papr( "editLayout" );
+        content = papr( "editContent" );
 
         $( menus ).find( "li > .edit-content" )
                       .toggleClass( "ui-state-default", !! content.length )
