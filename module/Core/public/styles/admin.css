@@ -65,8 +65,17 @@ div.adminContentContainer h1.prefix:after
 
 div.adminContentContainer h1 .action-buttons
 {
-    font-size: 11px;
+    display: inline;
+    font-size: 18px;
     line-height: 18px;
+}
+
+div.adminContentContainer h1 .action-buttons,
+div.adminContentContainer h1 .action-buttons button,
+div.adminContentContainer h1 .action-buttons input[type=button],
+div.adminContentContainer h1 .action-buttons input[type=submit],
+div.adminContentContainer h1 .action-buttons .button-appearance
+{
     vertical-align: top;
 }
 
