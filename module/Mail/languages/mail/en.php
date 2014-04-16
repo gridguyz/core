@@ -20,6 +20,7 @@ return array(
     'mail.list.column.locale.title' => 'Language',
     'mail.list.column.name.title' => 'Name',
     'mail.list.title' => 'Mail templates',
+    'mail.template.formEditor.formFilled' => 'Form Builder: Form filled',
     'mail.template.resource' => 'Mail templates',
     'mail.template.privilege.edit' => 'Edit mail templates',
     'mail.template.privilege.view' => 'View mail templates',
