@@ -63,6 +63,13 @@ div.adminContentContainer h1.prefix:after
     content: url("/images/common/admin/right-arrow-hover.png");
 }
 
+div.adminContentContainer h1 .action-buttons
+{
+    font-size: 11px;
+    line-height: 18px;
+    vertical-align: top;
+}
+
 div.adminContentContainer .adminLocale
 {
     float: right;
