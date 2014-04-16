@@ -42,9 +42,12 @@
         customize = js.require( "js.customize" ),
         message   = js.require( "js.ui.message" ),
         reflect   = js.require( "js.paragraph.reflectCss" ),
-        editable  = "[data-paragraph-id]:not(.paragraph-edit-disabled)",
+        editable  = '[data-paragraph-id]:not(.paragraph-edit-disabled)',
         draggable = '[data-paragraph-properties~="drag"]' + editable,
         droppable = '[data-paragraph-properties~="drop"]' + editable,
+        deletable = '[data-paragraph-id]'
+                  + ':not([data-paragraph-properties~="delete"])'
+                  + ':not([data-paragraph-properties~="deleteAncestors"])',
         gpbtypes  = function ( types ) {
             var i, l, s = [];
             types = Array.prototype.slice.call( arguments, 0 );
@@ -202,7 +205,7 @@
 
                     header.find( ".delete" )
                           .css( "display", ~ types.indexOf( "delete" ) &&
-                                           ! para.find( "[data-paragraph-id]:not([data-paragraph-properties~=delete])" ).length ? "" : "none" );
+                                           ! para.find( deletable ).length ? "" : "none" );
 
                     header.find( ".append" )
                           .css( "display", para.data( "paragraphOnlyParentOf" ) ? "" : "none" );

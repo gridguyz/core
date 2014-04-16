@@ -63,6 +63,11 @@ abstract class ProxyAbstract
     /**
      * @var string
      */
+    const PROPERTY_DELETE_ANCESTORS = 'deleteAncestors';
+
+    /**
+     * @var string
+     */
     const PROPERTY_REPRESENTS_TEXT = 'representsText';
 
     /**
