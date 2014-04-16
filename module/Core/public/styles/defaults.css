@@ -344,6 +344,16 @@ table.table-pairs td
     background-image: url("/images/common/buttons/button-grant-hover.png");
 }
 
+.action-button.widget
+{
+    background-image: url("/images/common/buttons/button-widget.png");
+}
+
+.action-button.widget:hover
+{
+    background-image: url("/images/common/buttons/button-widget-hover.png");
+}
+
 form dl,
 form dl dt
 {
