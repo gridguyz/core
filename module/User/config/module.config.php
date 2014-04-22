@@ -978,7 +978,7 @@ return array(
                     'spec'  => array(
                         'options'   => array(
                             'options'   => array(
-                                'basic' => array(
+                                'functions' => array(
                                     'options'   => array(
                                         'login' => 'paragraph.type.login',
                                     ),

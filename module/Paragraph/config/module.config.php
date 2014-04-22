@@ -1005,7 +1005,7 @@ return array(
                         'type'      => 'Zork\Form\Element\RadioGroup',
                         'name'      => 'type',
                         'options'   => array(
-                            //'label'     => 'paragraph.form.start.type',
+                         // 'label'     => 'paragraph.form.start.type',
                             'required'  => true,
                             'options'   => array(
                                 'basic'         => array(
@@ -1014,25 +1014,41 @@ return array(
                                     'options'   => array(
                                         'html'      => 'paragraph.type.html',
                                         'title'     => 'paragraph.type.title',
+                                        'columns'   => 'paragraph.type.columns',
+                                        'widget'    => 'paragraph.type.widget',
+                                    ),
+                                ),
+                             /* 'container'     => array(
+                                    'label'     => 'paragraph.type-group.container',
+                                    'order'     => 2,
+                                    'options'   => array(
+                                    ),
+                                ), */
+                             /* 'code'          => array(
+                                    'label'     => 'paragraph.type-group.code',
+                                    'order'     => 3,
+                                    'options'   => array(
+                                    ),
+                                ), */
+                                'functions'     => array(
+                                    'label'     => 'paragraph.type-group.functions',
+                                    'order'     => 4,
+                                    'options'   => array(
+                                        'boxes'     => 'paragraph.type.boxes',
                                         'lead'      => 'paragraph.type.lead',
                                         'infobar'   => 'paragraph.type.infobar',
                                         'language'  => 'paragraph.type.language',
                                     ),
                                 ),
-                                'container'     => array(
-                                    'label'     => 'paragraph.type-group.container',
-                                    'order'     => 2,
-                                    'options'   => array(
-                                        'boxes'     => 'paragraph.type.boxes',
-                                        'columns'   => 'paragraph.type.columns',
-                                    ),
+                                'media'         => array(
+                                    'label'     => 'paragraph.type-group.media',
+                                    'order'     => 5,
+                                    'options'   => array(),
                                 ),
-                                'code'          => array(
-                                    'label'     => 'paragraph.type-group.code',
-                                    'order'     => 3,
-                                    'options'   => array(
-                                        'widget'    => 'paragraph.type.widget',
-                                    ),
+                                'social'        => array(
+                                    'label'     => 'paragraph.type-group.social',
+                                    'order'     => 6,
+                                    'options'   => array(),
                                 ),
                             ),
                         ),
@@ -1042,9 +1058,9 @@ return array(
                             'data-js-imageradiogroup-class' => 'default',
                             'data-js-imageradiogroup-imagesrc' => '/images/common/admin/paragraph-type/[value].png',
                             'data-js-imageradiogroup-descriptionkey' => 'paragraph.type.[value].description',
-                            //optional attributes
-                            // 'data-js-imageradiogroup-fieldsettabs' => 'false',
-                            // 'data-js-imageradiogroup-vslider' => 'false',
+                         // optional attributes
+                         // 'data-js-imageradiogroup-fieldsettabs' => 'false',
+                         // 'data-js-imageradiogroup-vslider' => 'false',
                         ),
                     ),
                 ),

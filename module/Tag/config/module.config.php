@@ -151,9 +151,9 @@ return array(
                     'spec'  => array(
                         'options'   => array(
                             'options'   => array(
-                                'basic' => array(
+                                'functions' => array(
                                     'options'   => array(
-                                        'tags'          => 'paragraph.type.tags',
+                                        'tags'  => 'paragraph.type.tags',
                                     ),
                                 ),
                             ),

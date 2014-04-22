@@ -275,6 +275,10 @@ return array(
                                 'basic' => array(
                                     'options'   => array(
                                         'menu'          => 'paragraph.type.menu',
+                                    ),
+                                ),
+                                'functions'     => array(
+                                    'options'   => array(
                                         'breadcrumb'    => 'paragraph.type.breadcrumb',
                                     ),
                                 ),
