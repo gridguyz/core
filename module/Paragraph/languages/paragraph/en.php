@@ -4,6 +4,7 @@ return array (
   'paragraph.action.clone.success' => 'Cloning success',
   'paragraph.action.delete.failed' => 'Delete failed',
   'paragraph.action.delete.success' => 'Delete success',
+  'paragraph.circularReferenceError' => 'Paragraphs cannot reference themselves',
   'paragraph.content.list.column.actions.title' => 'Actions',
   'paragraph.content.list.column.created.title' => 'Created',
   'paragraph.content.list.column.defaultFor.title' => 'Default for',

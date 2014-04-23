@@ -8,6 +8,14 @@ use Grid\Paragraph\Model\Paragraph\Structure\ReferencedParagraphInterface;
 $view = $this;
 $list = new DepthList( $this->paragraphRenderList );
 
+if ( ! isset( $GLOBALS[__FILE__]['rendered'] ) )
+{
+    $GLOBALS[__FILE__] = $GLOBALS[__FILE__] ?: array();
+    $GLOBALS[__FILE__]['rendered'] = $GLOBALS[__FILE__]['rendered'] ?: array();
+}
+
+$rendered = &$GLOBALS[__FILE__]['rendered'];
+
 $this->headLink()
      ->appendStylesheet( '/styles/paragraph.css' );
 
@@ -22,7 +30,7 @@ else
     $root->content  = $this->content;
 }
 
-$list->runin( function ( $paragraph ) use ( $view ) {
+$list->runin( function ( $paragraph ) use ( $view, &$rendered ) {
 
     if ( $paragraph->id && $paragraph->id == $paragraph->rootId )
     {
@@ -59,9 +67,31 @@ $list->runin( function ( $paragraph ) use ( $view ) {
 
     if ( ! empty( $referencedRenderList ) )
     {
-        echo $view->partial( 'grid/paragraph/render/paragraph', array(
-            'paragraphRenderList' => (array) $referencedRenderList,
-        ) );
+        list( $_, $first ) = reset( $referencedRenderList );
+        $id = $first->id;
+
+        if ( isset( $rendered[$id] ) )
+        {
+            if ( $first->isEditable() )
+            {
+                echo sprintf(
+                    '<b>%s</b>: %s',
+                    $view->translate( 'default.error' ),
+                    $view->translate(
+                        'paragraph.circularReferenceError',
+                        'paragraph'
+                    )
+                );
+            }
+        }
+        else
+        {
+            $rendered[$id] = true;
+
+            echo $view->partial( 'grid/paragraph/render/paragraph', array(
+                'paragraphRenderList' => (array) $referencedRenderList,
+            ) );
+        }
     }
 }
 
