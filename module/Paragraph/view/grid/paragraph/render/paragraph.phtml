@@ -8,10 +8,14 @@ use Grid\Paragraph\Model\Paragraph\Structure\ReferencedParagraphInterface;
 $view = $this;
 $list = new DepthList( $this->paragraphRenderList );
 
+if ( ! isset( $GLOBALS[__FILE__] ) )
+{
+    $GLOBALS[__FILE__] = array();
+}
+
 if ( ! isset( $GLOBALS[__FILE__]['rendered'] ) )
 {
-    $GLOBALS[__FILE__] = $GLOBALS[__FILE__] ?: array();
-    $GLOBALS[__FILE__]['rendered'] = $GLOBALS[__FILE__]['rendered'] ?: array();
+    $GLOBALS[__FILE__]['rendered'] = array();
 }
 
 $rendered = &$GLOBALS[__FILE__]['rendered'];
