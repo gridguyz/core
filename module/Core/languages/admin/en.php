@@ -142,7 +142,7 @@ return array (
   'admin.packages.installed.all' => 'All',
   'admin.packages.installed.not' => 'Not installed',
   'admin.packages.installed.only' => 'Only installed',
-  'admin.packages.installedTime' => 'Installed at',
+  'admin.packages.installedTime' => 'Installed / Updated',
   'admin.packages.installedVersion' => 'Installed version',
   'admin.packages.keywords' => 'Keywords',
   'admin.packages.libraryDescription' => 'Library description',
