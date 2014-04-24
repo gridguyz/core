@@ -735,6 +735,32 @@
         {
             switch ( attrType )
             {
+                case "checkbox":
+                case "radio":
+                    element.on( "click change", function () {
+                        var form = $( element[0].form || element.closest( "form" ) ),
+                            rqrd = element.is( "[required], [data-validate-required=true]" ),
+                            chkd = element.prop( "checked" ),
+                            name = element.prop( "name" ),
+                            same = 'input[type="' + attrType + '"][name="'
+                                 + String( name ).replace( /"/g, '\\"' ) + '"]';
+
+                        if ( name && rqrd ) {
+                            if ( chkd ) {
+                                form.find( same + "[required]" )
+                                    .removeAttr( "required" )
+                                    .data( "validateRequired", true )
+                                    .attr( "data-validate-required", "true" );
+                            } else if ( ! form.find( same + ":checked" ).length ) {
+                                form.find( same + "[data-validate-required=true]" )
+                                    .attr( "required", "required" )
+                                    .data( "validateRequired", false )
+                                    .removeAttr( "data-validate-required" );
+                            }
+                        }
+                    } );
+                    break;
+
                 case "color":
                     var val  = element[0].getAttribute( "value" ),
                         name = String( element.attr( "name" ) || "" ),
