@@ -156,7 +156,7 @@ class Structure extends MapperAwareAbstract
      */
     public function hasRawProperty( $rawName )
     {
-        return ! empty( $this->properties[$rawName] );
+        return isset( $this->properties[$rawName] );
     }
 
     /**
@@ -167,7 +167,7 @@ class Structure extends MapperAwareAbstract
      */
     public function getRawProperty( $rawName )
     {
-        if ( ! empty( $this->properties[$rawName] ) )
+        if ( isset( $this->properties[$rawName] ) )
         {
             return (object) $this->properties[$rawName];
         }
@@ -208,14 +208,13 @@ class Structure extends MapperAwareAbstract
             }
         }
 
-        if ( empty( $value ) )
+        $rawName    = (string) $rawName;
+        $value      = (string) $value;
+        $priority   = ( (string) $priority ) ?: self::PRIORITY_NORMAL;
+
+        if ( '' === $value )
         {
             return $this->removeRawProperty( $rawName );
-        }
-
-        if ( empty( $priority ) )
-        {
-            $priority = self::PRIORITY_NORMAL;
         }
 
         $this->properties[$rawName] = array(
@@ -258,7 +257,7 @@ class Structure extends MapperAwareAbstract
      */
     public function getRawPropertyValue( $rawName )
     {
-        if ( ! empty( $this->properties[$rawName] ) )
+        if ( isset( $this->properties[$rawName]['value'] ) )
         {
             return $this->properties[$rawName]['value'];
         }
@@ -274,7 +273,7 @@ class Structure extends MapperAwareAbstract
      */
     public function getRawPropertyPriority( $rawName )
     {
-        if ( ! empty( $this->properties[$rawName] ) )
+        if ( isset( $this->properties[$rawName]['priority'] ) )
         {
             return $this->properties[$rawName]['priority'];
         }
@@ -290,12 +289,19 @@ class Structure extends MapperAwareAbstract
      */
     public function getRawPropertyPostfix( $rawName )
     {
-        if ( empty( $this->properties[$rawName]['priority'] ) )
+        if ( ! isset( $this->properties[$rawName]['priority'] ) )
         {
             return '';
         }
 
-        return ' !' . $this->properties[$rawName]['priority'];
+        $priority = (string) $this->properties[$rawName]['priority'];
+
+        if ( '' === $priority )
+        {
+            return '';
+        }
+
+        return ' !' . $priority;
     }
 
     /**
@@ -332,21 +338,22 @@ class Structure extends MapperAwareAbstract
             {
                 switch ( true )
                 {
-                    case is_array( $value ) && array_key_exists( 'value', $value ):
+                    case is_array( $value ) &&
+                            array_key_exists( 'value', $value ):
                         $value = (object) $value;
 
                     case is_object( $value ):
-                        if ( empty( $value->value ) )
+                        if ( ! isset( $value->value ) )
                         {
                             $value->value = null;
                         }
 
-                        if ( empty( $value->priority ) )
+                        if ( ! isset( $value->priority ) )
                         {
                             $value->priority = null;
                         }
 
-                        if ( empty( $value->name ) )
+                        if ( ! isset( $value->name ) )
                         {
                             $value->name = $name;
                         }
@@ -424,26 +431,21 @@ class Structure extends MapperAwareAbstract
      */
     protected function setBackgroundPositionXProperty( $value, $priority = self::PRIORITY_NORMAL )
     {
-        $y = $this->getRawProperty( 'background-position-y' );
+        $x = (string) $value;
+        $y = (string) $this->getRawPropertyValue( 'background-position-y' );
 
-        if ( empty( $value ) )
+        if ( '' !== $x && '' !== $y )
         {
-            $xyValue    = null;
-            $xyPriority = null;
-        }
-        else if ( ! empty( $y ) && ! empty( $y->value ) )
-        {
-            $xyValue    = $value . ' ' . $y->value;
-            $xyPriority = empty( $priority ) ? $y->priority : $priority;
-        }
-        else
-        {
-            $xyValue    = $value . ' 0%';
-            $xyPriority = $priority;
+            $this->setRawProperty(
+                'background-position',
+                $x . ' ' . $y,
+                $priority ?: $this->getRawPropertyPriority(
+                    'background-position-y'
+                )
+            );
         }
 
-        return $this->setRawProperty( 'background-position', $xyValue, $xyPriority )
-                    ->setRawProperty( 'background-position-x', $value, $priority );
+        return $this->setRawProperty( 'background-position-x', $x, $priority );
     }
 
     /**
@@ -455,26 +457,21 @@ class Structure extends MapperAwareAbstract
      */
     protected function setBackgroundPositionYProperty( $value, $priority = self::PRIORITY_NORMAL )
     {
-        $x = $this->getRawProperty( 'background-position-x' );
+        $y = (string) $value;
+        $x = (string) $this->getRawPropertyValue( 'background-position-x' );
 
-        if ( empty( $value ) )
+        if ( '' !== $x && '' !== $y )
         {
-            $xyValue    = null;
-            $xyPriority = null;
-        }
-        else if ( ! empty( $x ) && ! empty( $x->value ) )
-        {
-            $xyValue    = $x->value . ' ' . $value;
-            $xyPriority = empty( $priority ) ? $x->priority : $priority;
-        }
-        else
-        {
-            $xyValue    = '0% ' . $value;
-            $xyPriority = $priority;
+            $this->setRawProperty(
+                'background-position',
+                $x . ' ' . $y,
+                $priority ?: $this->getRawPropertyPriority(
+                    'background-position-x'
+                )
+            );
         }
 
-        return $this->setRawProperty( 'background-position', $xyValue, $xyPriority )
-                    ->setRawProperty( 'background-position-y', $value, $priority );
+        return $this->setRawProperty( 'background-position-y', $y, $priority );
     }
 
     /**
@@ -486,10 +483,16 @@ class Structure extends MapperAwareAbstract
      */
     protected function setBackgroundPositionProperty( $value, $priority = self::PRIORITY_NORMAL )
     {
-        list( $x, $y ) = preg_split( '/\s+/', trim( $value ), 2 );
+        $parts = preg_split( '/\s+/', trim( $value ), 2 );
+        $this->setRawProperty( 'background-position', $value, $priority );
 
-        return $this->setRawProperty( 'background-position', $value, $priority )
-                    ->setRawProperty( 'background-position-x', $x, $priority )
+        if ( count( $parts ) < 2 )
+        {
+            return $this;
+        }
+
+        list( $x, $y ) = $parts;
+        return $this->setRawProperty( 'background-position-x', $x, $priority )
                     ->setRawProperty( 'background-position-y', $y, $priority );
     }
 
@@ -616,21 +619,21 @@ class Structure extends MapperAwareAbstract
                 switch ( true )
                 {
                     case is_array( $value ) &&
-                         array_key_exists( 'value', $value ):
+                            array_key_exists( 'value', $value ):
                         $value = (object) $value;
 
                     case is_object( $value ):
-                        if ( empty( $value->value ) )
+                        if ( ! isset( $value->value ) )
                         {
                             $value->value = null;
                         }
 
-                        if ( empty( $value->priority ) )
+                        if ( ! isset( $value->priority ) )
                         {
                             $value->priority = null;
                         }
 
-                        if ( empty( $value->name ) )
+                        if ( ! isset( $value->name ) )
                         {
                             $value->name = $name;
                         }
