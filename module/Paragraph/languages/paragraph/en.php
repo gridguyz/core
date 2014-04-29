@@ -351,6 +351,8 @@ return array (
   'paragraph.type.formFieldCheckbox.description' => 'Check box field description',
   'paragraph.type.formFieldMultiCheckbox' => 'Check boxes field',
   'paragraph.type.formFieldMultiCheckbox.description' => 'Check boxes field description',
+  'paragraph.type.formFieldEmail' => 'Email field',
+  'paragraph.type.formFieldEmail.description' => 'Email field description',
   'paragraph.warn.defaultFallback.%s' => 'The %s paragraph is disabled.',
   'paragraph.warn.defaultFallback.link.%s' => 'You can activate it again with one click in the <a href="%s">APPz Gallery</a>.',
   'paragraph.widget.list.column.actions.title' => 'Actions',
