@@ -638,7 +638,10 @@ BEGIN
 
         UPDATE "customize_rule"
            SET "rootParagraphId" = NEW."rootId"
-         WHERE "rootParagraphId" = OLD."rootId";
+          FROM "customize_rule_x_paragraph"
+         WHERE "customize_rule_x_paragraph"."ruleId"        = "customize_rule"."id"
+           AND "customize_rule_x_paragraph"."paragraphId"   = OLD."id"
+           AND "customize_rule"."rootParagraphId"           = OLD."rootId";
 
         IF NOT EXISTS ( SELECT *
                           FROM "paragraph"
