@@ -737,7 +737,7 @@
             {
                 case "checkbox":
                 case "radio":
-                    element.on( "click change", function () {
+                    var checkChecked = function () {
                         var form = $( element[0].form || element.closest( "form" ) ),
                             rqrd = element.is( "[required], [data-validate-required=true]" ),
                             chkd = element.prop( "checked" ),
@@ -758,7 +758,14 @@
                                     .removeAttr( "data-validate-required" );
                             }
                         }
-                    } );
+                    };
+
+                    element.on( "click change", checkChecked );
+
+                    if ( element.prop( "checked" ) ) {
+                        checkChecked();
+                    }
+
                     break;
 
                 case "color":
