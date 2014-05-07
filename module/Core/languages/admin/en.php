@@ -87,6 +87,8 @@ return array (
   'admin.navTop.settings' => 'Site settings',
   'admin.navTop.settings.facebook' => 'Facebook',
   'admin.navTop.settings.google' => 'Google',
+  'admin.navTop.settings.linkedin' => 'LinkedIn',
+  'admin.navTop.settings.twitter' => 'Twitter',
   'admin.navTop.settings.locale' => 'Languages',
   'admin.navTop.settings.mail' => 'Email settings',
   'admin.navTop.settings.siteDefinition' => 'Site definitions',
