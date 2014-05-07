@@ -1217,6 +1217,14 @@ return array(
         ),
         'Grid\MultisitePlatform' => array(
             'navigation' => array(
+                'dashboard'  => array(
+                    'label'         => 'admin.navTop.dashboard',
+                    'textDomain'    => 'admin',
+                    'route'         => 'Grid\Core\Admin\Dashboard',
+                    'order'         => 998,
+                    'resource'      => 'admin',
+                    'privilege'     => 'ui',
+                ),
                 'packages'  => array(
                     'label'         => 'admin.navTop.packages',
                     'textDomain'    => 'admin',
