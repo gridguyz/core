@@ -4,6 +4,7 @@ namespace Grid\Core\Model\Uri;
 
 use Locale;
 use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Predicate;
 use Zend\Db\Sql\Expression;
 use Zork\Model\Mapper\DbAware\ReadWriteMapperAbstract;
 
