@@ -63,7 +63,7 @@ class Content extends AbstractRoot
     /**
      * Layout
      *
-     * @var \Paragraph\Model\Paragraph\Structure\Layout
+     * @var \Grid\Paragraph\Model\Paragraph\Structure\Layout
      */
     private $_layout;
 
@@ -77,14 +77,14 @@ class Content extends AbstractRoot
     /**
      * Content created-by user
      *
-     * @var \User\Model\User\Structure
+     * @var \Grid\User\Model\User\Structure
      */
     private $_user;
 
     /**
      * User-mapper
      *
-     * @var \User\Model\User\Mapper
+     * @var \Grid\User\Model\User\Mapper
      */
     private $_userMapper;
 
@@ -196,7 +196,7 @@ class Content extends AbstractRoot
     /**
      * Uri-model
      *
-     * @var \Core\Model\Uri\Model
+     * @var \Grid\Core\Model\Uri\Model
      */
     private $_uriModel;
 
@@ -210,7 +210,7 @@ class Content extends AbstractRoot
     /**
      * Seo-uri structure
      *
-     * @var \Core\Model\Uri\Structure
+     * @var \Grid\Core\Model\Uri\Structure
      */
     private $_seoUriStructure;
 
@@ -228,7 +228,7 @@ class Content extends AbstractRoot
      * Set layout-id
      *
      * @param int $layoutId
-     * @return \Paragraph\Model\Paragraph\Structure\Content
+     * @return \Grid\Paragraph\Model\Paragraph\Structure\Content
      */
     public function setLayoutId( $layoutId )
     {
@@ -240,7 +240,7 @@ class Content extends AbstractRoot
     /**
      * Get layout
      *
-     * @return \Paragraph\Model\Paragraph\Structure\Layout
+     * @return \Grid\Paragraph\Model\Paragraph\Structure\Layout
      */
     public function getLayout()
     {
@@ -256,8 +256,8 @@ class Content extends AbstractRoot
     /**
      * Set layout
      *
-     * @param \Paragraph\Model\Paragraph\Structure\Layout $layout
-     * @return \Paragraph\Model\Paragraph\Structure\Content
+     * @param \Grid\Paragraph\Model\Paragraph\Structure\Layout $layout
+     * @return \Grid\Paragraph\Model\Paragraph\Structure\Content
      */
     public function setLayout( Layout $layout = null )
     {
@@ -289,7 +289,7 @@ class Content extends AbstractRoot
      * Set user-id
      *
      * @param int $userId
-     * @return \Paragraph\Model\Paragraph\Structure\Content
+     * @return \Grid\Paragraph\Model\Paragraph\Structure\Content
      */
     public function setUserId( $userId )
     {
@@ -301,7 +301,7 @@ class Content extends AbstractRoot
     /**
      * Get user mapper
      *
-     * @return \User\Model\User\Mapper
+     * @return \Grid\User\Model\User\Mapper
      */
     protected function getUserMapper()
     {
@@ -323,7 +323,7 @@ class Content extends AbstractRoot
     /**
      * Get user
      *
-     * @return \User\Model\User\Structure
+     * @return \Grid\User\Model\User\Structure
      */
     public function getUser()
     {
@@ -340,7 +340,7 @@ class Content extends AbstractRoot
      * Set user
      *
      * @param \User\Model\User\Structure $user
-     * @return \Paragraph\Model\Paragraph\Structure\Content
+     * @return \Grid\Paragraph\Model\Paragraph\Structure\Content
      */
     public function setUser( UserStructure $user = null )
     {
@@ -400,7 +400,7 @@ class Content extends AbstractRoot
      *
      * @param \DateTime|string $date
      * @param string|null $format
-     * @return \Paragraph\Model\Paragraph\Structure\Content
+     * @return \Grid\Paragraph\Model\Paragraph\Structure\Content
      */
     public function setCreated( $date, $format = null )
     {
@@ -423,7 +423,7 @@ class Content extends AbstractRoot
      *
      * @param \DateTime|string $date
      * @param string|null $format
-     * @return \Paragraph\Model\Paragraph\Structure\Content
+     * @return \Grid\Paragraph\Model\Paragraph\Structure\Content
      */
     public function setLastModified( $date, $format = null )
     {
@@ -435,7 +435,7 @@ class Content extends AbstractRoot
      * Set published flag
      *
      * @param bool $published
-     * @return \Paragraph\Model\Paragraph\Structure\Content
+     * @return \Grid\Paragraph\Model\Paragraph\Structure\Content
      */
     public function setPublished( $published )
     {
@@ -448,7 +448,7 @@ class Content extends AbstractRoot
      *
      * @param \DateTime|string $date
      * @param string|null $format
-     * @return \Paragraph\Model\Paragraph\Structure\Content
+     * @return \Grid\Paragraph\Model\Paragraph\Structure\Content
      */
     public function setPublishedFrom( $date, $format = null )
     {
@@ -461,7 +461,7 @@ class Content extends AbstractRoot
      *
      * @param \DateTime|string $date
      * @param string|null $format
-     * @return \Paragraph\Model\Paragraph\Structure\Content
+     * @return \Grid\Paragraph\Model\Paragraph\Structure\Content
      */
     public function setPublishedTo( $date, $format = null )
     {
@@ -510,7 +510,7 @@ class Content extends AbstractRoot
      * Set all access
      *
      * @param   bool $allAccess
-     * @return  \Paragraph\Model\Paragraph\Structure\Content
+     * @return  \Grid\Paragraph\Model\Paragraph\Structure\Content
      */
     public function setAllAccess( $allAccess )
     {
@@ -522,7 +522,7 @@ class Content extends AbstractRoot
      * Set access users
      *
      * @param   array|string $users
-     * @return  \Paragraph\Model\Paragraph\Structure\Content
+     * @return  \Grid\Paragraph\Model\Paragraph\Structure\Content
      */
     public function setAccessUsers( $users )
     {
@@ -537,7 +537,7 @@ class Content extends AbstractRoot
      * Set access groups
      *
      * @param   array|string $groups
-     * @return  \Paragraph\Model\Paragraph\Structure\Content
+     * @return  \Grid\Paragraph\Model\Paragraph\Structure\Content
      */
     public function setAccessGroups( $groups )
     {
@@ -552,7 +552,7 @@ class Content extends AbstractRoot
      * Set edit users
      *
      * @param   array|string $users
-     * @return  \Paragraph\Model\Paragraph\Structure\Content
+     * @return  \Grid\Paragraph\Model\Paragraph\Structure\Content
      */
     public function setEditUsers( $users )
     {
@@ -567,7 +567,7 @@ class Content extends AbstractRoot
      * Set edit groups
      *
      * @param   array|string $groups
-     * @return  \Paragraph\Model\Paragraph\Structure\Content
+     * @return  \Grid\Paragraph\Model\Paragraph\Structure\Content
      */
     public function setEditGroups( $groups )
     {
@@ -581,7 +581,7 @@ class Content extends AbstractRoot
     /**
      * Get uri model
      *
-     * @return \Core\Model\Uri\Model
+     * @return \Grid\Core\Model\Uri\Model
      */
     protected function getUriModel()
     {
@@ -598,7 +598,7 @@ class Content extends AbstractRoot
      * Get uri structure by locale(s)
      *
      * @param   null|string|array $locales
-     * @return  \Core\Model\Uri\Structure
+     * @return  \Grid\Core\Model\Uri\Structure
      */
     protected function getUriStructure( array $locales )
     {
@@ -692,7 +692,7 @@ class Content extends AbstractRoot
      * Set seo-uri
      *
      * @param   string $seoUri
-     * @return  \Paragraph\Model\Paragraph\Structure\Content
+     * @return  \Grid\Paragraph\Model\Paragraph\Structure\Content
      */
     public function setSeoUri( $seoUri )
     {
@@ -733,6 +733,19 @@ class Content extends AbstractRoot
             $subdomainId = $this->getServiceLocator()
                                 ->get( 'SiteInfo' )
                                 ->getSubdomainId();
+
+            $postfix  = 2;
+            $baseUri  = $this->_seoUri;
+            $uriModel = $this->getUriModel();
+            $params   = array(
+                'id' => empty( $this->_seoUriStructure ) ? null : $this->_seoUriStructure->id
+            );
+
+            while ( $uriModel->isSubdomainUriExists( $subdomainId,
+                    $this->_seoUri, $params ) )
+            {
+                $this->_seoUri = $baseUri . '/' . ( $postfix++ );
+            }
 
             if ( empty( $this->_seoUriStructure ) )
             {
@@ -826,7 +839,7 @@ class Content extends AbstractRoot
     }
 
     /**
-     * @return \Paragraph\Model\Paragraph\Structure\Content
+     * @return \Grid\Paragraph\Model\Paragraph\Structure\Content
      */
     public function prepareCreate()
     {
