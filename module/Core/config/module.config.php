@@ -699,6 +699,12 @@ return array(
         ),
         'Grid\Core\Uri' => array(
             'elements'  => array(
+                'id' => array(
+                    'spec' => array(
+                        'type'      => 'Zork\Form\Element\Hidden',
+                        'name'      => 'id',
+                    ),
+                ),
                 'subdomainId' => array(
                     'spec' => array(
                         'type'      => 'Zork\Form\Element\SelectModel',
@@ -748,6 +754,9 @@ return array(
                             'required'  => true,
                             'pattern'   => '((?!(app|images|scripts|styles|thumbnails|tmp|uploads)\/)(?!favicon\.ico|sitemap\.xml|robots\.txt).+(?!index\.php))',
                             'maxlength' => 64,
+                            'rpc_validators'    => array(
+                                'Grid\Core\Model\Uri\Rpc::isUriAvailable',
+                            ),
                         ),
                     ),
                 ),
