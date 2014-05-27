@@ -174,21 +174,21 @@ class Mapper extends ReadWriteMapperAbstract
      *
      * @param   int     $subdomainId
      * @param   string  $uri
-     * @param   int     $excludeContentId
+     * @param   int     $excludeUriId
      * @return  bool
      */
-    public function isSubdomainUriExists( $subdomainId, $uri, $excludeContentId = null )
+    public function isSubdomainUriExists( $subdomainId, $uri, $excludeUriId = null )
     {
-        return $this->isExists( empty( $excludeContentId ) ? array(
+        return $this->isExists( empty( $excludeUriId ) ? array(
             'subdomainId'   => $subdomainId,
             'uri'           => $uri,
         ) : array(
             'subdomainId'   => $subdomainId,
             'uri'           => $uri,
             new Predicate\Operator(
-                'contentId',
+                'id',
                 Predicate\Operator::OP_NE,
-                $excludeContentId
+                $excludeUriId
             ),
         ) );
     }
