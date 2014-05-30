@@ -26,9 +26,9 @@
             template = element.find( "[data-template]" ).last(),
             addLabel = element.data( "jsCollectionAddlabel" ) || "default.add",
             relegend = function () {
-                element.find( "> fieldset > legend" ).each( function ( index ) {
-                    var leg  = $( this ),
-                        orig = leg.data( "jsCollectionOriginalLegend" );
+                element.find( "> fieldset > legend" ).each( function ( index, leg ) {
+                    leg  = $( leg );
+                    var orig = leg.data( "jsCollectionOriginalLegend" );
 
                     if ( ! orig )
                     {
@@ -73,6 +73,7 @@
                             element.find( "> fieldset" ).length
                         ) );
                         relegend();
+                        element.accordion( "refresh" );
                     } )
             );
         }
