@@ -40,7 +40,27 @@
                     }
 
                     leg.text( String( orig ).format( index + 1 ) );
+
+                    if ( ! leg.find( "button" ).length )
+                    {
+                        leg.prepend(
+                            $( '<button type="button">' )
+                                .button( {
+                                    "text": false,
+                                    "icons": {
+                                        "primary": "ui-icon-close"
+                                    }
+                                } )
+                                .click( function () {
+                                    leg.parent( "fieldset" )
+                                       .remove();
+
+                                    relegend();
+                                } )
+                        );
+                    }
                 } );
+
                 element.accordion( "refresh" );
             };
 

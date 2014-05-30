@@ -10,4 +10,13 @@
 .js-form-collection fieldset legend
 {
     width: 100%;
+    box-sizing: border-box;
+}
+
+.js-form-collection fieldset legend button
+{
+    float: right;
+    width: 1.6em;
+    height: 1.5em;
+    margin: -0.1em;
 }
