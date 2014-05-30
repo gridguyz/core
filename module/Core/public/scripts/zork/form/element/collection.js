@@ -34,7 +34,7 @@
                     {
                         leg.data(
                             "jsCollectionOriginalLegend",
-                            orig = element.text()
+                            orig = leg.text()
                         );
                     }
 
