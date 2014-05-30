@@ -27,17 +27,18 @@
             addLabel = element.data( "jsCollectionAddlabel" ) || "default.add",
             relegend = function () {
                 element.find( "> fieldset > legend" ).each( function ( index ) {
-                    var orig = element.data( "jsCollectionOriginalLegend" );
+                    var leg  = $( this ),
+                        orig = leg.data( "jsCollectionOriginalLegend" );
 
                     if ( ! orig )
                     {
-                        element.data(
+                        leg.data(
                             "jsCollectionOriginalLegend",
                             orig = element.text()
                         );
                     }
 
-                    element.text( String( orig ).format( index + 1 ) );
+                    leg.text( String( orig ).format( index + 1 ) );
                 } );
             };
 
