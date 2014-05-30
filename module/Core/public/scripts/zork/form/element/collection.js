@@ -20,7 +20,8 @@
      */
     global.Zork.Form.Element.prototype.collection = function ( element )
     {
-        element = $( element );
+        js.style( "/styles/scripts/formcollection.css" );
+        element = $( element ).addClass( "js-form-collection" );
 
         var sortable = !! element.data( "jsCollectionSortable" ),
             template = element.find( "[data-template]" ).last(),
@@ -67,7 +68,7 @@
         {
             element.after(
                 $( '<button type="button" />' )
-                    .html( addLabel )
+                    .html( js.core.translate( addLabel ) )
                     .click( function () {
                         template.before( template.data( "template" ).replace(
                             /__index__/g,
