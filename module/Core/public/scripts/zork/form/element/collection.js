@@ -43,6 +43,8 @@
             };
 
         element.accordion( {
+            "collapsible": true,
+            "heightStyle": "content",
             "header": "> fieldset > legend"
         } );
 
