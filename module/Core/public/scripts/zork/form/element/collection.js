@@ -40,6 +40,7 @@
 
                     leg.text( String( orig ).format( index + 1 ) );
                 } );
+                element.accordion( "refresh" );
             };
 
         element.accordion( {
@@ -73,7 +74,6 @@
                             element.find( "> fieldset" ).length
                         ) );
                         relegend();
-                        element.accordion( "refresh" );
                     } )
             );
         }
