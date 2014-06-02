@@ -90,10 +90,13 @@
                 $( '<button type="button" />' )
                     .html( js.core.translate( addLabel ) )
                     .click( function () {
-                        template.before( template.data( "template" ).replace(
+                        var ins = $( template.data( "template" ).replace(
                             /__index__/g,
                             element.find( "> fieldset" ).length
                         ) );
+
+                        template.before( ins );
+                        js.core.parseDocument( ins );
                         relegend();
                     } )
             );
