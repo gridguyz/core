@@ -86,13 +86,15 @@
 
         if ( template.length )
         {
+            var nextIndex = element.find( "> fieldset" ).length;
+
             element.after(
                 $( '<button type="button" />' )
                     .html( js.core.translate( addLabel ) )
                     .click( function () {
                         var ins = $( template.data( "template" ).replace(
                             /__index__/g,
-                            element.find( "> fieldset" ).length
+                            nextIndex++
                         ) );
 
                         template.before( ins );
