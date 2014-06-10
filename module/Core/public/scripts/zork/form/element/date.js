@@ -33,8 +33,9 @@
                 var format = element.data( "jsDateFormat" ) ||
                         $.datepicker.regional[lang].altFormat || "d MM yy.",
                     trigger = $( '<button class="ui-datepicker-trigger" ' +
-                                 'type="button">...</button>' )
+                                 'type="button"></button>' )
                               .button( {
+                                  "label": "...",
                                   "icons": {
                                       "primary": "ui-icon-calculator"
                                   }
@@ -62,7 +63,7 @@
                             formatted = "...";
                         }
 
-                        trigger.val( formatted );
+                        trigger.button( "option", "label", formatted );
                     };
 
                 element.after( trigger );
@@ -115,7 +116,7 @@
                     if ( ! required )
                     {
                         var empty = $( '<button type="button" ' +
-                                       'class="js-date-empty">&nbsp;</button>' )
+                                       'class="js-date-empty"></button>' )
                                     .button( {
                                         "text": false,
                                         "icons": {
