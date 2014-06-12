@@ -4,7 +4,22 @@
 <?php foreach ( $this->paginator as $content ):
     $link = $content->getUri( (string) $this->locale() );?>
 
-    <div class="content-entry">
+    <div class="content-entry <?php if( isset($this->microcontentShare) ): ?>microcontent<?php endif; ?>"
+<?php if( isset($this->microcontentShare) ): ?>
+       data-microcontent-share="<?= $this->microcontentShare; ?>"
+       data-microcontent-url="<?= $this->domain(null,$link); ?>"
+       data-microcontent-type="article"
+       <?php if( $content->leadImage  ): ?>
+       data-microcontent-image="<?= $this->domain(null,$content->leadImage) ?>"
+       <?php endif; ?>
+       <?php if( $content->title  ): ?>
+       data-microcontent-title="<?= $this->escapeHtmlAttr( strip_tags($content->title) ) ?>"
+       <?php endif; ?>
+       <?php if( isset($content->leadText) ): ?>
+       data-microcontent-description="<?= $this->escapeHtmlAttr( strip_tags($content->leadText) ) ?>"
+       <?php endif; ?>
+<?php endif; ?>
+     >
         <h3 class="title">
             <a href="<?= $this->escapeHtmlAttr( $link ) ?>"><?=
                $this->escapeHtml( $content->title ) ?></a>

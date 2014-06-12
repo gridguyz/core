@@ -14,11 +14,22 @@ return array(
                     ),
                 ),
             ),
+            'Grid\Image\Meta' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route'    => '/app/:locale/image/meta/:paragraphId',
+                    'defaults' => array(
+                        'controller' => 'Grid\Image\Controller\Meta',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
         ),
     ),
     'controllers' => array(
         'invokables' => array(
             'Grid\Image\Controller\Thumbnail' => 'Grid\Image\Controller\ThumbnailController',
+            'Grid\Image\Controller\Meta'      => 'Grid\Image\Controller\MetaController',
         ),
     ),
     'acl' => array(
@@ -228,7 +239,8 @@ return array(
     ),
     'view_manager' => array(
         'template_map' => array(
-            'grid/paragraph/render/image' => __DIR__ . '/../view/grid/paragraph/render/image.phtml'
+            'grid/paragraph/render/image' => __DIR__ . '/../view/grid/paragraph/render/image.phtml',
+            'grid/image/meta/index'       => __DIR__ . '/../view/grid/image/meta/index.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',

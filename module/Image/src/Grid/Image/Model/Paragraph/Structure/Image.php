@@ -113,6 +113,13 @@ class Image extends AbstractLeaf
     protected $lightBox     = false;
 
     /**
+     * microcontent share setting
+     * 
+     * @var string (empty)|enable|disable  
+     */
+    protected $microcontentShare = '';
+    
+    /**
      * Get width attribute
      *
      * @return int
@@ -196,4 +203,19 @@ class Image extends AbstractLeaf
         return array( $this->url );
     }
 
+    /**
+     * 
+     * @param string $value
+     * @return \Grid\Image\Model\Paragraph\Structure\Image
+     */
+    public function setMicrocontentShare($value) 
+    {
+        $value = strtolower($value);
+        $allowed = array('','enable','disable');
+        $this->microcontentShare = in_array($value, $allowed)
+                                    ? $value
+                                    : '';
+        return $this;
+    }
+    
 }

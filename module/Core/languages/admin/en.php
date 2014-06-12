@@ -91,6 +91,7 @@ return array (
   'admin.navTop.settings.twitter' => 'Twitter',
   'admin.navTop.settings.locale' => 'Languages',
   'admin.navTop.settings.mail' => 'Email settings',
+  'admin.navTop.settings.share' => 'Share settings',
   'admin.navTop.settings.siteDefinition' => 'Site definitions',
   'admin.navTop.snippet' => 'Snippet',
   'admin.navTop.snippetCreate' => 'Create new snippet',

@@ -1,0 +1,27 @@
+<?php
+
+/* @var $paragraph \Grid\Image\Model\Paragraph\Structure\Image */
+$paragraph = $this->paragraph;
+
+if( !empty($paragraph->alternate) )
+{
+    $this->headTitle($this->escapeHtmlAttr($paragraph->alternate));
+}
+
+$this->openGraph()
+     ->setType('article')
+     ->append( array(
+         'og:title' => $this->escapeHtmlAttr(strip_tags($paragraph->alternate)),
+         'og:image' => $this->domain('',$paragraph->url),
+         'og:description' => $this->escapeHtmlAttr(strip_tags($paragraph->caption)),
+     ) );
+
+?>
+<script type="text/javascript">
+    (function(self,document,$){
+        $(document).ready(function(){
+            //self.location.href = "<?= $this->contentUri; ?>";
+        });
+    }(self,document,jQuery));
+</script>
+
