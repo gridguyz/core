@@ -38,10 +38,14 @@
                         element.data( "jsDateMax" ) ),
                     format = element.data( "jsDateFormat" ) ||
                         $.datepicker.regional[lang].altFormat || "d MM yy.",
-                    trigger = $( '<input type="button" />', {
-                                    "class": "ui-datetimepicker-trigger",
-                                    "value": "..."
-                                } ),
+                    trigger = $( '<button class="ui-datetimepicker-trigger" ' +
+                                 'type="button"></button>' )
+                              .button( {
+                                  "label": "...",
+                                  "icons": {
+                                      "primary": "ui-icon-calculator"
+                                  }
+                              } ),
                     set = function () {
                         var formatted;
                         if ( element.val() )
@@ -66,7 +70,7 @@
                             formatted = "...";
                         }
 
-                        trigger.val( formatted );
+                        trigger.button( "option", "label", formatted );
                     };
 
                 element.after( trigger );
@@ -147,8 +151,15 @@
 
                     if ( ! required )
                     {
-                        var empty = $( '<input type="button" ' +
-                            'class="js-datetime-empty" value="&#x2205;" />' );
+                        var empty = $( '<button type="button" ' +
+                                       'class="js-date-empty"></button>' )
+                                    .button( {
+                                        "text": false,
+                                        "icons": {
+                                            "primary": "ui-icon-trash"
+                                        }
+                                    } );
+
                         trigger.after( empty );
                         empty.click( function () {
                             element.val( "" )

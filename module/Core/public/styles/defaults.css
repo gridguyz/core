@@ -964,6 +964,19 @@ input[type="datetime-local"]
     margin-left: -0.3em;
 }
 
+.ui-datepicker-trigger,
+.ui-datetimepicker-trigger
+{
+    font-size: 11px;
+}
+
+.ui-datepicker-trigger .ui-button-text,
+.ui-datetimepicker-trigger .ui-button-text
+{
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
 .ui-widget-content
 {
     padding: 0px;
@@ -1138,7 +1151,6 @@ dd.ui-inputset input
 {
     background-image: url("/images/common/icons/border-style-solid-hover.png");
 }
-
 
 .ui-icon.css-border-style-dotted
 {
