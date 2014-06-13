@@ -8,13 +8,27 @@ if( !empty($paragraph->alternate) )
     $this->headTitle($this->escapeHtmlAttr($paragraph->alternate));
 }
 
+$metaTitle       = \Zork\Stdlib\String::stripHtml($paragraph->alternate);
+$metaImage       = $this->domain('',$paragraph->url);
+$metaDescription = \Zork\Stdlib\String::stripHtml($paragraph->caption);
+
 $this->openGraph()
      ->setType('article')
      ->append( array(
-         'og:title' => $this->escapeHtmlAttr(strip_tags($paragraph->alternate)),
-         'og:image' => $this->domain('',$paragraph->url),
-         'og:description' => $this->escapeHtmlAttr(strip_tags($paragraph->caption)),
+         'og:image'       => $metaImage,
+         'og:title'       => $metaTitle,
+         'og:description' => $metaDescription,
      ) );
+
+    /**
+     * @link https://dev.twitter.com/docs/cards/types/photo-card
+     */ 
+    $this->headMeta()
+         ->appendName('twitter:card', 'photo')
+         ->appendName('twitter:image', $metaImage)
+         ->appendName('twitter:title', $metaTitle)
+         ->appendName('twitter:description', $metaDescription)
+    ;
 
 ?>
 <script type="text/javascript">

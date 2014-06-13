@@ -7,6 +7,10 @@
         'locale'=>(string)$this->locale(),
         'paragraphId' => $this->paragraph->id
     )));
+    $microcontentTitle       = \Zork\Stdlib\String::stripHtml($paragraph->alternate);
+    $microcontentImage       = $this->domain('',$paragraph->url);
+    $microcontentDescription = \Zork\Stdlib\String::stripHtml($paragraph->caption);
+    
 
 ?>
 <figure itemscope="itemscope" itemtype="http://schema.org/ImageObject">
@@ -15,9 +19,9 @@
        name="image-paragraph-<?= $this->paragraph->id ?>"
        data-microcontent-share="<?= $this->paragraph->microcontentShare ?>"
        data-microcontent-url="<?= $microcontentUrl ?>"
-       data-microcontent-image="<?= $this->domain(null,$url) ?>"
-       data-microcontent-title="<?= $alt; ?>"
-       data-microcontent-description="<?= $this->escapeHtmlAttr( strip_tags($this->paragraph->caption) ) ?>"
+       data-microcontent-image="<?= $microcontentImage ?>"
+       data-microcontent-title="<?= $microcontentTitle ?>"
+       data-microcontent-description="<?= $microcontentDescription ?>"
        data-microcontent-type="image"
        
 <?php if ( $this->paragraph->linkTo ): ?>
