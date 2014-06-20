@@ -1,22 +1,38 @@
-<?php $alt = $this->escapeHtmlAttr( $this->paragraph->alternate );
-      $url = $this->escapeHtmlAttr( $this->paragraph->url ); ?>
+<?php 
+
+    $alt = $this->escapeHtmlAttr( $this->paragraph->alternate );
+    $url = $this->escapeHtmlAttr( $this->paragraph->url ); 
+    
+    $microcontentUrl = $this->domain(null,$this->url('Grid\Image\Meta',array(
+        'locale'=>(string)$this->locale(),
+        'paragraphId' => $this->paragraph->id
+    )));
+    $microcontentTitle       = \Zork\Stdlib\String::stripHtml($paragraph->alternate);
+    $microcontentImage       = $this->domain('',$paragraph->url);
+    $microcontentDescription = \Zork\Stdlib\String::stripHtml($paragraph->caption);
+    
+
+?>
 <figure itemscope="itemscope" itemtype="http://schema.org/ImageObject">
     <meta itemprop="name" content="<?= $alt ?>" />
-    <a class="image-paragraph-link"
+    <a class="image-paragraph-link microcontent"
        name="image-paragraph-<?= $this->paragraph->id ?>"
+       data-microcontent-share="<?= $this->paragraph->microcontentShare ?>"
+       data-microcontent-url="<?= $microcontentUrl ?>"
+       data-microcontent-image="<?= $microcontentImage ?>"
+       data-microcontent-title="<?= $microcontentTitle ?>"
+       data-microcontent-description="<?= $microcontentDescription ?>"
+       data-microcontent-type="image"
+       
 <?php if ( $this->paragraph->linkTo ): ?>
-
        href="<?= $this->escapeHtmlAttr( $this->paragraph->linkTo ) ?>"
-<?php if ( $this->paragraph->linkTarget ): ?>
-
+    <?php if ( $this->paragraph->linkTarget ): ?>
        target="<?= $this->escapeHtmlAttr( $this->paragraph->linkTarget ) ?>"
-<?php endif ?>
+    <?php endif ?>
 <?php endif ?>
 <?php if ( $this->paragraph->lightBox ): ?>
-
        data-js-type="js.paragraph.image"
 <?php endif ?>
-
        data-js-lightbox-image="<?= $url ?>"
        data-js-lightbox-title="<?= $this->escapeHtmlAttr( $this->paragraph->caption ) ?>">
         <img alt="<?= $alt ?>"

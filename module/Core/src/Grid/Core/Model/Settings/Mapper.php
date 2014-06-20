@@ -400,6 +400,7 @@ class Mapper implements HydratorInterface,
                     }
                     else
                     {
+                        $rem[] = $spec['key'];
                         foreach ( $settings[$name] as $index => $value )
                         {
                             $set[$spec['key'] . '.' . $index] = array(
