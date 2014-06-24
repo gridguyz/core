@@ -97,6 +97,7 @@ return array (
   'paragraph.form.customize.basic.legend.siteWizardFormLabel' => 'Form label',
   'paragraph.form.customize.basic.legend.sliderTitle' => 'Slider: titles',
   'paragraph.form.customize.basic.legend.sliderDescription' => 'Slider: descriptions',
+  'paragraph.form.customize.basic.legend.sliderPreviews' => 'Slider: previews',
   'paragraph.form.customize.css.backgroundColor' => 'Background color',
   'paragraph.form.customize.css.backgroundImage' => 'Background image',
   'paragraph.form.customize.css.backgroundPositionX' => 'Background horizontal position',
