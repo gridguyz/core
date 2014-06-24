@@ -1132,6 +1132,16 @@ return array(
                                     ),
                                 ),
                             ),
+                            'textAlign' => array(
+                                'spec'  => array(
+                                    'type'      => 'Zork\Form\Element\CssTextAlign',
+                                    'name'      => 'textAlign',
+                                    'options'   => array(
+                                        'label'         => 'paragraph.form.customize.css.textAlign',
+                                        'required'      => false,
+                                    ),
+                                ),
+                            ),
                             'textTransform' => array(
                                 'spec'  => array(
                                     'type'      => 'Zork\Form\Element\CssTextTransform',
