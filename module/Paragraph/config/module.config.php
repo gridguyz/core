@@ -2748,6 +2748,16 @@ return array(
                                     ),
                                 ),
                             ),
+                            'rootText' => array(
+                                'spec' => array(
+                                    'type'      => 'Zork\Form\Element\Html',
+                                    'name'      => 'rootText',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.content.leadText',
+                                        'required'  => false,
+                                    ),
+                                ),
+                            ),
                             'rootImage' => array(
                                 'spec' => array(
                                     'type'      => 'Zork\Form\Element\PathSelect',
@@ -2758,12 +2768,57 @@ return array(
                                     ),
                                 ),
                             ),
-                            'rootText' => array(
-                                'spec' => array(
-                                    'type'      => 'Zork\Form\Element\Html',
-                                    'name'      => 'rootText',
+                            'imageWidth' => array(
+                                'spec'  => array(
+                                    'type'      => 'Zork\Form\Element\Number',
+                                    'name'      => 'width',
                                     'options'   => array(
-                                        'label'     => 'paragraph.form.content.leadText',
+                                        'label'     => 'paragraph.form.lead.imageWidth',
+                                        'required'  => false,
+                                    ),
+                                    'attributes'    => array(
+                                        'min'       => 25,
+                                        'max'       => 800,
+                                    ),
+                                ),
+                            ),
+                            'imageHeight' => array(
+                                'spec'  => array(
+                                    'type'      => 'Zork\Form\Element\Number',
+                                    'name'      => 'height',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.lead.imageHeight',
+                                        'required'  => false,
+                                    ),
+                                    'attributes'    => array(
+                                        'min'       => 25,
+                                        'max'       => 600,
+                                    ),
+                                ),
+                            ),
+                            'imageMethod' => array(
+                                'spec'  => array(
+                                    'type'      => 'Zork\Form\Element\Select',
+                                    'name'      => 'method',
+                                    'options'   => array(
+                                        'label'         => 'paragraph.form.lead.imageMethod',
+                                        'required'      => false,
+                                        'text_domain'   => 'image',
+                                        'options'       => array(
+                                            'fit'       => 'image.method.fit',
+                                            'frame'     => 'image.method.frame',
+                                            'cut'       => 'image.method.cut',
+                                            'stretch'   => 'image.method.stretch',
+                                        ),
+                                    ),
+                                ),
+                            ),
+                            'imageBgColor' => array(
+                                'spec'  => array(
+                                    'type'      => 'Zork\Form\Element\Color',
+                                    'name'      => 'bgColor',
+                                    'options'   => array(
+                                        'label'     => 'paragraph.form.lead.imageBgColor',
                                         'required'  => false,
                                     ),
                                 ),

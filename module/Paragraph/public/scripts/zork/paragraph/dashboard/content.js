@@ -53,12 +53,16 @@
             if ( val )
             {
                 leads.find( ".lead-image" )
-                     .attr( "src", js.core.thumbnail( {
+                     .each( function () {
+                         var t = $( this );
+                         t.attr( "src", js.core.thumbnail( {
                             "url"    : val,
-                            "width"  : 100,
-                            "height" : 100,
-                            "method" : "fit"
-                        } ) )
+                            "width"  : t.data( "jsLeadImageWidth" ),
+                            "height" : t.data( "jsLeadImageHeight" ),
+                            "method" : t.data( "jsLeadImageMethod" ),
+                            "bgcolor": t.data( "jsLeadImageBgcolor" )
+                         } ) );
+                     } )
                      .css( "display", "" );
             }
             else

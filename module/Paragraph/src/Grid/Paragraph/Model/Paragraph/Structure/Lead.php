@@ -41,6 +41,78 @@ class Lead extends AbstractLeaf
     protected static $viewOpen = 'grid/paragraph/render/lead';
 
     /**
+     * Image-width
+     *
+     * @var string
+     */
+    protected $imageWidth   = null;
+
+    /**
+     * Image-height
+     *
+     * @var string
+     */
+    protected $imageHeight  = null;
+
+    /**
+     * Image-method
+     *
+     * @var string
+     */
+    public $imageMethod     = null;
+
+    /**
+     * Image-method
+     *
+     * @var string
+     */
+    public $imageBgColor    = null;
+
+    /**
+     * Get image width attribute
+     *
+     * @return  int
+     */
+    public function getImageWidth()
+    {
+        return $this->imageWidth;
+    }
+
+    /**
+     * Set image width attribute
+     *
+     * @param   int $width
+     * @return  Lead
+     */
+    public function setImageWidth( $width )
+    {
+        $this->imageWidth = empty( $width ) ? null : (int) $width;
+        return $this;
+    }
+
+    /**
+     * Get image height attribute
+     *
+     * @return  int
+     */
+    public function getImageHeight()
+    {
+        return $this->imageHeight;
+    }
+
+    /**
+     * Set image height attribute
+     *
+     * @param   int $height
+     * @return  Lead
+     */
+    public function setImageHeight( $height )
+    {
+        $this->imageHeight = empty( $height ) ? null : (int) $height;
+        return $this;
+    }
+
+    /**
      * Get the rendered content
      *
      * @return mixed|null
