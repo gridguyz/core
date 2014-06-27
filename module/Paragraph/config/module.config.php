@@ -2771,7 +2771,7 @@ return array(
                             'imageWidth' => array(
                                 'spec'  => array(
                                     'type'      => 'Zork\Form\Element\Number',
-                                    'name'      => 'width',
+                                    'name'      => 'imageWidth',
                                     'options'   => array(
                                         'label'     => 'paragraph.form.lead.imageWidth',
                                         'required'  => false,
@@ -2785,7 +2785,7 @@ return array(
                             'imageHeight' => array(
                                 'spec'  => array(
                                     'type'      => 'Zork\Form\Element\Number',
-                                    'name'      => 'height',
+                                    'name'      => 'imageHeight',
                                     'options'   => array(
                                         'label'     => 'paragraph.form.lead.imageHeight',
                                         'required'  => false,
@@ -2799,7 +2799,7 @@ return array(
                             'imageMethod' => array(
                                 'spec'  => array(
                                     'type'      => 'Zork\Form\Element\Select',
-                                    'name'      => 'method',
+                                    'name'      => 'imageMethod',
                                     'options'   => array(
                                         'label'         => 'paragraph.form.lead.imageMethod',
                                         'required'      => false,
@@ -2816,7 +2816,7 @@ return array(
                             'imageBgColor' => array(
                                 'spec'  => array(
                                     'type'      => 'Zork\Form\Element\Color',
-                                    'name'      => 'bgColor',
+                                    'name'      => 'imageBgColor',
                                     'options'   => array(
                                         'label'     => 'paragraph.form.lead.imageBgColor',
                                         'required'  => false,
