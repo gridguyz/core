@@ -372,6 +372,8 @@ return array (
   'paragraph.type.formFieldEmail.description' => 'Email field description',
   'paragraph.type.facebookLikebox' => 'Facebook LikeBox',
   'paragraph.type.facebookLikebox.description' => 'Facebook LikeBox description',
+  'paragraph.type.gallery' => 'Image gallery',
+  'paragraph.type.gallery.description' => 'Image gallery description',
   'paragraph.type.twitterTweetbox' => 'Twitter TweetBox',
   'paragraph.type.twitterTweetbox.description' => 'Twitter TweetBox description',
   'paragraph.warn.defaultFallback.%s' => 'The %s paragraph is disabled.',
