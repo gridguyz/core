@@ -142,6 +142,7 @@ return array (
   'paragraph.form.customize.general.borderStyles' => 'Border styles',
   'paragraph.form.customize.general.borderUnits' => 'Border units',
   'paragraph.form.customize.general.legend.element' => 'General customize',
+  'paragraph.form.customize.general.legend.galleryPreview' => 'Gallery: preview',
   'paragraph.form.customize.general.legend.imageCaption' => 'Caption',
   'paragraph.form.customize.general.legend.imageImg' => 'Image',
   'paragraph.form.customize.general.legend.languageUlLi' => 'Langauage list-item',
