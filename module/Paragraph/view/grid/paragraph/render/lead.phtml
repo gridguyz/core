@@ -1,10 +1,17 @@
 <header>
     <img class="lead-image"
-<?php if ( ! empty( $this->paragraph->renderedImage ) ): ?>
+<?php if ( ! empty( $this->paragraph->renderedImage ) ):
+         $w = $this->paragraph->imageWidth;
+         $h = $this->paragraph->imageHeight; ?>
+         data-js-lead-image-method="<?= $this->paragraph->imageMethod ?: 'fit' ?>"
+         data-js-lead-image-width="<?= $w || $h ? $w : 100 ?>"
+         data-js-lead-image-height="<?= $w || $h ? $h : 100 ?>"
+         data-js-lead-image-bgcolor="<?= ltrim( $this->paragraph->imageBgColor, '#' ) ?>"
          src="<?= $this->thumbnail( $this->paragraph->renderedImage, array(
-                                        'method'    => 'fit',
-                                        'width'     => 100,
-                                        'height'    => 100,
+                                        'method'    => $this->paragraph->imageMethod ?: 'fit',
+                                        'width'     => $w || $h ? $w : 100,
+                                        'height'    => $w || $h ? $h : 100,
+                                        'bgColor'   => ltrim( $this->paragraph->imageBgColor, '#' ),
                                     ) ) ?>"
 <?php else: ?>
          style="display: none;"

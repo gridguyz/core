@@ -28,9 +28,10 @@
      * @param {Object} params
      * @param {HTMLElement|$} params.element
      * @param {String} params.title Title of the dialog window.
+     * @param {Function} cb
      * @type String
      */
-    global.Zork.Ui.prototype.lightbox = function ( element, params )
+    global.Zork.Ui.prototype.lightbox = function ( element, params, cb )
     {
         params = $.extend( {}, js.ui.lightbox.defaults, params || {} );
 
@@ -64,8 +65,13 @@
             params.handle = element.data( "jsLightboxHandle" ) || null;
         }
 
+        if ( typeof cb !== "function" )
+        {
+            cb = function ( p ) { return p; };
+        }
+
         var open = function ( event ) {
-            js.ui.lightbox.open( params );
+            js.ui.lightbox.open( cb( params ) );
             event.stopPropagation();
             event.preventDefault();
             return false;
