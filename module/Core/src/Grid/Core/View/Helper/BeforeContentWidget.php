@@ -90,7 +90,11 @@ class BeforeContentWidget extends AbstractHelper
         $serviceLocator = $this->getServiceLocator();
         
         $config = $serviceLocator->get('Config');
-        $configWidgets = $config['modules']['Grid\Core']['beforeContentWidget'];
+        
+        $configWidgets = isset($config['modules']['Grid\Core']['beforeContentWidget'])
+                         ? $config['modules']['Grid\Core']['beforeContentWidget']
+                         : array();
+        
         foreach ( $configWidgets as $serviceClass )
         {
             $service = $serviceLocator->get( $serviceClass );
