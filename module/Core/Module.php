@@ -450,7 +450,20 @@ class Module extends ModuleAbstract
             empty( $config['view_widgets'] ) ? array() : $config['view_widgets']
         );
     }
-
+    
+    
+    /**
+     * Get `BeforeContentWidget` view-helper instance
+     *
+     * @return \Grid\Core\View\Helper\BeforeContentWidget
+     */
+    public function getBeforeContentWidgetViewHelper()
+    {
+        return View\Helper\BeforeContentWidget::factory(
+            $this->serviceLocator
+        );
+    }
+    
     /**
      * Get `isModuleLoaded` view-helper instance
      *
@@ -555,6 +568,7 @@ class Module extends ModuleAbstract
                 'siteInfo'          => array( $this, 'getSiteInfoViewHelper' ),
                 'uploads'           => array( $this, 'getUploadsViewHelper' ),
                 'rowSet'            => array( $this, 'getRowSetViewHelper' ),
+                'beforeContentWidget' => array( $this, 'getBeforeContentWidgetViewHelper' ),
             ),
         );
     }
