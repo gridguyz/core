@@ -389,4 +389,11 @@ return array (
   'paragraph.widget.privilege.edit' => 'Edit widgets',
   'paragraph.widget.privilege.view' => 'View widgets',
   'paragraph.widget.resource' => 'Widgets',
+    
+    'paragraph.form.resource' => 'Forms',
+    'paragraph.form.privilege.create' => 'Create form',
+    'paragraph.form.privilege.delete' => 'Delete form',
+    'paragraph.form.privilege.edit' => 'Edit form',
+    'paragraph.form.privilege.view' => 'View forms and fills',
+
 );
