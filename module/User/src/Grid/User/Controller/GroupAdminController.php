@@ -225,7 +225,8 @@ class GroupAdminController extends AbstractListController
         $locator    = $this->getServiceLocator();
         $groupModel = $locator->get( 'Grid\User\Model\User\Group\Model' );
         $group      = $groupModel->find( $params->fromRoute( 'id' ) );
-
+        $identity   = $locator->get('Zend\Authentication\AuthenticationService')
+                              ->getIdentity();
         if ( empty( $group ) )
         {
             $this->getResponse()
@@ -233,9 +234,10 @@ class GroupAdminController extends AbstractListController
 
             return;
         }
-
-        if ( ! $this->getPermissionsModel()
-                    ->isAllowed( $group, 'grant' ) )
+ 
+        if( !$this->getPermissionsModel()->isAllowed( $group, 'grant' ) 
+            || $identity->groupId >= $group->id
+          )
         {
             $this->getResponse()
                  ->setStatusCode( 403 );
@@ -243,8 +245,18 @@ class GroupAdminController extends AbstractListController
             return;
         }
 
+        $filterRights = $identity->groupId>=3
+                        ?  array(new \Zend\Db\Sql\Predicate\Operator(
+                                'group', 
+                                \Zend\Db\Sql\Predicate\Operator::OPERATOR_NOT_EQUAL_TO,
+                                'user.group',
+                                \Zend\Db\Sql\Predicate\Expression::TYPE_IDENTIFIER,
+                                \Zend\Db\Sql\Predicate\Expression::TYPE_VALUE
+                              ))
+                        : array();
+        
         $rightModel = $locator->get( 'Grid\User\Model\User\Right\Model' );
-        $rights     = $rightModel->findAllByGroup( $group->id );
+        $rights     = $rightModel->findAllByGroup( $group->id, $filterRights );
 
         if ( $request->isPost() )
         {

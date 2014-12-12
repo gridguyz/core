@@ -120,7 +120,7 @@ class Mapper extends ReadWriteMapperAbstract
      *
      * return array %id% => %name% pairs
      */
-    public function findUserGroups()
+    public function findUserGroups($where=array())
     {
         if ( null === $this->userGroups )
         {
@@ -128,7 +128,9 @@ class Mapper extends ReadWriteMapperAbstract
 
             $select = $this->sql( 'user_group' )
                            ->select()
-                           ->columns( array( 'id', 'name' ) );
+                           ->columns( array( 'id', 'name' ) )
+                           ->where( $where )
+                        ;
 
             /* @var $result \Zend\Db\Adapter\Driver\ResultInterface */
             $result = $this->sql()

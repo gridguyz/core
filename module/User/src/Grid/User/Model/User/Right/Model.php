@@ -55,10 +55,10 @@ class Model implements MapperAwareInterface
      * @param   int     $userId
      * @return  array
      */
-    public function findAllByUser( $userId )
+    public function findAllByUser( $userId, $where=array() )
     {
         return $this->getMapper()
-                    ->findAllByUser( $userId );
+                    ->findAllByUser( $userId, $where );
     }
 
     /**
@@ -67,10 +67,10 @@ class Model implements MapperAwareInterface
      * @param   int     $groupId
      * @return  array
      */
-    public function findAllByGroup( $groupId )
+    public function findAllByGroup( $groupId, $where=array() )
     {
         return $this->getMapper()
-                    ->findAllByGroup( $groupId );
+                    ->findAllByGroup( $groupId, $where );
     }
 
     /**

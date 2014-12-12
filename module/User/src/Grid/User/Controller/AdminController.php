@@ -105,8 +105,10 @@ class AdminController extends AbstractListExportController
         $user             = $model->create( array() );
         $datasheetService = $locator->get( 'Grid\User\Datasheet\Service' );
 
-        if ( ! $this->getPermissionsModel()
-                    ->isAllowed( 'user', 'create' ) )
+        $allowedInGroups = $this->getPermissionsModel()
+                                ->allowedUserGroups('create');
+
+        if ( empty($allowedInGroups) )
         {
             $this->getResponse()
                  ->setStatusCode( 403 );
@@ -192,6 +194,9 @@ class AdminController extends AbstractListExportController
         $user             = $model->find( $params->fromRoute( 'id' ) );
         $datasheetService = $locator->get( 'Grid\User\Datasheet\Service' );
 
+        $identity         = $locator->get('Zend\Authentication\AuthenticationService')
+                                    ->getIdentity();
+        
         if ( empty( $user ) )
         {
             $this->getResponse()
@@ -200,8 +205,11 @@ class AdminController extends AbstractListExportController
             return;
         }
 
-        if ( ! $this->getPermissionsModel()
-                    ->isAllowed( $user, 'edit' ) )
+                
+        if( !$this->getPermissionsModel()->isAllowed( $user, 'edit' ) 
+            || 
+            ( $identity->groupId > 2 && $user->groupId < 3 )
+          )
         {
             $this->getResponse()
                  ->setStatusCode( 403 );
@@ -372,7 +380,9 @@ class AdminController extends AbstractListExportController
         $locator    = $this->getServiceLocator();
         $userModel  = $locator->get( 'Grid\User\Model\User\Model' );
         $user       = $userModel->find( $params->fromRoute( 'id' ) );
-
+        $identity   = $locator->get('Zend\Authentication\AuthenticationService')
+                              ->getIdentity();
+        
         if ( empty( $user ) )
         {
             $this->getResponse()
@@ -381,8 +391,10 @@ class AdminController extends AbstractListExportController
             return;
         }
 
-        if ( ! $this->getPermissionsModel()
-                    ->isAllowed( $user, 'grant' ) )
+        if( !$this->getPermissionsModel()->isAllowed( $user, 'grant' ) 
+            || 
+            ( $identity->groupId > 2 && $user->groupId < 3 )
+          )
         {
             $this->getResponse()
                  ->setStatusCode( 403 );
@@ -390,8 +402,17 @@ class AdminController extends AbstractListExportController
             return;
         }
 
+        $filterRights = $identity->groupId>=3
+                        ?  array(new \Zend\Db\Sql\Predicate\Operator(
+                                'group', 
+                                \Zend\Db\Sql\Predicate\Operator::OPERATOR_NOT_EQUAL_TO,
+                                'user.group',
+                                \Zend\Db\Sql\Predicate\Expression::TYPE_IDENTIFIER,
+                                \Zend\Db\Sql\Predicate\Expression::TYPE_VALUE
+                              ))
+                        : array();
         $rightModel = $locator->get( 'Grid\User\Model\User\Right\Model' );
-        $rights     = $rightModel->findAllByUser( $user->id );
+        $rights     = $rightModel->findAllByUser( $user->id, $filterRights );
 
         if ( $request->isPost() )
         {
@@ -431,7 +452,9 @@ class AdminController extends AbstractListExportController
         $locator    = $this->getServiceLocator();
         $model      = $locator->get( 'Grid\User\Model\User\Model' );
         $user       = $model->find( $params->fromRoute( 'id' ) );
-
+        $identity   = $locator->get('Zend\Authentication\AuthenticationService')
+                              ->getIdentity();
+                
         if ( empty( $user ) )
         {
             $this->getResponse()
@@ -440,8 +463,10 @@ class AdminController extends AbstractListExportController
             return;
         }
 
-        if ( ! $this->getPermissionsModel()
-                    ->isAllowed( $user, 'ban' ) )
+        if( !$this->getPermissionsModel()->isAllowed( $user, 'ban' ) 
+            || 
+            ( $identity->groupId > 2 && $user->groupId < 3 )
+          )
         {
             $this->getResponse()
                  ->setStatusCode( 403 );
@@ -478,7 +503,9 @@ class AdminController extends AbstractListExportController
         $model           = $locator->get( 'Grid\User\Model\User\Model' );
         $user            = $model->find( $params->fromRoute( 'id' ) );
         $datasheetService = $locator->get( 'Grid\User\Datasheet\Service' );
-
+        $identity         = $locator->get('Zend\Authentication\AuthenticationService')
+                                    ->getIdentity();
+                
         if ( empty( $user ) )
         {
             $this->getResponse()
@@ -487,8 +514,10 @@ class AdminController extends AbstractListExportController
             return;
         }
 
-        if ( ! $this->getPermissionsModel()
-                    ->isAllowed( $user, 'delete' ) )
+        if( !$this->getPermissionsModel()->isAllowed( $user, 'delete' ) 
+            || 
+            ( $identity->groupId > 2 && $user->groupId < 3 )
+        )
         {
             $this->getResponse()
                  ->setStatusCode( 403 );

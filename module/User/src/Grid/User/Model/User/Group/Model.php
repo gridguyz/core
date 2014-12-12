@@ -74,7 +74,7 @@ class Model implements MapperAwareInterface
                     ->getPaginator( array(
                         'id' => array_keys(
                             $this->getPermissionsModel()
-                                 ->allowedUserGroups( 'view' )
+                                 ->allowedUserGroups( 'view',false )
                         ),
                     ) );
     }

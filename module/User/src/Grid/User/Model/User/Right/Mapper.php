@@ -52,7 +52,7 @@ class Mapper extends ReadWriteMapperAbstract
      * @param   int     $userId
      * @return  array
      */
-    public function findAllByUser( $userId )
+    public function findAllByUser( $userId, $where=array()  )
     {
         $select = $this->select()
                        ->join( 'user_right_x_user',
@@ -81,6 +81,7 @@ class Mapper extends ReadWriteMapperAbstract
                                    'granted' => 'userId'
                                ),
                                Sql\Select::JOIN_LEFT )
+                        ->where( $where )
                         ->order( array(
                             'group'     => 'ASC',
                             'resource'  => 'ASC',
@@ -108,7 +109,7 @@ class Mapper extends ReadWriteMapperAbstract
      * @param   int     $groupId
      * @return  array
      */
-    public function findAllByGroup( $groupId )
+    public function findAllByGroup( $groupId, $where=array() )
     {
         $select = $this->select()
                        ->join( 'user_right_x_user_group',
@@ -137,6 +138,7 @@ class Mapper extends ReadWriteMapperAbstract
                                    'granted' => 'groupId'
                                ),
                                Sql\Select::JOIN_LEFT )
+                        ->where( $where )
                         ->order( array(
                             'group'     => 'ASC',
                             'resource'  => 'ASC',
@@ -154,7 +156,7 @@ class Mapper extends ReadWriteMapperAbstract
         {
             $return[] = $this->selected( $row );
         }
-
+        
         return $return;
     }
 

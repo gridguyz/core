@@ -800,7 +800,7 @@ return array(
                             'model'     => 'Grid\User\Model\Permissions\Model',
                             'method'    => 'allowedUserGroups',
                             'arguments' => array(
-                                'edit',
+                                'create',
                             ),
                         ),
                     ),

@@ -202,7 +202,7 @@ class Model implements AclAwareInterface,
 
                 $resource = 'user.group.' . $matches[1] .
                             '.identity.' . $matches[2];
-
+                
                 $this->checkResource( $resource );
                 $acl->allow( $role, $resource );
             }
@@ -233,7 +233,7 @@ class Model implements AclAwareInterface,
 
         $role       = $this->checkRole( $role );
         $resource   = $this->checkResource( $resource );
-
+        
         return $this->getAcl()
                     ->isAllowed( $role,
                                  $resource,
@@ -272,16 +272,28 @@ class Model implements AclAwareInterface,
      * @param string $privilege
      * @return array :id => :name pairs
      */
-    public function allowedUserGroups( $privilege = self::PRIVILEGE_DEFAULT )
+    public function allowedUserGroups( $privilege = self::PRIVILEGE_DEFAULT, $includeSelfGroup=true )
     {
         $result = array();
 
+        $operator = $includeSelfGroup
+                    ? \Zend\Db\Sql\Predicate\Operator::OPERATOR_GREATER_THAN_OR_EQUAL_TO
+                    : \Zend\Db\Sql\Predicate\Operator::OPERATOR_GREATER_THAN;
+        
+        $filter = array(new \Zend\Db\Sql\Predicate\Operator(
+                    'id', 
+                    $operator,
+                    $this->getRole()->groupId,
+                    \Zend\Db\Sql\Predicate\Expression::TYPE_IDENTIFIER,
+                    \Zend\Db\Sql\Predicate\Expression::TYPE_VALUE
+                  ));
+        
         if ( null === $this->userGroups )
         {
             $this->userGroups = $this->getMapper()
-                                     ->findUserGroups();
+                                     ->findUserGroups($filter);
         }
-
+        
         foreach ( $this->userGroups as $id => $name )
         {
             if ( $this->isAllowed( 'user.group.' . $id, $privilege ) )

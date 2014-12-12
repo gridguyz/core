@@ -72,7 +72,7 @@ class Model implements MapperAwareInterface
                                     $permissions->allowedUsers( 'view' )
                                 ) ),
                                 new In( 'user.groupId', array_keys(
-                                    $permissions->allowedUserGroups( 'view' )
+                                    $permissions->allowedUserGroups( 'view', true )
                                 ) ),
                             ),
                             PredicateSet::OP_OR
