@@ -45,7 +45,7 @@
             itemTitleAttr: 'title',
             showTitle: false,
             jsSlideSpeed: 400,
-            jsSlideEasing: 'linear', 
+            jsSlideEasing: 'swing', 
             swipeThreshold: 50,
             /**
              * @param {FsViewer} fsviewerInstance
@@ -164,7 +164,7 @@
             Me.itemsContainer.animate(
                 {opacity: 1},
                 Me.settings.jsSlideSpeed, 
-                Me.settings.jsLideEasing
+                Me.settings.jsSlideEasing
             );
         };
         
@@ -209,7 +209,7 @@
                 Me.itemsContainer.animate(
                     {left: (-itemIndex*100)+'%','margin-left':0},
                     Me.settings.jsSlideSpeed, 
-                    Me.settings.jsLideEasing
+                    Me.settings.jsSlideEasing
                 );
             }
             
