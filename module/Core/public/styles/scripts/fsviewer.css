@@ -1,0 +1,156 @@
+@charset "utf-8";
+
+#fsviewer-container {
+    background: none repeat scroll 0 0 rgb(12,12,12);
+    border-bottom: 1px solid rgb(12,12,12);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 0.35s ease 0s;    
+    z-index: 9999 !important;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+#fsviewer-items {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    white-space: nowrap;
+    width: 100%;
+    z-index: 3;
+}
+
+#fsviewer-items .fsviewer-item {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    transition: transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s ease 0s;
+    transition-duration: inherit !important;
+    transition-timing-function: inherit !important;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+#fsviewer-items .fsviewer-item:before {
+	content: "";
+	display: inline-block;
+	height: 50%;
+	width: 1px;
+	margin-right: -1px;
+}
+
+#fsviewer-items .fsviewer-item img {
+    display: inline-block;
+    height: auto;
+    margin: 0;
+    max-height: 100%;
+    max-width: 100%;
+    padding: 0;
+    vertical-align: middle;
+    width: auto;
+    transform: scale3d(1, 1, 1);
+    border: medium none !important;
+    background-image: url(/images/scripts/loading.gif);
+    background-position: center center; 
+    background-repeat: no-repeat;
+}
+
+#fsviewer-items .fsviewer-item .text {
+    position: absolute;
+    top: 0;
+    left: 0;    
+    width: 100%;
+    text-align: center; 
+}
+#fsviewer-items .fsviewer-item .text span {
+    max-width: 100%;
+    padding: 5px;
+    display: inline-block;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #ffffff;
+    word-wrap: normal;
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.75);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 0 0 3px 3px
+}
+
+#fsviewer-nav {
+    bottom: 20px;
+    left: 50%;
+    margin-left: -42px;
+    position: fixed;
+    z-index: 5;
+}
+#fsviewer-nav a {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0,0,0,0.65);
+    background-position: center center; 
+    background-repeat: no-repeat;
+    margin: 1px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+#fsviewer-nav a.prev {
+    background-image: url(/images/scripts/fsviewer/prev.png);  
+}
+
+#fsviewer-nav a.next {
+    background-image: url(/images/scripts/fsviewer/next.png);
+}
+
+#fsviewer-nav a:hover {
+    background-color: rgba(0,0,0,0.9);
+}
+
+#fsviewer-nav a.disabled,
+#fsviewer-nav a.disabled:hover {
+    background-color: rgba(0,0,0,0.65);
+    opacity: 0.3;
+    cursor: default;
+}
+
+#fsviewer-close {
+    position: fixed;
+    z-index: 10;
+    top: 20px;
+    right: 20px;
+    display: block;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    background-color: rgba(0,0,0,0.65);
+    background-image: url(/images/scripts/fsviewer/close.png);
+    background-position: center center; 
+    background-repeat: no-repeat;
+    border-radius: 3px;
+}
+#fsviewer-close:hover {
+    background-color: rgba(0,0,0,0.9);
+}
+
+@media screen and (max-width: 400px) {
+    
+    #fsviewer-nav {
+        bottom: 5px;
+    }
+    
+    #fsviewer-close {
+        top: 5px;
+        right: 5px;
+    }
+}
