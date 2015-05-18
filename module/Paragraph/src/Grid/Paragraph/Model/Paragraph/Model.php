@@ -220,6 +220,52 @@ class Model implements MapperAwareInterface,
                     ),
                 );
                 $columns = array(
+                    'created' => new Expression(
+                        '( SELECT ?
+                             FROM ? AS ?
+                            WHERE ?.? = ?.?
+                              AND ?.? = ?
+                         )',
+                        array(
+                            'value',
+                            'paragraph_property', 'paragraph_property_created',
+                            'paragraph_property_created', 'paragraphId',
+                            'paragraph', 'id',
+                            'paragraph_property_created', 'name',
+                            'created'
+                        ),
+                        array(
+                            Expression::TYPE_IDENTIFIER,
+                            Expression::TYPE_IDENTIFIER, Expression::TYPE_IDENTIFIER,
+                            Expression::TYPE_IDENTIFIER, Expression::TYPE_IDENTIFIER,
+                            Expression::TYPE_IDENTIFIER, Expression::TYPE_IDENTIFIER,
+                            Expression::TYPE_IDENTIFIER, Expression::TYPE_IDENTIFIER,
+                            Expression::TYPE_VALUE
+                        )
+                    ),    
+                    'lastModified' => new Expression(
+                        '( SELECT ?
+                             FROM ? AS ?
+                            WHERE ?.? = ?.?
+                              AND ?.? = ?
+                         )',
+                        array(
+                            'value',
+                            'paragraph_property', 'paragraph_property_created',
+                            'paragraph_property_created', 'paragraphId',
+                            'paragraph', 'id',
+                            'paragraph_property_created', 'name',
+                            'lastModified'
+                        ),
+                        array(
+                            Expression::TYPE_IDENTIFIER,
+                            Expression::TYPE_IDENTIFIER, Expression::TYPE_IDENTIFIER,
+                            Expression::TYPE_IDENTIFIER, Expression::TYPE_IDENTIFIER,
+                            Expression::TYPE_IDENTIFIER, Expression::TYPE_IDENTIFIER,
+                            Expression::TYPE_IDENTIFIER, Expression::TYPE_IDENTIFIER,
+                            Expression::TYPE_VALUE
+                        )
+                    ),   
                     'title' => new Expression(
                         '( SELECT ?
                              FROM ? AS ?
