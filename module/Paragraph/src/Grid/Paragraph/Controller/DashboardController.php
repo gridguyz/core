@@ -6,6 +6,7 @@ use Zend\View\Model\ViewModel;
 use Zend\Mvc\Controller\AbstractActionController;
 use Grid\Paragraph\Model\Paragraph\Structure\AbstractRoot;
 use Grid\Paragraph\Model\Paragraph\Structure\ContentDependentAwareInterface;
+use Grid\Paragraph\Model\Paragraph\Structure\PublishRestrictedInterface;
 
 /**
  * DashboardController
@@ -69,7 +70,21 @@ class DashboardController extends AbstractActionController
 
         if ( $request->isPost() )
         {
-            $form->setData( $request->getPost() );
+            $post = $request->getPost();
+            if( $cid && $paragraph instanceof PublishRestrictedInterface )
+            {
+                if( empty($post['paragraph-content']['accessUsers']) )
+                {
+                    $post->set('paragraph-content', array_merge( $post['paragraph-content'],array('accessUsers' => array()) ));
+                }
+                if( empty($post['paragraph-content']['accessGroups']) )
+                {
+                    $post->set('paragraph-content', array_merge( $post['paragraph-content'],array('accessGroups' => array()) ));
+                }
+            }
+            //var_dump($post['paragraph-content']);die();
+            //if( !isset($pos) )
+            $form->setData( $post );
             $view->setVariable( 'success',
                                 $form->isValid() && $dashboard->save() );
         }

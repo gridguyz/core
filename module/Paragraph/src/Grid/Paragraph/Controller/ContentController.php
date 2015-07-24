@@ -87,7 +87,24 @@ class ContentController extends AbstractListController
 
         if ( $request->isPost() )
         {
-            $form->setData( $request->getPost() );
+            $post = $request->getPost();
+            if( empty($post['accessUsers']) )
+            {
+                $post->set('accessUsers', array());
+            }
+            if( empty($post['accessGroups']) )
+            {
+                $post->set('accessGroups', array());
+            }
+            if( empty($post['editUsers']) )
+            {
+                $post->set('editUsers', array());
+            }
+            if( empty($post['editGroups']) )
+            {
+                $post->set('editGroups', array());
+            }
+            $form->setData( $post );
 
             if ( $form->isValid() && $paragraph->save() )
             {
