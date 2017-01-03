@@ -2519,7 +2519,7 @@ tinymce.html.Styles = function(settings, schema) {
 					'figure[A][C|legend|figcaption]' +
 					'figcaption[A][C]' +
 					'img[A|alt|src|height|width|usemap|ismap][]' +
-					'iframe[A|name|src|height|width|sandbox|seamless][]' +
+					'iframe[A|name|src|height|width|sandbox|seamless|allowfullscreen][]' +
 					'embed[A|src|height|width|type][]' +
 					'object[A|data|type|height|width|usemap|name|form|classid][param]' +
 					'param[A|name|value][]' +
@@ -2619,7 +2619,7 @@ tinymce.html.Styles = function(settings, schema) {
 				'img[E|src|alt|name|longdesc|width|height|usemap|ismap|align|border|hspace|vspace][]' + 
 				'map[B|C|A|name][X|form|Q|area]' + 
 				'h2[E|align][#|S]' + 
-				'iframe[A|longdesc|name|src|frameborder|marginwidth|marginheight|scrolling|align|width|height][#|Y]' + 
+				'iframe[A|longdesc|name|src|frameborder|marginwidth|marginheight|scrolling|align|width|height|allowfullscreen][#|Y]' + 
 				'h3[E|align][#|S]' + 
 				'tt[E][#|S]' + 
 				'i[E][#|S]' + 
